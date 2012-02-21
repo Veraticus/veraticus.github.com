@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Josh Symonds]]></title>
+  <link href="http://Veraticus.github.com/atom.xml" rel="self"/>
+  <link href="http://Veraticus.github.com/"/>
+  <updated>2012-02-21T11:40:37-06:00</updated>
+  <id>http://Veraticus.github.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
