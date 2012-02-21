@@ -3,11 +3,9 @@ layout: post
 title: "Fixing Redis Timeout and Unexpected Token Errors"
 date: 2012-02-21 12:41
 comments: true
-categories: 
+categories: [redis, server]
 ---
 Ran into some annoying problems with redis and resque recently that couldn't be immediately solved through judicious Googling, so figured I'd make a quick post about it.
-
-<!-- more -->
 
 ## Resource temporarily unavailable - Timeout reading from the socket
 
