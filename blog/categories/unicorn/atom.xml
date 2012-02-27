@@ -4,7 +4,7 @@
   <title><![CDATA[Category: unicorn | Josh Symonds]]></title>
   <link href="http://Veraticus.github.com/blog/categories/unicorn/atom.xml" rel="self"/>
   <link href="http://Veraticus.github.com/"/>
-  <updated>2012-02-27T10:50:14-06:00</updated>
+  <updated>2012-02-27T10:53:09-06:00</updated>
   <id>http://Veraticus.github.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -77,7 +77,7 @@ end
 end
 ```ruby</p>
 
-<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your old unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn's biggest selling points -- zero downtime deploys.</p>
+<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn's biggest selling points -- zero downtime deploys.</p>
 
 <p><code>ruby
 after_fork do |server, worker|

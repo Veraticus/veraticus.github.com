@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://Veraticus.github.com/atom.xml" rel="self"/>
   <link href="http://Veraticus.github.com/"/>
-  <updated>2012-02-27T10:50:14-06:00</updated>
+  <updated>2012-02-27T10:53:09-06:00</updated>
   <id>http://Veraticus.github.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -89,7 +89,7 @@
 
 <p>ruby</p>
 
-<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your old unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn&#8217;s biggest selling points &#8211; zero downtime deploys.</p>
+<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn&#8217;s biggest selling points &#8211; zero downtime deploys.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
