@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://Veraticus.github.com/atom.xml" rel="self"/>
   <link href="http://Veraticus.github.com/"/>
-  <updated>2012-02-23T13:31:54-06:00</updated>
+  <updated>2012-02-27T10:49:05-06:00</updated>
   <id>http://Veraticus.github.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,101 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Setting up Unicorn in a Production Environment]]></title>
+    <link href="http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/"/>
+    <updated>2012-02-27T10:20:00-06:00</updated>
+    <id>http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment</id>
+    <content type="html"><![CDATA[<p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
+
+<p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
+
+<!-- more -->
+
+
+<h2>worker_processes</h2>
+
+<p>I searched high and low for a guide on how many workers each of my unicorns should employ and came up empty-handed. Unfortunately, this is highly dependent on your application. If you do complicated ImageMagick or PDF transformations on your server threads (which you shouldn&#8217;t with unicorn, but hey, who knows) then your threads will use a lot of memory, especially on those operations. For reference, our Rails app takes up about 25 megabytes of memory per worker. However, we have offloaded all of our long-running and memory-intensive tasks into Resque.</p>
+
+<p>We use EC2&#8217;s m1.xlarge instance class and have 30 workers running per server. This number is intentionally set low; in my experience, the closer you come to maximum resource usage in an EC2 instance, the more likely it is to crash, or even worse become unresponsive.</p>
+
+<h2>working_directory</h2>
+
+<p>This should be fairly straightforward but has an important caveat: make sure to make this the static path of your current deploy, so the actual target of your symlink. Ours is <code>'/our/app/directory/current'</code>. Putting fanciness in here is very likely to get you shot in the foot with unicorn not reloading your app correctly, so I can&#8217;t stress enough, just make this a simple string.</p>
+
+<h2>listen</h2>
+
+<p>Our backlog is set to 64. If a unicorn has 64 queued connections likely it&#8217;s dead and we need failover to happen immediately; nginx takes care of that when unicorn refuses to service a request.</p>
+
+<h2>preload_app</h2>
+
+<p>true.</p>
+
+<h2>Gemfile</h2>
+
+<p>We had an issue where unicorn wouldn&#8217;t pick up our Gemfile correctly. Turns out that it doesn&#8217;t understand symlinked directories for reading gemfiles, so we had to employ this dazzling bit of code to get new gems into our bundle when the unicorns restarted:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_exec</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="o">|</span>
+</span><span class='line'>  <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;BUNDLE_GEMFILE&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;/mnt/Hipstaweb-&lt;%= RUBBER_ENV %&gt;/current/Gemfile&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>before_fork and after_fork magic</h2>
+
+<p>If you&#8217;re seriously considering unicorn, I&#8217;m sure you&#8217;ve seen the following gisted:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">defined?</span><span class="p">(</span><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">)</span> <span class="ow">and</span>
+</span><span class='line'>    <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">disconnect!</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">old_pid</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">.</span><span class="n">config</span><span class="o">[</span><span class="ss">:pid</span><span class="o">]</span><span class="si">}</span><span class="s2">.oldbin&quot;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">server</span><span class="o">.</span><span class="n">pid</span> <span class="o">!=</span> <span class="n">old_pid</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="no">Process</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="s2">&quot;QUIT&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">rescue</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ENOENT</span><span class="p">,</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ESRCH</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ruby</p>
+
+<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your old unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn&#8217;s biggest selling points &#8211; zero downtime deploys.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">after_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
+</span><span class='line'>  <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">establish_connection</span>
+</span><span class='line'>  <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">verify_active_connections!</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you include the <code>connection.disconnect!</code> line in your before_fork, make sure you reestablish the connection in your after_fork. This prevents stale database connections and ensures each worker is always correctly connected to the database.</p>
+
+<p>(As a postscript to this post: your unicorn servers are required to have <a href="http://en.wikipedia.org/wiki/List_of_My_Little_Pony:_Friendship_Is_Magic_characters">My Little Pony</a> character names.)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why I Like Rubber]]></title>

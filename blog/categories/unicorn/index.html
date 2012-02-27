@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rapnd: Redis APN Daemon - Josh Symonds</title>
+  <title>Category: unicorn - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="rapnd is a gem I developed to create a persistent connection through which to pass messages to Apple&#8217;s Push Notification servers. It&#8217;s &hellip;">
+  <meta name="description" content="Category: unicorn">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon">
+  <link rel="canonical" href="http://Veraticus.github.comblog/categories/unicorn">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,107 +75,36 @@
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">Rapnd: Redis APN Daemon</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-        
-      </p>
+    <h1 class="entry-title">Category: Unicorn</h1>
     
   </header>
-
-
-<div class="entry-content"><p><a href="http://github.com/Veraticus/rapnd">rapnd</a> is a gem I developed to create a persistent connection through which to pass messages to Apple&#8217;s Push Notification servers. It&#8217;s pretty neat and you should check it out.</p>
-
-<h2>Why another push notification gem?</h2>
-
-<p>The existing ones just didn&#8217;t do what I wanted. There were some that created persistent daemon connections&#8230; but they were only usable with one app, and we have two apps we want to send push notifications for. There were some with multiple app support, but they didn&#8217;t have daemons or they assumed the existence of ActiveRecord. And in my opinion using ActiveRecord to store notifications is pretty dumb.</p>
-
-<h2>Whoa! ActiveRecord is just fine, bro.</h2>
-
-<p>Yeah, I love ActiveRecord. But it&#8217;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&#8217;t care less about the content or whether or not it was actually delivered &#8211; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&#8217;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
-
-<h2>Why a daemon?</h2>
-
-<p>Well, Apple tells you to do it. But for a more important reason, Apple claims that constantly established and dropped connections to their servers will result in IP blacklisting. I&#8217;ve never actually seen this in practice, but&#8230; well&#8230; why chance it? rapnd uses one connection per daemon and tries to keep it open as long as possible.</p>
-
-<p>So yeah, it&#8217;s pretty cool. Go check out <a href="http://github.com/Veraticus/rapnd">the rapnd github page</a> to see the deets.</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting up Unicorn in a Production Environment</a></h1>
+<time datetime="2012-02-27T10:20:00-06:00" pubdate><span class='month'>Feb</span> <span class='day'>27</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/servers/'>servers</a>, <a class='category' href='/blog/categories/unicorn/'>unicorn</a></span>
+</footer>
 
 
-<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rapnd/'>rapnd</a>, <a class='category' href='/blog/categories/redis/'>redis</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon/" data-via="Veraticus" data-counturl="http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon/" >Tweet</a>
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/" title="Previous Post: Fixing Redis Timeout and Unexpected Token Errors">&laquo; Fixing Redis Timeout and Unexpected Token Errors</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" title="Next Post: Dynamoid: An ORM for Amazon's DynamoDB">Dynamoid: An ORM for Amazon's DynamoDB &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -252,10 +181,7 @@
       var disqus_shortname = 'joshsymonds';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon/';
-        var disqus_url = 'http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
