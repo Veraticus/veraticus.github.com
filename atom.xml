@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://Veraticus.github.com/atom.xml" rel="self"/>
   <link href="http://Veraticus.github.com/"/>
-  <updated>2012-02-27T10:49:05-06:00</updated>
+  <updated>2012-02-27T10:50:14-06:00</updated>
   <id>http://Veraticus.github.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -104,7 +104,7 @@
 
 <p>If you include the <code>connection.disconnect!</code> line in your before_fork, make sure you reestablish the connection in your after_fork. This prevents stale database connections and ensures each worker is always correctly connected to the database.</p>
 
-<p>(As a postscript to this post: your unicorn servers are required to have <a href="http://en.wikipedia.org/wiki/List_of_My_Little_Pony:_Friendship_Is_Magic_characters">My Little Pony</a> character names.)</p>
+<p>(As a postscript to this post: your unicorn servers are required to have <a href="http://en.wikipedia.org/wiki/List_of_My_Little_Pony:_Friendship_Is_Magic_characters">My Little Pony</a> server names.)</p>
 ]]></content>
   </entry>
   
