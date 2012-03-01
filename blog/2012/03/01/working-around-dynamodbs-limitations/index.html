@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Josh Symonds</title>
+  <title>Working Around DynamoDB's Limitations - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Blog Archive 2012 Working Around DynamoDB&#8217;s Limitations
-Mar 01 2012 posted in dynamodb, dynamoid Setting up Unicorn in a Production &hellip;">
+  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ Mar 01 2012 posted in dynamodb, dynamoid Setting up Unicorn in a Production &hel
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://Veraticus.github.com/blog/archives">
+  <link rel="canonical" href="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,106 +75,104 @@ Mar 01 2012 posted in dynamodb, dynamoid Setting up Unicorn in a Production &hel
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Working Around DynamoDB's Limitations</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
 
-  
-  <h2>2012</h2>
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
 
-<article>
-  
-<h1><a href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Working Around DynamoDB&#8217;s Limitations</a></h1>
-<time datetime="2012-03-01T12:54:00-06:00" pubdate><span class='month'>Mar</span> <span class='day'>01</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you&#8217;re modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
 
+<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables&#8230; but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
 
+<p>This still doesn&#8217;t allow really complex indexed operations &#8211; you can find by email and name, for example, but you can&#8217;t find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes&#8230; far more than DynamoDB can easily provide or accomplish alone.</p>
 
-<article>
-  
-<h1><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting up Unicorn in a Production Environment</a></h1>
-<time datetime="2012-02-27T10:20:00-06:00" pubdate><span class='month'>Feb</span> <span class='day'>27</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/servers/'>servers</a>, <a class='category' href='/blog/categories/unicorn/'>unicorn</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/02/23/why-i-like-rubber/">Why I Like Rubber</a></h1>
-<time datetime="2012-02-23T13:30:00-06:00" pubdate><span class='month'>Feb</span> <span class='day'>23</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rubber/'>rubber</a>, <a class='category' href='/blog/categories/servers/'>servers</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
-<time datetime="2012-02-22T15:00:00-06:00" pubdate><span class='month'>Feb</span> <span class='day'>22</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/02/21/rapnd-redis-apn-daemon/">Rapnd: Redis APN Daemon</a></h1>
-<time datetime="2012-02-21T13:21:00-06:00" pubdate><span class='month'>Feb</span> <span class='day'>21</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rapnd/'>rapnd</a>, <a class='category' href='/blog/categories/redis/'>redis</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
-<time datetime="2012-02-21T12:41:00-06:00" pubdate><span class='month'>Feb</span> <span class='day'>21</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/redis/'>redis</a>, <a class='category' href='/blog/categories/server/'>server</a></span>
-</footer>
-
-
-</article>
-
+<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB&#8230; and I can see the potential for geospatial indexing using DynamoDB&#8217;s range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB&#8217;s case.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/" data-via="Veraticus" data-counturl="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/" title="Previous Post: Setting up Unicorn in a Production Environment">&laquo; Setting up Unicorn in a Production Environment</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -252,7 +249,10 @@ Mar 01 2012 posted in dynamodb, dynamoid Setting up Unicorn in a Production &hel
       var disqus_shortname = 'joshsymonds';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
+        var disqus_url = 'http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
