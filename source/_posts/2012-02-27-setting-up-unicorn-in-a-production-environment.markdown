@@ -57,7 +57,7 @@ before_fork do |server, worker|
 end
 ```ruby
 
-But just to reinforce how awesome it is: this configuration is awesome. It allows your old unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn's biggest selling points -- zero downtime deploys.
+But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn's biggest selling points -- zero downtime deploys.
 
 ```ruby
 after_fork do |server, worker|
