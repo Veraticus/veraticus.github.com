@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Working Around DynamoDB's Limitations - Josh Symonds</title>
+  <title>Don't Mess With Primary Keys - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
+  <meta name="description" content="I really like answering questions on Stack Overflow &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations">
+  <link rel="canonical" href="http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,7 +79,7 @@
   
   <header>
     
-      <h1 class="entry-title">Working Around DynamoDB's Limitations</h1>
+      <h1 class="entry-title">Don't Mess With Primary Keys</h1>
     
     
       <p class="meta">
@@ -95,27 +95,33 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-03-04T19:11:00-06:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+<div class="entry-content"><p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
 
-<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
+<p>Recently I&#8217;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &#8220;how do I mess with the primary key column?&#8221;</p>
+
+<p>The answer is always, invariably, the same: don&#8217;t.</p>
 
 <!-- more -->
 
 
-<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you&#8217;re modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
+<p>It might seem sensible to tuck some sort of business logic away into your primary key. Just earlier today, <a href="http://stackoverflow.com/questions/9558715/changing-models-id-type-from-integer-to-decimal-makes-all-entries-try-to-be-0-0/9558832#9558832">I answered a question</a> from a guy who wanted to turn his primary key column into a decimal, and have the part before the decimal be equal to the primary key of another table &#8211; so you&#8217;d have 75.001 and 75.002, with 75 being the primary key of the orders table. A cute idea for a new column like order_number or something like that, but just a plain awful idea for a primary key.</p>
 
-<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables&#8230; but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
+<p>Primary keys, when you get right down to it, are database artifacts. They&#8217;re useful because they allow databases to expose powerful relations for our data: without a way for databases to reference individual rows that are guaranteed to be unique, even the most basic joins would be impossible. And because they&#8217;re important for databases, the assumption seems to be that they&#8217;re important for people too.</p>
 
-<p>This still doesn&#8217;t allow really complex indexed operations &#8211; you can find by email and name, for example, but you can&#8217;t find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes&#8230; far more than DynamoDB can easily provide or accomplish alone.</p>
+<p>Part of this is Rails&#8217; fault. By exposing URLs with primary keys by default (like users/4), one would automatically assume that the primary key is important data for a user to know (your key is 4 and that&#8217;s important!). In reality nothing could be further from the truth: the ID for a user is arbitrary database-internal logic and has no business facing users at all. I wish Rails going forward came bundled with the really awesome <a href="https://github.com/norman/friendly_id">FriendlyId</a> Gem that makes some unique database column appear to your internal application logic as the real ID for that table. Then you&#8217;d have URLs like users/josh, and that both looks better and obfuscates the primary key.</p>
 
-<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB&#8230; and I can see the potential for geospatial indexing using DynamoDB&#8217;s range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB&#8217;s case.</p>
+<p>As a sidenote, this is why UUID-based keys like <a href="http://www.mongodb.org/display/DOCS/Object+IDs">MongoDB&#8217;s</a> and <a href="https://github.com/Veraticus/Dynamoid">Dynamoid&#8217;s</a> are rather nifty &#8211; they make really ugly ID-based URLs by default so force you to choose a better column to use as a URL slug.</p>
+
+<p>The problem with all this attention on the primary key is that, invariably, people want to change it. Changing primary keys is awful. It will disassociate data all throughout your database, it messes with table autoincrementing&#8230; it will lead to problems right at the moment, and even more down the road you won&#8217;t even foresee. Or even worse, you&#8217;ll want to choose something nonstandard as a primary key (or not choose one at all) &#8211; and you&#8217;ll want to perform a join and be forced to deal with the consequences of your decision. Hint: they won&#8217;t be pretty.</p>
+
+<p>So do yourself a favor. View the ID column as what it really is: an internal database construction. It should be an auto-incrementing integer, no excuses. If you want any kind of business logic, make a new column for it and manage it separately. You&#8217;ll be glad you did, I promise.</p>
 </div>
 
 
@@ -138,12 +144,12 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-03-04T19:11:00-06:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+    <a class='category' href='/blog/categories/beginner/'>beginner</a>, <a class='category' href='/blog/categories/rails/'>rails</a>
   
 </span>
 
@@ -152,7 +158,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/" data-via="Veraticus" data-counturl="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/" data-via="Veraticus" data-counturl="http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/" >Tweet</a>
   
   
   
@@ -161,10 +167,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/" title="Previous Post: Setting up Unicorn in a Production Environment">&laquo; Setting up Unicorn in a Production Environment</a>
+        <a class="basic-alignment left" href="/blog/2012/03/01/working-around-dynamodbs-limitations/" title="Previous Post: Working Around DynamoDB's Limitations">&laquo; Working Around DynamoDB's Limitations</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/03/04/dont-mess-with-primary-keys/" title="Next Post: Don't Mess With Primary Keys">Don't Mess With Primary Keys &raquo;</a>
       
     </p>
   </footer>
@@ -252,8 +256,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
-        var disqus_url = 'http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
+        var disqus_identifier = 'http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/';
+        var disqus_url = 'http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/';
         var disqus_script = 'embed.js';
       
     (function () {

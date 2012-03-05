@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://Veraticus.github.com/atom.xml" rel="self"/>
   <link href="http://Veraticus.github.com/"/>
-  <updated>2012-03-02T13:32:33-06:00</updated>
+  <updated>2012-03-04T19:59:01-06:00</updated>
   <id>http://Veraticus.github.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Don't Mess With Primary Keys]]></title>
+    <link href="http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
+    <updated>2012-03-04T19:11:00-06:00</updated>
+    <id>http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
+    <content type="html"><![CDATA[<p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
+
+<p>Recently I&#8217;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &#8220;how do I mess with the primary key column?&#8221;</p>
+
+<p>The answer is always, invariably, the same: don&#8217;t.</p>
+
+<!-- more -->
+
+
+<p>It might seem sensible to tuck some sort of business logic away into your primary key. Just earlier today, <a href="http://stackoverflow.com/questions/9558715/changing-models-id-type-from-integer-to-decimal-makes-all-entries-try-to-be-0-0/9558832#9558832">I answered a question</a> from a guy who wanted to turn his primary key column into a decimal, and have the part before the decimal be equal to the primary key of another table &#8211; so you&#8217;d have 75.001 and 75.002, with 75 being the primary key of the orders table. A cute idea for a new column like order_number or something like that, but just a plain awful idea for a primary key.</p>
+
+<p>Primary keys, when you get right down to it, are database artifacts. They&#8217;re useful because they allow databases to expose powerful relations for our data: without a way for databases to reference individual rows that are guaranteed to be unique, even the most basic joins would be impossible. And because they&#8217;re important for databases, the assumption seems to be that they&#8217;re important for people too.</p>
+
+<p>Part of this is Rails&#8217; fault. By exposing URLs with primary keys by default (like users/4), one would automatically assume that the primary key is important data for a user to know (your key is 4 and that&#8217;s important!). In reality nothing could be further from the truth: the ID for a user is arbitrary database-internal logic and has no business facing users at all. I wish Rails going forward came bundled with the really awesome <a href="https://github.com/norman/friendly_id">FriendlyId</a> Gem that makes some unique database column appear to your internal application logic as the real ID for that table. Then you&#8217;d have URLs like users/josh, and that both looks better and obfuscates the primary key.</p>
+
+<p>As a sidenote, this is why UUID-based keys like <a href="http://www.mongodb.org/display/DOCS/Object+IDs">MongoDB&#8217;s</a> and <a href="https://github.com/Veraticus/Dynamoid">Dynamoid&#8217;s</a> are rather nifty &#8211; they make really ugly ID-based URLs by default so force you to choose a better column to use as a URL slug.</p>
+
+<p>The problem with all this attention on the primary key is that, invariably, people want to change it. Changing primary keys is awful. It will disassociate data all throughout your database, it messes with table autoincrementing&#8230; it will lead to problems right at the moment, and even more down the road you won&#8217;t even foresee. Or even worse, you&#8217;ll want to choose something nonstandard as a primary key (or not choose one at all) &#8211; and you&#8217;ll want to perform a join and be forced to deal with the consequences of your decision. Hint: they won&#8217;t be pretty.</p>
+
+<p>So do yourself a favor. View the ID column as what it really is: an internal database construction. It should be an auto-incrementing integer, no excuses. If you want any kind of business logic, make a new column for it and manage it separately. You&#8217;ll be glad you did, I promise.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Working Around DynamoDB's Limitations]]></title>
