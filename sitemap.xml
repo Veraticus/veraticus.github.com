@@ -2,50 +2,46 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>
-            http://Veraticus.github.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/
+            http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/
         </loc>
         <lastmod>2012-02-21T14:18:20-06:00</lastmod>
     </url>
     <url>
-        <loc>http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon/</loc>
+        <loc>http://joshsymonds.com/blog/2012/02/21/rapnd-redis-apn-daemon/</loc>
         <lastmod>2012-02-21T14:21:46-06:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://Veraticus.github.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/
-        </loc>
+        <loc>http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/</loc>
         <lastmod>2012-02-22T15:19:08-06:00</lastmod>
     </url>
     <url>
-        <loc>http://Veraticus.github.com/blog/2012/02/23/why-i-like-rubber/</loc>
+        <loc>http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/</loc>
         <lastmod>2012-02-23T13:31:47-06:00</lastmod>
     </url>
     <url>
         <loc>
-            http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/
+            http://joshsymonds.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/
         </loc>
         <lastmod>2012-02-27T10:52:55-06:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/
-        </loc>
+        <loc>http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/</loc>
         <lastmod>2012-03-01T12:55:42-06:00</lastmod>
     </url>
     <url>
-        <loc>http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/</loc>
+        <loc>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/</loc>
         <lastmod>2012-03-04T19:58:50-06:00</lastmod>
     </url>
     <url>
-        <loc>http://Veraticus.github.com/blog/archives/</loc>
+        <loc>http://joshsymonds.com/blog/archives/</loc>
         <lastmod>2012-03-04T19:58:50-06:00</lastmod>
     </url>
     <url>
-        <loc>http://Veraticus.github.com/</loc>
+        <loc>http://joshsymonds.com/</loc>
         <lastmod>2012-03-04T19:58:50-06:00</lastmod>
     </url>
     <url>
-        <loc>http://Veraticus.github.com/resume/</loc>
+        <loc>http://joshsymonds.com/resume/</loc>
         <lastmod>2012-03-02T13:32:23-06:00</lastmod>
     </url>
 </urlset>

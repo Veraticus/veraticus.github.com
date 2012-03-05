@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: servers | Josh Symonds]]></title>
-  <link href="http://Veraticus.github.com/blog/categories/servers/atom.xml" rel="self"/>
-  <link href="http://Veraticus.github.com/"/>
-  <updated>2012-03-04T19:59:01-06:00</updated>
-  <id>http://Veraticus.github.com/</id>
+  <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2012-03-05T11:08:50-06:00</updated>
+  <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Setting up Unicorn in a Production Environment]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/"/>
     <updated>2012-02-27T10:20:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment</id>
+    <id>http://joshsymonds.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment</id>
     <content type="html"><![CDATA[<p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
 
 <p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
@@ -94,9 +94,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Why I Like Rubber]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/23/why-i-like-rubber/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/"/>
     <updated>2012-02-23T13:30:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/23/why-i-like-rubber</id>
+    <id>http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber</id>
     <content type="html"><![CDATA[<p>When I was analyzing tools to deploy applications into Amazon's elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
 
 <p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it's super easy to start a server with nothing more than:</p>

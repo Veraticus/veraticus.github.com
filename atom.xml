@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Josh Symonds]]></title>
-  <link href="http://Veraticus.github.com/atom.xml" rel="self"/>
-  <link href="http://Veraticus.github.com/"/>
-  <updated>2012-03-04T19:59:01-06:00</updated>
-  <id>http://Veraticus.github.com/</id>
+  <link href="http://joshsymonds.com/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2012-03-05T11:08:50-06:00</updated>
+  <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Don't Mess With Primary Keys]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
+    <link href="http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
     <updated>2012-03-04T19:11:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
+    <id>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
     <content type="html"><![CDATA[<p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
 
 <p>Recently I&#8217;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &#8220;how do I mess with the primary key column?&#8221;</p>
@@ -43,9 +43,9 @@
   
   <entry>
     <title type="html"><![CDATA[Working Around DynamoDB's Limitations]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations/"/>
+    <link href="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/"/>
     <updated>2012-03-01T12:54:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/03/01/working-around-dynamodbs-limitations</id>
+    <id>http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations</id>
     <content type="html"><![CDATA[<p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
 
 <p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
@@ -65,9 +65,9 @@
   
   <entry>
     <title type="html"><![CDATA[Setting up Unicorn in a Production Environment]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/"/>
     <updated>2012-02-27T10:20:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment</id>
+    <id>http://joshsymonds.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment</id>
     <content type="html"><![CDATA[<p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
 
 <p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
@@ -160,9 +160,9 @@
   
   <entry>
     <title type="html"><![CDATA[Why I Like Rubber]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/23/why-i-like-rubber/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/"/>
     <updated>2012-02-23T13:30:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/23/why-i-like-rubber</id>
+    <id>http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber</id>
     <content type="html"><![CDATA[<p>When I was analyzing tools to deploy applications into Amazon&#8217;s elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
 
 <p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&#8217;s super easy to start a server with nothing more than:</p>
@@ -189,9 +189,9 @@
   
   <entry>
     <title type="html"><![CDATA[Dynamoid: An ORM for Amazon's DynamoDB]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/"/>
     <updated>2012-02-22T15:00:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb</id>
+    <id>http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb</id>
     <content type="html"><![CDATA[<p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
 
 <p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
@@ -213,9 +213,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rapnd: Redis APN Daemon]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/21/rapnd-redis-apn-daemon/"/>
     <updated>2012-02-21T13:21:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/21/rapnd-redis-apn-daemon</id>
+    <id>http://joshsymonds.com/blog/2012/02/21/rapnd-redis-apn-daemon</id>
     <content type="html"><![CDATA[<p><a href="http://github.com/Veraticus/rapnd">rapnd</a> is a gem I developed to create a persistent connection through which to pass messages to Apple&#8217;s Push Notification servers. It&#8217;s pretty neat and you should check it out.</p>
 
 <h2>Why another push notification gem?</h2>
@@ -236,9 +236,9 @@
   
   <entry>
     <title type="html"><![CDATA[Fixing Redis Timeout and Unexpected Token Errors]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/"/>
     <updated>2012-02-21T12:41:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors</id>
+    <id>http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors</id>
     <content type="html"><![CDATA[<p>Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&#8217;d make a quick post about it.</p>
 
 <h2>Resource temporarily unavailable - Timeout reading from the socket</h2>

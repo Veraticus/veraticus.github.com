@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: beginner | Josh Symonds]]></title>
-  <link href="http://Veraticus.github.com/blog/categories/beginner/atom.xml" rel="self"/>
-  <link href="http://Veraticus.github.com/"/>
-  <updated>2012-03-04T19:59:01-06:00</updated>
-  <id>http://Veraticus.github.com/</id>
+  <link href="http://joshsymonds.com/blog/categories/beginner/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2012-03-05T11:08:50-06:00</updated>
+  <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Don't Mess With Primary Keys]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
+    <link href="http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
     <updated>2012-03-04T19:11:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
+    <id>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
     <content type="html"><![CDATA[<p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> -- it's like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
 
 <p>Recently I've been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of "how do I mess with the primary key column?"</p>
