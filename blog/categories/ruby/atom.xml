@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-07T19:35:33-06:00</updated>
+  <updated>2012-03-07T19:40:20-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -43,7 +43,7 @@ end
 </code></p>
 
 <ul>
-<li><h3>SecureRandom#random_number</h3>
+<li><h3>SecureRandom#base64</h3>
 
 <p>As above, except that +, /, and = are included in the output. The addition of three more characters significantly improves the randomness of this method, though, so use it when the resulting string doesn't need to be in a URL.</p></li>
 </ul>
