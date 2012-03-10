@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-07T19:40:20-06:00</updated>
+  <updated>2012-03-10T10:21:05-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails 3: Arel, Arel_Table, and Squeel]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/"/>
+    <updated>2012-03-10T10:17:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/10/rails-3-arel,arel_table,-and-squeel</id>
+    <content type="html"><![CDATA[<p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &#8211; ActiveRecord&#8217;s own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
+
+<p>Well, in reality, that isn&#8217;t quite what happened. ActiveRecord&#8217;s Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;sum(model.column) as &#39;model_sum&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="s2">&quot;created_at</span>
+</span><span class='line'><span class="s2">DESC&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;models.created_at &gt; ?&quot;</span><span class="p">,</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or using unpleasant workarounds to address the underlying Arel for the model:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="no">Model</span><span class="o">.</span><span class="n">arel_table</span><span class="o">[</span><span class="ss">:title</span><span class="o">].</span><span class="n">matches</span><span class="p">(</span><span class="s1">&#39;%foo%&#39;</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is just kinda ugly. Happily, there&#8217;s a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Much easier to understand! The double-curly braces does kind of suck (this is because it&#8217;s a hash inside a proc) but it&#8217;s still a fair but more understandable than the default Arel stuff.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ruby 1.9 Awesomeness Part 1: SecureRandom]]></title>

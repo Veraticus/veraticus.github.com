@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-07T19:40:20-06:00</updated>
+  <updated>2012-03-10T10:21:05-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails 3: Arel, Arel_Table, and Squeel]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/"/>
+    <updated>2012-03-10T10:17:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/10/rails-3-arel,arel_table,-and-squeel</id>
+    <content type="html"><![CDATA[<p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel -- ActiveRecord's own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
+
+<p>Well, in reality, that isn't quite what happened. ActiveRecord's Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
+
+<!-- more -->
+
+
+<p><code>ruby
+Model.select("sum(model.column) as 'model_sum'").order("created_at
+DESC").where("models.created_at &gt; ?", DateTime.now - 1.day)
+</code></p>
+
+<p>Or using unpleasant workarounds to address the underlying Arel for the model:</p>
+
+<p><code>ruby
+Model.where(Model.arel_table[:title].matches('%foo%'))
+</code></p>
+
+<p>This is just kinda ugly. Happily, there's a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
+
+<p><code>ruby
+Model.where
+</code></p>
+
+<p>Much easier to understand! The double-curly braces does kind of suck (this is because it's a hash inside a proc) but it's still a fair but more understandable than the default Arel stuff.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ruby 1.9 Awesomeness Part 1: SecureRandom]]></title>
