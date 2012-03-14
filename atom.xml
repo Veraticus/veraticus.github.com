@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-10T10:21:05-06:00</updated>
+  <updated>2012-03-13T22:18:57-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Fnordmetric: Native Rails Metrics]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/13/fnordmetric-native-rails-metrics/"/>
+    <updated>2012-03-13T22:05:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/13/fnordmetric-native-rails-metrics</id>
+    <content type="html"><![CDATA[<p>Over the weekend I spent some time getting <a href="https://github.com/paulasmuth/fnordmetric">Fnordmetric</a> set up in an application. On the surface it looks really cool and quite nifty, but I ran into some trouble getting it configured how I wanted it and figured I&#8217;d make a post about it. I think I might have been struggling against the conventions in it a little too much, but it was still an instructive battle.</p>
+
+<!-- more -->
+
+
+<h2>Engineize It</h2>
+
+<p>The Gem itself assumes you&#8217;ll be running it on its own port, presumably redirecting nginx traffic there. But this is 2012 and Rails engines are all the rage &#8211; so why bother with a separate app? Well, I&#8217;ll get to the reason why later, but mounting it as an engine is pretty simple.</p>
+
+<p>Set up an initializer or something that defines all the Fnord metrics you want, something like <code>config/initializers/fnord.rb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;fnordmetric&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">FnordMetric</span><span class="o">.</span><span class="n">namespace</span> <span class="ss">:analytics</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gauge</span> <span class="ss">:events_total</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:tick</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:progressive</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s2">&quot;Events (total)&quot;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">event</span><span class="p">(</span><span class="ss">:&quot;*&quot;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">incr</span> <span class="ss">:events_tota</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">FnordMetric</span><span class="o">.</span><span class="n">server_configuration</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="ss">:redis_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:redis_prefix</span> <span class="o">=&gt;</span> <span class="s2">&quot;fnordmetric&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:inbound_stream</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1339&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:start_worker</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:print_stats</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:event_queue_ttl</span> <span class="o">=&gt;</span> <span class="mi">120</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:event_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:session_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That stuff is copy-pasted from the Github README, so I won&#8217;t go into explaining it. Note that we do not include FnordMetric.standalone at the bottom, however; we&#8217;ll be mounting the server ourselves in routes.rb like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">mount</span> <span class="no">FnordMetric</span><span class="o">.</span><span class="n">embedded</span><span class="p">,</span> <span class="ss">:at</span> <span class="o">=&gt;</span> <span class="s2">&quot;/fnord&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you can go to localhost:3000/fnord, and tada! Fnord metrics!</p>
+
+<h2>Set Up a Worker</h2>
+
+<p>The difficult, of course, is that each instance of your app will now also spin up its own instance of a FnordWorker, which might not be what you want. I got around this by altering my config/initializers/fnord.rb:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FnordMetric</span><span class="o">.</span><span class="n">server_configuration</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="ss">:redis_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:redis_prefix</span> <span class="o">=&gt;</span> <span class="s2">&quot;fnordmetric&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:inbound_stream</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1339&quot;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:start_worker</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">development?</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;FNORD_WORKER&#39;</span><span class="o">]</span> <span class="p">?</span> <span class="kp">true</span> <span class="p">:</span> <span class="kp">false</span><span class="p">),</span>
+</span><span class='line'>  <span class="ss">:print_stats</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:event_queue_ttl</span> <span class="o">=&gt;</span> <span class="mi">120</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:event_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">:session_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I know some people hate the ternary operator, but I kind of like it. Anyway, this causes the worker to start only if there&#8217;s an environment variable set to start it or the Rails environment is development. I set up one instance that receives this variable when it starts, and now I only have one worker. Simplicity itself!</p>
+
+<p>Ultimately, I like Fnordmetric, but I&#8217;m not using it in my production applications. I feel like there&#8217;s a level of abstraction to go before it&#8217;s really usable in big production apps. It&#8217;s much better at tracking arbitrary metrics than NewRelic &#8211; honestly, trying to shoehorn stats into their system feels silly at times &#8211; but setting up the tracking stuff is a pain, involving a lot of unnecessary repetition. I think that a Fnordmetric2.0 would be awesome, though, so I hope the project sees more love and work. And who knows, if I have some time I&#8217;ll try contributing to it myself. That&#8217;s the joy of open source: if you have a good idea, you make it happen.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails 3: Arel, Arel_Table, and Squeel]]></title>
