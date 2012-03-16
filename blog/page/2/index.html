@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Working Around DynamoDB's Limitations - Josh Symonds</title>
+  <title>Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
+  <meta name="description" content="Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations">
+  <link rel="canonical" href="http://joshsymonds.com/blog/page/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,12 +75,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Working Around DynamoDB's Limitations</h1>
+      <h1 class="entry-title"><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
     
     
       <p class="meta">
@@ -96,89 +99,39 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+  <div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&#8217;d make a quick post about it.</p>
 
-<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
+<h2>Resource temporarily unavailable - Timeout reading from the socket</h2>
 
-<!-- more -->
+<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &#8211; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
 
+<h2>unexpected token at &#8216;OK&#8217; (Resque::Helpers::DecodeException)</h2>
 
-<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you&#8217;re modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
+<p>This one took a bit more tracking down to fix.</p>
 
-<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables&#8230; but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
-
-<p>This still doesn&#8217;t allow really complex indexed operations &#8211; you can find by email and name, for example, but you can&#8217;t find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes&#8230; far more than DynamoDB can easily provide or accomplish alone.</p>
-
-<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB&#8230; and I can see the potential for geospatial indexing using DynamoDB&#8217;s range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB&#8217;s case.</p>
+<p>The newest versions of resque (I&#8217;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &#8211; for example, returning &#8220;OK.&#8221; Upgrading your redis server handily fixes this problem.</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/" >Tweet</a>
-  
-  
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/" title="Previous Post: Setting up Unicorn in a Production Environment">&laquo; Setting up Unicorn in a Production Environment</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/03/04/dont-mess-with-primary-keys/" title="Next Post: Don't Mess With Primary Keys">Don't Mess With Primary Keys &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -207,7 +160,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2012/03/04/dont-mess-with-primary-keys/">Don't Mess With Primary Keys</a>
+        <a href="/blog/2012/03/04/dont-mess-with-primary-keys/">Don&#8217;t Mess With Primary Keys</a>
       </li>
     
   </ul>
@@ -217,7 +170,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -237,7 +190,6 @@
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -252,10 +204,7 @@
       var disqus_shortname = 'joshsymonds';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

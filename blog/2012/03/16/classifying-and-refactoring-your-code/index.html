@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Working Around DynamoDB's Limitations - Josh Symonds</title>
+  <title>Classifying and Refactoring Your Code - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
+  <meta name="description" content="Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">Working Around DynamoDB's Limitations</h1>
+      <h1 class="entry-title">Classifying and Refactoring Your Code</h1>
     
     
       <p class="meta">
@@ -96,27 +96,35 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
-
-<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
+<div class="entry-content"><p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I&#8217;d share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I&#8217;ve learned will aid others.</p>
 
 <!-- more -->
 
 
-<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you&#8217;re modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
+<h2>Hashes = Objects</h2>
 
-<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables&#8230; but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
+<p>In the earlier iterations of Dynamoid, I was passing around almost everything in hashes, and the calculations I was performing on those hashes was growing more and more complicated as I went, with logic flying around my files like a flock of disorganized birds. When I was putting index logic into criteria chains, I realized that keeping indexes as hashes was an enormous mistake&#8230; and one I wish I had realized earlier.</p>
 
-<p>This still doesn&#8217;t allow really complex indexed operations &#8211; you can find by email and name, for example, but you can&#8217;t find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes&#8230; far more than DynamoDB can easily provide or accomplish alone.</p>
+<p>As I was refactoring my code I realized that I pass hashes around in a number of places. Hashes work well initially to store small amounts of data, but if you&#8217;re using them for that purpose you almost certainly want a real object instead. Just whip that hash apart into a class and you&#8217;ll be surprised how much code will go in there, and how much simpler your application will be for your trouble.</p>
 
-<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB&#8230; and I can see the potential for geospatial indexing using DynamoDB&#8217;s range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB&#8217;s case.</p>
+<h2>Refactor Early, Refactor Often</h2>
+
+<p>I tend to be my own harshest critic, but honestly, my first pass at features tends to be messy at best. I make my tests pass (always test first, btw, but that&#8217;s so fundamental I&#8217;m not going to include it as a point) but usually in the most complicated, slowest, unpleasant way possible. Take some time after the tests pass to stare at your code a bit and decide if that&#8217;s really the best way to go about doing things. Usually a change will jump out at you immediately, but don&#8217;t be afraid to just come back to the code later if nothing presents itself.</p>
+
+<p>Tests allow you to do this kind of refactoring free of charge. I always imagine tests as the scaffolding around my code; no matter how tall the code gets, with the scaffolding it&#8217;ll never fall over.</p>
+
+<h2>Document!</h2>
+
+<p>I&#8217;m really bad at this one myself, but I&#8217;m going to be going back through Dynamoid in the very near future and adding documentation to all my methods. Even if your code is a one-liner, people will read documentation over code every time. So document that code! Especially in a collaborative environment, documentation is critical for making your project easy to contribute to.</p>
+
+<p>I&#8217;m sure other things will pop out at me after some thought, but these are the biggest takeaways Dynamoid has given me. Hopefully they&#8217;ll be of use to someone else as well.</p>
 </div>
 
 
@@ -139,12 +147,12 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+    <a class='category' href='/blog/categories/beginner/'>beginner</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
   
 </span>
 
@@ -153,7 +161,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/" >Tweet</a>
   
   
   
@@ -162,10 +170,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/" title="Previous Post: Setting up Unicorn in a Production Environment">&laquo; Setting up Unicorn in a Production Environment</a>
+        <a class="basic-alignment left" href="/blog/2012/03/13/fnordmetric-native-rails-metrics/" title="Previous Post: Fnordmetric: Native Rails Metrics">&laquo; Fnordmetric: Native Rails Metrics</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/03/04/dont-mess-with-primary-keys/" title="Next Post: Don't Mess With Primary Keys">Don't Mess With Primary Keys &raquo;</a>
       
     </p>
   </footer>
@@ -253,8 +259,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/';
         var disqus_script = 'embed.js';
       
     (function () {
