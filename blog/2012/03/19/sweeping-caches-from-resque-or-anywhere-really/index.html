@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Fixing Redis Timeout and Unexpected Token Errors - Josh Symonds</title>
+  <title>Sweeping Caches from Resque (or Anywhere Really) - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&# &hellip;">
+  <meta name="description" content="Phil Karlton, someone I can only presume is a pretty smart programmer, said &#8220;there are only two hard things in Computer Science: cache &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">Fixing Redis Timeout and Unexpected Token Errors</h1>
+      <h1 class="entry-title">Sweeping Caches From Resque (or Anywhere Really)</h1>
     
     
       <p class="meta">
@@ -96,24 +96,30 @@
   
 
 
-<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+<time datetime="2012-03-19T10:29:00-05:00" pubdate data-updated="true">Mar 19<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&#8217;d make a quick post about it.</p>
+<div class="entry-content"><p>Phil Karlton, someone I can only presume is a pretty smart programmer, said <a href="http://martinfowler.com/bliki/TwoHardThings.html">&#8220;there are only two hard things in Computer Science: cache invalidation and naming things.&#8221;</a> He&#8217;s totally right; cache invalidation is one of the biggest headaches when designing highly usable, highly available websites and is something that I&#8217;m sure every Rails programmer worth their salt has struggled with. (Naming things is also a pain but not the focus of this post.)</p>
 
-<h2>Resource temporarily unavailable - Timeout reading from the socket</h2>
+<!-- more -->
 
-<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &#8211; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
 
-<h2>unexpected token at &#8216;OK&#8217; (Resque::Helpers::DecodeException)</h2>
+<p>And unfortunately the reason for the struggle is that Rails&#8217; caching tools don&#8217;t go nearly as far as they should. This is really through no fault of their own; honestly, Rails&#8217; caching methods are amazingly robust, and if you don&#8217;t know what they are, you should read <a href="http://guides.rubyonrails.org/caching_with_rails.html">the guide</a> on them. But good tools can only take you so far. Ultimately, caching is as application-specific as you can get, and when you get to finely-grained control you have to take the reins yourself.</p>
 
-<p>This one took a bit more tracking down to fix.</p>
+<p>One of the problems I ran into recently was invalidating caches during an association join. I have two models, album and photo, and when one is added to the other I wanted to expire all the caches dealing with both. I already have <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> in my application, but callbacks aren&#8217;t triggered on association. And putting something in an after_add on the association itself didn&#8217;t seem like the right answer; why should I put cache expiration stuff in my model when I already have sweepers dedicated to that logic?</p>
 
-<p>The newest versions of resque (I&#8217;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &#8211; for example, returning &#8220;OK.&#8221; Upgrading your redis server handily fixes this problem.</p>
+<p>I&#8217;m not sure I&#8217;m in love with the solution I came up with, but it certainly seems to work. All of the association logic happens in Resque jobs, so I added the cache invalidation directly to this jobs by invoking the sweeper manually:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">PhotoSweeper</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:new</span><span class="p">)</span><span class="o">.</span><span class="n">expire_cache_for</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>send</code> business is necessary because new is a private method for sweepers. Nevertheless this really seems to get the job done; the caches are swept appropriately, and my cache invalidation logic remains safely in the sweepers, where I can add or edit it as much as I want. I suppose if I really wanted to I could put this in an after_add on the model as well. I&#8217;ve resisted that so far but maybe it&#8217;s the logical place for this kind of expiration logic to happen.</p>
 </div>
 
 
@@ -136,12 +142,12 @@
   
 
 
-<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+<time datetime="2012-03-19T10:29:00-05:00" pubdate data-updated="true">Mar 19<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/redis/'>redis</a>, <a class='category' href='/blog/categories/server/'>server</a>
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/resque/'>resque</a>
   
 </span>
 
@@ -150,7 +156,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/" >Tweet</a>
   
   
   
@@ -159,8 +165,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2012/03/16/classifying-and-refactoring-your-code/" title="Previous Post: Classifying and Refactoring Your Code">&laquo; Classifying and Refactoring Your Code</a>
       
-        <a class="basic-alignment right" href="/blog/2012/02/21/rapnd-redis-apn-daemon/" title="Next Post: Rapnd: Redis APN Daemon">Rapnd: Redis APN Daemon &raquo;</a>
       
     </p>
   </footer>
@@ -248,8 +254,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/';
         var disqus_script = 'embed.js';
       
     (function () {
