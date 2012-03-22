@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Phil Karlton, someone I can only presume is a pretty smart programmer, said &#8220;there are only two hard things in Computer Science: cache &hellip;">
+  <meta name="description" content="I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,77 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/22/why-i-dont-use-haml/">Why I Don&#8217;t Use Haml</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-22T13:19:00-05:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It&#8217;s actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it&#8217;s very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
+
+<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
+
+<h2>Indentation Sucks (Usually)</h2>
+
+<p>Notice the cute little parenthetical up there? That&#8217;s because I really do like CoffeeScript, which is just as whitespace-sensitive as Haml. So what&#8217;s the difference?</p>
+
+<p>CoffeeScript uses indentations to abstract away one of the worst &#8220;features&#8221; of JavaScript: the dreaded <code>})</code> sequences. Closing arguments and functions again and again is not only a headache, it happens so frequently that some sort of error is inevitable. Strict whitespace rules help us avoid errors in closure. Of course, the same argument can be made about HTML and Haml&#8217;s whitespace rules, but there&#8217;s another key difference here.</p>
+
+<p>HTML closures indicate which tag they close. You don&#8217;t have a forest of <code>)})})}</code>, which even if you indent correctly still won&#8217;t tell you which parenthesis or bracket they&#8217;re closing. Instead you have an obvious and syntactic declaration of which tag you&#8217;re ending when you end it. You can argue that the tag closure is unnecessary (Haml seems largely based on this argument), but you&#8217;re trading explicit tag closure for explicit whitespace restrictions&#8230;</p>
+
+<p>And ultimately (and most damningly), whitespace restrictions make the document harder to read and understand than closing tags. If you have an extremely long page with many nested elements, Haml is very difficult to comprehend and consequently much harder to use.</p>
+
+<h2>If It Ain&#8217;t Broke&#8230;</h2>
+
+<p>SASS and CoffeeScript fix serious errors and oversights in the implementations of their specific languages. CoffeeScript ensures correct lexical scoping of variables; SASS allows variable assignment and better selectors than CSS. Both are enormous improvements on the languages they compile into.</p>
+
+<p>Haml doesn&#8217;t add anything at all to HTML. There&#8217;s no special Haml tags that do something HTML couldn&#8217;t do by itself. It gives you a shortcut for the syntax, but that&#8217;s essentially it.</p>
+
+<p>And HTML really isn&#8217;t that bad by itself. The syntax is already fairly clean and clear; it&#8217;s not like we&#8217;re lost in a field of, well, parenthesis and curly brackets. Tables can get a little muddy at times, but good HTML and CSS prevent documents from becoming unreadable &#8211; and Haml doesn&#8217;t offer any interesting or unique tools to improve readability, either.</p>
+
+<h2>Designers Aren&#8217;t Programmers</h2>
+
+<p>But I think this is the biggest reason I don&#8217;t use Haml. Frontend designers use CSS, and the best ones employ JavaScript (and program good JavaScript!) &#8211; but every single one is going to be using HTML to create their pages. Eventually, if your site gets big, you&#8217;re going to want a designer to do some pages for you&#8230; and they&#8217;re not going to be producing Haml, they&#8217;re going to be producing HTML.</p>
+
+<p>Sure, you can change that HTML to Haml. But let me guarantee you, one day they&#8217;ll want to change something, and at that point you do one of three things:</p>
+
+<ol>
+<li>Show them the Haml site, tell them to do it all in Haml, and pay for them learning it.</li>
+<li>Take their design and convert it to Haml yourself and then incorporate it into the page.</li>
+<li>Curse your unjust fate and just switch to erb and copypaste their changes in.</li>
+</ol>
+
+
+<p>As I said at the beginning, I like Haml. But it&#8217;s a markup language for programmers, and ultimately the people who use HTML the most aren&#8217;t programmers. SASS is barely a programming language, more like a set of syntactical shortcuts; and CoffeeScript appeals to those who program in JavaScript already. Haml just doesn&#8217;t appeal to the correct audience to use its core feature set, which is a damn shame, because Haml really is pretty cool.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -474,57 +545,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
-
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
-
-<p>But it will soon! The TODO list is particularly exciting:</p>
-
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
-</ul>
-
-
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -545,6 +565,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/03/22/why-i-dont-use-haml/">Why I Don&#8217;t Use Haml</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/">Sweeping Caches from Resque (or Anywhere Really)</a>
       </li>
     
@@ -558,10 +582,6 @@
     
       <li class="post">
         <a href="/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/">Rails 3: Arel, Arel_Table, and Squeel</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">Ruby 1.9 Awesomeness Part 1: SecureRandom</a>
       </li>
     
   </ul>
