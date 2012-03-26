@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-26T01:06:16-05:00</updated>
+  <updated>2012-03-26T09:26:59-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -64,7 +64,7 @@ query
 <p>  end</p>
 
 <p>end
-```ruby</p>
+```</p>
 
 <p>These are all, in elasticsearch parlance, filters rather than queries: queries must look into data fields and perform operations in them, whereas filters just filter on a fields' value directly... exactly what I was looking for. <code>terms</code> instructs the filter parser that at least one of the select elements must match. <code>range</code>, as you can see, allows us to pull only photos within a certain date. <code>geo_distance</code> is particularly cool and lets us filter all photos by their geographic location.</p>
 
