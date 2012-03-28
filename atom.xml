@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-28T16:02:45-05:00</updated>
+  <updated>2012-03-28T16:16:53-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -38,7 +38,7 @@
 <span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
 </span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="n">address</span>
+</span><span class='line'>  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="ss">:address</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
