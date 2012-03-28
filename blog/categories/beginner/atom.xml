@@ -4,7 +4,7 @@
   <title><![CDATA[Category: beginner | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/beginner/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-03-26T09:26:59-05:00</updated>
+  <updated>2012-03-28T16:02:45-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Delegation when Delegate Just Won't Work]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work/"/>
+    <updated>2012-03-28T15:37:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work</id>
+    <content type="html"><![CDATA[<p>Rails provides a really awesome ability to avoid <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a> violations -- the <a href="http://apidock.com/rails/Module/delegate">Module#delegate</a> method. The Law of Demeter is an informal programming guideline, intended to make your code more obvious and more reusable: objects should only call methods on other objects, not objects of those objects. To provide a more concrete example:</p>
+
+<p><code>ruby
+  @user.address.street_address # Law of Demeter violation: @user should not reach into address!
+  @user.street_address # So much better...
+</code></p>
+
+<p>Rails, because it's cool, provides a quick and easy pattern for making this work:</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  has_one :address
+  delegate :street_address, :to => address</p>
+
+<p>end</p>
+
+<p>User.new.street_address # Calls address.street_address
+```</p>
+
+<p>Check out the <a href="http://apidock.com/rails/Module/delegate">delegate documentation</a> for more information on how this functionality works. But <a href="http://stackoverflow.com/questions/9914400/delegate-all-method-calls-on-a-model-to-an-association">a question I came across on Stack Overflow</a> today asked: what do you when you want to delegate all methods? I do <a href="https://github.com/Veraticus/Dynamoid/blob/master/lib/dynamoid/adapter.rb#L122">something similar in Dynamoid</a> and wanted to talk about how to make this pattern sensible and performant.</p>
+
+<!-- more -->
+
+
+<p>Essentially you have two options when delegation fails: the easy but less performant way, and the hard but more performant way. It's always nice to have choices, right?</p>
+
+<h2>The Easy Way</h2>
+
+<p>The easy way uses <code>method_missing</code>. Method_missing, of course, is part of Ruby's extensive metaprogramming suite; it is called when a method that doesn't exist is invoked on an object. So, if you have an object (say our user from above) and you want to delegate all methods that it doesn't have itself to its address, you would simply do:</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  has_one :address</p>
+
+<p>  def method_missing(method, *args)</p>
+
+<pre><code>return address.send(method, *args) if address &amp;&amp; address.respond_to?(method)
+super
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This works and will correctly send every method that can be called on an address to that address. Unfortunately, method_missing is slower than defining a method directly on the object, so every time you're forced to use method_missing you're added fractions of milliseconds to your application. This speed difference is usually imperceptible, but you never know: if you use this method_missing enough it could make a difference.</p>
+
+<h2>The Hard Way</h2>
+
+<p>So we have the hard way. This method is "harder" only in that you need to know the methods you want to delegate beforehand -- in which case, why aren't you using <code>delegate</code>? There is still a use for this method though: if you want to do something like benchmarking or argument recording before you delegate, you can do that easily here.</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  has_one :address</p>
+
+<p>  [:all, :my, :methods, :here].each do |m|</p>
+
+<pre><code>define_method(m) do |*args|
+  address.send(m, *args)
+end 
+</code></pre>
+
+<p>  end</p>
+
+<p>  end
+```</p>
+
+<p>In Dynamoid, we perform benchmarking in this method before sending the response along, allowing you to see how long the actual request took in DynamoDB.</p>
+
+<p>Ultimately, you should use <code>delegate</code> if possible... but if it isn't, then either of these two options should get you started to avoid programming unpleasantness. Don't address your objects through other objects -- your code will look better and be more maintainable if you take some time to isolate methods!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Classifying and Refactoring Your Code]]></title>
