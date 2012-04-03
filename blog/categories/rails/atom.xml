@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-04-01T00:50:18-05:00</updated>
+  <updated>2012-04-03T12:00:07-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Refactor a Large and Old Project]]></title>
+    <link href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/"/>
+    <updated>2012-04-03T10:06:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project</id>
+    <content type="html"><![CDATA[<p>The Rails application backing Hipstamatic is very, very large. It started over two years ago as a Rails 2.1 project, and has been continuously improved since then -- moving to Rails 3.2, adding in redis and resque, and then adding in elasticsearch. During that time the database has bounced around continuously in size and importance as we move data from MySQL to data stores that are <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">better suited for it</a>. And while at the start it handled only contests and submissions, since then we've added in orders, the family album, D-Series support, and even more exciting behind-the-scenes stuff.</p>
+
+<p>And as you can imagine from a project that's undergone continuous improvement for a long time, it's kind of a mess. A lot of stuff was done without an eye towards our future needs, and, even more embarrassingly, a lot of stuff was done with a future need in mind -- and, of course, that need never materialized, so the code is named or structured improperly.</p>
+
+<p>The temptation with any project as large and old as this is to do <a href="http://chadfowler.com/2006/12/27/the-big-rewrite">the Big Rewrite</a>. I've been involved in a few of those, and my advice regarding them is quite simple:</p>
+
+<!-- more -->
+
+
+<h1>DON'T DO IT</h1>
+
+<p>There are <a href="http://mentalized.net/journal/2010/10/04/avoiding_the_big_rewrite/">multiple</a> <a href="http://www.joelonsoftware.com/articles/fog0000000069.html">articles</a> <a href="http://blog.objectmentor.com/articles/2009/01/09/the-big-redesign-in-the-sky">discussing</a> why the Big Rewrite is a horrible idea, and reiterating their excellent points here isn't my intention. Instead I'm going to discuss the plan I've decided on for our own project, which I'm going to call, in lieu of the Big Rewrite, the Proper Refactoring.</p>
+
+<p>Our Proper Refactoring will split our one monolithic application apart into a number of services, exposing their APIs for the happiness of our users while hiding the internals of their business logic from parts of the application that don't care about it. If you want to follow along on our process (or do your own Proper Refactoring), I wrote down a quick summary of the three (well, four) simple stages that will take us from having one large working app to many small working apps!</p>
+
+<ol>
+<li><h3>Test it all first.</h3>
+
+<p>This entire process is doomed to failure if your application isn't tested. There's no way you can achieve 100% test coverage, regardless of what <a href="https://github.com/colszowka/simplecov">SimpleCov</a> tells you -- there's always that quick fix you stuck in to fix a small problem that isn't tested and won't show up in any coverage report. But you need to get as close as humanly possible, because stuff will break (like that quick fix), and you can limit how much breakage occurs by testing everything you can before you start.</p>
+
+<p>Happily, Hipstamatic is well tested, so step zero for us is pretty well completed. I still anticipate problems will occur as we make the change, and of course as I find code that isn't adequately tested I'll write tests for it... but both of those are unavoidable.</p></li>
+<li><h3>Find breakpoints and map splits.</h3>
+
+<p>Hipstamatic will be turning into five services: authentication, photos, contests, ordering, and D-Series cameras. Our main goal is to silo concerns apart from each other, making each part of the application more failure resistant and robust while allowing us to develop them all independently from each other if necessary. I'm not 100% settled on this separation of concerns, but the order that I listed them is the order I'll be working on them. If it seems like something just has to be married to something else, I'll combine them together and that'll be that.</p>
+
+<p>So if you're doing this on your own project, split your application into units that are atomic enough that they can be changed independently from each other, but not so atomic that close couplings are undone. My benchmark for this is going to be if I have two projects open simultaneously and keep coding in the two of them in tandem, most likely they should be merged.</p></li>
+<li><h3>Start copying and pasting.</h3>
+
+<p>The fun part! Take the parts necessary for the one fragment you're working on and merge them into one coherent project. Crucically, <em>don't change anything except what's absolutely necessary</em>. You'll find code that you want to change, trust me. Just slap some TODOs on that baby and keep moving. It's important that you change as little as possible, because the process is already breaking apart your nice pretty app. If you start changing the pieces once they're broken, you'll find they don't fit back together quite right, and that will be an enormous headache to fix.</p></li>
+<li><h3>Add relevant bits to the API Gem.</h3>
+
+<p>For our web services to understand each other, and to prevent duplication of code, I'll be extracting connector bits into a Gem that each application (and indeed any application that wants to consume our API) can use. It'll most likely be heavily based on <a href="https://github.com/jnunemaker/httparty">httparty</a> since ActiveResource isn't anywhere near as actively developed.</p></li>
+</ol>
+
+
+<p>And the split is complete! Of course it sounds pretty easy when you gloss over most of the hard work in step #2, but hey, the way to make complicated projects seem achievable is to reduce them into manageable steps. I intend to follow this road map like the Pope follows the Bible -- that is, using the good parts and ignoring the rest. Zing! But I'll report back in a future post to indicate how well these steps worked for me. Until then, wish me luck!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Delegation when Delegate Just Won't Work]]></title>
@@ -305,39 +349,6 @@ FnordMetric.server_configuration = {
 <p>I know some people hate the ternary operator, but I kind of like it. Anyway, this causes the worker to start only if there's an environment variable set to start it or the Rails environment is development. I set up one instance that receives this variable when it starts, and now I only have one worker. Simplicity itself!</p>
 
 <p>Ultimately, I like Fnordmetric, but I'm not using it in my production applications. I feel like there's a level of abstraction to go before it's really usable in big production apps. It's much better at tracking arbitrary metrics than NewRelic -- honestly, trying to shoehorn stats into their system feels silly at times -- but setting up the tracking stuff is a pain, involving a lot of unnecessary repetition. I think that a Fnordmetric2.0 would be awesome, though, so I hope the project sees more love and work. And who knows, if I have some time I'll try contributing to it myself. That's the joy of open source: if you have a good idea, you make it happen.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails 3: Arel, Arel_Table, and Squeel]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/"/>
-    <updated>2012-03-10T10:17:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/10/rails-3-arel,arel_table,-and-squeel</id>
-    <content type="html"><![CDATA[<p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel -- ActiveRecord's own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
-
-<p>Well, in reality, that isn't quite what happened. ActiveRecord's Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
-
-<!-- more -->
-
-
-<p><code>ruby
-Model.select("sum(model.column) as 'model_sum'").order("created_at
-DESC").where("models.created_at &gt; ?", DateTime.now - 1.day)
-</code></p>
-
-<p>Or using unpleasant workarounds to address the underlying Arel for the model:</p>
-
-<p><code>ruby
-Model.where(Model.arel_table[:title].matches('%foo%'))
-</code></p>
-
-<p>This is just kinda ugly. Happily, there's a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
-
-<p><code>ruby
-Model.where
-</code></p>
-
-<p>Much easier to understand! The double-curly braces does kind of suck (this is because it's a hash inside a proc) but it's still a fair but more understandable than the default Arel stuff.</p>
 ]]></content>
   </entry>
   
