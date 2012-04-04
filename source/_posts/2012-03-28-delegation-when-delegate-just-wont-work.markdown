@@ -17,7 +17,7 @@ Rails, because it's cool, provides a quick and easy pattern for making this work
 ```ruby
 class User < ActiveRecord::Base
   has_one :address
-  delegate :street_address, :to => address
+  delegate :street_address, :to => :address
 
 end
 
