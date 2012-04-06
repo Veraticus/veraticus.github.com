@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How I Scaled Hipstamatic - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="The Proper Refactoring proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How I Scaled Hipstamatic</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-06T10:58:00-05:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I&#8217;ve been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don&#8217;t have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
+
+<p>Now, take a look at our average response time over the last month.</p>
+
+<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
+
+<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&#8217;m proud of our 115ms average response time. Proud but not satisfied &#8211; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&#8217;s no reason we can&#8217;t achieve 50-70ms response times with better caching and slimmer applications.</p>
+
+<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That&#8217;s an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
+
+<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic&#8217;s web site and web services fast. (Or, at the very least, a lot faster.)</p>
+
+<!-- more -->
+
+
+<h2>Cache <em>Everything</em></h2>
+
+<p>This is easily the most important, most crucial rule to making your applications fast. You&#8217;d be surprised what you can cache, and how much time caching will save. Memcached access times are ridiculously fast, faster even than the fastest database query. Stick everything in your cache. Everything. <em>Everything</em>.</p>
+
+<p><img src="http://f.cl.ly/items/3f0J2M0H3o3h0w1X1i3m/cache-all-the-things.jpg" alt="Cache all the things" /></p>
+
+<p>This is such an important rule I even gave you an annoying memegenerator image of it. Yes, people, it&#8217;s memegenerator important.</p>
+
+<p>You really can&#8217;t go overboard enough when it comes to caching. Make resque jobs whose only purpose is to warm your caches. Use <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> to sensibly and programmatically expire caches. Almost 90% of our application traffic returns the same (or very similar) JSON and HTML. By caching those responses, we save massive amounts of time, and more importantly, boatloads of money (due to lessened server load).</p>
+
+<h2>Choose Your Tools Wisely</h2>
+
+<p>Choose software that is frequently updated and widely used in the community. Choose software that is robust: by that I mean resistant to failure, and that has survived years of use in live, highly available environments. And finally and most importantly, choose software that is fast. Very, very fast.</p>
+
+<p>Two years ago, we switched from a single, shared instance on A Small Orange to Amazon&#8217;s Elastic Cloud, allowing us to scale each of our components as necessary and independently from each other. Speed gains were noticeable immediately, but even better was the fact that there was a whole bunch of excellent software easily available to help us manage and scale our cloud presence. (See my earlier post <a href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">on Rubber</a>).</p>
+
+<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don&#8217;t want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive &#8211; the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
+
+<p>Take the time and do the research. There&#8217;s a best tool for you waiting out there &#8211; finding it will make your life a thousand times easier.</p>
+
+<h2>Less is More</h2>
+
+<p>For a long time, incoming requests to the app were load balanced through <a href="http://haproxy.1wt.eu/">HAProxy</a> before reaching a Passenger instance. HAProxy is an amazing piece of software; it&#8217;s extremely fast and gives you an awesome drill-down into incoming requests and your server status.</p>
+
+<p>It also added 10 milliseconds to our response times on average.</p>
+
+<p>If a piece of your stack isn&#8217;t mission critical (and HAProxy, for us, was just a nice piece of software and not mission critical) then you should remove it. Amazing graphics and interesting metrics are less important than your response time. Examine your stack carefully, with a very critical eye, and whatever isn&#8217;t absolutely necessary I would strongly recommend cutting out entirely.</p>
+
+<p>What I found helpful to do was draw a quick flow chart of how a request is actually serviced. Nothing that you intend to present to your boss; just a small approximation of your stack. Each step on that chain adds time to that request returning a response. If it adds time to the request turnaround, it needs to be adding something important to that response. Otherwise, it needs to go.</p>
+
+<h2>Achieve Balance</h2>
+
+<p>When we were extensively using <a href="http://redis.io/">redis</a> as a semi-persistent datastore, I constantly experienced bottlenecks for redis connections. But you can encounter this problem anywhere in your server setup: I also had to deal with MySQL bottlenecks and, in one extremely memorable instance, Unicorn queue bottlenecks. These are all issues with load balancing inside the stack.</p>
+
+<p>There&#8217;s never a part of your stack that is immune to load balancing problems. Once you correctly scale one part, another component that performed adequately will suddenly start chugging under unexpected load or new use conditions. And, unfortunately, pre-optimization can backfire; sometimes you&#8217;ll target the wrong part of your stack for optimizations, and other times you&#8217;ll scale something that won&#8217;t experience a bottleneck at all.</p>
+
+<p>I recommend against trying to pre-scale unless you&#8217;re sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act &#8211; you can guess to a limited extent where you&#8217;ll tip after the next step, but you can never be sure until you actually take it. That&#8217;s why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
+
+<p>Formal plans generally aren&#8217;t required, but know what steps you&#8217;d take if something started to fail. Even ten seconds of idle thought can save you agonizing minutes of unavailability.</p>
+
+<h2>Use 75% of Every Server</h2>
+
+<p>This rule applies doubly to servers on EC2. Instances that reach 100% memory or CPU utilization are instances that are very difficult to fix (and are much more prone to crashing in a shared environment). You can&#8217;t SSH into them because they take forever to respond; you can&#8217;t reboot them because they don&#8217;t respond to Amazon&#8217;s control plane. They are about to become horrible zombies in your setup, taking up space but refusing to die, and you&#8217;ll have to route around them to keep your uptime intact.</p>
+
+<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me &#8211; not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
+
+<p>If you&#8217;re using less than 75%, then you can likely combine services together and remove servers. And if you&#8217;re using more&#8230; well, I have <a href="http://www.pagerduty.com/">PagerDuty</a> configured to call me if at any time a server reaches 85% resource usage, and those are calls I take very seriously.</p>
+
+<p>I&#8217;m sure I&#8217;ll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas &#8211; for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-06T10:58:00-05:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/03/how-to-refactor-a-large-and-old-project/" title="Previous Post: How to Refactor a Large and Old Project">&laquo; How to Refactor a Large and Old Project</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/06/how-i-scaled-hipstamatic/">How I Scaled Hipstamatic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">How to Refactor a Large and Old Project</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/">Ruby in the Sandbox: SandRBox</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/">Delegation when Delegate Just Won't Work</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">Elasticsearch and Percolation in Rails</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
