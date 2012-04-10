@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Achieving 100% Uptime - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Achieving 100% Uptime</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-09T17:52:00-05:00" pubdate data-updated="true">Apr 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
+
+<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users&#8217; perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email &#8211; it&#8217;s a good indication of how well I did my job in the previous week. And for a couple weeks now I&#8217;m happy to report I&#8217;ve been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
+
+<p>How do you achieve numbers like these? Unfortunately getting to 100% isn&#8217;t an easy road, and I want to state up front that I also don&#8217;t think it&#8217;s a realistic goal. Issues you can&#8217;t control can ruin your uptime number, and you shouldn&#8217;t feel broken up about that. It happens to everybody. But it&#8217;s always good setting goals that are difficult to achieve, and this one is no different.</p>
+
+<p>So what&#8217;s the secret to 100% uptime?</p>
+
+<!-- more -->
+
+
+<h2>Watch It Constantly</h2>
+
+<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they&#8217;ll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
+
+<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications&#8217; behavior and warn you when that behavior becomes dangerous. Here&#8217;s a sample of our unicorn monit file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>  <span class="k">if </span>totalmem &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
+</span><span class='line'>  <span class="k">if </span>totalmem &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
+</span><span class='line'>  <span class="k">if </span>cpu &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
+</span><span class='line'>  <span class="k">if </span>cpu &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This states that I get an alert when unicorn&#8217;s total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
+
+<p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
+
+<p>Yes, this is a lot of monitoring. But I feel like even this isn&#8217;t enough. You can&#8217;t watch your stack too carefully, and you can&#8217;t have too many tools in place to help you analyze what&#8217;s going on. Consider this trifecta of tools only a start, but at least it&#8217;s a good one.</p>
+
+<h2>Seamless Deploys</h2>
+
+<p>On an average week I deploy seven to ten times. Of course, this entire process is invisible to our users; the magic that makes this happen is <a href="http://unicorn.bogomips.org/">unicorn</a>. There have been many posts on the wonders of unicorn and how to configure it correctly. I will simply post the part of our <code>unicorn.rb</code> that allows us to do seamless restarting, which you can find in a number of gists essentially unmodified.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">old_pid</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">.</span><span class="n">config</span><span class="o">[</span><span class="ss">:pid</span><span class="o">]</span><span class="si">}</span><span class="s2">.oldbin&quot;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">server</span><span class="o">.</span><span class="n">pid</span> <span class="o">!=</span> <span class="n">old_pid</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="no">Process</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="s2">&quot;QUIT&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">rescue</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ENOENT</span><span class="p">,</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ESRCH</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The command we use to restart unicorn is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>  <span class="k">if</span> <span class="o">[</span> ! -f <span class="s1">&#39;/pids/unicorn.pid&#39;</span> <span class="o">]</span>; <span class="k">then </span><span class="nb">cd </span>current_path <span class="o">&amp;&amp;</span> bundle <span class="nb">exec </span>unicorn_rails -c ./config/unicorn.rb -E production -D; <span class="k">else </span><span class="nb">kill</span> -USR2 <span class="sb">`</span>cat /pids/unicorn.pid<span class="sb">`</span>; <span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it&#8217;s ready to start processing connections.</p>
+
+<h2>Migrations Without Downtime</h2>
+
+<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you&#8217;re changing how existing code interacts with the database &#8211; for new tables, simply migrate before deploying and you&#8217;re done. If only it could be that easy all the time&#8230;</p>
+
+<p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddOrdersCountToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
+</span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">m</span><span class="o">.</span><span class="n">ddl</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE </span><span class="si">#{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> ADD COLUMN orders_count INT(11) default 0&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
+</span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">m</span><span class="o">.</span><span class="n">ddl</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE </span><span class="si">#{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> DROP COLUMN orders_count&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you&#8217;re gonna need to get your hands dirty. Using this method you&#8217;ll be able to become the envy of your friends and peers, for you&#8217;ll be able to execute zero downtime migrations.</p>
+
+<p>And those three points are the main ways I&#8217;ve reduced our downtime. It&#8217;s a difficult road to 100%, but it&#8217;s worth it because you can stare at pretty graphs like this:</p>
+
+<p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
+
+<p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-09T17:52:00-05:00" pubdate data-updated="true">Apr 9<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/06/how-i-scaled-hipstamatic/" title="Previous Post: How I Scaled Hipstamatic">&laquo; How I Scaled Hipstamatic</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/09/achieving-100-percent-uptime/">Achieving 100% Uptime</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/06/how-i-scaled-hipstamatic/">How I Scaled Hipstamatic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">How to Refactor a Large and Old Project</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/">Ruby in the Sandbox: SandRBox</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/">Delegation when Delegate Just Won't Work</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

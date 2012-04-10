@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-04-06T12:44:36-05:00</updated>
+  <updated>2012-04-09T22:42:10-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,108 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Achieving 100% Uptime]]></title>
+    <link href="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/"/>
+    <updated>2012-04-09T17:52:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime</id>
+    <content type="html"><![CDATA[<p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
+
+<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users' perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email -- it's a good indication of how well I did my job in the previous week. And for a couple weeks now I'm happy to report I've been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
+
+<p>How do you achieve numbers like these? Unfortunately getting to 100% isn't an easy road, and I want to state up front that I also don't think it's a realistic goal. Issues you can't control can ruin your uptime number, and you shouldn't feel broken up about that. It happens to everybody. But it's always good setting goals that are difficult to achieve, and this one is no different.</p>
+
+<p>So what's the secret to 100% uptime?</p>
+
+<!-- more -->
+
+
+<h2>Watch It Constantly</h2>
+
+<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they'll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
+
+<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications' behavior and warn you when that behavior becomes dangerous. Here's a sample of our unicorn monit file:</p>
+
+<p><code>bash
+  if totalmem &gt; 70% for 4 cycles then alert
+  if totalmem &gt; 90% for 6 cycles then exec "kill -USR2 `cat /pids/unicorn.pid`"
+  if cpu &gt; 70% for 4 cycles then alert
+  if cpu &gt; 90% for 6 cycles then exec "kill -USR2 `cat /pids/unicorn.pid`"
+</code></p>
+
+<p>This states that I get an alert when unicorn's total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
+
+<p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
+
+<p>Yes, this is a lot of monitoring. But I feel like even this isn't enough. You can't watch your stack too carefully, and you can't have too many tools in place to help you analyze what's going on. Consider this trifecta of tools only a start, but at least it's a good one.</p>
+
+<h2>Seamless Deploys</h2>
+
+<p>On an average week I deploy seven to ten times. Of course, this entire process is invisible to our users; the magic that makes this happen is <a href="http://unicorn.bogomips.org/">unicorn</a>. There have been many posts on the wonders of unicorn and how to configure it correctly. I will simply post the part of our <code>unicorn.rb</code> that allows us to do seamless restarting, which you can find in a number of gists essentially unmodified.</p>
+
+<p>```ruby
+before_fork do |server, worker|
+  old_pid = "#{server.config[:pid]}.oldbin"
+  if File.exists?(old_pid) &amp;&amp; server.pid != old_pid</p>
+
+<pre><code>begin
+  Process.kill("QUIT", File.read(old_pid).to_i)
+rescue Errno::ENOENT, Errno::ESRCH
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>The command we use to restart unicorn is:</p>
+
+<p><code>bash
+  if [ ! -f '/pids/unicorn.pid' ]; then cd current_path &amp;&amp; bundle exec unicorn_rails -c ./config/unicorn.rb -E production -D; else kill -USR2 `cat /pids/unicorn.pid`; fi
+</code></p>
+
+<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it's ready to start processing connections.</p>
+
+<h2>Migrations Without Downtime</h2>
+
+<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you're changing how existing code interacts with the database -- for new tables, simply migrate before deploying and you're done. If only it could be that easy all the time...</p>
+
+<p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
+
+<p>```ruby
+class AddOrdersCountToUsers &lt; ActiveRecord::Migration</p>
+
+<p>  def self.up</p>
+
+<pre><code>Lhm.change_table(:users) do |m|
+  m.ddl("ALTER TABLE #{m.name} ADD COLUMN orders_count INT(11) default 0")
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.down</p>
+
+<pre><code>Lhm.change_table(:users) do |m|
+  m.ddl("ALTER TABLE #{m.name} DROP COLUMN orders_count")
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you're gonna need to get your hands dirty. Using this method you'll be able to become the envy of your friends and peers, for you'll be able to execute zero downtime migrations.</p>
+
+<p>And those three points are the main ways I've reduced our downtime. It's a difficult road to 100%, but it's worth it because you can stare at pretty graphs like this:</p>
+
+<p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
+
+<p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How I Scaled Hipstamatic]]></title>
@@ -320,30 +422,6 @@ end
 ```</p>
 
 <p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I'll save details on how I did that for another post.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sweeping Caches from Resque (or Anywhere Really)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/"/>
-    <updated>2012-03-19T10:29:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really</id>
-    <content type="html"><![CDATA[<p>Phil Karlton, someone I can only presume is a pretty smart programmer, said <a href="http://martinfowler.com/bliki/TwoHardThings.html">"there are only two hard things in Computer Science: cache invalidation and naming things."</a> He's totally right; cache invalidation is one of the biggest headaches when designing highly usable, highly available websites and is something that I'm sure every Rails programmer worth their salt has struggled with. (Naming things is also a pain but not the focus of this post.)</p>
-
-<!-- more -->
-
-
-<p>And unfortunately the reason for the struggle is that Rails' caching tools don't go nearly as far as they should. This is really through no fault of their own; honestly, Rails' caching methods are amazingly robust, and if you don't know what they are, you should read <a href="http://guides.rubyonrails.org/caching_with_rails.html">the guide</a> on them. But good tools can only take you so far. Ultimately, caching is as application-specific as you can get, and when you get to finely-grained control you have to take the reins yourself.</p>
-
-<p>One of the problems I ran into recently was invalidating caches during an association join. I have two models, album and photo, and when one is added to the other I wanted to expire all the caches dealing with both. I already have <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> in my application, but callbacks aren't triggered on association. And putting something in an after_add on the association itself didn't seem like the right answer; why should I put cache expiration stuff in my model when I already have sweepers dedicated to that logic?</p>
-
-<p>I'm not sure I'm in love with the solution I came up with, but it certainly seems to work. All of the association logic happens in Resque jobs, so I added the cache invalidation directly to this jobs by invoking the sweeper manually:</p>
-
-<p><code>ruby
-PhotoSweeper.send(:new).expire_cache_for(photo)
-</code></p>
-
-<p>The <code>send</code> business is necessary because new is a private method for sweepers. Nevertheless this really seems to get the job done; the caches are swept appropriately, and my cache invalidation logic remains safely in the sweepers, where I can add or edit it as much as I want. I suppose if I really wanted to I could put this in an after_add on the model as well. I've resisted that so far but maybe it's the logical place for this kind of expiration logic to happen.</p>
 ]]></content>
   </entry>
   
