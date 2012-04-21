@@ -198,7 +198,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Of course, actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
+<p>Actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -251,7 +251,7 @@
 
 <p>All the sudoing is to ensure no weirdness happens with directories being owned by someone other than Hipstabot, which would prevent git from pulling correctly.</p>
 
-<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I&#8217;m not involved in any step of the process. Creating workflows like this &#8211; that make what people do easier and better &#8211; is one of the greatest joys of being a programmer, and I hope someone else finds something in this post that helps them do something like that.</p>
+<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I&#8217;m not involved in any step of the process. Creating workflows like this &#8211; that make what people do easier and better &#8211; is one of the greatest joys of being a programmer, and I hope someone finds this post helpful in accomplishing something similar.</p>
 </div>
 
 

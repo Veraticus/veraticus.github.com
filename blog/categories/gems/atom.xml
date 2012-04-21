@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gems | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-04-21T12:22:35-05:00</updated>
+  <updated>2012-04-21T12:27:18-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -83,7 +83,7 @@ task :gen_deploy => [:build, :deploy] do
 end
 ```</p>
 
-<p>Of course, actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
+<p>Actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
 
 <p>```coffeescript
 module.exports = (robot) ->
@@ -115,7 +115,7 @@ exec "cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot git pull
 
 <p>All the sudoing is to ensure no weirdness happens with directories being owned by someone other than Hipstabot, which would prevent git from pulling correctly.</p>
 
-<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I'm not involved in any step of the process. Creating workflows like this -- that make what people do easier and better -- is one of the greatest joys of being a programmer, and I hope someone else finds something in this post that helps them do something like that.</p>
+<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I'm not involved in any step of the process. Creating workflows like this -- that make what people do easier and better -- is one of the greatest joys of being a programmer, and I hope someone finds this post helpful in accomplishing something similar.</p>
 ]]></content>
   </entry>
   
