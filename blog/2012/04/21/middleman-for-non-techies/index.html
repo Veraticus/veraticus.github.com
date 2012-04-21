@@ -236,7 +236,7 @@
 </span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error pulling repository:&quot;</span>
 </span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
 </span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Building &amp; building site&quot;</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Building &amp; deploying site&quot;</span>
 </span><span class='line'>        <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
 </span><span class='line'>          <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
 </span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error building site:&quot;</span>

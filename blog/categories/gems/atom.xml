@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gems | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-04-21T12:28:33-05:00</updated>
+  <updated>2012-04-21T12:29:11-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -100,7 +100,7 @@ exec "cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot git pull
     msg.send "Fatal error pulling repository:"
     msg.send chomp stderr
   else
-    msg.send "[#{site}/deploy] Building &amp; building site"
+    msg.send "[#{site}/deploy] Building &amp; deploying site"
     exec "cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot rake gen_deploy", (error, stdout, stderr) -&gt;
       if error != null
         msg.send "Fatal error building site:"
