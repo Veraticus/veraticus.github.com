@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="rapnd is a gem I developed to create a persistent connection through which to pass messages to Apple&#8217;s Push Notification servers. It&#8217;s &hellip;">
+  <meta name="description" content="Dynamoid is (another) gem I developed, but I think it&#8217;s a lot more exciting than rapnd! I started work on it over Christmas but didn&#8217;t &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
+
+<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
+
+<p>But it will soon! The TODO list is particularly exciting:</p>
+
+<ul>
+<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
+<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
+<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
+<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
+<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
+</ul>
+
+
+<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -193,6 +244,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
       </li>
     
@@ -206,10 +261,6 @@
     
       <li class="post">
         <a href="/blog/2012/04/09/achieving-100-percent-uptime/">Achieving 100% Uptime</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/06/how-i-scaled-hipstamatic/">How I Scaled Hipstamatic</a>
       </li>
     
   </ul>
