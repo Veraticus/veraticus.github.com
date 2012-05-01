@@ -128,7 +128,7 @@
 <p>This is just kinda ugly. Happily, there&#8217;s a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p"></span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">{</span> <span class="p">{</span><span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;Josh&#39;</span> <span class="o">|</span> <span class="n">created_at</span> <span class="o">&lt;=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span><span class="p">}</span> <span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -207,6 +207,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/04/28/dynamoid-0-dot-4-0/">'Dynamoid 0.4.0'</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
       </li>
     
@@ -220,10 +224,6 @@
     
       <li class="post">
         <a href="/blog/2012/04/12/reducing-our-aws-costs-by-60-percent/">Reducing Our AWS Costs by 60%</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/09/achieving-100-percent-uptime/">Achieving 100% Uptime</a>
       </li>
     
   </ul>
