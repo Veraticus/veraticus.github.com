@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-04-30T23:18:56-05:00</updated>
+  <updated>2012-05-01T00:42:10-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -14,11 +14,64 @@
 
   
   <entry>
-    <title type="html"><![CDATA['Dynamoid 0.4.0']]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/28/dynamoid-0-dot-4-0/"/>
-    <updated>2012-04-28T00:57:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/28/dynamoid-0-dot-4-0</id>
-    <content type="html"><![CDATA[
+    <title type="html"><![CDATA[Dynamoid 0.4.0]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/"/>
+    <updated>2012-05-01T00:04:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&#8217;t worked &#8211; they&#8217;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&#8217;s DynamoDB.</p>
+
+<p>What do I mean by that?</p>
+
+<!-- more -->
+
+
+<h3>Per-table Performance</h3>
+
+<p>Previously to 0.4.0, Dynamoid&#8217;s table provisioning relied on the defaults that Dynamoid provided (100 read, 20 write) and then manual tuning if you wanted to make any changes from there. And that&#8217;s for every table. This was especially frustrating because you can only scale up to twice the current value (though you can do that as many times as you want)&#8230; but the real downer is you can only scale down 20%, and you can only do that once per day. So obviously if my defaults didn&#8217;t work for you, you had to go through a couple of days of readjustment, and who wants that?</p>
+
+<p>Now you can specify performance options for each table you create, using the new <code>table</code> Dynamoid syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tweet</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Dynamoid</span><span class="o">::</span><span class="no">Document</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">table</span> <span class="nb">name</span><span class="p">:</span> <span class="ss">:twitters</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="ss">:tweet_id</span><span class="p">,</span> <span class="n">read_capacity</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">write_capacity</span><span class="p">:</span> <span class="mi">200</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &#8211; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
+
+<h3>Consistent Querying</h3>
+
+<p>Consistency in enormous databases can be a troublesome question to address. I&#8217;ve read <a href="http://nosql.mypopescu.com/post/18844539755/why-dynamodb-consistent-reads-cost-twice-or-whats">that DynamoDB&#8217;s consistent pricing</a> is too high and I agree with Alex&#8217;s points: but we live in a universe where DynamoDB consistent reading is reality, so we may as well make the best of it.</p>
+
+<p>That said, thanks to <a href="https://github.com/ananthakumaran">Anantha Kumaran</a>, Dynamoid can now take full advantage of DynamoDB&#8217;s consistent read feature. Issuing queries like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">consistent</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="ss">:consistent</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Will retrieve all results, even the most recently-written ones. I gotta say, having people you don&#8217;t even know commit to projects is one of the joys of open source programming, and this feature was written entirely by Anantha (though refactored a bit by yours truly).</p>
+
+<h3>Future Functionality</h3>
+
+<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&#8217;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &#8211; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&#8230; but we already perform indexing, so it wouldn&#8217;t be that bad.</p>
+
+<p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I&#8217;m not sure about this functionality, though, for the same reason that I&#8217;m unsure about adding geolocation.</p>
+
+<p>Geolocation, you say? Yes indeed. Initially I had specced out a <a href="http://en.wikipedia.org/wiki/Geohash">geohash-style</a> geolocation functionality that would allow models to do single-field location and distance finding. The longer I pondered the problem, though, the less compelling this answer seemed to me. Amazing pieces of software have already been developed (like <a href="http://www.elasticsearch.org/">elasticsearch</a>) that are dedicated only to indexing (both text and geolocation). They do it faster and easier than DynamoDB probably ever could, and even Amazon has acknowledged this with the creation of their <a href="http://aws.amazon.com/cloudsearch/">CloudSearch</a> service.</p>
+
+<p>So I&#8217;m not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
+
+<p>Unless I hear compelling arguments otherwise, I&#8217;ll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I&#8217;m working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
 ]]></content>
   </entry>
   
