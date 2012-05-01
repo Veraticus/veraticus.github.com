@@ -25,7 +25,7 @@ Model.where(Model.arel_table[:title].matches('%foo%'))
 This is just kinda ugly. Happily, there's a Gem that addresses this problem called [squeel](https://github.com/ernie/squeel) that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:
 
 ```ruby
-Model.where{{name == 'Josh' | created_at <= DateTime.now}}
+Model.where{ {name == 'Josh' | created_at <= DateTime.now} }
 ```
 
 Much easier to understand! The double-curly braces does kind of suck (this is because it's a hash inside a proc) but it's still a fair but more understandable than the default Arel stuff.
