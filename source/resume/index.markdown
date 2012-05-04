@@ -4,7 +4,7 @@ footer: true
 ---
 ## Experience
 ### Web Director (2010 - Present) @ [Synthetic](http://heysynthetic.com)
-* Managed a team dedicated to developing, deploying, and maintaining a fast and highly available website and API endpoint for Synthetic, makers of [Hipstamatic](http://hipstamaticapp.com). Our site at [community.hipstamatic.com](http://community.hipstamatic.com) sees over a million requests every month.
+* Managed a team dedicated to developing, deploying, and maintaining a fast and highly available website and API endpoint for Synthetic, makers of [Hipstamatic](http://hipstamaticapp.com). Our site at [community.hipstamatic.com](http://community.hipstamatic.com) sees millions of requests every month.
 * Administered a dozen Amazon EC2 servers running Ubuntu, Rails, unicorn, nginx, MySQL, memcached, and redis to provide robust and seamless web and iPhone integration. Dynamically altered the size and amount of EC2 instances to provide better throughput and capacity while staying inside budget constraints.
 * Used test-driven development to create a highly complicated, fully automated photo processing and ordering application that processes thousands of dollars in transactions daily. Integrated this ordering system with iPhone endpoints for plist, XML, and JSON.
 * Created numerous static sites to promote and support new products, while also providing internal team systems support and maintenance for Linux and Mac devices.
