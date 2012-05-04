@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T10:51:28-05:00</updated>
+  <updated>2012-05-04T10:52:14-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -223,7 +223,6 @@ end</p>
 <pre><code>@label = new_label(text, frame)
 @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
 @label.textColor = UIColor.blackColor
-@label
 </code></pre>
 
 <p>  end
@@ -238,7 +237,6 @@ end</p>
 <pre><code>@label = new_label(text, frame)
 @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
 @label.textColor = UIColor.grayColor
-@label
 </code></pre>
 
 <p>  end

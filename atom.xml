@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T10:51:28-05:00</updated>
+  <updated>2012-05-04T10:52:14-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -291,8 +291,6 @@
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
 <span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Label</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
@@ -312,7 +310,6 @@
 </span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
@@ -324,7 +321,6 @@
 </span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
