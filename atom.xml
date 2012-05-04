@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T10:49:50-05:00</updated>
+  <updated>2012-05-04T10:51:28-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -227,8 +227,6 @@
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Label</span>
 </span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
 </span><span class='line'>
@@ -246,7 +244,6 @@
 </span><span class='line'>    <span class="k">super</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
@@ -255,7 +252,6 @@
 </span><span class='line'>    <span class="k">super</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
