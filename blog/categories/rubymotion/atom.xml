@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T10:12:42-05:00</updated>
+  <updated>2012-05-04T10:48:55-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -169,7 +169,6 @@ class Label
 @label.textAlignment = UITextAlignmentCenter
 @label.backgroundColor = UIColor.clearColor
 @label.text = text.to_s
-@label
 </code></pre>
 
 <p>  end
@@ -178,7 +177,7 @@ end</p>
 <p>class BigLabel &lt; Label
   def initialize(text, frame)</p>
 
-<pre><code>@label = super
+<pre><code>super
 @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
 @label.textColor = UIColor.blackColor
 @label
@@ -190,15 +189,14 @@ end</p>
 <p>class LittleLabel &lt; Label
   def initialize(text, frame)</p>
 
-<pre><code>@label = super
+<pre><code>super
 @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
 @label.textColor = UIColor.grayColor
 @label
 </code></pre>
 
 <p>  end
-end
-```</p>
+end```</p>
 
 <p>Or if you don't like classes, give a module a whirl instead:</p>
 
