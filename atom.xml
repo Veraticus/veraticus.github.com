@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T10:48:55-05:00</updated>
+  <updated>2012-05-04T10:49:50-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -229,8 +229,6 @@
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
 <span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Label</span>
 </span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
 </span><span class='line'>
@@ -259,86 +257,11 @@
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
 </span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span><span class="sb">```</span>
-</span><span class='line'>
-</span><span class='line'><span class="sb">Or if you don&#39;t like classes, give a module a whirl instead:</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ruby
-module Label
-  def new_label(text, frame)</p>
-
-<pre><code>label = UILabel.alloc.initWithFrame(frame)
-label.adjustsFontSizeToFitWidth = true
-label.textAlignment = UITextAlignmentCenter
-label.backgroundColor = UIColor.clearColor
-label.text = text.to_s
-label
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>class BigLabel
-  include Label
-  attr_accessor :label</p>
-
-<p>  def initialize(text, frame)</p>
-
-<pre><code>@label = new_label(text, frame)
-@label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
-@label.textColor = UIColor.blackColor
-@label
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>class LittleLabel
-  include Label
-  attr_accessor :label</p>
-
-<p>  def initialize(text, frame)</p>
-
-<pre><code>@label = new_label(text, frame)
-@label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
-@label.textColor = UIColor.grayColor
-@label
-</code></pre>
-
-<p>  end
-end</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Okay</span><span class="p">,</span> <span class="n">the</span> <span class="k">module</span> <span class="nn">example</span> <span class="n">was</span> <span class="n">a</span> <span class="n">little</span> <span class="n">contrived</span><span class="p">,</span> <span class="n">but</span> <span class="n">you</span> <span class="n">get</span> <span class="n">the</span> <span class="n">idea</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">This</span> <span class="n">is</span> <span class="n">the</span> <span class="n">power</span> <span class="n">of</span> <span class="no">Ruby</span> <span class="o">+</span> <span class="no">Objective</span><span class="o">-</span><span class="n">C</span><span class="p">:</span> <span class="n">you</span> <span class="n">get</span> <span class="no">Ruby</span><span class="s1">&#39;s powerful and expressive enumerators, metaprogramming, and reflection, but Objective-C&#39;</span><span class="n">s</span> <span class="no">APIs</span> <span class="ow">and</span> <span class="n">libraries</span><span class="o">.</span> <span class="no">It</span><span class="s1">&#39;s like chocolate and peanut butter, they just go together so well.</span>
-</span><span class='line'>
-</span><span class='line'><span class="s1">Oh, and finally, because it&#39;</span><span class="n">s</span> <span class="no">Ruby</span><span class="p">,</span> <span class="n">it</span> <span class="n">considers</span> <span class="n">testing</span> <span class="n">a</span> <span class="n">first</span> <span class="k">class</span> <span class="n">citizen</span><span class="o">.</span> <span class="no">Every</span> <span class="no">RubyMotion</span> <span class="n">app</span> <span class="n">ships</span> <span class="n">with</span> <span class="n">a</span> <span class="n">spec</span> <span class="n">file</span> <span class="n">that</span> <span class="n">lets</span> <span class="n">you</span> <span class="n">create</span> <span class="n">tests</span> <span class="k">for</span> <span class="n">your</span> <span class="n">iPhone</span> <span class="n">application</span> <span class="k">in</span> <span class="n">a</span> <span class="n">simple</span> <span class="ow">and</span> <span class="n">elegant</span> <span class="n">manner</span> <span class="n">that</span> <span class="n">will</span> <span class="n">look</span> <span class="n">familiar</span> <span class="n">to</span> <span class="n">anyone</span> <span class="n">who</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">ever</span> <span class="n">used</span> <span class="no">RSpec</span><span class="p">:</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ruby
-describe &#8220;Application &#8216;TestApp&#8217;&#8221; do
-  before do</p>
-
-<pre><code>@app = UIApplication.sharedApplication
-</code></pre>
-
-<p>  end</p>
-
-<p>  it &#8220;has one window&#8221; do</p>
-
-<pre><code>@app.windows.size.should == 1
-</code></pre>
-
-<p>  end
-end</p>
+<p>Or if you don&#8217;t like classes, give a module a whirl instead:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -347,32 +270,122 @@ end</p>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">### RubyMotion Makes Debugging Easy</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Label</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
+</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
+</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'>    <span class="n">label</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="no">Whereas</span> <span class="no">Xcode</span> <span class="ow">and</span> <span class="no">Objective</span><span class="o">-</span><span class="n">C</span> <span class="n">debugging</span> <span class="n">is</span> <span class="n">painful</span> <span class="k">in</span> <span class="n">the</span> <span class="n">extreme</span><span class="p">,</span> <span class="k">in</span> <span class="no">RubyMotion</span> <span class="n">it</span> <span class="n">couldn</span><span class="s1">&#39;t be easier. As soon as you compile and run a project, you enter a runtime loop for both debugging it and reflecting in it. From the simulator itself, you can select interface elements and arbitrarily change them from the commandline; by programatically referencing your application delegate, you can make your simulator call code without even pressing a button.</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Label</span>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
 </span><span class='line'>
-</span><span class='line'><span class="s1">I don&#39;</span><span class="n">t</span> <span class="n">think</span> <span class="n">I</span><span class="s1">&#39;m doing this feature justice by describing it. You should really go [check out the video](http://www.rubymotion.com/getting-started/) to see it in action.</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
+</span><span class='line'>    <span class="vi">@label</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="s1">Exceptions also give you sensible error messages, and even backtraces! I put a method in my app that doesn&#39;</span><span class="n">t</span> <span class="n">exist</span><span class="o">.</span> <span class="no">Check</span> <span class="n">out</span> <span class="n">the</span> <span class="no">RubyMotion</span> <span class="n">console</span> <span class="n">output</span><span class="p">:</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Label</span>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
+</span><span class='line'>    <span class="vi">@label</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ruby
-2012-05-04 09:37:52.843 TestApp[54214:f803] *** Terminating app due to uncaught exception &#8216;NoMethodError&#8217;, reason: &#8216;lotsa_labels.rb:51:in <code>block in initWithFrame:': undefined method</code>explode&#8217; for #&lt;LotsaLabels:0x6c385a0> (NoMethodError)</p>
+<p>Okay, the module example was a little contrived, but you get the idea.</p>
 
-<pre><code>from lotsa_labels.rb:42:in `initWithFrame:'
-from test_view_controller.rb:14:in `loadView'
-from test_view_controller.rb:103:in `showLabels:'
-</code></pre>
+<p>This is the power of Ruby + Objective-C: you get Ruby&#8217;s powerful and expressive enumerators, metaprogramming, and reflection, but Objective-C&#8217;s APIs and libraries. It&#8217;s like chocolate and peanut butter, they just go together so well.</p>
+
+<p>Oh, and finally, because it&#8217;s Ruby, it considers testing a first class citizen. Every RubyMotion app ships with a spec file that lets you create tests for your iPhone application in a simple and elegant manner that will look familiar to anyone who&#8217;s ever used RSpec:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">This</span> <span class="n">isn</span><span class="s1">&#39;t all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what&#39;</span><span class="n">s</span> <span class="n">happening</span><span class="o">.</span> <span class="no">As</span> <span class="n">a</span> <span class="n">rule</span> <span class="n">you</span> <span class="n">don</span><span class="s1">&#39;t have to do that nearly as much, though -- or at least I haven&#39;</span><span class="n">t</span> <span class="n">so</span> <span class="n">far</span><span class="o">.</span> <span class="no">Finally</span><span class="p">,</span> <span class="n">there</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">no</span> <span class="n">great</span> <span class="n">way</span> <span class="n">to</span> <span class="n">get</span> <span class="n">logging</span> <span class="n">output</span> <span class="n">from</span> <span class="n">the</span> <span class="n">application</span> <span class="n">other</span> <span class="n">than</span> <span class="n">outputting</span> <span class="n">directly</span> <span class="n">to</span> <span class="n">stdout</span><span class="o">.</span> <span class="no">When</span> <span class="n">I</span> <span class="n">want</span> <span class="n">to</span> <span class="n">log</span> <span class="n">stuff</span><span class="p">,</span> <span class="n">I</span> <span class="k">end</span> <span class="n">up</span> <span class="n">having</span> <span class="n">lines</span> <span class="n">like</span> <span class="n">this</span><span class="p">:</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s2">&quot;Application &#39;TestApp&#39;&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@app</span> <span class="o">=</span> <span class="no">UIApplication</span><span class="o">.</span><span class="n">sharedApplication</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;has one window&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@app</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ruby
-  $stdout.puts &#8220;Received response: #{response}&#8221;
-&#8220;`</p>
+<h3>RubyMotion Makes Debugging Easy</h3>
+
+<p>Whereas Xcode and Objective-C debugging is painful in the extreme, in RubyMotion it couldn&#8217;t be easier. As soon as you compile and run a project, you enter a runtime loop for both debugging it and reflecting in it. From the simulator itself, you can select interface elements and arbitrarily change them from the commandline; by programatically referencing your application delegate, you can make your simulator call code without even pressing a button.</p>
+
+<p>I don&#8217;t think I&#8217;m doing this feature justice by describing it. You should really go <a href="http://www.rubymotion.com/getting-started/">check out the video</a> to see it in action.</p>
+
+<p>Exceptions also give you sensible error messages, and even backtraces! I put a method in my app that doesn&#8217;t exist. Check out the RubyMotion console output:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">2012</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mo">04</span> <span class="mi">09</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span><span class="o">.</span><span class="mi">843</span> <span class="no">TestApp</span><span class="o">[</span><span class="mi">54214</span><span class="ss">:f803</span><span class="o">]</span> <span class="o">***</span> <span class="no">Terminating</span> <span class="n">app</span> <span class="n">due</span> <span class="n">to</span> <span class="n">uncaught</span> <span class="n">exception</span> <span class="s1">&#39;NoMethodError&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="s1">&#39;lotsa_labels.rb:51:in `block in initWithFrame:&#39;</span><span class="p">:</span> <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`explode&#39; for #&lt;LotsaLabels:0x6c385a0&gt; (NoMethodError)</span>
+</span><span class='line'><span class="sb"> from lotsa_labels.rb:42:in `</span><span class="n">initWithFrame</span><span class="ss">:&#39;</span>
+</span><span class='line'><span class="ss"> from test_view_controller.rb:14:in `loadView&#39;</span>
+</span><span class='line'>  <span class="n">from</span> <span class="n">test_view_controller</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">103</span><span class="ss">:in</span> <span class="sb">`showLabels:&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This isn&#8217;t all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what&#8217;s happening. As a rule you don&#8217;t have to do that nearly as much, though &#8211; or at least I haven&#8217;t so far. Finally, there&#8217;s no great way to get logging output from the application other than outputting directly to stdout. When I want to log stuff, I end up having lines like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Received response: </span><span class="si">#{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Which just splats lines directly into the console. Not the most elegant solution, but it works, and that&#8217;s what counts.</p>
 
