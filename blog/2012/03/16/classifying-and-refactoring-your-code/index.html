@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Classifying and Refactoring Your Code - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Classifying and Refactoring Your Code</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I&#8217;d share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I&#8217;ve learned will aid others.</p>
+
+<!-- more -->
+
+
+<h2>Hashes = Objects</h2>
+
+<p>In the earlier iterations of Dynamoid, I was passing around almost everything in hashes, and the calculations I was performing on those hashes was growing more and more complicated as I went, with logic flying around my files like a flock of disorganized birds. When I was putting index logic into criteria chains, I realized that keeping indexes as hashes was an enormous mistake&#8230; and one I wish I had realized earlier.</p>
+
+<p>As I was refactoring my code I realized that I pass hashes around in a number of places. Hashes work well initially to store small amounts of data, but if you&#8217;re using them for that purpose you almost certainly want a real object instead. Just whip that hash apart into a class and you&#8217;ll be surprised how much code will go in there, and how much simpler your application will be for your trouble.</p>
+
+<h2>Refactor Early, Refactor Often</h2>
+
+<p>I tend to be my own harshest critic, but honestly, my first pass at features tends to be messy at best. I make my tests pass (always test first, btw, but that&#8217;s so fundamental I&#8217;m not going to include it as a point) but usually in the most complicated, slowest, unpleasant way possible. Take some time after the tests pass to stare at your code a bit and decide if that&#8217;s really the best way to go about doing things. Usually a change will jump out at you immediately, but don&#8217;t be afraid to just come back to the code later if nothing presents itself.</p>
+
+<p>Tests allow you to do this kind of refactoring free of charge. I always imagine tests as the scaffolding around my code; no matter how tall the code gets, with the scaffolding it&#8217;ll never fall over.</p>
+
+<h2>Document!</h2>
+
+<p>I&#8217;m really bad at this one myself, but I&#8217;m going to be going back through Dynamoid in the very near future and adding documentation to all my methods. Even if your code is a one-liner, people will read documentation over code every time. So document that code! Especially in a collaborative environment, documentation is critical for making your project easy to contribute to.</p>
+
+<p>I&#8217;m sure other things will pop out at me after some thought, but these are the biggest takeaways Dynamoid has given me. Hopefully they&#8217;ll be of use to someone else as well.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/beginner/'>beginner</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/13/fnordmetric-native-rails-metrics/" title="Previous Post: Fnordmetric: Native Rails Metrics">&laquo; Fnordmetric: Native Rails Metrics</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/" title="Next Post: Sweeping Caches from Resque (or Anywhere Really)">Sweeping Caches from Resque (or Anywhere Really) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">Testing Elasticsearch in Rails with Tire</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

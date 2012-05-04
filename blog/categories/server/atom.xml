@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: server | Josh Symonds]]></title>
-  <link href="http://Veraticus.github.com/blog/categories/server/atom.xml" rel="self"/>
-  <link href="http://Veraticus.github.com/"/>
-  <updated>2012-02-27T10:50:14-06:00</updated>
-  <id>http://Veraticus.github.com/</id>
+  <link href="http://joshsymonds.com/blog/categories/server/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2012-05-04T09:50:28-05:00</updated>
+  <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Fixing Redis Timeout and Unexpected Token Errors]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/"/>
     <updated>2012-02-21T12:41:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors</id>
+    <id>http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors</id>
     <content type="html"><![CDATA[<p>Ran into some annoying problems with redis and resque recently that couldn't be immediately solved through judicious Googling, so figured I'd make a quick post about it.</p>
 
 <h2>Resource temporarily unavailable - Timeout reading from the socket</h2>

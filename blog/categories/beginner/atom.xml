@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: beginner | Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/beginner/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2012-05-04T09:50:28-05:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to Programming I]]></title>
+    <link href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/"/>
+    <updated>2012-04-24T12:04:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i</id>
+    <content type="html"><![CDATA[<p>This is a copy of the handout I'll be giving to students for my upcoming class at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>, creatively titled "Introduction to Programming." It borrows structure rather liberally from Chris Pine's <a href="http://pine.fm/LearnToProgram">Learn to Program</a>, but the content is my own.</p>
+
+<!-- more -->
+
+
+<h2>Getting Started with Ruby</h2>
+
+<h3>Welcome to Programming</h3>
+
+<p>Computer programming is the skill that allows you to make computers do what you want. Computers are excellent at menial, repetitive tasks that require little oversight and no creativity: but you can also use them to make amazing websites, games, and applications. Whether it's a simple program to make your day-to-day life easier, or a complicated application that gives you full-time employment, computer programming is invaluable professionally and also rewarding personally. Even better, it's lots of fun!</p>
+
+<p>Many people are intimidated by the idea of learning computer programming -- they're worried you need complicated math or lots of formal training to do well. Nothing could be further from the truth. Computer programming can be learned by anyone and is very much learning a new language. All you need to succeed at computer programming is familiarity with computers, a willingness to learn, and a computer to do the programming on.</p>
+
+<p>You'll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it's also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby -- for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
+
+<p>To learn Ruby, we'll be using an online tool that allows us to quickly and easily try Ruby, called sandRBox. In our first <strong>exercise</strong>, we'll go to sandRBox and type in an example expression.</p>
+
+<ol>
+<li><p>Open up your web browser.</p></li>
+<li><p>In the address bar, type <code>sandrbox.com</code>, and press enter.</p></li>
+<li><p>In the page that opens, type <code>1 + 1</code>, and press enter.</p></li>
+</ol>
+
+
+<p>The output of your command is returned to you immediately. Congratulations, you're a computer programmer!</p>
+
+<h3>Numbers</h3>
+
+<p>Computers are really excellent at math. In this <strong>exercise</strong>, we'll learn how to do math in Ruby.</p>
+
+<ol>
+<li><p>Try <code>2 * 3</code>. <code>*</code> is the multiplication operator.</p></li>
+<li><p>Try <code>9 / 3</code>. <code>/</code> is the division operator.</p></li>
+<li><p>Try <code>2+2</code>. You don't need spaces around the operator; in fact, Ruby doesn't care how many spaces appear in a statement.</p></li>
+<li><p>Try <code>-9 - 3</code>. By putting a minus in front of a number, it becomes negative.</p></li>
+<li><p>Try <code>9 / 0</code>. This is your first ever error message in Ruby. The kind of error appears before the colon (ZeroDivisionError, in this case); some helpful error text appears afterwards. Obviously, this error means you can't divide by zero.</p></li>
+<li><p>Try <code>5 / 2</code>. It might surprise you that the result is 2 instead of 2.5; what's going on here?</p></li>
+</ol>
+
+
+<p>In Ruby, there are two kinds of numbers. There are <strong>integers</strong> -- that is, whole numbers, whether positive or negative -- and there are <strong>floats</strong>. Floats (short for "floating-point numbers") are numbers with any kind of decimal place, even if that decimal place is zero. <code>55.123</code>, <code>-231.4</code>, <code>0.001</code>, and <code>5.0</code> are all floats.</p>
+
+<p>Most of the time, you'll be using integers. This is because most people (and thus most programs) deal in whole things: you don't receive 4.3 emails, or view 1.8 webpages, or listen to 5.24 of a song. Floats are used when you're doing more complicated mathematics, for example graphics or physics.</p>
+
+<p>In this <strong>exercise</strong>, let's do some math on floats.</p>
+
+<ol>
+<li><p>Try <code>2.0 * 3.0</code>. Of course, the answer <code>6.0</code> is the same as the answer for integer math, <code>6</code>.</p></li>
+<li><p>Try <code>5.0 / 2.0</code>. Now that answer looks a lot more like what we'd expect!</p></li>
+<li><p>Try <code>-9.0 + 8.0</code>. Everything you would expect to work in integers works fine on floats.</p></li>
+<li><p>Try <code>(598.0 / (92.0 - 90.0)) * 43.0 + 2.0</code>. Even complicated math is easy with computers!</p></li>
+</ol>
+
+
+<h3>Strings</h3>
+
+<p>Numbers are exciting, but people generally use words a lot more than they do numbers. We refer to letters, words, and sentences in Ruby as <strong>strings</strong>. Strings in Ruby are always encapsulated by either single or double-quotes. In this <strong>exercise</strong>, we'll write a few strings to see how they work.</p>
+
+<ol>
+<li><p>Try <code>'Hello.'</code>. Notice that when Ruby returns a string to us, it's always in double quotes, even if we typed it in single quotes.</p></li>
+<li><p>Try <code>"This is a big fancy string."</code>. Strings can be of any length and can contain any characters: spaces or punctuation included.</p></li>
+<li><p>Try <code>'2 is my favorite number'</code>. Numbers that are in strings are just more words.</p></li>
+<li><p>Try <code>'Well isn't this nice.'</code>. Oh no!</p></li>
+<li><p>Try <code>"She said, "This is foolish!""</code> What's happening?</p></li>
+</ol>
+
+
+<p>You'll get a syntax error for the last two statements above. In both cases, Ruby is expecting a single quote or double quote to end the string, but instead we're using one inside the actual string itself. Ruby is only a computer language. Unlike a human reading either of those sentences, it can't tell which quotation marks are part of the sentence and which are intended to start and end the string; instead it gives us a syntax error.</p>
+
+<p>Strings are fun to type, but they're even more fun to actually use! Let's do an <strong>exercise</strong> that shows us the power of strings.</p>
+
+<ol>
+<li><p>Try <code>'Hello' * 3</code>. Whoops, we probably wanted to put a space in there. Let's try it again with <code>'Hello ' * 3</code>. There, isn't that much better?</p></li>
+<li><p>Try <code>'Message in ' + 'a bottle.'</code> Again, space is important.</p></li>
+<li><p>Try <code>'12' * 3</code>. Is this different than what you'd expect?</p></li>
+<li><p>Try <code>'12' + '12' + '12'</code>. How about that?</p></li>
+</ol>
+
+
+<p>The last two won't actually do math, like you might expect. Remember <code>'12'</code> is a string: <code>12</code> is an integer! So <code>'12'</code> is no different from <code>'sandwiches'</code> or <code>'love'</code> -- it's a word to Ruby, not a number. If you try to use strings as numbers, Ruby won't understand what you mean. Here's a quick <strong>exercise</strong> to illustrate this point.</p>
+
+<ol>
+<li><p>Try <code>'14' + 14</code>.</p></li>
+<li><p>Try <code>3 * 'bacon'</code>.</p></li>
+</ol>
+
+
+<p>If you think about it, both of these errors make sense. What would it mean to add 14 to the word "fourteen?" How do you multiply three by bacon? Remember, computers can only do what you tell them. If you tell them to do things that don't make any sense, they'll return errors. Still, wouldn't it be nice to be able to add <code>'14'</code> to <code>14</code> and get 28, like we'd expect?</p>
+
+<h3>Methods</h3>
+
+<p>What do <code>1</code>, <code>"Hello"</code>, and <code>'My favorite number is 3'</code> all have in common? In Ruby, they're all objects. Ruby objects are very similar to real-world objects. Objects in Ruby can do things, just like objects you interact with every day. A car can drive, a cat can meow, and a person can smile. Objects in Ruby can do things as well; and the things that they can do are called <strong>methods</strong>.</p>
+
+<p>In Ruby, you make an object perform a method with a period, and then the name of the method you want to call. So if you could use Ruby on your car, you would use <code>car.drive</code> to drive it, and if your cat wanted to meow, it would do <code>cat.meow</code>. Let's try a quick <strong>exercise</strong> to see how easy it is to use methods.</p>
+
+<ol>
+<li><p>Try <code>'Hello'.reverse</code>. reverse is a method for strings: it reverses the string for you. How helpful! In this example, 'Hello' is the object. The period instructs Ruby that a method is coming up next, and reverse is the name of the method.</p></li>
+<li><p>Try <code>1.odd?</code>. Ruby tells you <code>true</code>, which obviously means that 1 is an odd number.</p></li>
+<li><p>Try <code>1.zero?</code>. One is not zero, so Ruby returns <code>false</code>.</p></li>
+<li><p>Try <code>'Sentence!'.length</code>. Length is a string method that returns how many characters are in that string.</p></li>
+<li><p>Try <code>'I want to yell this'.upcase</code>. Upcase transforms a string into all capitals.</p></li>
+</ol>
+
+
+<p>There are dozens of possible methods for strings and numbers. Learning Ruby is very much like learning a new language -- while you will learn the grammar and the most commonly-used words in this class, you'll eventually want to grab a dictionary and look up more words yourself. Ruby's documentation contains a simple, complete, easy-to-read list of methods and is free online. There are instructions for finding it at the end of this handout.</p>
+
+<p>Ruby tries to be as sensible as possible. Methods are named to be unsurprising and predictable. For example, if you know about <code>upcase</code>, you can guess that there's a similar method called <code>downcase</code> that does exactly the opposite -- that is, it would convert all letters into lowercase. And you'd be right!</p>
+
+<p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
+
+<ol>
+<li><p>Try <code>1.+1</code>.</p></li>
+<li><p>Try <code>2.-1</code>.</p></li>
+<li><p>Try <code>"One".+"One"</code>.</p></li>
+</ol>
+
+
+<p>The plus method is special. You don't need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them. Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you'll probably see a lot of: the NoMethodError.</p>
+
+<ol>
+<li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
+<li><p>Try <code>"Hello".odd?</code> Drat. Looks like <code>odd?</code> is only for numbers.</p></li>
+<li><p>Try <code>"Hello".zero?</code> So is <code>zero?</code>.</p></li>
+</ol>
+
+
+<p>With the NoMethodError, Ruby is letting you know that a method you tried to call on an object didn't exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby's nice way of telling you that you messed up somewhere.</p>
+
+<h3>Conversion</h3>
+
+<p>Remember earlier how we thought it'd be nice if you could add <code>'14'</code> and <code>14</code> together to get 28? We now have all the ingredients to make this happen. Ruby has methods that convert one kind of object into another kind of object. In this <strong>exercise</strong>, we'll do some exciting conversions!</p>
+
+<ol>
+<li><p>Try <code>1.to_s</code>. to_s means "to string." Notice that the result comes back with quotation marks -- this isn't the number 1 anymore, but instead the word "1"!</p></li>
+<li><p>Try <code>1.to_f</code>. to_f means "to float." The result is the number 1 as a float -- that is, 1.0.</p></li>
+<li><p>Try <code>2.3.to_i</code>. to_i means "to integer." Because integers can only be whole numbers, the trailing .3 is dropped, converting the number to 2.</p></li>
+<li><p>Try <code>'3'.to_i</code>. The word "3" is now the number 3.</p></li>
+<li><p>Try <code>'14'.to_i + 14</code>. Pretty convenient, huh?</p></li>
+<li><p>Try <code>'Hello'.to_i</code>.</p></li>
+</ol>
+
+
+<p>The result of that last one might surprise you. Ruby tries very hard to perform conversions sensibly, but when it can't convert a string, it'll return zero instead. So be careful of what you're trying to convert, or else you might get zero back instead.</p>
+
+<h3>Next Session</h3>
+
+<p>Now that we've covered the basics of Ruby, we'll put what we've learned into action. Using variables, we'll create our first Ruby programs, and finally make the computer work for us!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby in the Sandbox: SandRBox]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/"/>
+    <updated>2012-03-31T11:19:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox</id>
+    <content type="html"><![CDATA[<p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They're always looking for people to teach new classes, so I figured I would teach an introduction to programming class -- an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner's language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it's super fun.</p>
+
+<p>Unfortunately, getting stuff installed on the computers at the cyber center is kind of a headache. Like most chronically underfunded but well-meaning institutions, there are about three levels of bureaucracy between you and getting anything done. And teaching Ruby without the aid of irb would be next to impossible. So what's a guy to do?</p>
+
+<p>Simple: <a href="http://sandrbox.herokuapp.com/">create irb online</a>.</p>
+
+<!-- more -->
+
+
+<p>Now, I hear what you're saying: "Josh, that already exists, and it's called <a href="http://tryruby.org/">tryruby.org</a>!" Unfortunately, I don't like tryruby all that much. I have nothing but respect for their mission, but the service itself is achingly slow and frequently it won't work at all. I don't know what they're running it on (the only code I could find on github was months old), but I figured I could whip up something better.</p>
+
+<p><a href="https://github.com/Veraticus/Sandrbox">Turns out I was right</a>. Sandrbox is a simple project that I'm actually pretty proud of; it makes use of some very edge-case metaprogramming concepts to create as secure an irb environment as I could whip up. In addition to removing dangerous methods on classes (and their metaclasses), it has some really nice syntactical sugar that makes it easy to understand where you are in a block. And when the execution of your secure code is done, it restores all the classes and methods that were missing while removing any new ones that were added, guaranteeing that your environment will be exactly the same as before you started executing code.</p>
+
+<p>This is obviously important if you intend to run that code on a server somewhere -- after all, you can't have someone doing something like:</p>
+
+<p><code>ruby
+`killall -9 thin` # bad
+Kernel.exec("rm -rf /") # worse
+</code></p>
+
+<p>These methods when executed in Sandrbox are instead gently sanitized:</p>
+
+<p><code>ruby
+Sandrbox.perform(['`killall -9 thin`']).output # =&gt; ["NameError: undefined local variable or method ``' for Kernel:Module"]
+Sandrbox.perform(['Kernel.exec("rm -rf /")']).output # =&gt; ["NameError: undefined local variable or method `exec' for Kernel:Module"]
+</code></p>
+
+<p>While still allowing you to retain the power and complexity of Ruby:</p>
+
+<p><code>ruby
+Sandrbox.perform(['class Foo', 'def test', '"Hi!"', 'end', 'end', 'Foo.new.test']).output # =&gt; [nil, '"Hi!"']
+</code></p>
+
+<p>Even cooler is that it automatically does some parsing for you, so that you know when code can be executed or the user is probably not done yet typing:</p>
+
+<p><code>ruby
+response = Sandrbox.perform(['class Foo', 'def test'])
+response.output # []
+response.complete? # false
+response.indent_level # 2
+response.indent_character # 'def'
+</code></p>
+
+<p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course -- it'll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can't destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can't say that it's totally secure yet, but it's a damn sight better than uncensored irb, and after a week or two of work I bet I'll be able to get it locked down pretty damn tight.</p>
+
+<p>But until then, go ahead and try to break it!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Delegation when Delegate Just Won't Work]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work/"/>
+    <updated>2012-03-28T15:37:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work</id>
+    <content type="html"><![CDATA[<p>Rails provides a really awesome ability to avoid <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a> violations -- the <a href="http://apidock.com/rails/Module/delegate">Module#delegate</a> method. The Law of Demeter is an informal programming guideline, intended to make your code more obvious and more reusable: objects should only call methods on other objects, not objects of those objects. To provide a more concrete example:</p>
+
+<p><code>ruby
+  @user.address.street_address # Law of Demeter violation: @user should not reach into address!
+  @user.street_address # So much better...
+</code></p>
+
+<p>Rails, because it's cool, provides a quick and easy pattern for making this work:</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  has_one :address
+  delegate :street_address, :to => :address</p>
+
+<p>end</p>
+
+<p>User.new.street_address # Calls address.street_address
+```</p>
+
+<p>Check out the <a href="http://apidock.com/rails/Module/delegate">delegate documentation</a> for more information on how this functionality works. But <a href="http://stackoverflow.com/questions/9914400/delegate-all-method-calls-on-a-model-to-an-association">a question I came across on Stack Overflow</a> today asked: what do you when you want to delegate all methods? I do <a href="https://github.com/Veraticus/Dynamoid/blob/master/lib/dynamoid/adapter.rb#L122">something similar in Dynamoid</a> and wanted to talk about how to make this pattern sensible and performant.</p>
+
+<!-- more -->
+
+
+<p>Essentially you have two options when delegation fails: the easy but less performant way, and the hard but more performant way. It's always nice to have choices, right?</p>
+
+<h2>The Easy Way</h2>
+
+<p>The easy way uses <code>method_missing</code>. Method_missing, of course, is part of Ruby's extensive metaprogramming suite; it is called when a method that doesn't exist is invoked on an object. So, if you have an object (say our user from above) and you want to delegate all methods that it doesn't have itself to its address, you would simply do:</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  has_one :address</p>
+
+<p>  def method_missing(method, *args)</p>
+
+<pre><code>return address.send(method, *args) if address &amp;&amp; address.respond_to?(method)
+super
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This works and will correctly send every method that can be called on an address to that address. Unfortunately, method_missing is slower than defining a method directly on the object, so every time you're forced to use method_missing you're added fractions of milliseconds to your application. This speed difference is usually imperceptible, but you never know: if you use this method_missing enough it could make a difference.</p>
+
+<h2>The Hard Way</h2>
+
+<p>So we have the hard way. This method is "harder" only in that you need to know the methods you want to delegate beforehand -- in which case, why aren't you using <code>delegate</code>? There is still a use for this method though: if you want to do something like benchmarking or argument recording before you delegate, you can do that easily here.</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  has_one :address</p>
+
+<p>  [:all, :my, :methods, :here].each do |m|</p>
+
+<pre><code>define_method(m) do |*args|
+  address.send(m, *args)
+end 
+</code></pre>
+
+<p>  end</p>
+
+<p>  end
+```</p>
+
+<p>In Dynamoid, we perform benchmarking in this method before sending the response along, allowing you to see how long the actual request took in DynamoDB.</p>
+
+<p>Ultimately, you should use <code>delegate</code> if possible... but if it isn't, then either of these two options should get you started to avoid programming unpleasantness. Don't address your objects through other objects -- your code will look better and be more maintainable if you take some time to isolate methods!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Classifying and Refactoring Your Code]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/"/>
+    <updated>2012-03-16T00:39:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code</id>
+    <content type="html"><![CDATA[<p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I've discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I'd share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I've learned will aid others.</p>
+
+<!-- more -->
+
+
+<h2>Hashes = Objects</h2>
+
+<p>In the earlier iterations of Dynamoid, I was passing around almost everything in hashes, and the calculations I was performing on those hashes was growing more and more complicated as I went, with logic flying around my files like a flock of disorganized birds. When I was putting index logic into criteria chains, I realized that keeping indexes as hashes was an enormous mistake... and one I wish I had realized earlier.</p>
+
+<p>As I was refactoring my code I realized that I pass hashes around in a number of places. Hashes work well initially to store small amounts of data, but if you're using them for that purpose you almost certainly want a real object instead. Just whip that hash apart into a class and you'll be surprised how much code will go in there, and how much simpler your application will be for your trouble.</p>
+
+<h2>Refactor Early, Refactor Often</h2>
+
+<p>I tend to be my own harshest critic, but honestly, my first pass at features tends to be messy at best. I make my tests pass (always test first, btw, but that's so fundamental I'm not going to include it as a point) but usually in the most complicated, slowest, unpleasant way possible. Take some time after the tests pass to stare at your code a bit and decide if that's really the best way to go about doing things. Usually a change will jump out at you immediately, but don't be afraid to just come back to the code later if nothing presents itself.</p>
+
+<p>Tests allow you to do this kind of refactoring free of charge. I always imagine tests as the scaffolding around my code; no matter how tall the code gets, with the scaffolding it'll never fall over.</p>
+
+<h2>Document!</h2>
+
+<p>I'm really bad at this one myself, but I'm going to be going back through Dynamoid in the very near future and adding documentation to all my methods. Even if your code is a one-liner, people will read documentation over code every time. So document that code! Especially in a collaborative environment, documentation is critical for making your project easy to contribute to.</p>
+
+<p>I'm sure other things will pop out at me after some thought, but these are the biggest takeaways Dynamoid has given me. Hopefully they'll be of use to someone else as well.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Don't Mess With Primary Keys]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
+    <updated>2012-03-04T19:11:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
+    <content type="html"><![CDATA[<p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> -- it's like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
+
+<p>Recently I've been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of "how do I mess with the primary key column?"</p>
+
+<p>The answer is always, invariably, the same: don't.</p>
+
+<!-- more -->
+
+
+<p>It might seem sensible to tuck some sort of business logic away into your primary key. Just earlier today, <a href="http://stackoverflow.com/questions/9558715/changing-models-id-type-from-integer-to-decimal-makes-all-entries-try-to-be-0-0/9558832#9558832">I answered a question</a> from a guy who wanted to turn his primary key column into a decimal, and have the part before the decimal be equal to the primary key of another table -- so you'd have 75.001 and 75.002, with 75 being the primary key of the orders table. A cute idea for a new column like order_number or something like that, but just a plain awful idea for a primary key.</p>
+
+<p>Primary keys, when you get right down to it, are database artifacts. They're useful because they allow databases to expose powerful relations for our data: without a way for databases to reference individual rows that are guaranteed to be unique, even the most basic joins would be impossible. And because they're important for databases, the assumption seems to be that they're important for people too.</p>
+
+<p>Part of this is Rails' fault. By exposing URLs with primary keys by default (like users/4), one would automatically assume that the primary key is important data for a user to know (your key is 4 and that's important!). In reality nothing could be further from the truth: the ID for a user is arbitrary database-internal logic and has no business facing users at all. I wish Rails going forward came bundled with the really awesome <a href="https://github.com/norman/friendly_id">FriendlyId</a> Gem that makes some unique database column appear to your internal application logic as the real ID for that table. Then you'd have URLs like users/josh, and that both looks better and obfuscates the primary key.</p>
+
+<p>As a sidenote, this is why UUID-based keys like <a href="http://www.mongodb.org/display/DOCS/Object+IDs">MongoDB's</a> and <a href="https://github.com/Veraticus/Dynamoid">Dynamoid's</a> are rather nifty -- they make really ugly ID-based URLs by default so force you to choose a better column to use as a URL slug.</p>
+
+<p>The problem with all this attention on the primary key is that, invariably, people want to change it. Changing primary keys is awful. It will disassociate data all throughout your database, it messes with table autoincrementing... it will lead to problems right at the moment, and even more down the road you won't even foresee. Or even worse, you'll want to choose something nonstandard as a primary key (or not choose one at all) -- and you'll want to perform a join and be forced to deal with the consequences of your decision. Hint: they won't be pretty.</p>
+
+<p>So do yourself a favor. View the ID column as what it really is: an internal database construction. It should be an auto-incrementing integer, no excuses. If you want any kind of business logic, make a new column for it and manage it separately. You'll be glad you did, I promise.</p>
+]]></content>
+  </entry>
+  
+</feed>

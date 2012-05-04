@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Why I Don't Use Haml - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Why I Don't Use Haml</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-22T13:19:00-05:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It&#8217;s actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it&#8217;s very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
+
+<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
+
+<!-- more -->
+
+
+<h2>Indentation Sucks (Usually)</h2>
+
+<p>Notice the cute little parenthetical up there? That&#8217;s because I really do like CoffeeScript, which is just as whitespace-sensitive as Haml. So what&#8217;s the difference?</p>
+
+<p>CoffeeScript uses indentations to abstract away one of the worst &#8220;features&#8221; of JavaScript: the dreaded <code>})</code> sequences. Closing arguments and functions again and again is not only a headache, it happens so frequently that some sort of error is inevitable. Strict whitespace rules help us avoid errors in closure. Of course, the same argument can be made about HTML and Haml&#8217;s whitespace rules, but there&#8217;s another key difference here.</p>
+
+<p>HTML closures indicate which tag they close. You don&#8217;t have a forest of <code>)})})}</code>, which even if you indent correctly still won&#8217;t tell you which parenthesis or bracket they&#8217;re closing. Instead you have an obvious and syntactic declaration of which tag you&#8217;re ending when you end it. You can argue that the tag closure is unnecessary (Haml seems largely based on this argument), but you&#8217;re trading explicit tag closure for explicit whitespace restrictions&#8230;</p>
+
+<p>And ultimately (and most damningly), whitespace restrictions make the document harder to read and understand than closing tags. If you have an extremely long page with many nested elements, Haml is very difficult to comprehend and consequently much harder to use.</p>
+
+<h2>If It Ain&#8217;t Broke&#8230;</h2>
+
+<p>SASS and CoffeeScript fix serious errors and oversights in the implementations of their specific languages. CoffeeScript ensures correct lexical scoping of variables; SASS allows variable assignment and better selectors than CSS. Both are enormous improvements on the languages they compile into.</p>
+
+<p>Haml doesn&#8217;t add anything at all to HTML. There&#8217;s no special Haml tags that do something HTML couldn&#8217;t do by itself. It gives you a shortcut for the syntax, but that&#8217;s essentially it.</p>
+
+<p>And HTML really isn&#8217;t that bad by itself. The syntax is already fairly clean and clear; it&#8217;s not like we&#8217;re lost in a field of, well, parenthesis and curly brackets. Tables can get a little muddy at times, but good HTML and CSS prevent documents from becoming unreadable &#8211; and Haml doesn&#8217;t offer any interesting or unique tools to improve readability, either.</p>
+
+<h2>Designers Aren&#8217;t Programmers</h2>
+
+<p>But I think this is the biggest reason I don&#8217;t use Haml. Frontend designers use CSS, and the best ones employ JavaScript (and program good JavaScript!) &#8211; but every single one is going to be using HTML to create their pages. Eventually, if your site gets big, you&#8217;re going to want a designer to do some pages for you&#8230; and they&#8217;re not going to be producing Haml, they&#8217;re going to be producing HTML.</p>
+
+<p>Sure, you can change that HTML to Haml. But let me guarantee you, one day they&#8217;ll want to change something, and at that point you do one of three things:</p>
+
+<ol>
+<li>Show them the Haml site, tell them to do it all in Haml, and pay for them learning it.</li>
+<li>Take their design and convert it to Haml yourself and then incorporate it into the page.</li>
+<li>Curse your unjust fate and just switch to erb and copypaste their changes in.</li>
+</ol>
+
+
+<p>As I said at the beginning, I like Haml. But it&#8217;s a markup language for programmers, and ultimately the people who use HTML the most aren&#8217;t programmers. SASS is barely a programming language, more like a set of syntactical shortcuts; and CoffeeScript appeals to those who program in JavaScript already. Haml just doesn&#8217;t appeal to the correct audience to use its core feature set, which is a damn shame, because Haml really is pretty cool.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-22T13:19:00-05:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/" title="Previous Post: Sweeping Caches from Resque (or Anywhere Really)">&laquo; Sweeping Caches from Resque (or Anywhere Really)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/25/elasticsearch-and-percolation-in-rails/" title="Next Post: Elasticsearch and Percolation in Rails">Elasticsearch and Percolation in Rails &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">Testing Elasticsearch in Rails with Tire</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

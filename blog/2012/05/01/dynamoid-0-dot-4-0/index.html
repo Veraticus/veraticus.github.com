@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Dynamoid 0.4.0 - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Dynamoid 0.4.0 is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Dynamoid 0.4.0</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-01T00:04:00-05:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&#8217;t worked &#8211; they&#8217;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&#8217;s DynamoDB.</p>
+
+<p>What do I mean by that?</p>
+
+<!-- more -->
+
+
+<h3>Per-table Performance</h3>
+
+<p>Previously to 0.4.0, Dynamoid&#8217;s table provisioning relied on the defaults that Dynamoid provided (100 read, 20 write) and then manual tuning if you wanted to make any changes from there. And that&#8217;s for every table. This was especially frustrating because you can only scale up to twice the current value (though you can do that as many times as you want)&#8230; but the real downer is you can only scale down 20%, and you can only do that once per day. So obviously if my defaults didn&#8217;t work for you, you had to go through a couple of days of readjustment, and who wants that?</p>
+
+<p>Now you can specify performance options for each table you create, using the new <code>table</code> Dynamoid syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tweet</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Dynamoid</span><span class="o">::</span><span class="no">Document</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">table</span> <span class="nb">name</span><span class="p">:</span> <span class="ss">:twitters</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="ss">:tweet_id</span><span class="p">,</span> <span class="n">read_capacity</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">write_capacity</span><span class="p">:</span> <span class="mi">200</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &#8211; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
+
+<h3>Consistent Querying</h3>
+
+<p>Consistency in enormous databases can be a troublesome question to address. I&#8217;ve read <a href="http://nosql.mypopescu.com/post/18844539755/why-dynamodb-consistent-reads-cost-twice-or-whats">that DynamoDB&#8217;s consistent pricing</a> is too high and I agree with Alex&#8217;s points: but we live in a universe where DynamoDB consistent reading is reality, so we may as well make the best of it.</p>
+
+<p>That said, thanks to <a href="https://github.com/ananthakumaran">Anantha Kumaran</a>, Dynamoid can now take full advantage of DynamoDB&#8217;s consistent read feature. Issuing queries like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">consistent</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="ss">:consistent</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Will retrieve all results, even the most recently-written ones. I gotta say, having people you don&#8217;t even know commit to projects is one of the joys of open source programming, and this feature was written entirely by Anantha (though refactored a bit by yours truly).</p>
+
+<h3>Future Functionality</h3>
+
+<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&#8217;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &#8211; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&#8230; but we already perform indexing, so it wouldn&#8217;t be that bad.</p>
+
+<p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I&#8217;m not sure about this functionality, though, for the same reason that I&#8217;m unsure about adding geolocation.</p>
+
+<p>Geolocation, you say? Yes indeed. Initially I had specced out a <a href="http://en.wikipedia.org/wiki/Geohash">geohash-style</a> geolocation functionality that would allow models to do single-field location and distance finding. The longer I pondered the problem, though, the less compelling this answer seemed to me. Amazing pieces of software have already been developed (like <a href="http://www.elasticsearch.org/">elasticsearch</a>) that are dedicated only to indexing (both text and geolocation). They do it faster and easier than DynamoDB probably ever could, and even Amazon has acknowledged this with the creation of their <a href="http://aws.amazon.com/cloudsearch/">CloudSearch</a> service.</p>
+
+<p>So I&#8217;m not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
+
+<p>Unless I hear compelling arguments otherwise, I&#8217;ll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I&#8217;m working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-01T00:04:00-05:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>, <a class='category' href='/blog/categories/gems/'>gems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/24/introduction-to-programming-i/" title="Previous Post: Introduction to Programming I">&laquo; Introduction to Programming I</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/" title="Next Post: Why RubyMotion Is Better Than Objective-C">Why RubyMotion Is Better Than Objective-C &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">Testing Elasticsearch in Rails with Tire</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

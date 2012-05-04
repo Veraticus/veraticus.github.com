@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Elasticsearch and Percolation in Rails - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Elasticsearch and Percolation in Rails</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-25T11:39:00-05:00" pubdate data-updated="true">Mar 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &#8211; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &#8211; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&#8217;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&#8217;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
+
+<!-- more -->
+
+
+<p>Initially, magic albums were a set of complicated MySQL queries. I think anyone who&#8217;s had experience with indexes in an enormous MySQL database knows where this one is going&#8230; its performance was terrible, and as more people created more albums our RDS instance started really chugging. The worst part was we were spending enormous amounts of time, energy, and money invested in a small part of our application, and it was having a cascade effect through the database ruining the rest of the user experience.</p>
+
+<p>As a stopgap measure, we switched to using Redis lists to hold the association but kept the actual index in MySQL. Recently though we migrated away from MySQL completely to an index storage called <a href="http://www.elasticsearch.org/">elasticsearch</a>. Elasticsearch is awesome because it&#8217;s built on Lucene, is incredibly easy to get going, and is very very powerful. I passed over search solutions like <a href="http://sphinxsearch.com/">Sphinx</a> and <a href="http://www.searchify.com/">Searchify</a> mostly because we aren&#8217;t doing any text searching: all of the queries albums perform on photos are controlled by direct, matched fields. We just needed a great, simple engine for indexing them constantly and pulling results out quickly &#8211; an engine that wouldn&#8217;t bring the rest of our stack down if there was an indexing failure or if we were bombarded with many simultaneous queries.</p>
+
+<p>Elasticsearch has given us all that and more. Using the amazing <a href="https://github.com/karmi/tire">tire</a> gem, it was simple to get our photo model set up correctly:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Tire</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Search</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">mapping</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:id</span>
+</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:lat_lng</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:geo_point</span>
+</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:account_id</span>
+</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:date</span>
+</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:tags</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(The code here is changed slightly from its production form to redact business logic and simplify it.) Of course, the real magic takes place in the albums model. Albums are essentially saved queries, if you think about it: they should search for photos every time they&#8217;re called. So we have a method to generate the query we&#8217;re looking for:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_query</span>
+</span><span class='line'>    <span class="n">query</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:terms</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:account_ids</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:accounts</span><span class="o">]</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:accounts</span><span class="o">].</span><span class="n">blank?</span>
+</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:terms</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:tags</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:tags</span><span class="o">]</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:tags</span><span class="o">].</span><span class="n">blank?</span>
+</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:range</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:created_at</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:from</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:starts_at</span><span class="o">]</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:ends_at</span><span class="o">]</span><span class="p">}}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:starts_at</span><span class="o">].</span><span class="n">blank?</span> <span class="o">&amp;&amp;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:ends_at</span><span class="o">].</span><span class="n">blank?</span>
+</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:geo_distance</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:lat_lng</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">query</span><span class="o">[</span><span class="ss">:lat</span><span class="o">].</span><span class="n">to_f</span><span class="p">,</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lng</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span> <span class="ss">:distance</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">query</span><span class="o">[</span><span class="ss">:range</span><span class="o">]</span><span class="si">}</span><span class="s2">km&quot;</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lat</span><span class="o">].</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lng</span><span class="o">].</span><span class="n">blank?</span>
+</span><span class='line'>    <span class="n">query</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These are all, in elasticsearch parlance, filters rather than queries: queries must look into data fields and perform operations in them, whereas filters just filter on a fields&#8217; value directly&#8230; exactly what I was looking for. <code>terms</code> instructs the filter parser that at least one of the select elements must match. <code>range</code>, as you can see, allows us to pull only photos within a certain date. <code>geo_distance</code> is particularly cool and lets us filter all photos by their geographic location.</p>
+
+<p>Using this couldn&#8217;t be simpler:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_photos</span>
+</span><span class='line'>    <span class="n">finder</span> <span class="o">=</span> <span class="no">Photo</span><span class="o">.</span><span class="n">search</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">query</span> <span class="p">{</span> <span class="n">all</span> <span class="p">}</span>
+</span><span class='line'>      <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
+</span><span class='line'>      <span class="n">sort</span> <span class="p">{</span><span class="n">by</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="s2">&quot;desc&quot;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">finder</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tada! Easy and simple searching inside your models. The performance gain for us was massive; elasticsearch has a ridiculously small memory footprint, but consistently returns responses to us in 50-60 milliseconds. Now that&#8217;s performance!</p>
+
+<p>Many of you might be wondering, though, how we get the reverse of this association. Albums have many (searched) photos; how does a photo know what album it&#8217;s in? This was a stumbling block for the other search solutions I investigated, and I was concerned I would have to bust out the old, gimpy MySQL.</p>
+
+<p>But elasticsearch to the rescue! It employs a very neat feature called <a href="http://www.elasticsearch.org/blog/2011/02/08/percolator.html">the percolator</a>. Percolation allows us to save searches as an index themselves, and then determine what objects match any of the saved searches. So, we save the search an album would conduct along with the album&#8217;s ID into the photo percolator; then we can determine what queries a photo matches when we save it. It&#8217;s really quite ingenuous and was, of course, ridiculously easy to set up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">after_save</span> <span class="ss">:register_query</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">register_query</span>
+</span><span class='line'>    <span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">register_percolator_query</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">q</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">q</span><span class="o">.</span><span class="n">filtered</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">query</span> <span class="p">{</span><span class="n">all</span><span class="p">}</span>
+</span><span class='line'>        <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This uses the same <code>elasticsearch_query</code> method as above (of course, since we want to save the same query into the database). And on the photo model, to use it, we just do:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">percolated_albums</span>
+</span><span class='line'>    <span class="no">Album</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">percolate</span><span class="p">(</span><span class="nb">self</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I&#8217;ll save details on how I did that for another post.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-25T11:39:00-05:00" pubdate data-updated="true">Mar 25<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/22/why-i-dont-use-haml/" title="Previous Post: Why I Don't Use Haml">&laquo; Why I Don't Use Haml</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/" title="Next Post: Delegation when Delegate Just Won't Work">Delegation when Delegate Just Won't Work &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">Testing Elasticsearch in Rails with Tire</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

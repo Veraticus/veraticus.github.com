@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: dynamodb | Josh Symonds]]></title>
-  <link href="http://Veraticus.github.com/blog/categories/dynamodb/atom.xml" rel="self"/>
-  <link href="http://Veraticus.github.com/"/>
-  <updated>2012-02-27T10:50:14-06:00</updated>
-  <id>http://Veraticus.github.com/</id>
+  <link href="http://joshsymonds.com/blog/categories/dynamodb/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2012-05-04T09:50:28-05:00</updated>
+  <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
     
@@ -14,10 +14,32 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Working Around DynamoDB's Limitations]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/"/>
+    <updated>2012-03-01T12:54:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations</id>
+    <content type="html"><![CDATA[<p>I've been giving a lot of thought recently to working around DynamoDB's built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I'll talk a little about overcoming the indexing problem, since I'm still noodling around the transaction issue.</p>
+
+<!-- more -->
+
+
+<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you're modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
+
+<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables... but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
+
+<p>This still doesn't allow really complex indexed operations -- you can find by email and name, for example, but you can't find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes... far more than DynamoDB can easily provide or accomplish alone.</p>
+
+<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB... and I can see the potential for geospatial indexing using DynamoDB's range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB's case.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Dynamoid: An ORM for Amazon's DynamoDB]]></title>
-    <link href="http://Veraticus.github.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/"/>
+    <link href="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/"/>
     <updated>2012-02-22T15:00:00-06:00</updated>
-    <id>http://Veraticus.github.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb</id>
+    <id>http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb</id>
     <content type="html"><![CDATA[<p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it's a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn't really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
 
 <p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> -- it's essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn't really do a whole lot of exciting stuff yet...</p>

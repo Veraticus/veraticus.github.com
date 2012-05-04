@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Middleman for Non-Techies - Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I didn&#8217;t make a post on the 18th because I&#8217;ve been in San Francisco at the Hipstamatic offices, which are totally awesome. The work I&# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Josh Symonds</a></h1>
+  
+    <h2>Ruby on Rails, Servers, and Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Middleman for Non-Techies</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T11:56:00-05:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I didn&#8217;t make a post on the 18th because I&#8217;ve been in San Francisco at <a href="http://www.refinery29.com/hipstamatic-office-pictures">the Hipstamatic offices</a>, which are totally awesome. The work I&#8217;ve been doing here has taken up all of my time, so I didn&#8217;t even get the chance to start writing a post until today. While I was here, I met <a href="http://lukesbeard.com/">Luke Beard</a>, a super talented designer who&#8217;s been touching up a lot of our sites. For example, the excellent <a href="http://disposable.hipstamatic.com/">disposable.hipstamatic.com</a> site is all his handiwork. I wanted to streamline his development process, so that he could deploy his work without feeling blocked by my (usually extremely full) schedule.</p>
+
+<p>We&#8217;re going to use <a href="https://github.com/middleman/middleman">Middleman</a> to achieve this, in addition to some other nice effects: automatic minification of JS and CSS and smushing of images. Middleman is essentially intended for developers, though; it requires commandline tools that can be fairly intimidating to those who&#8217;ve never really bothered popping open the console before. So here&#8217;s some small tweaks I made to our HTML projects to make the whole process easier on Luke and any future designers we hire.</p>
+
+<!-- more -->
+
+
+<h2>Use Middleman 3</h2>
+
+<p>Luke doesn&#8217;t use CoffeeScript or Sass (yet), so the CSS files he creates are just pure CSS. In Middleman 2, .css files aren&#8217;t automatically minified unless they&#8217;re run through a secondary processor, like Scss or Compass. This was extremely frustrating to figure out, but is happily really easy to fix. Use Middleman 3. Middleman 3 is in beta and you can install it like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>gem install middleman --pre
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The Middleman 3 beta has a number of <a href="http://awardwinningfjords.com/2012/01/03/middleman-3-beta.html">other cool features</a> that are worth checking out. In my limited experience using it, there aren&#8217;t any major syntax changes; my Middleman 2 projects converted without a single hitch.</p>
+
+<h2>Circumvent the Console</h2>
+
+<p>Once people figure out git, they universally love it. Most of our non-technical people who&#8217;ve been introduced to it use <a href="http://mac.github.com/">Github for Mac</a>, though, because honestly the console commands are kind of arcane. Half way through an explanation of the syntax of <code>git add</code>, I realized I was really barking up the wrong tree. So I didn&#8217;t want to force people to open a console window, cd into the Middleman directory, and start up a server. As simple as that sounds, I knew it would be an enormous point of failure.</p>
+
+<p>So I made a quick little script I inserted into the Middleman project directories.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/usr/bin/env ruby</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Kernel</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;cd </span><span class="si">#{</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp;&amp; middleman&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>I called it <code>start</code>. Chmod it 0755, and then when the designer checks out the repository, they can just double-click on <code>start</code> to automatically boot up the middleman console.</p>
+
+<h2>Deploy with Hubot</h2>
+
+<p>Of course, we also wanted to make it easy to deploy. My deploy script is stolen entirely from a <a href="https://gist.github.com/1902178">gist</a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SSH_USER</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span>
+</span><span class='line'><span class="no">SSH_HOST</span> <span class="o">=</span> <span class="s1">&#39;www.example.com&#39;</span>
+</span><span class='line'><span class="no">SSH_DIR</span>  <span class="o">=</span> <span class="s1">&#39;/var/www/html/www.example.com&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Build the website from source&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:build</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Building website&quot;</span>
+</span><span class='line'>  <span class="n">status</span> <span class="o">=</span> <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;middleman build --clean&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">status</span> <span class="p">?</span> <span class="s2">&quot;OK&quot;</span> <span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Run the preview server at http://localhost:4567&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:preview</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;middleman server&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Deploy website via rsync&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Deploying website via rsync to </span><span class="si">#{</span><span class="no">SSH_HOST</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="n">status</span> <span class="o">=</span> <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;rsync -avze &#39;ssh&#39; --delete build/ </span><span class="si">#{</span><span class="no">SSH_USER</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="no">SSH_HOST</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="no">SSH_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">status</span> <span class="p">?</span> <span class="s2">&quot;OK&quot;</span> <span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Build and deploy website&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:gen_deploy</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:build</span><span class="p">,</span> <span class="ss">:deploy</span><span class="o">]</span> <span class="k">do</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nv">module.exports = </span><span class="nf">(robot) -&gt;</span>
+</span><span class='line'>  <span class="nx">robot</span><span class="p">.</span><span class="nx">respond</span> <span class="sr">/deploy site (\w*)/i</span><span class="p">,</span> <span class="nf">(msg) -&gt;</span>
+</span><span class='line'>    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;util&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nv">site = </span><span class="nx">msg</span><span class="p">.</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Initiating deploy&quot;</span>
+</span><span class='line'>    <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error pulling repository:&quot;</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Building &amp; deploying site&quot;</span>
+</span><span class='line'>        <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+</span><span class='line'>          <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error building site:&quot;</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
+</span><span class='line'>          <span class="k">else</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Deploy complete&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">chomp = </span><span class="nf">(text) -&gt;</span>
+</span><span class='line'>  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All the sudoing is to ensure no weirdness happens with directories being owned by someone other than Hipstabot, which would prevent git from pulling correctly.</p>
+
+<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I&#8217;m not involved in any step of the process. Creating workflows like this &#8211; that make what people do easier and better &#8211; is one of the greatest joys of being a programmer, and I hope someone finds this post helpful in accomplishing something similar.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T11:56:00-05:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gems/'>gems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/" title="Previous Post: Testing Elasticsearch in Rails with Tire">&laquo; Testing Elasticsearch in Rails with Tire</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/24/introduction-to-programming-i/" title="Next Post: Introduction to Programming I">Introduction to Programming I &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
+  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">Testing Elasticsearch in Rails with Tire</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
