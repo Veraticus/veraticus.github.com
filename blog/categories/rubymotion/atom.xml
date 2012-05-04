@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T09:50:28-05:00</updated>
+  <updated>2012-05-04T10:12:42-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,7 +18,7 @@
     <link href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/"/>
     <updated>2012-05-04T02:14:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c</id>
-    <content type="html"><![CDATA[<p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I've done iOS programming before, but I've always found it unpleasant next to programming in other languages. Don't get me wrong, Objectice-C is better than C or C++, but I don't think that's saying a whole lot.</p>
+    <content type="html"><![CDATA[<p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I've done iOS programming before, but I've always found it unpleasant next to programming in other languages. Don't get me wrong, Objective-C is better than C or C++, but I don't think that's saying a whole lot.</p>
 
 <p>I've spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I've come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
 
