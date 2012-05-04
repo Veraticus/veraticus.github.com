@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-04T10:52:14-05:00</updated>
+  <updated>2012-05-04T10:57:15-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -119,7 +119,7 @@ UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellID
 <p>}
 ```</p>
 
-<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won't like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the SmallTalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
+<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won't like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the Smalltalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
 
 <p>```ruby
 class LotsaLabels &lt; UIView
