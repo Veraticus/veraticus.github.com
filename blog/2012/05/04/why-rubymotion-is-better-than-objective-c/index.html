@@ -102,7 +102,7 @@
   </header>
 
 
-<div class="entry-content"><p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I&#8217;ve done iOS programming before, but I&#8217;ve always found it unpleasant next to programming in other languages. Don&#8217;t get me wrong, Objectice-C is better than C or C++, but I don&#8217;t think that&#8217;s saying a whole lot.</p>
+<div class="entry-content"><p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I&#8217;ve done iOS programming before, but I&#8217;ve always found it unpleasant next to programming in other languages. Don&#8217;t get me wrong, Objective-C is better than C or C++, but I don&#8217;t think that&#8217;s saying a whole lot.</p>
 
 <p>I&#8217;ve spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I&#8217;ve come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
 
@@ -219,7 +219,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won&#8217;t like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the SmallTalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
+<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won&#8217;t like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the Smalltalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -311,9 +311,6 @@
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Label</span>
 </span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
 </span><span class='line'>
@@ -323,25 +320,22 @@
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="k">super</span>
+</span><span class='line'>    <span class="k">super</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="k">super</span>
+</span><span class='line'>    <span class="k">super</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -381,8 +375,6 @@
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
 <span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Label</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
@@ -402,7 +394,6 @@
 </span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
@@ -414,7 +405,6 @@
 </span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>    <span class="vi">@label</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -534,6 +524,8 @@
         <a class="basic-alignment left" href="/blog/2012/05/01/dynamoid-0-dot-4-0/" title="Previous Post: Dynamoid 0.4.0">&laquo; Dynamoid 0.4.0</a>
       
       
+        <a class="basic-alignment right" href="/blog/2012/05/07/rubymotion-tips-and-tricks/" title="Next Post: RubyMotion Tips &amp; Tricks">RubyMotion Tips &amp; Tricks &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -558,6 +550,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/05/07/rubymotion-tips-and-tricks/">RubyMotion Tips &amp; Tricks</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
       </li>
     
@@ -571,10 +567,6 @@
     
       <li class="post">
         <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">Testing Elasticsearch in Rails with Tire</a>
       </li>
     
   </ul>
