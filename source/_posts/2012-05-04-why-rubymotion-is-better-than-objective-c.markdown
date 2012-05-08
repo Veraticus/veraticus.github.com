@@ -5,7 +5,7 @@ date: 2012-05-04 02:14
 comments: true
 categories: [rubymotion]
 ---
-Generally speaking I try to stay away from inflammatory posts. But the release of [RubyMotion](http://www.rubymotion.com/) has been a revelation to me. I've done iOS programming before, but I've always found it unpleasant next to programming in other languages. Don't get me wrong, Objectice-C is better than C or C++, but I don't think that's saying a whole lot.
+Generally speaking I try to stay away from inflammatory posts. But the release of [RubyMotion](http://www.rubymotion.com/) has been a revelation to me. I've done iOS programming before, but I've always found it unpleasant next to programming in other languages. Don't get me wrong, Objective-C is better than C or C++, but I don't think that's saying a whole lot.
 
 I've spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I've come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and [Laurent Sansonetti](https://twitter.com/#!/lrz) must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.
 
@@ -100,7 +100,7 @@ if(cell == nil) {
 }
 ```
 
-I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won't like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the SmallTalk-style decorator syntax that Objective-C employs (with methods like `searchBar.setShowsCancelButton(false, animated:true)`) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:
+I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won't like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the Smalltalk-style decorator syntax that Objective-C employs (with methods like `searchBar.setShowsCancelButton(false, animated:true)`) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:
 
 ```ruby
 class LotsaLabels < UIView
@@ -146,25 +146,22 @@ class Label
     @label.textAlignment = UITextAlignmentCenter
     @label.backgroundColor = UIColor.clearColor
     @label.text = text.to_s
-    @label
   end
 end
 
 class BigLabel < Label
   def initialize(text, frame)
-    @label = super
+    super
     @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
     @label.textColor = UIColor.blackColor
-    @label
   end
 end
 
 class LittleLabel < Label
   def initialize(text, frame)
-    @label = super
+    super
     @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
     @label.textColor = UIColor.grayColor
-    @label
   end
 end
 ```
@@ -191,7 +188,6 @@ class BigLabel
     @label = new_label(text, frame)
     @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
     @label.textColor = UIColor.blackColor
-    @label
   end
 end
 
@@ -203,7 +199,6 @@ class LittleLabel
     @label = new_label(text, frame)
     @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
     @label.textColor = UIColor.grayColor
-    @label
   end
 end
 ```
