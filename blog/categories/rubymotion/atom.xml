@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-07T22:26:53-05:00</updated>
+  <updated>2012-05-10T20:02:55-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,109 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[From the RubyMotion Simulator to Your Friend's iPhone]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/"/>
+    <updated>2012-05-10T19:13:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone</id>
+    <content type="html"><![CDATA[<p>I've been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming</a> series today to give the whole Motion thing a break. But I spent far too long on Tuesday getting an app correctly deploying through Testflight, and it was a really painful process. I took copious notes while making it happen, though, so in the interest of saving someone else's time, here is my step-by-step guide to successfully getting an app from your RubyMotion simulator onto someone else's device.</p>
+
+<!-- more -->
+
+
+<h2>1. Set up your Apple Developer Account</h2>
+
+<p>This step is pretty obvious and if you're actually interested in deploying at all, it's probably already complete. But I promised a step-by-step guide, and this is certainly step number one (or more like number zero). If you want to deploy to other people's devices you need an Apple developer account. Sign up for one at <a href="https://developer.apple.com/membercenter/">Apple's developer member center</a>. Buying the iOS development license will set you back $100/year.</p>
+
+<h2>2. Create a Distribution Certificate</h2>
+
+<p>You'll have to <a href="https://developer.apple.com/ios/manage/certificates/team/index.action">create a development certificate first</a>. Once that's done, set yourself up with a <a href="https://developer.apple.com/ios/manage/certificates/team/distribute.action">distribution certificate</a>.</p>
+
+<p><img src="http://udn.epicgames.com/Three/rsrc/Three/AppleiOSProvisioningPortal/ios_provision_distcert_home.png" alt="Create a Distribution Certificate" /></p>
+
+<p>You need to press that big gray button that says, "Request Certificate." This distribution certificate is what you'll need to sign the eventual app with. If you use the wrong certificate or don't have one at all, most likely your friends will get the dreaded <a href="http://help.testflightapp.com/customer/portal/articles/402799-i-get-an-%22unable-to-download%22-error-when-installing-my-application">"Unable to Download"</a> Testflight error, which is certainly among the least helpful error messages I've ever come across.</p>
+
+<p>When you've saved the distribution certificate, click on it to add it to your keychain. Note its name: it will be something like, "iPhone Distribution Profile: Your Name." Make sure you remember the name of this certificate, as you will need it in step 6.</p>
+
+<h2>3. Add Devices</h2>
+
+<p>This is probably the most straightforward step. Head to the <a href="https://developer.apple.com/ios/manage/devices/index.action">devices section</a>, click the "Add Devices" button and start adding devices by their UDID. If you're doing this with a friend, link them to the first <a href="http://www.innerfence.com/howto/find-iphone-unique-device-identifier-udid">Google result for finding your UDID</a>, which is both helpful and actually available for viewing by your developer-accountless friends, as opposed to Apple's own instructions which are not.</p>
+
+<h2>4. Make an App ID</h2>
+
+<p>Technically this step is optional, but likely you'll eventually want to do push notifications, or in-app purchases, or something like that. So you may as well get an App ID now and save yourself the trouble of doing so later.</p>
+
+<p>Head over to the <a href="https://developer.apple.com/ios/manage/bundles/add.action">Create App ID</a> page and fill in all the necessary values. There's one field of particular importance to us, however: the bundle identifier. The usual style is <code>com.yourCompany.yourApp</code>, so go for something like that. Remember what you wrote here, as you'll need it again in step 6!</p>
+
+<h2>5. Create a Provisioning Profile, Referencing Your Devices</h2>
+
+<p><img src="http://veratic.us/GXmd/provisioning_profile.jpg" alt="Create a Provisioning Profile" /></p>
+
+<p>Head on over to the <a href="https://developer.apple.com/ios/manage/provisioningprofiles/create.action?type=2">distribution provisioning portal</a> and create a distribution provisioning profile. Ensure you select "Ad Hoc" for your distribution method (unless you're releasing to the App Store), and select the devices you entered in step 3. Submit the profile and hit Command-R until it's moved from pending to active. Download it; note the location you saved it to as well as its file name. Another thing we need to know for step 6.</p>
+
+<h2>6. Update your RubyMotion Rakefile</h2>
+
+<p>Stop! Do you have:</p>
+
+<ol>
+<li>The name of your distribution certificate, from step 2?</li>
+<li>The bundle identifier, from step 4?</li>
+<li>The filename and path of the distribution provisioning profile, from step 5?</li>
+</ol>
+
+
+<p>If you answered yes to all those questions, good for you! Proceed onwards. If not, check your reading comprehension skills and go back a few steps.</p>
+
+<p>Now that we have all that important information, we have to put it into our Rakefile.</p>
+
+<p>```ruby
+Motion::Project::App.setup do |app|
+  app.name = 'Test App'</p>
+
+<p>  app.codesign_certificate = 'iPhone Distribution: Your Name Here'
+  # The name of your personal distribution profile, from your keychain.
+  # Distribution profile, NOT development profile!
+  # This was from step 2.</p>
+
+<p>  app.identifier = 'com.yourCompany.yourApp'
+  # The bundle identifier, from step 4.
+  # Exactly as you typed it then.</p>
+
+<p>  app.provisioning_profile = '/path/to/your/distribution_provisioning_profile.mobileprovision'
+  # The filename and full path of your distribution provisioning profile.
+  # The name is probably an enormous hex string.
+  # From step 5.<br/>
+end
+```</p>
+
+<p>Failure to set any of these values correctly will result in either compilation errors or installation errors and will probably be nightmarishly difficult to track down and fix.</p>
+
+<h2>7. Set up Testflight</h2>
+
+<p>Follow the steps for doing this on the very helpful <a href="http://www.rubymotion.com/developer-center/articles/testflight/">RubyMotion article</a>. Afterwards, your Rakefile will look something like this:</p>
+
+<p>```ruby
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project'
+require 'motion-testflight'</p>
+
+<p>Motion::Project::App.setup do |app|
+  app.name = 'Test App'
+  app.codesign_certificate = 'iPhone Distribution: Your Name Here'
+  app.identifier = 'com.yourCompany.yourApp'
+  app.provisioning_profile = '/path/to/your/distribution_provisioning_profile.mobileprovision'
+  app.testflight.sdk = 'vendor/TestFlightSDK'
+  app.testflight.api_token = 'APIToken'
+  app.testflight.team_token = 'TeamToken'
+end
+```</p>
+
+<p>Finally, you should be able to <code>rake testflight notes='What a helpful step-by-step guide!'</code> to actually deploy your app to Testflight, and your users should be able to download and install it no problem.</p>
+
+<p>Writing this all down, it seems rather clear and straightforward. While doing it, unfortunately, it is not. Apple's documentation is really obtuse and the error messages you get during the process are seriously unhelpful. But happily with this guide you should be more or less good to go.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyMotion Tips &amp; Tricks]]></title>
