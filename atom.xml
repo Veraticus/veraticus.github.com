@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-10T20:02:55-05:00</updated>
+  <updated>2012-05-16T18:31:43-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,184 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Quick &amp; Easy User Preferences in Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/"/>
+    <updated>2012-05-16T18:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails</id>
+    <content type="html"><![CDATA[<p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn&#8217;t like what was presently out there. I don&#8217;t really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code&#8217;s for you.</p>
+
+<!-- more -->
+
+
+<h2>Setting Up Preferences</h2>
+
+<p>You need a preference model. It should look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Preference</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:user</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">validates_uniqueness_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:user_id</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:value</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I used this migration to create it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">CreatePreferences</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">change</span>
+</span><span class='line'>    <span class="n">create_table</span> <span class="ss">:preferences</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:value</span>
+</span><span class='line'>      <span class="n">t</span><span class="o">.</span><span class="n">integer</span> <span class="ss">:user_id</span>
+</span><span class='line'>      <span class="n">t</span><span class="o">.</span><span class="n">timestamps</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might note that the value of all preferences, regardless of if they&#8217;re supposed to be Boolean or datetime, is a string. Keep this in mind when you have to query this field later. (That is, if you want to search for all preferences where the value is true, you&#8217;ll want to search for &#8220;1&#8221;. And similarly, doing <code>user.preferences.first.true?</code> will always return <code>true</code>, as any string value is true. So, coder beware!)</p>
+
+<h2>Using Them</h2>
+
+<p>Ideally, this is what we want the user model to look like.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Preferences</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">preference</span> <span class="ss">:chime</span><span class="p">,</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="n">preference</span> <span class="ss">:name</span><span class="p">,</span> <span class="s2">&quot;Josh&quot;</span>
+</span><span class='line'>  <span class="n">preference</span> <span class="ss">:awesome</span><span class="p">,</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Simple but straightforward: we include the module and then define each preference, with its name first and default value second. Ideally we don&#8217;t want to save default values to the database, since that would just make a lot of unnecessary records.</p>
+
+<h2>The Preferences Module</h2>
+
+<p>So let&#8217;s make that happen in that <code>include Preferences</code> line! This is the real heart of the preferences engine.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Preferences</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:preferences</span>
+</span><span class='line'>    <span class="vc">@@preferences</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">preference</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">preferences</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class_variable_get</span><span class="p">(</span><span class="ss">:&#39;@@preferences&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">preferences</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">default</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">class_variable_set</span><span class="p">(</span><span class="ss">:&#39;@@preferences&#39;</span><span class="p">,</span> <span class="n">preferences</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">read_preference</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">p</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">p</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">,</span> <span class="ss">:value</span> <span class="o">=&gt;</span> <span class="vc">@@preferences</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="vc">@@preferences</span><span class="o">.</span><span class="n">has_key?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="kp">nil</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">write_preference</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">p</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">find_or_create_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">p</span><span class="o">.</span><span class="n">update_attribute</span><span class="p">(</span><span class="ss">:value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="vc">@@preferences</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">any?</span><span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="nb">method</span> <span class="o">=~</span> <span class="sr">/</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="sr">/</span><span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">method</span> <span class="o">=~</span> <span class="sr">/=/</span>
+</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">write_preference</span><span class="p">(</span><span class="nb">method</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">read_preference</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="k">super</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is really pretty simple. Upon inclusion it tells the model that it&#8217;s a part of that it <code>has_many :preferences</code> and sets up a class variable hash to store preferences and their defaults. When you declare <code>preference :chime, true</code> it records that in the class variable, and then all instances will respond to either <code>user.chime = true</code> or <code>user.write_preference(:chime, true)</code>. You can read values with <code>user.chime</code> or <code>user.read_preference(:chime)</code>. If a value isn&#8217;t written in the database, it returns the default value instead.</p>
+
+<p>This probably has a level or two of refactoring that could happen around it. Maybe when I have time I will turn it into a more sensible gem, but until then, if anyone needs quick and dirty preferences&#8230; here you go.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[From the RubyMotion Simulator to Your Friend's iPhone]]></title>
@@ -2116,50 +2294,6 @@
 
 
 <p>Much easier to understand! The double-curly braces does kind of suck (this is because it&#8217;s a hash inside a proc) but it&#8217;s still a fair but more understandable than the default Arel stuff.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby 1.9 Awesomeness Part 1: SecureRandom]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/"/>
-    <updated>2012-03-07T19:07:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom</id>
-    <content type="html"><![CDATA[<p>Ruby 1.9 includes a lot of neat stuff, and one of the coolest things is the SecureRandom module.</p>
-
-<p>SecureRandom presents a plethora of useful methods for creating random numbers and strings. You can <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> for a full list, but some of the more personally useful methods I&#8217;ve found are:</p>
-
-<!-- more -->
-
-
-<ul>
-<li><h3>SecureRandom#uuid</h3>
-
-<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a> uses this method to generate random IDs for objects. The resulting random number is supposed to be unique across an enormously large namespace (see the <a href="http://www.ietf.org/rfc/rfc4122.txt">RFC 4122</a> spec for details) and is perfect if you need a universally unique number&#8230; say, for generating IDs in a database.</p></li>
-<li><h3>SecureRandom#urlsafe_base64</h3>
-
-<p>If you&#8217;re creating a URL shortener then this method will end up being incredibly useful. The resulting string only includes characters that are URL safe (as the method name suggests), and while the string is not as unique as one generated by UUID, it will still be fairly random. Guaranteeing uniqueness across an application with a small loop would still probably be a wise idea though:</p></li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">permalink</span> <span class="o">=</span> <span class="kp">loop</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">permalink</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">urlsafe_base64</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">break</span> <span class="n">permalink</span> <span class="k">unless</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_permalink</span><span class="p">(</span><span class="n">permalink</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><h3>SecureRandom#base64</h3>
-
-<p>As above, except that +, /, and = are included in the output. The addition of three more characters significantly improves the randomness of this method, though, so use it when the resulting string doesn&#8217;t need to be in a URL.</p></li>
-</ul>
-
-
-<p>Regardless of what you&#8217;re working on, the new SecureRandom stuff will end up being incredibly useful for you. Go <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> to see some of the other neat stuff it includes!</p>
 ]]></content>
   </entry>
   
