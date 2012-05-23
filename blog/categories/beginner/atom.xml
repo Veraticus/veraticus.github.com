@@ -4,7 +4,7 @@
   <title><![CDATA[Category: beginner | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/beginner/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-16T18:31:43-05:00</updated>
+  <updated>2012-05-23T01:39:24-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/"/>
+    <updated>2012-05-22T23:08:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails</id>
+    <content type="html"><![CDATA[<p>I love Rails' routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we're ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
+
+<!-- more -->
+
+
+<h2>The Problem</h2>
+
+<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they're all really similar -- they all have a name, a description, some assets associated to them... And so they're all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
+
+<p><code>
+  gear/alfred
+  gear/dreampop
+  gear/stache
+</code></p>
+
+<p>And that's kind of tragic. Each type of gear should have its own route, even if they're all in the same model. Something like this would be both more readable and more expressive:</p>
+
+<p><code>
+  lenses/alfred
+  flashes/dreampop
+  films/stache
+</code></p>
+
+<p>Of course, having a controller for each kind of gear would be crazy. Happily, Rails provides some easy routing solutions!</p>
+
+<h2>The Solution</h2>
+
+<p>In our routes.rb, for each kind of resource that we're expecting, we create matching routes:</p>
+
+<p><code>ruby
+[:lenses, :films, :flashes, :cases].each do |gear|
+  match "#{gear}/:id", :controller =&gt; :gear, :action =&gt; :show, :type =&gt; gear, :as =&gt; gear
+end
+</code></p>
+
+<p>Let's dissect this routing statement in two steps. For the first, obviously, we're linking a route like <code>lenses/a1</code> or <code>flashes/cherry</code> to the gear controller. Importantly we're also passing a type: either lenses, films, flashes, or cases, instructing the controller which endpoint we want. In said controller, we should make sure that this passed type and the name of the piece of gear match. Otherwise people would go to <code>lenses/dreampop</code> or <code>flashes/alfred</code> and still see the correct resource despite specifying an invalid type and name combination. That would just be madness!</p>
+
+<p>```ruby
+class GearController &lt; ApplicationController
+  before_filter :find_gear</p>
+
+<p>  private</p>
+
+<p>  def find_gear</p>
+
+<pre><code>@gear = Gear.type(params[:type].to_s.singularize).where(:reference =&gt; params[:id]).first if params[:id]
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Type is a named scope that matches the passed params[:type] to a database column storing the actual type of gear. So this will try to find a lens or flash or what have you with the appropriate reference name. Simple enough.</p>
+
+<p>For the second part of the above route, the <code>:as =&gt; gear</code> part creates named routes like lenses_path and films_url. With that in mind, it's easy for us to dynamically generate links based only on the gear object. This is the helper that allows us to do so:</p>
+
+<p><code>ruby
+def multi_path(obj)
+  self.send("#{obj.type.pluralize.downcase}_path".to_sym, obj.reference)
+end
+</code></p>
+
+<p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don't want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
+
+<p>With only a few lines of code, it's easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don't have to sacrifice DRY to do so. If you have a lot of data that's expressed through only one controller, consider dynamic routing like this. It's easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introduction to Programming I]]></title>
@@ -326,34 +399,6 @@ end
 <p>I'm really bad at this one myself, but I'm going to be going back through Dynamoid in the very near future and adding documentation to all my methods. Even if your code is a one-liner, people will read documentation over code every time. So document that code! Especially in a collaborative environment, documentation is critical for making your project easy to contribute to.</p>
 
 <p>I'm sure other things will pop out at me after some thought, but these are the biggest takeaways Dynamoid has given me. Hopefully they'll be of use to someone else as well.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Don't Mess With Primary Keys]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
-    <updated>2012-03-04T19:11:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
-    <content type="html"><![CDATA[<p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> -- it's like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
-
-<p>Recently I've been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of "how do I mess with the primary key column?"</p>
-
-<p>The answer is always, invariably, the same: don't.</p>
-
-<!-- more -->
-
-
-<p>It might seem sensible to tuck some sort of business logic away into your primary key. Just earlier today, <a href="http://stackoverflow.com/questions/9558715/changing-models-id-type-from-integer-to-decimal-makes-all-entries-try-to-be-0-0/9558832#9558832">I answered a question</a> from a guy who wanted to turn his primary key column into a decimal, and have the part before the decimal be equal to the primary key of another table -- so you'd have 75.001 and 75.002, with 75 being the primary key of the orders table. A cute idea for a new column like order_number or something like that, but just a plain awful idea for a primary key.</p>
-
-<p>Primary keys, when you get right down to it, are database artifacts. They're useful because they allow databases to expose powerful relations for our data: without a way for databases to reference individual rows that are guaranteed to be unique, even the most basic joins would be impossible. And because they're important for databases, the assumption seems to be that they're important for people too.</p>
-
-<p>Part of this is Rails' fault. By exposing URLs with primary keys by default (like users/4), one would automatically assume that the primary key is important data for a user to know (your key is 4 and that's important!). In reality nothing could be further from the truth: the ID for a user is arbitrary database-internal logic and has no business facing users at all. I wish Rails going forward came bundled with the really awesome <a href="https://github.com/norman/friendly_id">FriendlyId</a> Gem that makes some unique database column appear to your internal application logic as the real ID for that table. Then you'd have URLs like users/josh, and that both looks better and obfuscates the primary key.</p>
-
-<p>As a sidenote, this is why UUID-based keys like <a href="http://www.mongodb.org/display/DOCS/Object+IDs">MongoDB's</a> and <a href="https://github.com/Veraticus/Dynamoid">Dynamoid's</a> are rather nifty -- they make really ugly ID-based URLs by default so force you to choose a better column to use as a URL slug.</p>
-
-<p>The problem with all this attention on the primary key is that, invariably, people want to change it. Changing primary keys is awful. It will disassociate data all throughout your database, it messes with table autoincrementing... it will lead to problems right at the moment, and even more down the road you won't even foresee. Or even worse, you'll want to choose something nonstandard as a primary key (or not choose one at all) -- and you'll want to perform a join and be forced to deal with the consequences of your decision. Hint: they won't be pretty.</p>
-
-<p>So do yourself a favor. View the ID column as what it really is: an internal database construction. It should be an auto-incrementing integer, no excuses. If you want any kind of business logic, make a new column for it and manage it separately. You'll be glad you did, I promise.</p>
 ]]></content>
   </entry>
   

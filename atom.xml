@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-16T18:31:43-05:00</updated>
+  <updated>2012-05-23T01:39:24-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,95 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/"/>
+    <updated>2012-05-22T23:08:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails</id>
+    <content type="html"><![CDATA[<p>I love Rails&#8217; routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we&#8217;re ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
+
+<!-- more -->
+
+
+<h2>The Problem</h2>
+
+<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they&#8217;re all really similar &#8211; they all have a name, a description, some assets associated to them&#8230; And so they&#8217;re all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  gear/alfred
+</span><span class='line'>  gear/dreampop
+</span><span class='line'>  gear/stache</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that&#8217;s kind of tragic. Each type of gear should have its own route, even if they&#8217;re all in the same model. Something like this would be both more readable and more expressive:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  lenses/alfred
+</span><span class='line'>  flashes/dreampop
+</span><span class='line'>  films/stache</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, having a controller for each kind of gear would be crazy. Happily, Rails provides some easy routing solutions!</p>
+
+<h2>The Solution</h2>
+
+<p>In our routes.rb, for each kind of resource that we&#8217;re expecting, we create matching routes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="ss">:lenses</span><span class="p">,</span> <span class="ss">:films</span><span class="p">,</span> <span class="ss">:flashes</span><span class="p">,</span> <span class="ss">:cases</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">gear</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">match</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">gear</span><span class="si">}</span><span class="s2">/:id&quot;</span><span class="p">,</span> <span class="ss">:controller</span> <span class="o">=&gt;</span> <span class="ss">:gear</span><span class="p">,</span> <span class="ss">:action</span> <span class="o">=&gt;</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="n">gear</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="n">gear</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&#8217;s dissect this routing statement in two steps. For the first, obviously, we&#8217;re linking a route like <code>lenses/a1</code> or <code>flashes/cherry</code> to the gear controller. Importantly we&#8217;re also passing a type: either lenses, films, flashes, or cases, instructing the controller which endpoint we want. In said controller, we should make sure that this passed type and the name of the piece of gear match. Otherwise people would go to <code>lenses/dreampop</code> or <code>flashes/alfred</code> and still see the correct resource despite specifying an invalid type and name combination. That would just be madness!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">GearController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:find_gear</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">find_gear</span>
+</span><span class='line'>    <span class="vi">@gear</span> <span class="o">=</span> <span class="no">Gear</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:type</span><span class="o">].</span><span class="n">to_s</span><span class="o">.</span><span class="n">singularize</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:reference</span> <span class="o">=&gt;</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">first</span> <span class="k">if</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Type is a named scope that matches the passed params[:type] to a database column storing the actual type of gear. So this will try to find a lens or flash or what have you with the appropriate reference name. Simple enough.</p>
+
+<p>For the second part of the above route, the <code>:as =&gt; gear</code> part creates named routes like lenses_path and films_url. With that in mind, it&#8217;s easy for us to dynamically generate links based only on the gear object. This is the helper that allows us to do so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">multi_path</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">obj</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">pluralize</span><span class="o">.</span><span class="n">downcase</span><span class="si">}</span><span class="s2">_path&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don&#8217;t want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
+
+<p>With only a few lines of code, it&#8217;s easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don&#8217;t have to sacrifice DRY to do so. If you have a lot of data that&#8217;s expressed through only one controller, consider dynamic routing like this. It&#8217;s easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Quick &amp; Easy User Preferences in Rails]]></title>
@@ -2255,45 +2344,6 @@
 <p>I know some people hate the ternary operator, but I kind of like it. Anyway, this causes the worker to start only if there&#8217;s an environment variable set to start it or the Rails environment is development. I set up one instance that receives this variable when it starts, and now I only have one worker. Simplicity itself!</p>
 
 <p>Ultimately, I like Fnordmetric, but I&#8217;m not using it in my production applications. I feel like there&#8217;s a level of abstraction to go before it&#8217;s really usable in big production apps. It&#8217;s much better at tracking arbitrary metrics than NewRelic &#8211; honestly, trying to shoehorn stats into their system feels silly at times &#8211; but setting up the tracking stuff is a pain, involving a lot of unnecessary repetition. I think that a Fnordmetric2.0 would be awesome, though, so I hope the project sees more love and work. And who knows, if I have some time I&#8217;ll try contributing to it myself. That&#8217;s the joy of open source: if you have a good idea, you make it happen.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails 3: Arel, Arel_Table, and Squeel]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/"/>
-    <updated>2012-03-10T10:17:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/10/rails-3-arel,arel_table,-and-squeel</id>
-    <content type="html"><![CDATA[<p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &#8211; ActiveRecord&#8217;s own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
-
-<p>Well, in reality, that isn&#8217;t quite what happened. ActiveRecord&#8217;s Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;sum(model.column) as &#39;model_sum&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="s2">&quot;created_at</span>
-</span><span class='line'><span class="s2">DESC&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;models.created_at &gt; ?&quot;</span><span class="p">,</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or using unpleasant workarounds to address the underlying Arel for the model:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="no">Model</span><span class="o">.</span><span class="n">arel_table</span><span class="o">[</span><span class="ss">:title</span><span class="o">].</span><span class="n">matches</span><span class="p">(</span><span class="s1">&#39;%foo%&#39;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is just kinda ugly. Happily, there&#8217;s a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">{</span> <span class="p">{</span><span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;Josh&#39;</span> <span class="o">|</span> <span class="n">created_at</span> <span class="o">&lt;=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span><span class="p">}</span> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Much easier to understand! The double-curly braces does kind of suck (this is because it&#8217;s a hash inside a proc) but it&#8217;s still a fair but more understandable than the default Arel stuff.</p>
 ]]></content>
   </entry>
   
