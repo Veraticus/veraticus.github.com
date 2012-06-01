@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamoid: An ORM for Amazon's DynamoDB - Josh Symonds</title>
+  <title>Moving On - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Dynamoid is (another) gem I developed, but I think it&#8217;s a lot more exciting than rapnd! I started work on it over Christmas but didn&#8217;t &hellip;">
+  <meta name="description" content="I try to keep to a schedule of a post every three days, and I&#8217;ve definitely not been keeping on top of that &#8211; I haven&#8217;t posted for &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/05/31/moving-on">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,7 +79,7 @@
   
   <header>
     
-      <h1 class="entry-title">Dynamoid: An ORM for Amazon's DynamoDB</h1>
+      <h1 class="entry-title">Moving On</h1>
     
     
       <p class="meta">
@@ -95,29 +95,35 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2012-05-31T16:49:00-05:00" pubdate data-updated="true">May 31<span>st</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
+<div class="entry-content"><p>I try to keep to a schedule of a post every three days, and I&#8217;ve definitely not been keeping on top of that &#8211; I haven&#8217;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&#8217;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
 
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
-
-<p>But it will soon! The TODO list is particularly exciting:</p>
-
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
-</ul>
+<!-- more -->
 
 
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
+<h2>Leaving Hipstamatic</h2>
+
+<p>I&#8217;m leaving my position as web director of Synthetic. I love the company and the product &#8211; I think Hipstamatic has a bright future ahead of it, and it is, in my opinion, easily the best photography app on the market. But my professional growth there had stalled. I was having lots of fun juggling servers, code, customer service, database administration, and, well, everything else technical. Yet I was hungry for more: specifically, opportunities to execute and pursue my own technical vision as a valued partner, not just a valued employee. I wanted to be a decision maker.</p>
+
+<p>Synthetic has always been a company driven by design. You can see it in any of their <a href="http://makebeautiful.hipstamatic.com/">amazing</a> <a href="http://gear.hipstamatic.com">sites</a> (featuring stellar HTML, CSS, and JS by the incomparable <a href="http://lukesbeard.com/">@LukesBeard</a>), and even the design of the Hipstamatic itself, which is retro and cool and usable all at once. But for an ambitious technical guy, direction through design didn&#8217;t leave a lot of opportunity for personal growth. I knew if I wanted to let my voice be heard, I&#8217;d have to go somewhere else to do it.</p>
+
+<h2>Joining GirlsGuideTo</h2>
+
+<p>So what&#8217;s next for Josh Symonds?</p>
+
+<p>I accepted an offer from <a href="http://girlsguideto.com">GirlsGuideTo</a>, an insanely fabulous website for women, to be their CTO and co-founder. Having recently secured a round of seed financing, GirlsGuideTo is positioned really excellently. They have a huge userbase and are poised to really take over their market; their only stumbling block is some really old software and a somewhat dated design. Those are problems I can fix! Within the next month, I intend to give the site a complete graphical and technical overhaul. Under my technical direction (and CEO Brette Borow&#8217;s product management), GirlsGuideTo will grow to be an even more amazing site &#8211; the premiere destination for women to get advice, read awesome articles, and connect with one another.</p>
+
+<p>Within the next couple weeks, I also intend to release my first RubyMotion application to the iTunes App Store. Featuring some excellent designs by the aforementioned <a href="http://lukesbeard.com/">@LukesBeard</a> and some pretty nifty code by yours truly, it represents the culmination of nearly a month spent working during almost all my free time. I think it&#8217;s pretty cool, and I&#8217;ll be spending some time discussing its technical infrastructure and how I used RubyMotion to make it happen.</p>
+
+<p>Finally, what does all this mean for my blog? Well, I&#8217;ll still post awesome code and go on and on about how much I love Ruby. But I&#8217;ll also be talking about the trials and tribulations of a newly-minted CTO at a new startup; finding talent, putting it to use, and in general conquering the world one step at a time. And I promise to get back on my regular, three-day schedule while I do it.</p>
+
+<p>So stick around and keep reading; this blog will only get more interesting!</p>
 </div>
 
 
@@ -140,12 +146,12 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2012-05-31T16:49:00-05:00" pubdate data-updated="true">May 31<span>st</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+    <a class='category' href='/blog/categories/business/'>business</a>
   
 </span>
 
@@ -154,7 +160,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/05/31/moving-on/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/05/31/moving-on/" >Tweet</a>
   
   
   
@@ -163,10 +169,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/21/rapnd-redis-apn-daemon/" title="Previous Post: Rapnd: Redis APN Daemon">&laquo; Rapnd: Redis APN Daemon</a>
+        <a class="basic-alignment left" href="/blog/2012/05/22/dynamic-routing-with-rails/" title="Previous Post: Dynamic Routing with Rails">&laquo; Dynamic Routing with Rails</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/02/23/why-i-like-rubber/" title="Next Post: Why I Like Rubber">Why I Like Rubber &raquo;</a>
       
     </p>
   </footer>
@@ -254,8 +258,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/05/31/moving-on/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/05/31/moving-on/';
         var disqus_script = 'embed.js';
       
     (function () {
