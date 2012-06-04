@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Over the weekend I spent some time getting Fnordmetric set up in an application. On the surface it looks really cool and quite nifty, but I ran into &hellip;">
+  <meta name="description" content="Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/16/classifying-and-refactoring-your-code/">Classifying and Refactoring Your Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I&#8217;d share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I&#8217;ve learned will aid others.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/16/classifying-and-refactoring-your-code/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -492,53 +533,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&#8217;d make a quick post about it.</p>
-
-<h2>Resource temporarily unavailable - Timeout reading from the socket</h2>
-
-<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &#8211; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
-
-<h2>unexpected token at &#8216;OK&#8217; (Resque::Helpers::DecodeException)</h2>
-
-<p>This one took a bit more tracking down to fix.</p>
-
-<p>The newest versions of resque (I&#8217;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &#8211; for example, returning &#8220;OK.&#8221; Upgrading your redis server handily fixes this problem.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -558,6 +555,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">My Love/Hate Relationship with Heroku</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/05/31/moving-on/">Moving On</a>
       </li>
     
@@ -571,10 +572,6 @@
     
       <li class="post">
         <a href="/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/">From the RubyMotion Simulator to Your Friend&#8217;s iPhone</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/07/rubymotion-tips-and-tricks/">RubyMotion Tips &amp; Tricks</a>
       </li>
     
   </ul>
