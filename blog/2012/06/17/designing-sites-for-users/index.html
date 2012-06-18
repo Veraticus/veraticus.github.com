@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Working Around DynamoDB's Limitations - Josh Symonds</title>
+  <title>Designing Sites for Users - Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
+  <meta name="description" content="Designing a new site from scratch can be difficult &#8211; not technically, but from a usability perspective. What color will your users like best? &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,7 +79,7 @@
   
   <header>
     
-      <h1 class="entry-title">Working Around DynamoDB's Limitations</h1>
+      <h1 class="entry-title">Designing Sites for Users</h1>
     
     
       <p class="meta">
@@ -95,27 +95,37 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-06-17T17:52:00-05:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
-
-<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
+<div class="entry-content"><p>Designing a new site from scratch can be difficult &#8211; not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities &#8211; and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
 
 <!-- more -->
 
 
-<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you&#8217;re modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
+<h2>Mailcheck</h2>
 
-<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables&#8230; but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
+<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that&#8217;s pretty impressive.</p>
 
-<p>This still doesn&#8217;t allow really complex indexed operations &#8211; you can find by email and name, for example, but you can&#8217;t find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes&#8230; far more than DynamoDB can easily provide or accomplish alone.</p>
+<p>I also love Mailcheck&#8217;s philosophy. The guiding idea here &#8211; that users will make errors, and software should respond efficiently to correct them &#8211; is true no matter what you&#8217;re making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app&#8217;s flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
 
-<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB&#8230; and I can see the potential for geospatial indexing using DynamoDB&#8217;s range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB&#8217;s case.</p>
+<h2>Chosen</h2>
+
+<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
+
+<p>Chosen expresses another important usability concept &#8211; accessibility. Modern software can be ridiculously complicated, but most users don&#8217;t care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user&#8217;s perspective.</p>
+
+<h2>Bandit</h2>
+
+<p>There&#8217;s been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I&#8217;ve done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I&#8217;ll be using it extensively moving into the future.</p>
+
+<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don&#8217;t need a set number of tests (as per A/B testing) and you aren&#8217;t confined to only two options. Ultimately, you don&#8217;t need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that&#8217;s pretty awesome.</p>
+
+<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you&#8217;re guaranteed to make software that&#8217;s much more usable than it would be otherwise.</p>
 </div>
 
 
@@ -138,12 +148,12 @@
   
 
 
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+<time datetime="2012-06-17T17:52:00-05:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+    <a class='category' href='/blog/categories/rails/'>rails</a>
   
 </span>
 
@@ -152,7 +162,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/" >Tweet</a>
   
   
   
@@ -161,10 +171,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/" title="Previous Post: Setting up Unicorn in a Production Environment">&laquo; Setting up Unicorn in a Production Environment</a>
+        <a class="basic-alignment left" href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/" title="Previous Post: My Love/Hate Relationship with Heroku">&laquo; My Love/Hate Relationship with Heroku</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/03/04/dont-mess-with-primary-keys/" title="Next Post: Don't Mess With Primary Keys">Don't Mess With Primary Keys &raquo;</a>
       
     </p>
   </footer>
@@ -252,8 +260,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/';
         var disqus_script = 'embed.js';
       
     (function () {

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-06-04T12:44:29-05:00</updated>
+  <updated>2012-06-17T19:09:17-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Designing Sites for Users]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
+    <updated>2012-06-17T17:52:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
+    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult -- not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities -- and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
+
+<!-- more -->
+
+
+<h2>Mailcheck</h2>
+
+<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that's pretty impressive.</p>
+
+<p>I also love Mailcheck's philosophy. The guiding idea here -- that users will make errors, and software should respond efficiently to correct them -- is true no matter what you're making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app's flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
+
+<h2>Chosen</h2>
+
+<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
+
+<p>Chosen expresses another important usability concept -- accessibility. Modern software can be ridiculously complicated, but most users don't care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user's perspective.</p>
+
+<h2>Bandit</h2>
+
+<p>There's been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I've done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I'll be using it extensively moving into the future.</p>
+
+<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don't need a set number of tests (as per A/B testing) and you aren't confined to only two options. Ultimately, you don't need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that's pretty awesome.</p>
+
+<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you're guaranteed to make software that's much more usable than it would be otherwise.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
@@ -355,108 +387,6 @@ end
 <p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you're at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary -- getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you're getting hammered, and don't be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
 
 <p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we're saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Achieving 100% Uptime]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/"/>
-    <updated>2012-04-09T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime</id>
-    <content type="html"><![CDATA[<p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
-
-<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users' perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email -- it's a good indication of how well I did my job in the previous week. And for a couple weeks now I'm happy to report I've been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
-
-<p>How do you achieve numbers like these? Unfortunately getting to 100% isn't an easy road, and I want to state up front that I also don't think it's a realistic goal. Issues you can't control can ruin your uptime number, and you shouldn't feel broken up about that. It happens to everybody. But it's always good setting goals that are difficult to achieve, and this one is no different.</p>
-
-<p>So what's the secret to 100% uptime?</p>
-
-<!-- more -->
-
-
-<h2>Watch It Constantly</h2>
-
-<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they'll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
-
-<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications' behavior and warn you when that behavior becomes dangerous. Here's a sample of our unicorn monit file:</p>
-
-<p><code>bash
-  if totalmem &gt; 70% for 4 cycles then alert
-  if totalmem &gt; 90% for 6 cycles then exec "kill -USR2 `cat /pids/unicorn.pid`"
-  if cpu &gt; 70% for 4 cycles then alert
-  if cpu &gt; 90% for 6 cycles then exec "kill -USR2 `cat /pids/unicorn.pid`"
-</code></p>
-
-<p>This states that I get an alert when unicorn's total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
-
-<p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
-
-<p>Yes, this is a lot of monitoring. But I feel like even this isn't enough. You can't watch your stack too carefully, and you can't have too many tools in place to help you analyze what's going on. Consider this trifecta of tools only a start, but at least it's a good one.</p>
-
-<h2>Seamless Deploys</h2>
-
-<p>On an average week I deploy seven to ten times. Of course, this entire process is invisible to our users; the magic that makes this happen is <a href="http://unicorn.bogomips.org/">unicorn</a>. There have been many posts on the wonders of unicorn and how to configure it correctly. I will simply post the part of our <code>unicorn.rb</code> that allows us to do seamless restarting, which you can find in a number of gists essentially unmodified.</p>
-
-<p>```ruby
-before_fork do |server, worker|
-  old_pid = "#{server.config[:pid]}.oldbin"
-  if File.exists?(old_pid) &amp;&amp; server.pid != old_pid</p>
-
-<pre><code>begin
-  Process.kill("QUIT", File.read(old_pid).to_i)
-rescue Errno::ENOENT, Errno::ESRCH
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>The command we use to restart unicorn is:</p>
-
-<p><code>bash
-  if [ ! -f '/pids/unicorn.pid' ]; then cd current_path &amp;&amp; bundle exec unicorn_rails -c ./config/unicorn.rb -E production -D; else kill -USR2 `cat /pids/unicorn.pid`; fi
-</code></p>
-
-<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it's ready to start processing connections.</p>
-
-<h2>Migrations Without Downtime</h2>
-
-<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you're changing how existing code interacts with the database -- for new tables, simply migrate before deploying and you're done. If only it could be that easy all the time...</p>
-
-<p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
-
-<p>```ruby
-class AddOrdersCountToUsers &lt; ActiveRecord::Migration</p>
-
-<p>  def self.up</p>
-
-<pre><code>Lhm.change_table(:users) do |m|
-  m.ddl("ALTER TABLE #{m.name} ADD COLUMN orders_count INT(11) default 0")
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.down</p>
-
-<pre><code>Lhm.change_table(:users) do |m|
-  m.ddl("ALTER TABLE #{m.name} DROP COLUMN orders_count")
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you're gonna need to get your hands dirty. Using this method you'll be able to become the envy of your friends and peers, for you'll be able to execute zero downtime migrations.</p>
-
-<p>And those three points are the main ways I've reduced our downtime. It's a difficult road to 100%, but it's worth it because you can stare at pretty graphs like this:</p>
-
-<p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
-
-<p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
 ]]></content>
   </entry>
   

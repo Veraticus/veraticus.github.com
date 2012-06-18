@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-06-04T12:44:29-05:00</updated>
+  <updated>2012-06-17T19:09:17-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Designing Sites for Users]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
+    <updated>2012-06-17T17:52:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
+    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult &#8211; not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities &#8211; and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
+
+<!-- more -->
+
+
+<h2>Mailcheck</h2>
+
+<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that&#8217;s pretty impressive.</p>
+
+<p>I also love Mailcheck&#8217;s philosophy. The guiding idea here &#8211; that users will make errors, and software should respond efficiently to correct them &#8211; is true no matter what you&#8217;re making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app&#8217;s flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
+
+<h2>Chosen</h2>
+
+<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
+
+<p>Chosen expresses another important usability concept &#8211; accessibility. Modern software can be ridiculously complicated, but most users don&#8217;t care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user&#8217;s perspective.</p>
+
+<h2>Bandit</h2>
+
+<p>There&#8217;s been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I&#8217;ve done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I&#8217;ll be using it extensively moving into the future.</p>
+
+<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don&#8217;t need a set number of tests (as per A/B testing) and you aren&#8217;t confined to only two options. Ultimately, you don&#8217;t need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that&#8217;s pretty awesome.</p>
+
+<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you&#8217;re guaranteed to make software that&#8217;s much more usable than it would be otherwise.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[My Love/Hate Relationship with Heroku]]></title>
@@ -2264,31 +2296,6 @@
 
 
 <p>As I said at the beginning, I like Haml. But it&#8217;s a markup language for programmers, and ultimately the people who use HTML the most aren&#8217;t programmers. SASS is barely a programming language, more like a set of syntactical shortcuts; and CoffeeScript appeals to those who program in JavaScript already. Haml just doesn&#8217;t appeal to the correct audience to use its core feature set, which is a damn shame, because Haml really is pretty cool.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sweeping Caches from Resque (or Anywhere Really)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/"/>
-    <updated>2012-03-19T10:29:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really</id>
-    <content type="html"><![CDATA[<p>Phil Karlton, someone I can only presume is a pretty smart programmer, said <a href="http://martinfowler.com/bliki/TwoHardThings.html">&#8220;there are only two hard things in Computer Science: cache invalidation and naming things.&#8221;</a> He&#8217;s totally right; cache invalidation is one of the biggest headaches when designing highly usable, highly available websites and is something that I&#8217;m sure every Rails programmer worth their salt has struggled with. (Naming things is also a pain but not the focus of this post.)</p>
-
-<!-- more -->
-
-
-<p>And unfortunately the reason for the struggle is that Rails&#8217; caching tools don&#8217;t go nearly as far as they should. This is really through no fault of their own; honestly, Rails&#8217; caching methods are amazingly robust, and if you don&#8217;t know what they are, you should read <a href="http://guides.rubyonrails.org/caching_with_rails.html">the guide</a> on them. But good tools can only take you so far. Ultimately, caching is as application-specific as you can get, and when you get to finely-grained control you have to take the reins yourself.</p>
-
-<p>One of the problems I ran into recently was invalidating caches during an association join. I have two models, album and photo, and when one is added to the other I wanted to expire all the caches dealing with both. I already have <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> in my application, but callbacks aren&#8217;t triggered on association. And putting something in an after_add on the association itself didn&#8217;t seem like the right answer; why should I put cache expiration stuff in my model when I already have sweepers dedicated to that logic?</p>
-
-<p>I&#8217;m not sure I&#8217;m in love with the solution I came up with, but it certainly seems to work. All of the association logic happens in Resque jobs, so I added the cache invalidation directly to this jobs by invoking the sweeper manually:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">PhotoSweeper</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:new</span><span class="p">)</span><span class="o">.</span><span class="n">expire_cache_for</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The <code>send</code> business is necessary because new is a private method for sweepers. Nevertheless this really seems to get the job done; the caches are swept appropriately, and my cache invalidation logic remains safely in the sweepers, where I can add or edit it as much as I want. I suppose if I really wanted to I could put this in an after_add on the model as well. I&#8217;ve resisted that so far but maybe it&#8217;s the logical place for this kind of expiration logic to happen.</p>
 ]]></content>
   </entry>
   
