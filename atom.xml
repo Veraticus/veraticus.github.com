@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-06-20T23:26:16-05:00</updated>
+  <updated>2012-06-28T15:11:22-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,93 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Error Pages]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
+    <updated>2012-06-28T15:09:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
+    <content type="html"><![CDATA[<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
+
+<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
+
+<p>Happily, you can do just this!</p>
+
+<!-- more -->
+
+
+<h2>Rescue_from Madness</h2>
+
+<p>Doing so requires abusing rescue_from a little bit, though. Set up something like this in your application_controller.rb:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_500</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownAction</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will prevent any error from rendering the default Rails error pages. Instead we&#8217;ll set up our own error pages like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
+</span><span class='line'>    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render</span> <span class="n">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="n">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="vi">@status</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And finally, in your view, actually include the request&#8217;s unique identifier:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;&lt;</span><span class="sx">%= @message.split(/\s/).collect(&amp;:capitalize).join(&#39; &#39;) %&gt; &lt;small&gt;&lt;%=</span> <span class="vi">@status</span> <span class="sx">%&gt;&lt;/small&gt;</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
+</span><span class='line'><span class="sr">  &lt;h3&gt;Error Code: &lt;%= request.env[&#39;action_dispatch.request_id&#39;] %&gt; &lt;/</span><span class="n">h3</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Dynamic error pages like what I&#8217;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&#8217;s pretty unlikely that&#8217;ll happen. Just be careful when using this system &#8211; maybe even don&#8217;t render the exception in your usual layout, but render it in an error-specific one &#8211; to reduce the chance of your error pages also erroring, and you&#8217;ll be golden.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How Not to Apply for a Job]]></title>
@@ -2151,161 +2238,6 @@
 <p>In Dynamoid, we perform benchmarking in this method before sending the response along, allowing you to see how long the actual request took in DynamoDB.</p>
 
 <p>Ultimately, you should use <code>delegate</code> if possible&#8230; but if it isn&#8217;t, then either of these two options should get you started to avoid programming unpleasantness. Don&#8217;t address your objects through other objects &#8211; your code will look better and be more maintainable if you take some time to isolate methods!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Elasticsearch and Percolation in Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/"/>
-    <updated>2012-03-25T11:39:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails</id>
-    <content type="html"><![CDATA[<p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &#8211; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &#8211; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&#8217;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&#8217;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
-
-<!-- more -->
-
-
-<p>Initially, magic albums were a set of complicated MySQL queries. I think anyone who&#8217;s had experience with indexes in an enormous MySQL database knows where this one is going&#8230; its performance was terrible, and as more people created more albums our RDS instance started really chugging. The worst part was we were spending enormous amounts of time, energy, and money invested in a small part of our application, and it was having a cascade effect through the database ruining the rest of the user experience.</p>
-
-<p>As a stopgap measure, we switched to using Redis lists to hold the association but kept the actual index in MySQL. Recently though we migrated away from MySQL completely to an index storage called <a href="http://www.elasticsearch.org/">elasticsearch</a>. Elasticsearch is awesome because it&#8217;s built on Lucene, is incredibly easy to get going, and is very very powerful. I passed over search solutions like <a href="http://sphinxsearch.com/">Sphinx</a> and <a href="http://www.searchify.com/">Searchify</a> mostly because we aren&#8217;t doing any text searching: all of the queries albums perform on photos are controlled by direct, matched fields. We just needed a great, simple engine for indexing them constantly and pulling results out quickly &#8211; an engine that wouldn&#8217;t bring the rest of our stack down if there was an indexing failure or if we were bombarded with many simultaneous queries.</p>
-
-<p>Elasticsearch has given us all that and more. Using the amazing <a href="https://github.com/karmi/tire">tire</a> gem, it was simple to get our photo model set up correctly:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Tire</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Search</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">mapping</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:id</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:lat_lng</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:geo_point</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:account_id</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:date</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:tags</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>(The code here is changed slightly from its production form to redact business logic and simplify it.) Of course, the real magic takes place in the albums model. Albums are essentially saved queries, if you think about it: they should search for photos every time they&#8217;re called. So we have a method to generate the query we&#8217;re looking for:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_query</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:terms</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:account_ids</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:accounts</span><span class="o">]</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:accounts</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:terms</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:tags</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:tags</span><span class="o">]</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:tags</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:range</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:created_at</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:from</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:starts_at</span><span class="o">]</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:ends_at</span><span class="o">]</span><span class="p">}}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:starts_at</span><span class="o">].</span><span class="n">blank?</span> <span class="o">&amp;&amp;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:ends_at</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:geo_distance</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:lat_lng</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">query</span><span class="o">[</span><span class="ss">:lat</span><span class="o">].</span><span class="n">to_f</span><span class="p">,</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lng</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span> <span class="ss">:distance</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">query</span><span class="o">[</span><span class="ss">:range</span><span class="o">]</span><span class="si">}</span><span class="s2">km&quot;</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lat</span><span class="o">].</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lng</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>These are all, in elasticsearch parlance, filters rather than queries: queries must look into data fields and perform operations in them, whereas filters just filter on a fields&#8217; value directly&#8230; exactly what I was looking for. <code>terms</code> instructs the filter parser that at least one of the select elements must match. <code>range</code>, as you can see, allows us to pull only photos within a certain date. <code>geo_distance</code> is particularly cool and lets us filter all photos by their geographic location.</p>
-
-<p>Using this couldn&#8217;t be simpler:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_photos</span>
-</span><span class='line'>    <span class="n">finder</span> <span class="o">=</span> <span class="no">Photo</span><span class="o">.</span><span class="n">search</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">query</span> <span class="p">{</span> <span class="n">all</span> <span class="p">}</span>
-</span><span class='line'>      <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
-</span><span class='line'>      <span class="n">sort</span> <span class="p">{</span><span class="n">by</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="s2">&quot;desc&quot;</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">finder</span><span class="o">.</span><span class="n">results</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Tada! Easy and simple searching inside your models. The performance gain for us was massive; elasticsearch has a ridiculously small memory footprint, but consistently returns responses to us in 50-60 milliseconds. Now that&#8217;s performance!</p>
-
-<p>Many of you might be wondering, though, how we get the reverse of this association. Albums have many (searched) photos; how does a photo know what album it&#8217;s in? This was a stumbling block for the other search solutions I investigated, and I was concerned I would have to bust out the old, gimpy MySQL.</p>
-
-<p>But elasticsearch to the rescue! It employs a very neat feature called <a href="http://www.elasticsearch.org/blog/2011/02/08/percolator.html">the percolator</a>. Percolation allows us to save searches as an index themselves, and then determine what objects match any of the saved searches. So, we save the search an album would conduct along with the album&#8217;s ID into the photo percolator; then we can determine what queries a photo matches when we save it. It&#8217;s really quite ingenuous and was, of course, ridiculously easy to set up:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">after_save</span> <span class="ss">:register_query</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">register_query</span>
-</span><span class='line'>    <span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">register_percolator_query</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">q</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">q</span><span class="o">.</span><span class="n">filtered</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">query</span> <span class="p">{</span><span class="n">all</span><span class="p">}</span>
-</span><span class='line'>        <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This uses the same <code>elasticsearch_query</code> method as above (of course, since we want to save the same query into the database). And on the photo model, to use it, we just do:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">percolated_albums</span>
-</span><span class='line'>    <span class="no">Album</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">percolate</span><span class="p">(</span><span class="nb">self</span><span class="p">))</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I&#8217;ll save details on how I did that for another post.</p>
 ]]></content>
   </entry>
   
