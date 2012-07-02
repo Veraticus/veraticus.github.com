@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: redis | Josh Symonds]]></title>
+  <title><![CDATA[Category: redis | Hi, I'm Josh]]></title>
   <link href="http://joshsymonds.com/blog/categories/redis/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-02T11:00:33-05:00</updated>
+  <updated>2012-07-02T11:15:54-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
