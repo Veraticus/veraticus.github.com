@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-02T11:18:52-05:00</updated>
+  <updated>2012-07-02T11:34:57-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -27,7 +27,7 @@
 
 <h2>Redcarpeted</h2>
 
-<p>A lot of fields in GirlsGuideTo are be Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
+<p>A lot of fields in GirlsGuideTo are Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
