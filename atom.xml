@@ -4,7 +4,7 @@
   <title><![CDATA[Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-06-28T15:20:16-05:00</updated>
+  <updated>2012-07-02T11:00:33-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-simple/"/>
+    <updated>2012-07-01T20:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-simple</id>
+    <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated nad really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+
+<!-- more -->
+
+
+<h2>Redcarpeted</h2>
+
+<p>A lot of fields in GirlsGuideTo are be Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Redcarpeted</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">redcarpet</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_markdown&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_html&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>        <span class="no">Redcarpet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="o">.</span><span class="n">to_html</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>ActiveSupport::Concern</code> is the magic that makes concerns so &#8230; magical. Simply by including another module called <code>ClassMethods</code>, <code>ActiveSupport::Concern</code>automatically knows to extend the base class with those methods when it&#8217;s included.</p>
+
+<p>In this case, this allows you to do something like this in your model:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>    <span class="n">redcarpet</span> <span class="ss">:body</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you&#8217;re curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
+
+<p>That&#8217;s just the starts of Rails concerns, though. Next time I&#8217;ll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dynamic Error Pages]]></title>
@@ -2140,104 +2216,6 @@
 <p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course &#8211; it&#8217;ll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can&#8217;t destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can&#8217;t say that it&#8217;s totally secure yet, but it&#8217;s a damn sight better than uncensored irb, and after a week or two of work I bet I&#8217;ll be able to get it locked down pretty damn tight.</p>
 
 <p>But until then, go ahead and try to break it!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Delegation when Delegate Just Won't Work]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work/"/>
-    <updated>2012-03-28T15:37:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work</id>
-    <content type="html"><![CDATA[<p>Rails provides a really awesome ability to avoid <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a> violations &#8211; the <a href="http://apidock.com/rails/Module/delegate">Module#delegate</a> method. The Law of Demeter is an informal programming guideline, intended to make your code more obvious and more reusable: objects should only call methods on other objects, not objects of those objects. To provide a more concrete example:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Law of Demeter violation: @user should not reach into address!</span>
-</span><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># So much better...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Rails, because it&#8217;s cool, provides a quick and easy pattern for making this work:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="ss">:address</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Calls address.street_address</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Check out the <a href="http://apidock.com/rails/Module/delegate">delegate documentation</a> for more information on how this functionality works. But <a href="http://stackoverflow.com/questions/9914400/delegate-all-method-calls-on-a-model-to-an-association">a question I came across on Stack Overflow</a> today asked: what do you when you want to delegate all methods? I do <a href="https://github.com/Veraticus/Dynamoid/blob/master/lib/dynamoid/adapter.rb#L122">something similar in Dynamoid</a> and wanted to talk about how to make this pattern sensible and performant.</p>
-
-<!-- more -->
-
-
-<p>Essentially you have two options when delegation fails: the easy but less performant way, and the hard but more performant way. It&#8217;s always nice to have choices, right?</p>
-
-<h2>The Easy Way</h2>
-
-<p>The easy way uses <code>method_missing</code>. Method_missing, of course, is part of Ruby&#8217;s extensive metaprogramming suite; it is called when a method that doesn&#8217;t exist is invoked on an object. So, if you have an object (say our user from above) and you want to delegate all methods that it doesn&#8217;t have itself to its address, you would simply do:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">address</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="k">if</span> <span class="n">address</span> <span class="o">&amp;&amp;</span> <span class="n">address</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This works and will correctly send every method that can be called on an address to that address. Unfortunately, method_missing is slower than defining a method directly on the object, so every time you&#8217;re forced to use method_missing you&#8217;re added fractions of milliseconds to your application. This speed difference is usually imperceptible, but you never know: if you use this method_missing enough it could make a difference.</p>
-
-<h2>The Hard Way</h2>
-
-<p>So we have the hard way. This method is &#8220;harder&#8221; only in that you need to know the methods you want to delegate beforehand &#8211; in which case, why aren&#8217;t you using <code>delegate</code>? There is still a use for this method though: if you want to do something like benchmarking or argument recording before you delegate, you can do that easily here.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="o">[</span><span class="ss">:all</span><span class="p">,</span> <span class="ss">:my</span><span class="p">,</span> <span class="ss">:methods</span><span class="p">,</span> <span class="ss">:here</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">define_method</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">address</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In Dynamoid, we perform benchmarking in this method before sending the response along, allowing you to see how long the actual request took in DynamoDB.</p>
-
-<p>Ultimately, you should use <code>delegate</code> if possible&#8230; but if it isn&#8217;t, then either of these two options should get you started to avoid programming unpleasantness. Don&#8217;t address your objects through other objects &#8211; your code will look better and be more maintainable if you take some time to isolate methods!</p>
 ]]></content>
   </entry>
   
