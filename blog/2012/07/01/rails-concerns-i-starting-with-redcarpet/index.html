@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Concerns I: Starting with Redcarpet - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns a lot in the new Basecamp, and it&#8217;s easy to see why: separation &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/javascripts/waypoints.js" type="text/javascript"></script>
+<script type="text/javascript">
+$.noConflict();
+jQuery(document).ready(function($) {
+  $('nav').waypoint(function(event, direction) {
+    $(this).toggleClass('sticky', direction === "down");
+  });
+});
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation">
+    <div id='navigation'>
+        <div class="navribbon ribbon-wrapper">
+          <div class="ribbon-front">
+            <ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+
+          </div>
+          <div class="ribbon-edge-topleft"></div>
+          <div class="ribbon-edge-topright"></div>
+          <div class="ribbon-edge-bottomleft"></div>
+          <div class="ribbon-edge-bottomright"></div>
+          <div class="ribbon-back-left"></div>
+          <div class="ribbon-back-right"></div>
+        </div>
+    </div>
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Concerns I: Starting With Redcarpet</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated nad really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+
+<!-- more -->
+
+
+<h2>Redcarpeted</h2>
+
+<p>A lot of fields in GirlsGuideTo are Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Redcarpeted</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">redcarpet</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_markdown&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_html&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>        <span class="no">Redcarpet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="o">.</span><span class="n">to_html</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>ActiveSupport::Concern</code> is the magic that makes concerns so &#8230; magical. Simply by including another module called <code>ClassMethods</code>, <code>ActiveSupport::Concern</code>automatically knows to extend the base class with those methods when it&#8217;s included.</p>
+
+<p>In this case, this allows you to do something like this in your model:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="no">Redcarpeted</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">redcarpet</span> <span class="ss">:body</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you&#8217;re curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
+
+<p>That&#8217;s just the starts of Rails concerns, though. Next time I&#8217;ll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/06/28/dynamic-error-pages/" title="Previous Post: Dynamic Error Pages">&laquo; Dynamic Error Pages</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>I'm CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/17/designing-sites-for-users/">Designing Sites for Users</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">My Love/Hate Relationship with Heroku</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+
+    </div>
+  </footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

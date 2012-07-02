@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>My Love/Hate Relationship with Heroku - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="There&#8217;s been some discussion recently about the relative merits of Heroku. I&#8217;ve managed applications both inside Heroku and outside it, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/javascripts/waypoints.js" type="text/javascript"></script>
+<script type="text/javascript">
+$.noConflict();
+jQuery(document).ready(function($) {
+  $('nav').waypoint(function(event, direction) {
+    $(this).toggleClass('sticky', direction === "down");
+  });
+});
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation">
+    <div id='navigation'>
+        <div class="navribbon ribbon-wrapper">
+          <div class="ribbon-front">
+            <ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+
+          </div>
+          <div class="ribbon-edge-topleft"></div>
+          <div class="ribbon-edge-topright"></div>
+          <div class="ribbon-edge-bottomleft"></div>
+          <div class="ribbon-edge-bottomright"></div>
+          <div class="ribbon-back-left"></div>
+          <div class="ribbon-back-right"></div>
+        </div>
+    </div>
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">My Love/Hate Relationship With Heroku</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-03T22:43:00-05:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>There&#8217;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&#8217;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&#8217;t decide whether or not I like the web&#8217;s premier platform-as-a-service or not. Every now and again I&#8217;ll gnash my teeth in frustration over it, and then other times I&#8217;ll sigh dreamily and think of all the wonderful things Heroku has done for me &#8211; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&#8217;s right for you.</p>
+
+<!-- more -->
+
+
+<h2>Pros</h2>
+
+<h3>Lets Me Sleep At Night</h3>
+
+<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons &#8211; an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
+
+<p>Heroku&#8217;s Postgres instances also do automatic backups and have always been available whenever I&#8217;ve needed them. Heroku doesn&#8217;t pay their infrastructure team enough, in my opinion; I&#8217;ve seriously never had a single outage of any sort on their service, and I have this comforting belief that if something did go horribly awry, I would be in good hands.</p>
+
+<h3>Easy &amp; Fast</h3>
+
+<p>Getting started on Heroku is ridiculously easy. You can have an app deployed there in just a minute or two, all from doing nothing more than adding a git remote and pushing to it. No matter how good your Chef recipes are, it&#8217;ll take you at least fifteen minutes to get a bare EC2 instance provisioned from nothing to accepting HTTP connections. After you do that, of course, clever use of AMIs will get there much quicker&#8230; but still nowhere near as fast as Heroku.</p>
+
+<h3>Extensible</h3>
+
+<p>This is sort of a rider to &#8220;easy &amp; fast,&#8221; but I think it deserves its own bulletpoint. Heroku addons provide managed solutions for nearly every need your application might have. Email sending, Redis instances, elasticsearch searching&#8230; and it&#8217;s really cool of Heroku to essentially provide marketing for these smaller SaaS companies. Additionally all of the addons I&#8217;ve used have worked really well, so there&#8217;s definitely some quality control going on.</p>
+
+<h3>Flexible</h3>
+
+<p>Heroku&#8217;s Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons &#8211; essentially anything at all, as long as you&#8217;re willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
+
+<h2>Cons</h2>
+
+<h3>Expensive</h3>
+
+<p>There&#8217;s really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it&#8217;s not just Heroku &#8211; especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost&#8230; and a big one, at that.</p>
+
+<h3>Deploys Suck</h3>
+
+<p>Deploying to Heroku is easy and fast &#8211; the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There&#8217;s no unicorn-style rolling deployments here. For small applications this is somewhat acceptable &#8211; in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
+
+<h3>Addon Constrained</h3>
+
+<p>If you want to do something really customized or compiled on Heroku &#8211; something that needs the JRE, for example &#8211; you&#8217;re pretty much screwed unless an addon already exists for it. You can&#8217;t compile elasticsearch or Lucene yourself, and if you don&#8217;t like the addons that provide those solutions you&#8217;re essentially out of luck. You&#8217;ll need to spool up your own EC2 instance, add Heroku&#8217;s security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you&#8217;re doing that, why not just manage the entire application yourself as well?</p>
+
+<h2>Conclusions</h2>
+
+<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku&#8217;s platform-as-a-service. They&#8217;re fast to deploy because they don&#8217;t take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive &#8211; and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that&#8217;s just something that Heroku can&#8217;t provide.</p>
+
+<p>So, for a big application, I would stick to doing it by hand. Yes, you&#8217;ll have a few more infrastructure annoyances, but you&#8217;ll need the control.</p>
+
+<p>But! All big appliations started small. There&#8217;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&#8217;s ability to start lean and quick, then don&#8217;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&#8217;s easy and fast. And that&#8217;s the real beauty of Heroku &#8211; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-03T22:43:00-05:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/servers/'>servers</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/31/moving-on/" title="Previous Post: Moving On">&laquo; Moving On</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/06/17/designing-sites-for-users/" title="Next Post: Designing Sites for Users">Designing Sites for Users &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>I'm CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/17/designing-sites-for-users/">Designing Sites for Users</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">My Love/Hate Relationship with Heroku</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+
+    </div>
+  </footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -4,132 +4,176 @@
         <loc>
             http://joshsymonds.com/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/
         </loc>
-        <lastmod>2012-02-21T14:18:20-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/02/21/rapnd-redis-apn-daemon/</loc>
-        <lastmod>2012-02-21T14:21:46-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/</loc>
-        <lastmod>2012-02-22T15:19:08-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/</loc>
-        <lastmod>2012-02-23T13:31:47-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://joshsymonds.com/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/
         </loc>
-        <lastmod>2012-02-27T10:52:55-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/</loc>
-        <lastmod>2012-03-01T12:55:42-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/</loc>
-        <lastmod>2012-03-04T19:58:50-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://joshsymonds.com/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/
         </loc>
-        <lastmod>2012-03-07T19:40:15-06:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/</loc>
-        <lastmod>2012-04-30T23:18:30-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/13/fnordmetric-native-rails-metrics/</loc>
-        <lastmod>2012-03-13T22:18:50-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/</loc>
-        <lastmod>2012-03-16T00:41:21-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/
         </loc>
-        <lastmod>2012-03-19T11:00:56-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/</loc>
-        <lastmod>2012-03-22T13:39:19-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/</loc>
-        <lastmod>2012-03-26T09:18:56-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work/</loc>
-        <lastmod>2012-03-28T16:16:46-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/</loc>
-        <lastmod>2012-04-01T00:50:13-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/</loc>
-        <lastmod>2012-04-03T11:59:48-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/</loc>
-        <lastmod>2012-04-06T12:40:17-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/</loc>
-        <lastmod>2012-04-09T22:40:24-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent/</loc>
-        <lastmod>2012-04-12T15:14:28-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/
         </loc>
-        <lastmod>2012-04-16T00:26:39-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/</loc>
-        <lastmod>2012-04-21T12:29:06-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/</loc>
-        <lastmod>2012-04-25T00:12:59-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/</loc>
-        <lastmod>2012-05-01T00:42:05-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/
         </loc>
-        <lastmod>2012-05-04T10:57:04-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/05/07/rubymotion-tips-and-tricks/</loc>
-        <lastmod>2012-05-07T22:26:08-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/
+        </loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/
+        </loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/</loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/05/31/moving-on/</loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/
+        </loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/</loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/06/20/how-not-to-apply-for-a-job/</loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/</loc>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/
+        </loc>
+        <lastmod>2012-07-02T16:46:36-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/404.html</loc>
-        <lastmod>2012-03-19T11:20:37-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2012-05-07T22:26:08-05:00</lastmod>
+        <lastmod>2012-07-02T16:46:36-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2012-05-07T22:26:08-05:00</lastmod>
+        <lastmod>2012-07-02T16:46:36-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>
-        <lastmod>2012-05-04T09:48:57-05:00</lastmod>
+        <lastmod>2012-07-02T16:36:47-05:00</lastmod>
     </url>
 </urlset>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Middleman for Non-Techies - Josh Symonds</title>
+  <title>Middleman for Non-Techies - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -18,16 +18,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/javascripts/waypoints.js" type="text/javascript"></script>
+<script type="text/javascript">
+$.noConflict();
+jQuery(document).ready(function($) {
+  $('nav').waypoint(function(event, direction) {
+    $(this).toggleClass('sticky', direction === "down");
+  });
+});
+</script>
   
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -46,14 +57,21 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Josh Symonds</a></h1>
-  
-    <h2>Ruby on Rails, Servers, and Coding</h2>
-  
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
 </hgroup>
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <nav role="navigation">
+    <div id='navigation'>
+        <div class="navribbon ribbon-wrapper">
+          <div class="ribbon-front">
+            <ul class="subscription" data-subscription="rss">
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
@@ -66,12 +84,22 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
+  <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
   <li><a href="/resume/">Resume</a></li>
 </ul>
 
-</nav>
+
+          </div>
+          <div class="ribbon-edge-topleft"></div>
+          <div class="ribbon-edge-topright"></div>
+          <div class="ribbon-edge-bottomleft"></div>
+          <div class="ribbon-edge-bottomright"></div>
+          <div class="ribbon-back-left"></div>
+          <div class="ribbon-back-right"></div>
+        </div>
+    </div>
+  </nav>
   <div id="main">
     <div id="content">
       <div>
@@ -225,27 +253,27 @@
 <span class='line-number'>23</span>
 </pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nv">module.exports = </span><span class="nf">(robot) -&gt;</span>
 </span><span class='line'>  <span class="nx">robot</span><span class="p">.</span><span class="nx">respond</span> <span class="sr">/deploy site (\w*)/i</span><span class="p">,</span> <span class="nf">(msg) -&gt;</span>
-</span><span class='line'>    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;util&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
+</span><span class='line'>    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;util&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nv">site = </span><span class="nx">msg</span><span class="p">.</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Initiating deploy&quot;</span>
-</span><span class='line'>    <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+</span><span class='line'>    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Initiating deploy&quot;</span>
+</span><span class='line'>    <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
 </span><span class='line'>      <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error pulling repository:&quot;</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error pulling repository:&quot;</span>
 </span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
 </span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Building &amp; deploying site&quot;</span>
-</span><span class='line'>        <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Building &amp; deploying site&quot;</span>
+</span><span class='line'>        <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
 </span><span class='line'>          <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error building site:&quot;</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error building site:&quot;</span>
 </span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
 </span><span class='line'>          <span class="k">else</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Deploy complete&quot;</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Deploy complete&quot;</span>
 </span><span class='line'>
 </span><span class='line'><span class="nv">chomp = </span><span class="nf">(text) -&gt;</span>
-</span><span class='line'>  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -318,31 +346,30 @@
   
     <section>
   <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
-  <p>I make excellent code for <a href="http://heysynthetic.com">Synthetic</a>. You might know us as the creators of <a href="http://hipstamaticapp.com">Hipstamatic</a>. I write Ruby on Rails, maintain servers, and generally keep things awesome.</p>
+  <p>I'm CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/05/07/rubymotion-tips-and-tricks/">RubyMotion Tips &amp; Tricks</a>
+        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a>
+        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a>
+        <a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>
+        <a href="/blog/2012/06/17/designing-sites-for-users/">Designing Sites for Users</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/04/21/middleman-for-non-techies/">Middleman for Non-Techies</a>
+        <a href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">My Love/Hate Relationship with Heroku</a>
       </li>
     
   </ul>
@@ -375,12 +402,16 @@
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
   Copyright &copy; 2012 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-</footer>
+
+    </div>
+  </footer>
   
 
 <script type="text/javascript">

@@ -13,21 +13,19 @@ $light-background: lighten($background, 10);
 $title-color: $purple;
 $subtitle-color: $title-color;
 
-$nav-bg: lighten(desaturate($violet, 10), 70);
+$nav-bg: lighten(desaturate($red, 10), 25);
 $nav-bg-back: $nav-bg;
+$nav-color-hover: lighten($violet, 30);
 
-//$header-bg: #3b2647;
-//$subtitle-color: lighten($header-bg, 58);
-//$nav-bg: desaturate(lighten($header-bg, 18), 5);
-//$nav-bg-front: image-url('noise.png');
-//$nav-bg-back: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11));
-//$sidebar-bg: desaturate(#eceff5, 8);
-//$sidebar-link-color: saturate(#526f9a, 10);
-//$sidebar-link-color-hover: darken(#7ab662, 9);
-//$footer-bg: $nav-bg;
-//$footer-bg-front: image-url('noise.png');
-//$footer-bg-back: linear-gradient(darken($footer-bg, 8), $footer-bg, lighten($footer-bg, 11));
+$link-color: lighten($violet, 10);
+$link-color-hover: lighten($violet, 30);
+$link-color-visited: lighten($violet,10);
+$link-color-active: lighten($link-color-hover,30);
 
+$sidebar-bg: desaturate(lighten($red, 70), 8);
+$sidebar-color: darken($red, 100);
+$sidebar-link-color: saturate($red, 100);
+$sidebar-link-color-hover:  darken($red, 100);
 
 /* To use the light Solarized highlighting theme uncomment the following line */
 $solarized: light;

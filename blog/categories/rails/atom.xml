@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: rails | Josh Symonds]]></title>
+  <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-07T22:26:53-05:00</updated>
+  <updated>2012-07-02T16:49:42-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -14,231 +14,35 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Testing Elasticsearch in Rails with Tire]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/"/>
-    <updated>2012-04-15T23:38:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous entry on elasticsearch</a>, I promised I would elaborate on testing <a href="http://www.elasticsearch.org/">elasticsearch</a> (and <a href="https://github.com/karmi/tire">tire</a>) in Rails applications. There's not really a whole lot of secret sauce to it, but I figured it'd make a good, quick post with some crunchy code for a late night. While writing, though, I realized I could also talk about a small problem I ran into while using tire -- specifically relating to index regeneration. This isn't a major flaw, but it did waste some of my time, so I figured documenting it (prior to fixing it) would be a sensible idea.</p>
+    <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/"/>
+    <updated>2012-07-01T20:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet</id>
+    <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it's easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren't only for code refuse -- by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that's where all the functionality for shipping lies... whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated nad really involved -- but more than that, concerns just make your code better, so you should definitely be using them!</p>
 
 <!-- more -->
 
 
-<h2>Testing Tire</h2>
+<h2>Redcarpeted</h2>
 
-<p>There are two components to testing tire: the first is emptying the index before tests where the contents of the index matters, and the second is ensuring that you only delete the index you want, rather than your development index (which would be annoying). Deleting the correct index is really easy. You just want something like this in your model:</p>
-
-<p>```ruby
-class Photo
-  include Tire::Model::Search</p>
-
-<p>  index_name("#{Rails.env}-search-photos")</p>
-
-<p>  ...
-end
-```</p>
-
-<p>Specifying <code>index_name</code> as dependent on the Rails environment ensures that your development index won't be destroyed by the next bit of code.</p>
-
-<p><code>ruby
-def clear_photo_index
-  Photo.tire.index.delete
-  Photo.tire.index.create(:mappings =&gt; Photo.tire.mapping_to_hash, :settings =&gt; Photo.tire.settings)
-  Photo.tire.index.refresh
-end
-</code></p>
-
-<p>I stuck that code in <code>test_helper.rb</code> and I call it before each of my photo tests. The first line, obviously, deletes the entire index. The second recreates it, using the mappings and settings already specified in the Photo model. And then we refresh it just to make sure that tire agrees with elasticsearch about the indexed fields.</p>
-
-<h2>Caveat Indexor</h2>
-
-<p>Overall, tire and elasticsearch have been joys to use. I have experienced unexpected behavior in tire though, particularly relating to index mappings. Obviously, deleting an index in tire works just as expected -- the index and all its associated data goes away. Also deleted are the field mappings for that index. However, what happens when you try to create a new object without reloading the class that defined it?</p>
-
-<p>Tire still faithfully stores the object into the deleted index. This invokes elasticsearch's <a href="http://www.elasticsearch.org/guide/reference/api/index_.html">automatic index creation</a> logic, which attempts to determine the types of your fields manually. Unfortunately, it never seems to correctly identify geo_point fields properly. For example, this is what my index mapping should look like:</p>
-
-<p><code>ruby
-{"photo"=&gt;{"properties"=&gt;{"account_id"=&gt;{"type"=&gt;"string"}, "id"=&gt;{"type"=&gt;"string"}, "lat_lng"=&gt;{"type"=&gt;"geo_point"}, "name"=&gt;{"type"=&gt;"string", "analyzer"=&gt;"snowball"}}}}
-</code></p>
-
-<p>But if I delete the index and then insert an object into it, elasticsearch automatically determines the types as follows:</p>
-
-<p><code>ruby
-{"photo"=&gt;{"properties"=&gt;{"_type"=&gt;{"type"=&gt;"string"}, "account_id"=&gt;{"type"=&gt;"long"}, "id"=&gt;{"type"=&gt;"long"}, "lat_lng"=&gt;{"type"=&gt;"string"}, "name"=&gt;{"type"=&gt;"string"}}}}
-</code></p>
-
-<p>The key difference here is that <code>lat_lng</code> is not a geo_point but is instead a string, which prevents any of the index geolocation queries from being run on it. You can correct this problem by deleting the index and reloading the class in which the index is defined, which causes tire to create the index again from your provided mapping. (Or run the <code>tire.index.create</code> code from above.) But I spent a tiring(pun!) hour trying to figure out why my indexes kept on receiving inappropriate field types before hitting on this as the reason.</p>
-
-<p>Similarly, and possibly more frustratingly, if you are incrementally developing an index, changes to your mapping won't appear in the index until you delete said index and reload its defining class. Again, deleting the index and inserting data immediately will cause elasticsearch to guess the field mappings for your index, with tragically inconsistent results.</p>
-
-<p>I told the very talented <a href="https://github.com/karmi">karmi</a> about this problem and he sensibly suggested I write a failing test for it, though unfortunately I haven't had the time to sit down and really do that. In the meantime, just know that this annoyance exists, and if you're working on tire indexes, make sure you religiously delete the mapping and then reload the class before you attempt to use the index again.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Reducing Our AWS Costs by 60%]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent/"/>
-    <updated>2012-04-12T13:30:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent</id>
-    <content type="html"><![CDATA[<p>Hipstamatic's Rails application is deployed to Amazon's Elastic Cloud, and we make extensive use of Amazon's Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
-
-<!-- more -->
-
-
-<h2>Improve Database Performance</h2>
-
-<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here's what I did to decrease load on our database:</p>
-
-<h3>Find Slow Queries</h3>
-
-<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2's <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won't show up since they aren't running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
-
-<p><code>ruby
-require 'factory_girl'
-require '.test/factories.rb' # or wherever your factory file is located
-200000.times do
-  Factory.create(:photo)
-end
-</code></p>
-
-<p>Repeat as needed. Remember your production system will likely have millions of records; get as close as you can to this without overwhelming your development machine.</p>
-
-<h3>Index Lots</h3>
-
-<p>Index the crap out of everything. It's nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you'll rapidly discover that various fields that aren't indexed together should be, but examining the individual queries your application makes and ensuring they're all indexed is an awesome (though boring) use of your time.</p>
-
-<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you'll have to get into your code yourself to find out what really needs indexing. Automated tools can't really replace actual hands-on experience... at least, not in this case.</p>
-
-<h3>Don't Use Your Database</h3>
-
-<p>Sticking something into the database isn't always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn't another tool to do that job. In particular, think about:</p>
-
-<ul>
-<li><h4>memcached</h4>
-
-<p>If you want to rapidly retrieve data and it's in key-value form, and persistence doesn't really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
-<li><h4>redis</h4>
-
-<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets -- especially if these data structures are going to end up being extremely large or called very frequently -- use redis.</p></li>
-<li><h4>elasticsearch</h4>
-
-<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can't say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you're performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
-</ul>
-
-
-<h2>Use More Caching</h2>
-
-<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess...) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
-
-<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I'd be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
-
-<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails' helper methods won't find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
+<p>A lot of fields in GirlsGuideTo are Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
 
 <p>```ruby
-def after_save(object)
-  [:domain1, :domain2, :domain3].each do |domain|</p>
+module Redcarpeted
+  extend ActiveSupport::Concern</p>
 
-<pre><code>expire_fragment "views/#{domain}/objects/#{object.id}"
-</code></pre>
+<p>  module ClassMethods</p>
 
-<p>  end
-end
-```</p>
+<pre><code>def redcarpet(field)
+  define_method("#{field}_markdown".to_sym) do
+    read_attribute(field)
+  end
 
-<p>I have this extracted out on a per-environment basis, specifying the domains to expire in our environment files. It works out really well.</p>
-
-<h2>Be Responsive</h2>
-
-<p>One of the great things about being deployed to the cloud is that you can -- and should! -- scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they'll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
-
-<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you're at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary -- getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you're getting hammered, and don't be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
-
-<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we're saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Achieving 100% Uptime]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/"/>
-    <updated>2012-04-09T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime</id>
-    <content type="html"><![CDATA[<p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
-
-<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users' perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email -- it's a good indication of how well I did my job in the previous week. And for a couple weeks now I'm happy to report I've been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
-
-<p>How do you achieve numbers like these? Unfortunately getting to 100% isn't an easy road, and I want to state up front that I also don't think it's a realistic goal. Issues you can't control can ruin your uptime number, and you shouldn't feel broken up about that. It happens to everybody. But it's always good setting goals that are difficult to achieve, and this one is no different.</p>
-
-<p>So what's the secret to 100% uptime?</p>
-
-<!-- more -->
-
-
-<h2>Watch It Constantly</h2>
-
-<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they'll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
-
-<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications' behavior and warn you when that behavior becomes dangerous. Here's a sample of our unicorn monit file:</p>
-
-<p><code>bash
-  if totalmem &gt; 70% for 4 cycles then alert
-  if totalmem &gt; 90% for 6 cycles then exec "kill -USR2 `cat /pids/unicorn.pid`"
-  if cpu &gt; 70% for 4 cycles then alert
-  if cpu &gt; 90% for 6 cycles then exec "kill -USR2 `cat /pids/unicorn.pid`"
-</code></p>
-
-<p>This states that I get an alert when unicorn's total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
-
-<p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
-
-<p>Yes, this is a lot of monitoring. But I feel like even this isn't enough. You can't watch your stack too carefully, and you can't have too many tools in place to help you analyze what's going on. Consider this trifecta of tools only a start, but at least it's a good one.</p>
-
-<h2>Seamless Deploys</h2>
-
-<p>On an average week I deploy seven to ten times. Of course, this entire process is invisible to our users; the magic that makes this happen is <a href="http://unicorn.bogomips.org/">unicorn</a>. There have been many posts on the wonders of unicorn and how to configure it correctly. I will simply post the part of our <code>unicorn.rb</code> that allows us to do seamless restarting, which you can find in a number of gists essentially unmodified.</p>
-
-<p>```ruby
-before_fork do |server, worker|
-  old_pid = "#{server.config[:pid]}.oldbin"
-  if File.exists?(old_pid) &amp;&amp; server.pid != old_pid</p>
-
-<pre><code>begin
-  Process.kill("QUIT", File.read(old_pid).to_i)
-rescue Errno::ENOENT, Errno::ESRCH
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>The command we use to restart unicorn is:</p>
-
-<p><code>bash
-  if [ ! -f '/pids/unicorn.pid' ]; then cd current_path &amp;&amp; bundle exec unicorn_rails -c ./config/unicorn.rb -E production -D; else kill -USR2 `cat /pids/unicorn.pid`; fi
-</code></p>
-
-<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it's ready to start processing connections.</p>
-
-<h2>Migrations Without Downtime</h2>
-
-<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you're changing how existing code interacts with the database -- for new tables, simply migrate before deploying and you're done. If only it could be that easy all the time...</p>
-
-<p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
-
-<p>```ruby
-class AddOrdersCountToUsers &lt; ActiveRecord::Migration</p>
-
-<p>  def self.up</p>
-
-<pre><code>Lhm.change_table(:users) do |m|
-  m.ddl("ALTER TABLE #{m.name} ADD COLUMN orders_count INT(11) default 0")
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.down</p>
-
-<pre><code>Lhm.change_table(:users) do |m|
-  m.ddl("ALTER TABLE #{m.name} DROP COLUMN orders_count")
+  define_method("#{field}_html".to_sym) do
+    Redcarpet.new(read_attribute(field)).to_html
+  end
 end
 </code></pre>
 
@@ -247,129 +51,327 @@ end
 <p>end
 ```</p>
 
-<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you're gonna need to get your hands dirty. Using this method you'll be able to become the envy of your friends and peers, for you'll be able to execute zero downtime migrations.</p>
+<p><code>ActiveSupport::Concern</code> is the magic that makes concerns so ... magical. Simply by including another module called <code>ClassMethods</code>, <code>ActiveSupport::Concern</code>automatically knows to extend the base class with those methods when it's included.</p>
 
-<p>And those three points are the main ways I've reduced our downtime. It's a difficult road to 100%, but it's worth it because you can stare at pretty graphs like this:</p>
+<p>In this case, this allows you to do something like this in your model:</p>
 
-<p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
+<p>```ruby
+  class Post &lt; ActiveRecord::Base</p>
 
-<p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
+<pre><code>include Redcarpeted
+
+redcarpet :body
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you're curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
+
+<p>That's just the starts of Rails concerns, though. Next time I'll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How I Scaled Hipstamatic]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/"/>
-    <updated>2012-04-06T10:58:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic</id>
-    <content type="html"><![CDATA[<p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I've been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don't have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
+    <title type="html"><![CDATA[Dynamic Error Pages]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
+    <updated>2012-06-28T15:09:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
+    <content type="html"><![CDATA[<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.</p>
 
-<p>Now, take a look at our average response time over the last month.</p>
+<p>But it'd be even awesomer if actual errors in your application referenced this UUID, wouldn't it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, "I encountered error 123xyz," rather than force you to look through a huge amount of backlog to find their specific exception?</p>
 
-<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
-
-<p>Considering the web of external services Hipstamatic depends on for much of its operation, I'm proud of our 115ms average response time. Proud but not satisfied -- hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There's no reason we can't achieve 50-70ms response times with better caching and slimmer applications.</p>
-
-<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That's an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
-
-<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic's web site and web services fast. (Or, at the very least, a lot faster.)</p>
+<p>Happily, you can do just this!</p>
 
 <!-- more -->
 
 
-<h2>Cache <em>Everything</em></h2>
+<h2>Rescue_from Madness</h2>
 
-<p>This is easily the most important, most crucial rule to making your applications fast. You'd be surprised what you can cache, and how much time caching will save. Memcached access times are ridiculously fast, faster even than the fastest database query. Stick everything in your cache. Everything. <em>Everything</em>.</p>
+<p>Doing so requires abusing rescue_from a little bit, though. Set up something like this in your application_controller.rb:</p>
 
-<p><img src="http://f.cl.ly/items/3f0J2M0H3o3h0w1X1i3m/cache-all-the-things.jpg" alt="Cache all the things" /></p>
+<p><code>ruby
+unless Rails.application.config.consider_all_requests_local
+  rescue_from Exception, with: :render_500
+  rescue_from ActionController::RoutingError, with: :render_404
+  rescue_from ActionController::UnknownController, with: :render_404
+  rescue_from ActionController::UnknownAction, with: :render_404
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+end
+</code></p>
 
-<p>This is such an important rule I even gave you an annoying memegenerator image of it. Yes, people, it's memegenerator important.</p>
+<p>This will prevent any error from rendering the default Rails error pages. Instead we'll set up our own error pages like so:</p>
 
-<p>You really can't go overboard enough when it comes to caching. Make resque jobs whose only purpose is to warm your caches. Use <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> to sensibly and programmatically expire caches. Almost 90% of our application traffic returns the same (or very similar) JSON and HTML. By caching those responses, we save massive amounts of time, and more importantly, boatloads of money (due to lessened server load).</p>
+<p>```ruby
+  def render_500(exception)</p>
 
-<h2>Choose Your Tools Wisely</h2>
+<pre><code>render_exception(500, exception.message, exception)
+</code></pre>
 
-<p>Choose software that is frequently updated and widely used in the community. Choose software that is robust: by that I mean resistant to failure, and that has survived years of use in live, highly available environments. And finally and most importantly, choose software that is fast. Very, very fast.</p>
+<p>  end</p>
 
-<p>Two years ago, we switched from a single, shared instance on A Small Orange to Amazon's Elastic Cloud, allowing us to scale each of our components as necessary and independently from each other. Speed gains were noticeable immediately, but even better was the fact that there was a whole bunch of excellent software easily available to help us manage and scale our cloud presence. (See my earlier post <a href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">on Rubber</a>).</p>
+<p>  def render_404(exception)</p>
 
-<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don't want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive -- the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
+<pre><code>render_exception(404, 'Page not found', exception)
+</code></pre>
 
-<p>Take the time and do the research. There's a best tool for you waiting out there -- finding it will make your life a thousand times easier.</p>
+<p>  end</p>
 
-<h2>Less is More</h2>
+<p>  def render_exception(status = 500, message = 'Server error', exception)</p>
 
-<p>For a long time, incoming requests to the app were load balanced through <a href="http://haproxy.1wt.eu/">HAProxy</a> before reaching a Passenger instance. HAProxy is an amazing piece of software; it's extremely fast and gives you an awesome drill-down into incoming requests and your server status.</p>
+<pre><code>@status = status
+@message = message
+Rails.logger.fatal "\n#{exception.class.to_s} (#{exception.message})"
+Rails.logger.fatal exception.backtrace.join("\n")
+render template: "errors/error", formats: [:html], layout: 'application', status: @status
+</code></pre>
 
-<p>It also added 10 milliseconds to our response times on average.</p>
+<p>  end
+```</p>
 
-<p>If a piece of your stack isn't mission critical (and HAProxy, for us, was just a nice piece of software and not mission critical) then you should remove it. Amazing graphics and interesting metrics are less important than your response time. Examine your stack carefully, with a very critical eye, and whatever isn't absolutely necessary I would strongly recommend cutting out entirely.</p>
+<p>And finally, in your view, actually include the request's unique identifier:</p>
 
-<p>What I found helpful to do was draw a quick flow chart of how a request is actually serviced. Nothing that you intend to present to your boss; just a small approximation of your stack. Each step on that chain adds time to that request returning a response. If it adds time to the request turnaround, it needs to be adding something important to that response. Otherwise, it needs to go.</p>
+<p><code>ruby
+  &lt;h1&gt;&lt;%= @message.split(/\s/).collect(&amp;:capitalize).join(' ') %&gt; &lt;small&gt;&lt;%= @status %&gt;&lt;/small&gt;&lt;/h1&gt;
+  &lt;h3&gt;Error Code: &lt;%= request.env['action_dispatch.request_id'] %&gt; &lt;/h3&gt;
+</code></p>
 
-<h2>Achieve Balance</h2>
-
-<p>When we were extensively using <a href="http://redis.io/">redis</a> as a semi-persistent datastore, I constantly experienced bottlenecks for redis connections. But you can encounter this problem anywhere in your server setup: I also had to deal with MySQL bottlenecks and, in one extremely memorable instance, Unicorn queue bottlenecks. These are all issues with load balancing inside the stack.</p>
-
-<p>There's never a part of your stack that is immune to load balancing problems. Once you correctly scale one part, another component that performed adequately will suddenly start chugging under unexpected load or new use conditions. And, unfortunately, pre-optimization can backfire; sometimes you'll target the wrong part of your stack for optimizations, and other times you'll scale something that won't experience a bottleneck at all.</p>
-
-<p>I recommend against trying to pre-scale unless you're sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act -- you can guess to a limited extent where you'll tip after the next step, but you can never be sure until you actually take it. That's why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
-
-<p>Formal plans generally aren't required, but know what steps you'd take if something started to fail. Even ten seconds of idle thought can save you agonizing minutes of unavailability.</p>
-
-<h2>Use 75% of Every Server</h2>
-
-<p>This rule applies doubly to servers on EC2. Instances that reach 100% memory or CPU utilization are instances that are very difficult to fix (and are much more prone to crashing in a shared environment). You can't SSH into them because they take forever to respond; you can't reboot them because they don't respond to Amazon's control plane. They are about to become horrible zombies in your setup, taking up space but refusing to die, and you'll have to route around them to keep your uptime intact.</p>
-
-<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me -- not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
-
-<p>If you're using less than 75%, then you can likely combine services together and remove servers. And if you're using more... well, I have <a href="http://www.pagerduty.com/">PagerDuty</a> configured to call me if at any time a server reaches 85% resource usage, and those are calls I take very seriously.</p>
-
-<p>I'm sure I'll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas -- for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
+<p>Dynamic error pages like what I'm suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it's pretty unlikely that'll happen. Just be careful when using this system -- maybe even don't render the exception in your usual layout, but render it in an error-specific one -- to reduce the chance of your error pages also erroring, and you'll be golden.</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Refactor a Large and Old Project]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/"/>
-    <updated>2012-04-03T10:06:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project</id>
-    <content type="html"><![CDATA[<p>The Rails application backing Hipstamatic is very, very large. It started over two years ago as a Rails 2.1 project, and has been continuously improved since then -- moving to Rails 3.2, adding in redis and resque, and then adding in elasticsearch. During that time the database has bounced around continuously in size and importance as we move data from MySQL to data stores that are <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">better suited for it</a>. And while at the start it handled only contests and submissions, since then we've added in orders, the family album, D-Series support, and even more exciting behind-the-scenes stuff.</p>
-
-<p>And as you can imagine from a project that's undergone continuous improvement for a long time, it's kind of a mess. A lot of stuff was done without an eye towards our future needs, and, even more embarrassingly, a lot of stuff was done with a future need in mind -- and, of course, that need never materialized, so the code is named or structured improperly.</p>
-
-<p>The temptation with any project as large and old as this is to do <a href="http://chadfowler.com/2006/12/27/the-big-rewrite">the Big Rewrite</a>. I've been involved in a few of those, and my advice regarding them is quite simple:</p>
+    <title type="html"><![CDATA[Designing Sites for Users]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
+    <updated>2012-06-17T17:52:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
+    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult -- not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities -- and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
 
 <!-- more -->
 
 
-<h1>DON'T DO IT</h1>
+<h2>Mailcheck</h2>
 
-<p>There are <a href="http://mentalized.net/journal/2010/10/04/avoiding_the_big_rewrite/">multiple</a> <a href="http://www.joelonsoftware.com/articles/fog0000000069.html">articles</a> <a href="http://blog.objectmentor.com/articles/2009/01/09/the-big-redesign-in-the-sky">discussing</a> why the Big Rewrite is a horrible idea, and reiterating their excellent points here isn't my intention. Instead I'm going to discuss the plan I've decided on for our own project, which I'm going to call, in lieu of the Big Rewrite, the Proper Refactoring.</p>
+<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that's pretty impressive.</p>
 
-<p>Our Proper Refactoring will split our one monolithic application apart into a number of services, exposing their APIs for the happiness of our users while hiding the internals of their business logic from parts of the application that don't care about it. If you want to follow along on our process (or do your own Proper Refactoring), I wrote down a quick summary of the three (well, four) simple stages that will take us from having one large working app to many small working apps!</p>
+<p>I also love Mailcheck's philosophy. The guiding idea here -- that users will make errors, and software should respond efficiently to correct them -- is true no matter what you're making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app's flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
 
-<ol>
-<li><h3>Test it all first.</h3>
+<h2>Chosen</h2>
 
-<p>This entire process is doomed to failure if your application isn't tested. There's no way you can achieve 100% test coverage, regardless of what <a href="https://github.com/colszowka/simplecov">SimpleCov</a> tells you -- there's always that quick fix you stuck in to fix a small problem that isn't tested and won't show up in any coverage report. But you need to get as close as humanly possible, because stuff will break (like that quick fix), and you can limit how much breakage occurs by testing everything you can before you start.</p>
+<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
 
-<p>Happily, Hipstamatic is well tested, so step zero for us is pretty well completed. I still anticipate problems will occur as we make the change, and of course as I find code that isn't adequately tested I'll write tests for it... but both of those are unavoidable.</p></li>
-<li><h3>Find breakpoints and map splits.</h3>
+<p>Chosen expresses another important usability concept -- accessibility. Modern software can be ridiculously complicated, but most users don't care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user's perspective.</p>
 
-<p>Hipstamatic will be turning into five services: authentication, photos, contests, ordering, and D-Series cameras. Our main goal is to silo concerns apart from each other, making each part of the application more failure resistant and robust while allowing us to develop them all independently from each other if necessary. I'm not 100% settled on this separation of concerns, but the order that I listed them is the order I'll be working on them. If it seems like something just has to be married to something else, I'll combine them together and that'll be that.</p>
+<h2>Bandit</h2>
 
-<p>So if you're doing this on your own project, split your application into units that are atomic enough that they can be changed independently from each other, but not so atomic that close couplings are undone. My benchmark for this is going to be if I have two projects open simultaneously and keep coding in the two of them in tandem, most likely they should be merged.</p></li>
-<li><h3>Start copying and pasting.</h3>
+<p>There's been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I've done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I'll be using it extensively moving into the future.</p>
 
-<p>The fun part! Take the parts necessary for the one fragment you're working on and merge them into one coherent project. Crucically, <em>don't change anything except what's absolutely necessary</em>. You'll find code that you want to change, trust me. Just slap some TODOs on that baby and keep moving. It's important that you change as little as possible, because the process is already breaking apart your nice pretty app. If you start changing the pieces once they're broken, you'll find they don't fit back together quite right, and that will be an enormous headache to fix.</p></li>
-<li><h3>Add relevant bits to the API Gem.</h3>
+<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don't need a set number of tests (as per A/B testing) and you aren't confined to only two options. Ultimately, you don't need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that's pretty awesome.</p>
 
-<p>For our web services to understand each other, and to prevent duplication of code, I'll be extracting connector bits into a Gem that each application (and indeed any application that wants to consume our API) can use. It'll most likely be heavily based on <a href="https://github.com/jnunemaker/httparty">httparty</a> since ActiveResource isn't anywhere near as actively developed.</p></li>
-</ol>
+<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you're guaranteed to make software that's much more usable than it would be otherwise.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/"/>
+    <updated>2012-05-22T23:08:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails</id>
+    <content type="html"><![CDATA[<p>I love Rails' routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we're ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
+
+<!-- more -->
 
 
-<p>And the split is complete! Of course it sounds pretty easy when you gloss over most of the hard work in step #2, but hey, the way to make complicated projects seem achievable is to reduce them into manageable steps. I intend to follow this road map like the Pope follows the Bible -- that is, using the good parts and ignoring the rest. Zing! But I'll report back in a future post to indicate how well these steps worked for me. Until then, wish me luck!</p>
+<h2>The Problem</h2>
+
+<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they're all really similar -- they all have a name, a description, some assets associated to them... And so they're all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
+
+<p><code>
+  gear/alfred
+  gear/dreampop
+  gear/stache
+</code></p>
+
+<p>And that's kind of tragic. Each type of gear should have its own route, even if they're all in the same model. Something like this would be both more readable and more expressive:</p>
+
+<p><code>
+  lenses/alfred
+  flashes/dreampop
+  films/stache
+</code></p>
+
+<p>Of course, having a controller for each kind of gear would be crazy. Happily, Rails provides some easy routing solutions!</p>
+
+<h2>The Solution</h2>
+
+<p>In our routes.rb, for each kind of resource that we're expecting, we create matching routes:</p>
+
+<p><code>ruby
+[:lenses, :films, :flashes, :cases].each do |gear|
+  match "#{gear}/:id", :controller =&gt; :gear, :action =&gt; :show, :type =&gt; gear, :as =&gt; gear
+end
+</code></p>
+
+<p>Let's dissect this routing statement in two steps. For the first, obviously, we're linking a route like <code>lenses/a1</code> or <code>flashes/cherry</code> to the gear controller. Importantly we're also passing a type: either lenses, films, flashes, or cases, instructing the controller which endpoint we want. In said controller, we should make sure that this passed type and the name of the piece of gear match. Otherwise people would go to <code>lenses/dreampop</code> or <code>flashes/alfred</code> and still see the correct resource despite specifying an invalid type and name combination. That would just be madness!</p>
+
+<p>```ruby
+class GearController &lt; ApplicationController
+  before_filter :find_gear</p>
+
+<p>  private</p>
+
+<p>  def find_gear</p>
+
+<pre><code>@gear = Gear.type(params[:type].to_s.singularize).where(:reference =&gt; params[:id]).first if params[:id]
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Type is a named scope that matches the passed params[:type] to a database column storing the actual type of gear. So this will try to find a lens or flash or what have you with the appropriate reference name. Simple enough.</p>
+
+<p>For the second part of the above route, the <code>:as =&gt; gear</code> part creates named routes like lenses_path and films_url. With that in mind, it's easy for us to dynamically generate links based only on the gear object. This is the helper that allows us to do so:</p>
+
+<p><code>ruby
+def multi_path(obj)
+  self.send("#{obj.type.pluralize.downcase}_path".to_sym, obj.reference)
+end
+</code></p>
+
+<p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don't want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
+
+<p>With only a few lines of code, it's easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don't have to sacrifice DRY to do so. If you have a lot of data that's expressed through only one controller, consider dynamic routing like this. It's easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Quick &amp; Easy User Preferences in Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/"/>
+    <updated>2012-05-16T18:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails</id>
+    <content type="html"><![CDATA[<p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn't like what was presently out there. I don't really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code's for you.</p>
+
+<!-- more -->
+
+
+<h2>Setting Up Preferences</h2>
+
+<p>You need a preference model. It should look like this:</p>
+
+<p>```ruby
+class Preference &lt; ActiveRecord::Base
+  belongs_to :user</p>
+
+<p>  validates_uniqueness_of :name, :scope => :user_id</p>
+
+<p>  attr_accessible :name, :value
+end
+```</p>
+
+<p>I used this migration to create it:</p>
+
+<p>```ruby
+class CreatePreferences &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code>create_table :preferences do |t|
+  t.string :name, :value
+  t.integer :user_id
+  t.timestamps
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>You might note that the value of all preferences, regardless of if they're supposed to be Boolean or datetime, is a string. Keep this in mind when you have to query this field later. (That is, if you want to search for all preferences where the value is true, you'll want to search for "1". And similarly, doing <code>user.preferences.first.true?</code> will always return <code>true</code>, as any string value is true. So, coder beware!)</p>
+
+<h2>Using Them</h2>
+
+<p>Ideally, this is what we want the user model to look like.</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  include Preferences</p>
+
+<p>  preference :chime, false
+  preference :name, "Josh"
+  preference :awesome, true</p>
+
+<p>  ...
+end
+```</p>
+
+<p>Simple but straightforward: we include the module and then define each preference, with its name first and default value second. Ideally we don't want to save default values to the database, since that would just make a lot of unnecessary records.</p>
+
+<h2>The Preferences Module</h2>
+
+<p>So let's make that happen in that <code>include Preferences</code> line! This is the real heart of the preferences engine.</p>
+
+<p>```ruby
+module Preferences
+  extend ActiveSupport::Concern</p>
+
+<p>  included do</p>
+
+<pre><code>has_many :preferences
+@@preferences = {}
+</code></pre>
+
+<p>  end</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def preference(name, default)
+  preferences = self.class_variable_get(:'@@preferences')
+  preferences[name] = default
+  self.class_variable_set(:'@@preferences', preferences)
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  def read_preference(name)</p>
+
+<pre><code>if p = self.preferences.where(:name =&gt; name).first
+  return p
+end
+return self.preferences.new(:name =&gt; name, :value =&gt; @@preferences[name]) if @@preferences.has_key?(name)
+nil
+</code></pre>
+
+<p>  end</p>
+
+<p>  def write_preference(name, value)</p>
+
+<pre><code>p = self.preferences.find_or_create_by_name(name)
+p.update_attribute(:value, value)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def method_missing(method, *args)</p>
+
+<pre><code>if @@preferences.keys.any?{|k| method =~ /#{k}/}
+  if method =~ /=/
+    self.write_preference(method.gsub('=', ''), *args)
+  else
+    self.read_preference(method)
+  end
+else
+  super
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This is really pretty simple. Upon inclusion it tells the model that it's a part of that it <code>has_many :preferences</code> and sets up a class variable hash to store preferences and their defaults. When you declare <code>preference :chime, true</code> it records that in the class variable, and then all instances will respond to either <code>user.chime = true</code> or <code>user.write_preference(:chime, true)</code>. You can read values with <code>user.chime</code> or <code>user.read_preference(:chime)</code>. If a value isn't written in the database, it returns the default value instead.</p>
+
+<p>This probably has a level or two of refactoring that could happen around it. Maybe when I have time I will turn it into a more sensible gem, but until then, if anyone needs quick and dirty preferences... here you go.</p>
 ]]></content>
   </entry>
   

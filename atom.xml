@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Josh Symonds]]></title>
+  <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-05-07T22:26:53-05:00</updated>
+  <updated>2012-07-02T16:49:42-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,746 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/"/>
+    <updated>2012-07-01T20:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet</id>
+    <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated nad really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+
+<!-- more -->
+
+
+<h2>Redcarpeted</h2>
+
+<p>A lot of fields in GirlsGuideTo are Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Redcarpeted</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">redcarpet</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_markdown&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_html&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>        <span class="no">Redcarpet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="o">.</span><span class="n">to_html</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>ActiveSupport::Concern</code> is the magic that makes concerns so &#8230; magical. Simply by including another module called <code>ClassMethods</code>, <code>ActiveSupport::Concern</code>automatically knows to extend the base class with those methods when it&#8217;s included.</p>
+
+<p>In this case, this allows you to do something like this in your model:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="no">Redcarpeted</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">redcarpet</span> <span class="ss">:body</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you&#8217;re curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
+
+<p>That&#8217;s just the starts of Rails concerns, though. Next time I&#8217;ll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Error Pages]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
+    <updated>2012-06-28T15:09:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
+    <content type="html"><![CDATA[<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
+
+<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
+
+<p>Happily, you can do just this!</p>
+
+<!-- more -->
+
+
+<h2>Rescue_from Madness</h2>
+
+<p>Doing so requires abusing rescue_from a little bit, though. Set up something like this in your application_controller.rb:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_500</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownAction</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will prevent any error from rendering the default Rails error pages. Instead we&#8217;ll set up our own error pages like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
+</span><span class='line'>    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render</span> <span class="n">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="n">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="vi">@status</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And finally, in your view, actually include the request&#8217;s unique identifier:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;&lt;</span><span class="sx">%= @message.split(/\s/).collect(&amp;:capitalize).join(&#39; &#39;) %&gt; &lt;small&gt;&lt;%=</span> <span class="vi">@status</span> <span class="sx">%&gt;&lt;/small&gt;</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
+</span><span class='line'><span class="sr">  &lt;h3&gt;Error Code: &lt;%= request.env[&#39;action_dispatch.request_id&#39;] %&gt; &lt;/</span><span class="n">h3</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Dynamic error pages like what I&#8217;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&#8217;s pretty unlikely that&#8217;ll happen. Just be careful when using this system &#8211; maybe even don&#8217;t render the exception in your usual layout, but render it in an error-specific one &#8211; to reduce the chance of your error pages also erroring, and you&#8217;ll be golden.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How Not to Apply for a Job]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/20/how-not-to-apply-for-a-job/"/>
+    <updated>2012-06-20T22:29:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/20/how-not-to-apply-for-a-job</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve been looking about two weeks now for a really fantastic designer for GirlsGuideTo &#8211; a designer that&#8217;s as fabulous as the site itself. Somewhat surprisingly, given how many people are unemployed or underemployed, my search has been really difficult. And not because of a dearth of responses: in fact, quite the opposite. I estimate I&#8217;ve received more than a hundred resumes in response to Craigslist postings, LinkedIn listings, and advertising in Dribbbble. And most surprising to me is the fact that the vast majority of these responses just aren&#8217;t very good.</p>
+
+<p>I&#8217;m sure that many of these resumes and coverletters come from experienced, seasoned professionals with a genuine and burning desire to be paid &#8211; a desire that is equally matched by my hunger to pay them for the amazing work they can do. But frankly, you wouldn&#8217;t know it from reading their letters. 99.9% of them are just&#8230; <em>bad</em>. So, I&#8217;ve taken the time to distill the mountain of resumes in my inbox into three succinct lessons. If you&#8217;re going to apply for a job, please take them to heart before writing your potential employer. Not only will you increase the chances you&#8217;ll actually be hired, but they will definitely thank you for breaking the tide of mediocrity that is surely washing over them. If you&#8217;re the one to stand out, believe me&#8230; you&#8217;ll get noticed.</p>
+
+<!-- more -->
+
+
+<h2>Don&#8217;t Copy and Paste</h2>
+
+<p>Easily the most common mistake I see &#8211; the one that is most likely to make me entirely skip a candidate &#8211; is that the cover letter is copied and pasted. It either doesn&#8217;t include my company name (GirlsGuideTo is somewhat distinctive), or even more embarrassing, is addressed to a different company&#8217;s name. I can always tell when I&#8217;m reading a copy/pasted letter. It&#8217;s generic and boring; it enumerates talents and skills that I have no need for and didn&#8217;t include in my job listing.</p>
+
+<p>I took the time to hand-craft the job posting you read. I know you&#8217;re probably applying to lots of jobs, and I sympathize that being without work &#8211; or trying to find a new job &#8211; is arduous and unpleasant. But if you want to be seriously considered, you must include three things in your cover letter:</p>
+
+<ol>
+<li>The name of the company you&#8217;re applying to,</li>
+<li>The position in the company you&#8217;re applying for,</li>
+<li>Why your skills make you a perfect fit for that position.</li>
+</ol>
+
+
+<p>The third one is obviously the most complicated but also the most necessary. The degree to which you customize your cover letter for the target job will be directly proportional to the number of people that respond positively to it. Believe me, I can tell which people actually wrote even a few choice words actually responding to my listing.</p>
+
+<p>They are the ones that I will write back.</p>
+
+<h2>Don&#8217;t Make Me Find You</h2>
+
+<p>If you&#8217;re an Internet professional &#8211; web designer, programmer, usability expert, whatever &#8211; you must have an online presence. It can be as simple as your LinkedIn profile, but ideally should be a portfolio, with your own personalized URL, summarizing the work you&#8217;ve done, hopefully with lots of links and (even better) pictures. You should link to this summary of you in your cover letter. Be proud of it; include it in the first or second sentence. Say something like, &#8220;You can find my resume, and my portfolio, online at http://myattractivenamehere.com. But the parts that are most directly pertinent to you are&#8230;&#8221; And then go on to list the jobs that you&#8217;ve done that make you perfect for me!</p>
+
+<p>Don&#8217;t include a list of twenty links in your coverletter, saying they&#8217;re you&#8217;re work. If I&#8217;m feeling gracious I might click on the first two. Chances are they won&#8217;t be what I&#8217;m looking for, and then I&#8217;ll consign your resume to the dustbin of defeat. (This outcome might have been averted if you had twenty thumbnails I could quickly glance over on your portfolio, though.)</p>
+
+<p>And for Heaven&#8217;s sake include some kind of link to yourself! Anything at all works. If you&#8217;re really an Internet professional and not just some high school student &#8211; or even if you ARE a high school student &#8211; you should have an online presence somewhere. If you don&#8217;t include links in your resume or your cover letter, the chances of me Googling you to find them are absolutely zero. As are the chances of you landing this job.</p>
+
+<h2>Don&#8217;t Make Me Read Your Resume</h2>
+
+<p>This is a harsh truth, but one I&#8217;ve heard again and again from people who have to make hiring decisions:</p>
+
+<p>We don&#8217;t read resumes unless we&#8217;ve already decided we&#8217;re interested in a candidate.</p>
+
+<p>Your cover letter is going to be your one and only chance to sell yourself. Go all out. If you have skills that you feel are directly applicable to the position, mention them in the cover letter, and then explain why those skills make you suited for the work. Your previous experiences that give you unique and valuable insight into the job should be front and center, in the letter itself.</p>
+
+<p>And most likely, the second place I go, after reading your cover letter, won&#8217;t be your resume either. It&#8217;ll be your online presence, either your portfolio or sample sites you&#8217;ve linked me to. I&#8217;ll only open your resume after I&#8217;ve already decided you&#8217;re most likely a good fit &#8211; and to be honest, I probably won&#8217;t read it very closely anyway, since by that point I&#8217;ve already made a decision.</p>
+
+<p>I know this seems unfair. You might be perfect for me; your resume even lists your numerous and varied accomplishments that make you my ideal match. But your competitor, with a very similar set of experiences, actually told me her accomplishments in her first paragraph. She drew my attention right to them &#8211; I didn&#8217;t even have to look in her resume to start being impressed by her. When I open her portfolio, I&#8217;ll see that she&#8217;s right. She <em>is</em> perfect for me. And then she goes on the shortlist, and you and your perfect resume are skipped over, unopened.</p>
+
+<p>What I&#8217;m really trying to say with this small list of &#8220;don&#8217;ts&#8221; is very simply this: don&#8217;t get lost in the crowd. I don&#8217;t care if the designer we end up choosing is a guy or girl, Chicagoan or San Franciscoan, experienced or freshly graduated. (Also it&#8217;s illegal for me to care, but that&#8217;s beside the point.) All that really matters to me is that they&#8217;re good; and more than being good, they&#8217;re not afraid to say, &#8220;I&#8217;m perfect for you, and here&#8217;s why.&#8221;</p>
+
+<p>And, honestly, that&#8217;s all that matters to any prospective employer from their applicants. If you really want to be hired, then you&#8217;ll have to show that you respect the time and energy they&#8217;ve invested in conducting a search for someone like you. Write plainly and to impress &#8211; cram your cover letter with customized material, responding directly to the job posting. Include links early and often to your online presence. And fill your letter with proof after repeated proof that you are the ideal match they&#8217;ve been searching for.</p>
+
+<p>Do all that, and you&#8217;ll get a response to each and every one of your applications. And, hopefully, most of those responses will be positive.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Designing Sites for Users]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
+    <updated>2012-06-17T17:52:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
+    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult &#8211; not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities &#8211; and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
+
+<!-- more -->
+
+
+<h2>Mailcheck</h2>
+
+<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that&#8217;s pretty impressive.</p>
+
+<p>I also love Mailcheck&#8217;s philosophy. The guiding idea here &#8211; that users will make errors, and software should respond efficiently to correct them &#8211; is true no matter what you&#8217;re making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app&#8217;s flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
+
+<h2>Chosen</h2>
+
+<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
+
+<p>Chosen expresses another important usability concept &#8211; accessibility. Modern software can be ridiculously complicated, but most users don&#8217;t care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user&#8217;s perspective.</p>
+
+<h2>Bandit</h2>
+
+<p>There&#8217;s been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I&#8217;ve done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I&#8217;ll be using it extensively moving into the future.</p>
+
+<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don&#8217;t need a set number of tests (as per A/B testing) and you aren&#8217;t confined to only two options. Ultimately, you don&#8217;t need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that&#8217;s pretty awesome.</p>
+
+<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you&#8217;re guaranteed to make software that&#8217;s much more usable than it would be otherwise.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[My Love/Hate Relationship with Heroku]]></title>
+    <link href="http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/"/>
+    <updated>2012-06-03T22:43:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku</id>
+    <content type="html"><![CDATA[<p>There&#8217;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&#8217;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&#8217;t decide whether or not I like the web&#8217;s premier platform-as-a-service or not. Every now and again I&#8217;ll gnash my teeth in frustration over it, and then other times I&#8217;ll sigh dreamily and think of all the wonderful things Heroku has done for me &#8211; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&#8217;s right for you.</p>
+
+<!-- more -->
+
+
+<h2>Pros</h2>
+
+<h3>Lets Me Sleep At Night</h3>
+
+<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons &#8211; an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
+
+<p>Heroku&#8217;s Postgres instances also do automatic backups and have always been available whenever I&#8217;ve needed them. Heroku doesn&#8217;t pay their infrastructure team enough, in my opinion; I&#8217;ve seriously never had a single outage of any sort on their service, and I have this comforting belief that if something did go horribly awry, I would be in good hands.</p>
+
+<h3>Easy &amp; Fast</h3>
+
+<p>Getting started on Heroku is ridiculously easy. You can have an app deployed there in just a minute or two, all from doing nothing more than adding a git remote and pushing to it. No matter how good your Chef recipes are, it&#8217;ll take you at least fifteen minutes to get a bare EC2 instance provisioned from nothing to accepting HTTP connections. After you do that, of course, clever use of AMIs will get there much quicker&#8230; but still nowhere near as fast as Heroku.</p>
+
+<h3>Extensible</h3>
+
+<p>This is sort of a rider to &#8220;easy &amp; fast,&#8221; but I think it deserves its own bulletpoint. Heroku addons provide managed solutions for nearly every need your application might have. Email sending, Redis instances, elasticsearch searching&#8230; and it&#8217;s really cool of Heroku to essentially provide marketing for these smaller SaaS companies. Additionally all of the addons I&#8217;ve used have worked really well, so there&#8217;s definitely some quality control going on.</p>
+
+<h3>Flexible</h3>
+
+<p>Heroku&#8217;s Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons &#8211; essentially anything at all, as long as you&#8217;re willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
+
+<h2>Cons</h2>
+
+<h3>Expensive</h3>
+
+<p>There&#8217;s really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it&#8217;s not just Heroku &#8211; especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost&#8230; and a big one, at that.</p>
+
+<h3>Deploys Suck</h3>
+
+<p>Deploying to Heroku is easy and fast &#8211; the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There&#8217;s no unicorn-style rolling deployments here. For small applications this is somewhat acceptable &#8211; in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
+
+<h3>Addon Constrained</h3>
+
+<p>If you want to do something really customized or compiled on Heroku &#8211; something that needs the JRE, for example &#8211; you&#8217;re pretty much screwed unless an addon already exists for it. You can&#8217;t compile elasticsearch or Lucene yourself, and if you don&#8217;t like the addons that provide those solutions you&#8217;re essentially out of luck. You&#8217;ll need to spool up your own EC2 instance, add Heroku&#8217;s security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you&#8217;re doing that, why not just manage the entire application yourself as well?</p>
+
+<h2>Conclusions</h2>
+
+<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku&#8217;s platform-as-a-service. They&#8217;re fast to deploy because they don&#8217;t take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive &#8211; and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that&#8217;s just something that Heroku can&#8217;t provide.</p>
+
+<p>So, for a big application, I would stick to doing it by hand. Yes, you&#8217;ll have a few more infrastructure annoyances, but you&#8217;ll need the control.</p>
+
+<p>But! All big appliations started small. There&#8217;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&#8217;s ability to start lean and quick, then don&#8217;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&#8217;s easy and fast. And that&#8217;s the real beauty of Heroku &#8211; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Moving On]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/31/moving-on/"/>
+    <updated>2012-05-31T16:49:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/31/moving-on</id>
+    <content type="html"><![CDATA[<p>I try to keep to a schedule of a post every three days, and I&#8217;ve definitely not been keeping on top of that &#8211; I haven&#8217;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&#8217;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
+
+<!-- more -->
+
+
+<h2>Leaving Hipstamatic</h2>
+
+<p>I&#8217;m leaving my position as web director of Synthetic. I love the company and the product &#8211; I think Hipstamatic has a bright future ahead of it, and it is, in my opinion, easily the best photography app on the market. But my professional growth there had stalled. I was having lots of fun juggling servers, code, customer service, database administration, and, well, everything else technical. Yet I was hungry for more: specifically, opportunities to execute and pursue my own technical vision as a valued partner, not just a valued employee. I wanted to be a decision maker.</p>
+
+<p>Synthetic has always been a company driven by design. You can see it in any of their <a href="http://makebeautiful.hipstamatic.com/">amazing</a> <a href="http://gear.hipstamatic.com">sites</a> (featuring stellar HTML, CSS, and JS by the incomparable <a href="http://lukesbeard.com/">@LukesBeard</a>), and even the design of the Hipstamatic itself, which is retro and cool and usable all at once. But for an ambitious technical guy, direction through design didn&#8217;t leave a lot of opportunity for personal growth. I knew if I wanted to let my voice be heard, I&#8217;d have to go somewhere else to do it.</p>
+
+<h2>Joining GirlsGuideTo</h2>
+
+<p>So what&#8217;s next for Josh Symonds?</p>
+
+<p>I accepted an offer from <a href="http://girlsguideto.com">GirlsGuideTo</a>, an insanely fabulous website for women, to be their CTO and co-founder. Having recently secured a round of seed financing, GirlsGuideTo is positioned really excellently. They have a huge userbase and are poised to really take over their market; their only stumbling block is some really old software and a somewhat dated design. Those are problems I can fix! Within the next month, I intend to give the site a complete graphical and technical overhaul. Under my technical direction (and CEO Brette Borow&#8217;s product management), GirlsGuideTo will grow to be an even more amazing site &#8211; the premiere destination for women to get advice, read awesome articles, and connect with one another.</p>
+
+<p>Within the next couple weeks, I also intend to release my first RubyMotion application to the iTunes App Store. Featuring some excellent designs by the aforementioned <a href="http://lukesbeard.com/">@LukesBeard</a> and some pretty nifty code by yours truly, it represents the culmination of nearly a month spent working during almost all my free time. I think it&#8217;s pretty cool, and I&#8217;ll be spending some time discussing its technical infrastructure and how I used RubyMotion to make it happen.</p>
+
+<p>Finally, what does all this mean for my blog? Well, I&#8217;ll still post awesome code and go on and on about how much I love Ruby. But I&#8217;ll also be talking about the trials and tribulations of a newly-minted CTO at a new startup; finding talent, putting it to use, and in general conquering the world one step at a time. And I promise to get back on my regular, three-day schedule while I do it.</p>
+
+<p>So stick around and keep reading; this blog will only get more interesting!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/"/>
+    <updated>2012-05-22T23:08:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails</id>
+    <content type="html"><![CDATA[<p>I love Rails&#8217; routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we&#8217;re ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
+
+<!-- more -->
+
+
+<h2>The Problem</h2>
+
+<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they&#8217;re all really similar &#8211; they all have a name, a description, some assets associated to them&#8230; And so they&#8217;re all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  gear/alfred
+</span><span class='line'>  gear/dreampop
+</span><span class='line'>  gear/stache</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that&#8217;s kind of tragic. Each type of gear should have its own route, even if they&#8217;re all in the same model. Something like this would be both more readable and more expressive:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  lenses/alfred
+</span><span class='line'>  flashes/dreampop
+</span><span class='line'>  films/stache</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, having a controller for each kind of gear would be crazy. Happily, Rails provides some easy routing solutions!</p>
+
+<h2>The Solution</h2>
+
+<p>In our routes.rb, for each kind of resource that we&#8217;re expecting, we create matching routes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="ss">:lenses</span><span class="p">,</span> <span class="ss">:films</span><span class="p">,</span> <span class="ss">:flashes</span><span class="p">,</span> <span class="ss">:cases</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">gear</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">match</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">gear</span><span class="si">}</span><span class="s2">/:id&quot;</span><span class="p">,</span> <span class="ss">:controller</span> <span class="o">=&gt;</span> <span class="ss">:gear</span><span class="p">,</span> <span class="ss">:action</span> <span class="o">=&gt;</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="n">gear</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="n">gear</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&#8217;s dissect this routing statement in two steps. For the first, obviously, we&#8217;re linking a route like <code>lenses/a1</code> or <code>flashes/cherry</code> to the gear controller. Importantly we&#8217;re also passing a type: either lenses, films, flashes, or cases, instructing the controller which endpoint we want. In said controller, we should make sure that this passed type and the name of the piece of gear match. Otherwise people would go to <code>lenses/dreampop</code> or <code>flashes/alfred</code> and still see the correct resource despite specifying an invalid type and name combination. That would just be madness!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">GearController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:find_gear</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">find_gear</span>
+</span><span class='line'>    <span class="vi">@gear</span> <span class="o">=</span> <span class="no">Gear</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:type</span><span class="o">].</span><span class="n">to_s</span><span class="o">.</span><span class="n">singularize</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:reference</span> <span class="o">=&gt;</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">first</span> <span class="k">if</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Type is a named scope that matches the passed params[:type] to a database column storing the actual type of gear. So this will try to find a lens or flash or what have you with the appropriate reference name. Simple enough.</p>
+
+<p>For the second part of the above route, the <code>:as =&gt; gear</code> part creates named routes like lenses_path and films_url. With that in mind, it&#8217;s easy for us to dynamically generate links based only on the gear object. This is the helper that allows us to do so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">multi_path</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">obj</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">pluralize</span><span class="o">.</span><span class="n">downcase</span><span class="si">}</span><span class="s2">_path&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don&#8217;t want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
+
+<p>With only a few lines of code, it&#8217;s easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don&#8217;t have to sacrifice DRY to do so. If you have a lot of data that&#8217;s expressed through only one controller, consider dynamic routing like this. It&#8217;s easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Quick &amp; Easy User Preferences in Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/"/>
+    <updated>2012-05-16T18:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails</id>
+    <content type="html"><![CDATA[<p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn&#8217;t like what was presently out there. I don&#8217;t really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code&#8217;s for you.</p>
+
+<!-- more -->
+
+
+<h2>Setting Up Preferences</h2>
+
+<p>You need a preference model. It should look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Preference</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:user</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">validates_uniqueness_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:user_id</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:value</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I used this migration to create it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">CreatePreferences</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">change</span>
+</span><span class='line'>    <span class="n">create_table</span> <span class="ss">:preferences</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:value</span>
+</span><span class='line'>      <span class="n">t</span><span class="o">.</span><span class="n">integer</span> <span class="ss">:user_id</span>
+</span><span class='line'>      <span class="n">t</span><span class="o">.</span><span class="n">timestamps</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might note that the value of all preferences, regardless of if they&#8217;re supposed to be Boolean or datetime, is a string. Keep this in mind when you have to query this field later. (That is, if you want to search for all preferences where the value is true, you&#8217;ll want to search for &#8220;1&#8221;. And similarly, doing <code>user.preferences.first.true?</code> will always return <code>true</code>, as any string value is true. So, coder beware!)</p>
+
+<h2>Using Them</h2>
+
+<p>Ideally, this is what we want the user model to look like.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Preferences</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">preference</span> <span class="ss">:chime</span><span class="p">,</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="n">preference</span> <span class="ss">:name</span><span class="p">,</span> <span class="s2">&quot;Josh&quot;</span>
+</span><span class='line'>  <span class="n">preference</span> <span class="ss">:awesome</span><span class="p">,</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Simple but straightforward: we include the module and then define each preference, with its name first and default value second. Ideally we don&#8217;t want to save default values to the database, since that would just make a lot of unnecessary records.</p>
+
+<h2>The Preferences Module</h2>
+
+<p>So let&#8217;s make that happen in that <code>include Preferences</code> line! This is the real heart of the preferences engine.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Preferences</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:preferences</span>
+</span><span class='line'>    <span class="vc">@@preferences</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">preference</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">preferences</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class_variable_get</span><span class="p">(</span><span class="ss">:&#39;@@preferences&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">preferences</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">default</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">class_variable_set</span><span class="p">(</span><span class="ss">:&#39;@@preferences&#39;</span><span class="p">,</span> <span class="n">preferences</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">read_preference</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">p</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">p</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">,</span> <span class="ss">:value</span> <span class="o">=&gt;</span> <span class="vc">@@preferences</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="vc">@@preferences</span><span class="o">.</span><span class="n">has_key?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="kp">nil</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">write_preference</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">p</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">find_or_create_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">p</span><span class="o">.</span><span class="n">update_attribute</span><span class="p">(</span><span class="ss">:value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="vc">@@preferences</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">any?</span><span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="nb">method</span> <span class="o">=~</span> <span class="sr">/</span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="sr">/</span><span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">method</span> <span class="o">=~</span> <span class="sr">/=/</span>
+</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">write_preference</span><span class="p">(</span><span class="nb">method</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">read_preference</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="k">super</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is really pretty simple. Upon inclusion it tells the model that it&#8217;s a part of that it <code>has_many :preferences</code> and sets up a class variable hash to store preferences and their defaults. When you declare <code>preference :chime, true</code> it records that in the class variable, and then all instances will respond to either <code>user.chime = true</code> or <code>user.write_preference(:chime, true)</code>. You can read values with <code>user.chime</code> or <code>user.read_preference(:chime)</code>. If a value isn&#8217;t written in the database, it returns the default value instead.</p>
+
+<p>This probably has a level or two of refactoring that could happen around it. Maybe when I have time I will turn it into a more sensible gem, but until then, if anyone needs quick and dirty preferences&#8230; here you go.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[From the RubyMotion Simulator to Your Friend's iPhone]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/"/>
+    <updated>2012-05-10T19:13:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming</a> series today to give the whole Motion thing a break. But I spent far too long on Tuesday getting an app correctly deploying through Testflight, and it was a really painful process. I took copious notes while making it happen, though, so in the interest of saving someone else&#8217;s time, here is my step-by-step guide to successfully getting an app from your RubyMotion simulator onto someone else&#8217;s device.</p>
+
+<!-- more -->
+
+
+<h2>1. Set up your Apple Developer Account</h2>
+
+<p>This step is pretty obvious and if you&#8217;re actually interested in deploying at all, it&#8217;s probably already complete. But I promised a step-by-step guide, and this is certainly step number one (or more like number zero). If you want to deploy to other people&#8217;s devices you need an Apple developer account. Sign up for one at <a href="https://developer.apple.com/membercenter/">Apple&#8217;s developer member center</a>. Buying the iOS development license will set you back $100/year.</p>
+
+<h2>2. Create a Distribution Certificate</h2>
+
+<p>You&#8217;ll have to <a href="https://developer.apple.com/ios/manage/certificates/team/index.action">create a development certificate first</a>. Once that&#8217;s done, set yourself up with a <a href="https://developer.apple.com/ios/manage/certificates/team/distribute.action">distribution certificate</a>.</p>
+
+<p><img src="http://udn.epicgames.com/Three/rsrc/Three/AppleiOSProvisioningPortal/ios_provision_distcert_home.png" alt="Create a Distribution Certificate" /></p>
+
+<p>You need to press that big gray button that says, &#8220;Request Certificate.&#8221; This distribution certificate is what you&#8217;ll need to sign the eventual app with. If you use the wrong certificate or don&#8217;t have one at all, most likely your friends will get the dreaded <a href="http://help.testflightapp.com/customer/portal/articles/402799-i-get-an-%22unable-to-download%22-error-when-installing-my-application">&#8220;Unable to Download&#8221;</a> Testflight error, which is certainly among the least helpful error messages I&#8217;ve ever come across.</p>
+
+<p>When you&#8217;ve saved the distribution certificate, click on it to add it to your keychain. Note its name: it will be something like, &#8220;iPhone Distribution Profile: Your Name.&#8221; Make sure you remember the name of this certificate, as you will need it in step 6.</p>
+
+<h2>3. Add Devices</h2>
+
+<p>This is probably the most straightforward step. Head to the <a href="https://developer.apple.com/ios/manage/devices/index.action">devices section</a>, click the &#8220;Add Devices&#8221; button and start adding devices by their UDID. If you&#8217;re doing this with a friend, link them to the first <a href="http://www.innerfence.com/howto/find-iphone-unique-device-identifier-udid">Google result for finding your UDID</a>, which is both helpful and actually available for viewing by your developer-accountless friends, as opposed to Apple&#8217;s own instructions which are not.</p>
+
+<h2>4. Make an App ID</h2>
+
+<p>Technically this step is optional, but likely you&#8217;ll eventually want to do push notifications, or in-app purchases, or something like that. So you may as well get an App ID now and save yourself the trouble of doing so later.</p>
+
+<p>Head over to the <a href="https://developer.apple.com/ios/manage/bundles/add.action">Create App ID</a> page and fill in all the necessary values. There&#8217;s one field of particular importance to us, however: the bundle identifier. The usual style is <code>com.yourCompany.yourApp</code>, so go for something like that. Remember what you wrote here, as you&#8217;ll need it again in step 6!</p>
+
+<h2>5. Create a Provisioning Profile, Referencing Your Devices</h2>
+
+<p><img src="http://veratic.us/GXmd/provisioning_profile.jpg" alt="Create a Provisioning Profile" /></p>
+
+<p>Head on over to the <a href="https://developer.apple.com/ios/manage/provisioningprofiles/create.action?type=2">distribution provisioning portal</a> and create a distribution provisioning profile. Ensure you select &#8220;Ad Hoc&#8221; for your distribution method (unless you&#8217;re releasing to the App Store), and select the devices you entered in step 3. Submit the profile and hit Command-R until it&#8217;s moved from pending to active. Download it; note the location you saved it to as well as its file name. Another thing we need to know for step 6.</p>
+
+<h2>6. Update your RubyMotion Rakefile</h2>
+
+<p>Stop! Do you have:</p>
+
+<ol>
+<li>The name of your distribution certificate, from step 2?</li>
+<li>The bundle identifier, from step 4?</li>
+<li>The filename and path of the distribution provisioning profile, from step 5?</li>
+</ol>
+
+
+<p>If you answered yes to all those questions, good for you! Proceed onwards. If not, check your reading comprehension skills and go back a few steps.</p>
+
+<p>Now that we have all that important information, we have to put it into our Rakefile.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
+</span><span class='line'>  <span class="c1"># The name of your personal distribution profile, from your keychain.</span>
+</span><span class='line'>  <span class="c1"># Distribution profile, NOT development profile!</span>
+</span><span class='line'>  <span class="c1"># This was from step 2.</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
+</span><span class='line'>  <span class="c1"># The bundle identifier, from step 4.</span>
+</span><span class='line'>  <span class="c1"># Exactly as you typed it then.</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
+</span><span class='line'>  <span class="c1"># The filename and full path of your distribution provisioning profile.</span>
+</span><span class='line'>  <span class="c1"># The name is probably an enormous hex string.</span>
+</span><span class='line'>  <span class="c1"># From step 5.  </span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Failure to set any of these values correctly will result in either compilation errors or installation errors and will probably be nightmarishly difficult to track down and fix.</p>
+
+<h2>7. Set up Testflight</h2>
+
+<p>Follow the steps for doing this on the very helpful <a href="http://www.rubymotion.com/developer-center/articles/testflight/">RubyMotion article</a>. Afterwards, your Rakefile will look something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-testflight&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">sdk</span> <span class="o">=</span> <span class="s1">&#39;vendor/TestFlightSDK&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">api_token</span> <span class="o">=</span> <span class="s1">&#39;APIToken&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">team_token</span> <span class="o">=</span> <span class="s1">&#39;TeamToken&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, you should be able to <code>rake testflight notes='What a helpful step-by-step guide!'</code> to actually deploy your app to Testflight, and your users should be able to download and install it no problem.</p>
+
+<p>Writing this all down, it seems rather clear and straightforward. While doing it, unfortunately, it is not. Apple&#8217;s documentation is really obtuse and the error messages you get during the process are seriously unhelpful. But happily with this guide you should be more or less good to go.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyMotion Tips &amp; Tricks]]></title>
@@ -988,27 +1728,27 @@
 <span class='line-number'>23</span>
 </pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nv">module.exports = </span><span class="nf">(robot) -&gt;</span>
 </span><span class='line'>  <span class="nx">robot</span><span class="p">.</span><span class="nx">respond</span> <span class="sr">/deploy site (\w*)/i</span><span class="p">,</span> <span class="nf">(msg) -&gt;</span>
-</span><span class='line'>    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;util&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
+</span><span class='line'>    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;util&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nv">site = </span><span class="nx">msg</span><span class="p">.</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Initiating deploy&quot;</span>
-</span><span class='line'>    <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+</span><span class='line'>    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Initiating deploy&quot;</span>
+</span><span class='line'>    <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
 </span><span class='line'>      <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error pulling repository:&quot;</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error pulling repository:&quot;</span>
 </span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
 </span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Building &amp; deploying site&quot;</span>
-</span><span class='line'>        <span class="nx">exec</span> <span class="s2">&quot;cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Building &amp; deploying site&quot;</span>
+</span><span class='line'>        <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
 </span><span class='line'>          <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;Fatal error building site:&quot;</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error building site:&quot;</span>
 </span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
 </span><span class='line'>          <span class="k">else</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s2">&quot;[#{site}/deploy] Deploy complete&quot;</span>
+</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Deploy complete&quot;</span>
 </span><span class='line'>
 </span><span class='line'><span class="nv">chomp = </span><span class="nf">(text) -&gt;</span>
-</span><span class='line'>  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1480,581 +2220,6 @@
 <p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course &#8211; it&#8217;ll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can&#8217;t destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can&#8217;t say that it&#8217;s totally secure yet, but it&#8217;s a damn sight better than uncensored irb, and after a week or two of work I bet I&#8217;ll be able to get it locked down pretty damn tight.</p>
 
 <p>But until then, go ahead and try to break it!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Delegation when Delegate Just Won't Work]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work/"/>
-    <updated>2012-03-28T15:37:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/28/delegation-when-delegate-just-wont-work</id>
-    <content type="html"><![CDATA[<p>Rails provides a really awesome ability to avoid <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a> violations &#8211; the <a href="http://apidock.com/rails/Module/delegate">Module#delegate</a> method. The Law of Demeter is an informal programming guideline, intended to make your code more obvious and more reusable: objects should only call methods on other objects, not objects of those objects. To provide a more concrete example:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Law of Demeter violation: @user should not reach into address!</span>
-</span><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># So much better...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Rails, because it&#8217;s cool, provides a quick and easy pattern for making this work:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="ss">:address</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Calls address.street_address</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Check out the <a href="http://apidock.com/rails/Module/delegate">delegate documentation</a> for more information on how this functionality works. But <a href="http://stackoverflow.com/questions/9914400/delegate-all-method-calls-on-a-model-to-an-association">a question I came across on Stack Overflow</a> today asked: what do you when you want to delegate all methods? I do <a href="https://github.com/Veraticus/Dynamoid/blob/master/lib/dynamoid/adapter.rb#L122">something similar in Dynamoid</a> and wanted to talk about how to make this pattern sensible and performant.</p>
-
-<!-- more -->
-
-
-<p>Essentially you have two options when delegation fails: the easy but less performant way, and the hard but more performant way. It&#8217;s always nice to have choices, right?</p>
-
-<h2>The Easy Way</h2>
-
-<p>The easy way uses <code>method_missing</code>. Method_missing, of course, is part of Ruby&#8217;s extensive metaprogramming suite; it is called when a method that doesn&#8217;t exist is invoked on an object. So, if you have an object (say our user from above) and you want to delegate all methods that it doesn&#8217;t have itself to its address, you would simply do:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">address</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="k">if</span> <span class="n">address</span> <span class="o">&amp;&amp;</span> <span class="n">address</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This works and will correctly send every method that can be called on an address to that address. Unfortunately, method_missing is slower than defining a method directly on the object, so every time you&#8217;re forced to use method_missing you&#8217;re added fractions of milliseconds to your application. This speed difference is usually imperceptible, but you never know: if you use this method_missing enough it could make a difference.</p>
-
-<h2>The Hard Way</h2>
-
-<p>So we have the hard way. This method is &#8220;harder&#8221; only in that you need to know the methods you want to delegate beforehand &#8211; in which case, why aren&#8217;t you using <code>delegate</code>? There is still a use for this method though: if you want to do something like benchmarking or argument recording before you delegate, you can do that easily here.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="o">[</span><span class="ss">:all</span><span class="p">,</span> <span class="ss">:my</span><span class="p">,</span> <span class="ss">:methods</span><span class="p">,</span> <span class="ss">:here</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">define_method</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">args</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">address</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In Dynamoid, we perform benchmarking in this method before sending the response along, allowing you to see how long the actual request took in DynamoDB.</p>
-
-<p>Ultimately, you should use <code>delegate</code> if possible&#8230; but if it isn&#8217;t, then either of these two options should get you started to avoid programming unpleasantness. Don&#8217;t address your objects through other objects &#8211; your code will look better and be more maintainable if you take some time to isolate methods!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Elasticsearch and Percolation in Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/"/>
-    <updated>2012-03-25T11:39:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails</id>
-    <content type="html"><![CDATA[<p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &#8211; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &#8211; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&#8217;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&#8217;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
-
-<!-- more -->
-
-
-<p>Initially, magic albums were a set of complicated MySQL queries. I think anyone who&#8217;s had experience with indexes in an enormous MySQL database knows where this one is going&#8230; its performance was terrible, and as more people created more albums our RDS instance started really chugging. The worst part was we were spending enormous amounts of time, energy, and money invested in a small part of our application, and it was having a cascade effect through the database ruining the rest of the user experience.</p>
-
-<p>As a stopgap measure, we switched to using Redis lists to hold the association but kept the actual index in MySQL. Recently though we migrated away from MySQL completely to an index storage called <a href="http://www.elasticsearch.org/">elasticsearch</a>. Elasticsearch is awesome because it&#8217;s built on Lucene, is incredibly easy to get going, and is very very powerful. I passed over search solutions like <a href="http://sphinxsearch.com/">Sphinx</a> and <a href="http://www.searchify.com/">Searchify</a> mostly because we aren&#8217;t doing any text searching: all of the queries albums perform on photos are controlled by direct, matched fields. We just needed a great, simple engine for indexing them constantly and pulling results out quickly &#8211; an engine that wouldn&#8217;t bring the rest of our stack down if there was an indexing failure or if we were bombarded with many simultaneous queries.</p>
-
-<p>Elasticsearch has given us all that and more. Using the amazing <a href="https://github.com/karmi/tire">tire</a> gem, it was simple to get our photo model set up correctly:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Tire</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Search</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">mapping</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:id</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:lat_lng</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:geo_point</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:account_id</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:date</span>
-</span><span class='line'>    <span class="n">indexes</span> <span class="ss">:tags</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>(The code here is changed slightly from its production form to redact business logic and simplify it.) Of course, the real magic takes place in the albums model. Albums are essentially saved queries, if you think about it: they should search for photos every time they&#8217;re called. So we have a method to generate the query we&#8217;re looking for:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_query</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:terms</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:account_ids</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:accounts</span><span class="o">]</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:accounts</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:terms</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:tags</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:tags</span><span class="o">]</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:tags</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:range</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:created_at</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:from</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:starts_at</span><span class="o">]</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:ends_at</span><span class="o">]</span><span class="p">}}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:starts_at</span><span class="o">].</span><span class="n">blank?</span> <span class="o">&amp;&amp;</span> <span class="n">query</span><span class="o">[</span><span class="ss">:ends_at</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:geo_distance</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:lat_lng</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">query</span><span class="o">[</span><span class="ss">:lat</span><span class="o">].</span><span class="n">to_f</span><span class="p">,</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lng</span><span class="o">].</span><span class="n">to_f</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span> <span class="ss">:distance</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">query</span><span class="o">[</span><span class="ss">:range</span><span class="o">]</span><span class="si">}</span><span class="s2">km&quot;</span><span class="p">}}</span> <span class="k">unless</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lat</span><span class="o">].</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">query</span><span class="o">[</span><span class="ss">:lng</span><span class="o">].</span><span class="n">blank?</span>
-</span><span class='line'>    <span class="n">query</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>These are all, in elasticsearch parlance, filters rather than queries: queries must look into data fields and perform operations in them, whereas filters just filter on a fields&#8217; value directly&#8230; exactly what I was looking for. <code>terms</code> instructs the filter parser that at least one of the select elements must match. <code>range</code>, as you can see, allows us to pull only photos within a certain date. <code>geo_distance</code> is particularly cool and lets us filter all photos by their geographic location.</p>
-
-<p>Using this couldn&#8217;t be simpler:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_photos</span>
-</span><span class='line'>    <span class="n">finder</span> <span class="o">=</span> <span class="no">Photo</span><span class="o">.</span><span class="n">search</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">query</span> <span class="p">{</span> <span class="n">all</span> <span class="p">}</span>
-</span><span class='line'>      <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
-</span><span class='line'>      <span class="n">sort</span> <span class="p">{</span><span class="n">by</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="s2">&quot;desc&quot;</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">finder</span><span class="o">.</span><span class="n">results</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Tada! Easy and simple searching inside your models. The performance gain for us was massive; elasticsearch has a ridiculously small memory footprint, but consistently returns responses to us in 50-60 milliseconds. Now that&#8217;s performance!</p>
-
-<p>Many of you might be wondering, though, how we get the reverse of this association. Albums have many (searched) photos; how does a photo know what album it&#8217;s in? This was a stumbling block for the other search solutions I investigated, and I was concerned I would have to bust out the old, gimpy MySQL.</p>
-
-<p>But elasticsearch to the rescue! It employs a very neat feature called <a href="http://www.elasticsearch.org/blog/2011/02/08/percolator.html">the percolator</a>. Percolation allows us to save searches as an index themselves, and then determine what objects match any of the saved searches. So, we save the search an album would conduct along with the album&#8217;s ID into the photo percolator; then we can determine what queries a photo matches when we save it. It&#8217;s really quite ingenuous and was, of course, ridiculously easy to set up:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">after_save</span> <span class="ss">:register_query</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">register_query</span>
-</span><span class='line'>    <span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">register_percolator_query</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">q</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">q</span><span class="o">.</span><span class="n">filtered</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">query</span> <span class="p">{</span><span class="n">all</span><span class="p">}</span>
-</span><span class='line'>        <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This uses the same <code>elasticsearch_query</code> method as above (of course, since we want to save the same query into the database). And on the photo model, to use it, we just do:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">percolated_albums</span>
-</span><span class='line'>    <span class="no">Album</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">percolate</span><span class="p">(</span><span class="nb">self</span><span class="p">))</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I&#8217;ll save details on how I did that for another post.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why I Don't Use Haml]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/"/>
-    <updated>2012-03-22T13:19:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml</id>
-    <content type="html"><![CDATA[<p>I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It&#8217;s actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it&#8217;s very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
-
-<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
-
-<!-- more -->
-
-
-<h2>Indentation Sucks (Usually)</h2>
-
-<p>Notice the cute little parenthetical up there? That&#8217;s because I really do like CoffeeScript, which is just as whitespace-sensitive as Haml. So what&#8217;s the difference?</p>
-
-<p>CoffeeScript uses indentations to abstract away one of the worst &#8220;features&#8221; of JavaScript: the dreaded <code>})</code> sequences. Closing arguments and functions again and again is not only a headache, it happens so frequently that some sort of error is inevitable. Strict whitespace rules help us avoid errors in closure. Of course, the same argument can be made about HTML and Haml&#8217;s whitespace rules, but there&#8217;s another key difference here.</p>
-
-<p>HTML closures indicate which tag they close. You don&#8217;t have a forest of <code>)})})}</code>, which even if you indent correctly still won&#8217;t tell you which parenthesis or bracket they&#8217;re closing. Instead you have an obvious and syntactic declaration of which tag you&#8217;re ending when you end it. You can argue that the tag closure is unnecessary (Haml seems largely based on this argument), but you&#8217;re trading explicit tag closure for explicit whitespace restrictions&#8230;</p>
-
-<p>And ultimately (and most damningly), whitespace restrictions make the document harder to read and understand than closing tags. If you have an extremely long page with many nested elements, Haml is very difficult to comprehend and consequently much harder to use.</p>
-
-<h2>If It Ain&#8217;t Broke&#8230;</h2>
-
-<p>SASS and CoffeeScript fix serious errors and oversights in the implementations of their specific languages. CoffeeScript ensures correct lexical scoping of variables; SASS allows variable assignment and better selectors than CSS. Both are enormous improvements on the languages they compile into.</p>
-
-<p>Haml doesn&#8217;t add anything at all to HTML. There&#8217;s no special Haml tags that do something HTML couldn&#8217;t do by itself. It gives you a shortcut for the syntax, but that&#8217;s essentially it.</p>
-
-<p>And HTML really isn&#8217;t that bad by itself. The syntax is already fairly clean and clear; it&#8217;s not like we&#8217;re lost in a field of, well, parenthesis and curly brackets. Tables can get a little muddy at times, but good HTML and CSS prevent documents from becoming unreadable &#8211; and Haml doesn&#8217;t offer any interesting or unique tools to improve readability, either.</p>
-
-<h2>Designers Aren&#8217;t Programmers</h2>
-
-<p>But I think this is the biggest reason I don&#8217;t use Haml. Frontend designers use CSS, and the best ones employ JavaScript (and program good JavaScript!) &#8211; but every single one is going to be using HTML to create their pages. Eventually, if your site gets big, you&#8217;re going to want a designer to do some pages for you&#8230; and they&#8217;re not going to be producing Haml, they&#8217;re going to be producing HTML.</p>
-
-<p>Sure, you can change that HTML to Haml. But let me guarantee you, one day they&#8217;ll want to change something, and at that point you do one of three things:</p>
-
-<ol>
-<li>Show them the Haml site, tell them to do it all in Haml, and pay for them learning it.</li>
-<li>Take their design and convert it to Haml yourself and then incorporate it into the page.</li>
-<li>Curse your unjust fate and just switch to erb and copypaste their changes in.</li>
-</ol>
-
-
-<p>As I said at the beginning, I like Haml. But it&#8217;s a markup language for programmers, and ultimately the people who use HTML the most aren&#8217;t programmers. SASS is barely a programming language, more like a set of syntactical shortcuts; and CoffeeScript appeals to those who program in JavaScript already. Haml just doesn&#8217;t appeal to the correct audience to use its core feature set, which is a damn shame, because Haml really is pretty cool.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sweeping Caches from Resque (or Anywhere Really)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/"/>
-    <updated>2012-03-19T10:29:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really</id>
-    <content type="html"><![CDATA[<p>Phil Karlton, someone I can only presume is a pretty smart programmer, said <a href="http://martinfowler.com/bliki/TwoHardThings.html">&#8220;there are only two hard things in Computer Science: cache invalidation and naming things.&#8221;</a> He&#8217;s totally right; cache invalidation is one of the biggest headaches when designing highly usable, highly available websites and is something that I&#8217;m sure every Rails programmer worth their salt has struggled with. (Naming things is also a pain but not the focus of this post.)</p>
-
-<!-- more -->
-
-
-<p>And unfortunately the reason for the struggle is that Rails&#8217; caching tools don&#8217;t go nearly as far as they should. This is really through no fault of their own; honestly, Rails&#8217; caching methods are amazingly robust, and if you don&#8217;t know what they are, you should read <a href="http://guides.rubyonrails.org/caching_with_rails.html">the guide</a> on them. But good tools can only take you so far. Ultimately, caching is as application-specific as you can get, and when you get to finely-grained control you have to take the reins yourself.</p>
-
-<p>One of the problems I ran into recently was invalidating caches during an association join. I have two models, album and photo, and when one is added to the other I wanted to expire all the caches dealing with both. I already have <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> in my application, but callbacks aren&#8217;t triggered on association. And putting something in an after_add on the association itself didn&#8217;t seem like the right answer; why should I put cache expiration stuff in my model when I already have sweepers dedicated to that logic?</p>
-
-<p>I&#8217;m not sure I&#8217;m in love with the solution I came up with, but it certainly seems to work. All of the association logic happens in Resque jobs, so I added the cache invalidation directly to this jobs by invoking the sweeper manually:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">PhotoSweeper</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:new</span><span class="p">)</span><span class="o">.</span><span class="n">expire_cache_for</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The <code>send</code> business is necessary because new is a private method for sweepers. Nevertheless this really seems to get the job done; the caches are swept appropriately, and my cache invalidation logic remains safely in the sweepers, where I can add or edit it as much as I want. I suppose if I really wanted to I could put this in an after_add on the model as well. I&#8217;ve resisted that so far but maybe it&#8217;s the logical place for this kind of expiration logic to happen.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Classifying and Refactoring Your Code]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/"/>
-    <updated>2012-03-16T00:39:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code</id>
-    <content type="html"><![CDATA[<p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I&#8217;d share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I&#8217;ve learned will aid others.</p>
-
-<!-- more -->
-
-
-<h2>Hashes = Objects</h2>
-
-<p>In the earlier iterations of Dynamoid, I was passing around almost everything in hashes, and the calculations I was performing on those hashes was growing more and more complicated as I went, with logic flying around my files like a flock of disorganized birds. When I was putting index logic into criteria chains, I realized that keeping indexes as hashes was an enormous mistake&#8230; and one I wish I had realized earlier.</p>
-
-<p>As I was refactoring my code I realized that I pass hashes around in a number of places. Hashes work well initially to store small amounts of data, but if you&#8217;re using them for that purpose you almost certainly want a real object instead. Just whip that hash apart into a class and you&#8217;ll be surprised how much code will go in there, and how much simpler your application will be for your trouble.</p>
-
-<h2>Refactor Early, Refactor Often</h2>
-
-<p>I tend to be my own harshest critic, but honestly, my first pass at features tends to be messy at best. I make my tests pass (always test first, btw, but that&#8217;s so fundamental I&#8217;m not going to include it as a point) but usually in the most complicated, slowest, unpleasant way possible. Take some time after the tests pass to stare at your code a bit and decide if that&#8217;s really the best way to go about doing things. Usually a change will jump out at you immediately, but don&#8217;t be afraid to just come back to the code later if nothing presents itself.</p>
-
-<p>Tests allow you to do this kind of refactoring free of charge. I always imagine tests as the scaffolding around my code; no matter how tall the code gets, with the scaffolding it&#8217;ll never fall over.</p>
-
-<h2>Document!</h2>
-
-<p>I&#8217;m really bad at this one myself, but I&#8217;m going to be going back through Dynamoid in the very near future and adding documentation to all my methods. Even if your code is a one-liner, people will read documentation over code every time. So document that code! Especially in a collaborative environment, documentation is critical for making your project easy to contribute to.</p>
-
-<p>I&#8217;m sure other things will pop out at me after some thought, but these are the biggest takeaways Dynamoid has given me. Hopefully they&#8217;ll be of use to someone else as well.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Fnordmetric: Native Rails Metrics]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/13/fnordmetric-native-rails-metrics/"/>
-    <updated>2012-03-13T22:05:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/13/fnordmetric-native-rails-metrics</id>
-    <content type="html"><![CDATA[<p>Over the weekend I spent some time getting <a href="https://github.com/paulasmuth/fnordmetric">Fnordmetric</a> set up in an application. On the surface it looks really cool and quite nifty, but I ran into some trouble getting it configured how I wanted it and figured I&#8217;d make a post about it. I think I might have been struggling against the conventions in it a little too much, but it was still an instructive battle.</p>
-
-<!-- more -->
-
-
-<h2>Engineize It</h2>
-
-<p>The Gem itself assumes you&#8217;ll be running it on its own port, presumably redirecting nginx traffic there. But this is 2012 and Rails engines are all the rage &#8211; so why bother with a separate app? Well, I&#8217;ll get to the reason why later, but mounting it as an engine is pretty simple.</p>
-
-<p>Set up an initializer or something that defines all the Fnord metrics you want, something like <code>config/initializers/fnord.rb</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;fnordmetric&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">FnordMetric</span><span class="o">.</span><span class="n">namespace</span> <span class="ss">:analytics</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">gauge</span> <span class="ss">:events_total</span><span class="p">,</span>
-</span><span class='line'>    <span class="ss">:tick</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span>
-</span><span class='line'>    <span class="ss">:progressive</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s2">&quot;Events (total)&quot;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">event</span><span class="p">(</span><span class="ss">:&quot;*&quot;</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">incr</span> <span class="ss">:events_tota</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">FnordMetric</span><span class="o">.</span><span class="n">server_configuration</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="ss">:redis_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:redis_prefix</span> <span class="o">=&gt;</span> <span class="s2">&quot;fnordmetric&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:inbound_stream</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1339&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:start_worker</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:print_stats</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:event_queue_ttl</span> <span class="o">=&gt;</span> <span class="mi">120</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:event_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:session_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That stuff is copy-pasted from the Github README, so I won&#8217;t go into explaining it. Note that we do not include FnordMetric.standalone at the bottom, however; we&#8217;ll be mounting the server ourselves in routes.rb like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">mount</span> <span class="no">FnordMetric</span><span class="o">.</span><span class="n">embedded</span><span class="p">,</span> <span class="ss">:at</span> <span class="o">=&gt;</span> <span class="s2">&quot;/fnord&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then you can go to localhost:3000/fnord, and tada! Fnord metrics!</p>
-
-<h2>Set Up a Worker</h2>
-
-<p>The difficult, of course, is that each instance of your app will now also spin up its own instance of a FnordWorker, which might not be what you want. I got around this by altering my config/initializers/fnord.rb:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FnordMetric</span><span class="o">.</span><span class="n">server_configuration</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="ss">:redis_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:redis_prefix</span> <span class="o">=&gt;</span> <span class="s2">&quot;fnordmetric&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:inbound_stream</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1339&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:start_worker</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">development?</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;FNORD_WORKER&#39;</span><span class="o">]</span> <span class="p">?</span> <span class="kp">true</span> <span class="p">:</span> <span class="kp">false</span><span class="p">),</span>
-</span><span class='line'>  <span class="ss">:print_stats</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:event_queue_ttl</span> <span class="o">=&gt;</span> <span class="mi">120</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:event_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span>
-</span><span class='line'>  <span class="ss">:session_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I know some people hate the ternary operator, but I kind of like it. Anyway, this causes the worker to start only if there&#8217;s an environment variable set to start it or the Rails environment is development. I set up one instance that receives this variable when it starts, and now I only have one worker. Simplicity itself!</p>
-
-<p>Ultimately, I like Fnordmetric, but I&#8217;m not using it in my production applications. I feel like there&#8217;s a level of abstraction to go before it&#8217;s really usable in big production apps. It&#8217;s much better at tracking arbitrary metrics than NewRelic &#8211; honestly, trying to shoehorn stats into their system feels silly at times &#8211; but setting up the tracking stuff is a pain, involving a lot of unnecessary repetition. I think that a Fnordmetric2.0 would be awesome, though, so I hope the project sees more love and work. And who knows, if I have some time I&#8217;ll try contributing to it myself. That&#8217;s the joy of open source: if you have a good idea, you make it happen.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails 3: Arel, Arel_Table, and Squeel]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/"/>
-    <updated>2012-03-10T10:17:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/10/rails-3-arel,arel_table,-and-squeel</id>
-    <content type="html"><![CDATA[<p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &#8211; ActiveRecord&#8217;s own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
-
-<p>Well, in reality, that isn&#8217;t quite what happened. ActiveRecord&#8217;s Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;sum(model.column) as &#39;model_sum&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="s2">&quot;created_at</span>
-</span><span class='line'><span class="s2">DESC&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;models.created_at &gt; ?&quot;</span><span class="p">,</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or using unpleasant workarounds to address the underlying Arel for the model:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="no">Model</span><span class="o">.</span><span class="n">arel_table</span><span class="o">[</span><span class="ss">:title</span><span class="o">].</span><span class="n">matches</span><span class="p">(</span><span class="s1">&#39;%foo%&#39;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is just kinda ugly. Happily, there&#8217;s a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">{</span> <span class="p">{</span><span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;Josh&#39;</span> <span class="o">|</span> <span class="n">created_at</span> <span class="o">&lt;=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span><span class="p">}</span> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Much easier to understand! The double-curly braces does kind of suck (this is because it&#8217;s a hash inside a proc) but it&#8217;s still a fair but more understandable than the default Arel stuff.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby 1.9 Awesomeness Part 1: SecureRandom]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/"/>
-    <updated>2012-03-07T19:07:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom</id>
-    <content type="html"><![CDATA[<p>Ruby 1.9 includes a lot of neat stuff, and one of the coolest things is the SecureRandom module.</p>
-
-<p>SecureRandom presents a plethora of useful methods for creating random numbers and strings. You can <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> for a full list, but some of the more personally useful methods I&#8217;ve found are:</p>
-
-<!-- more -->
-
-
-<ul>
-<li><h3>SecureRandom#uuid</h3>
-
-<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a> uses this method to generate random IDs for objects. The resulting random number is supposed to be unique across an enormously large namespace (see the <a href="http://www.ietf.org/rfc/rfc4122.txt">RFC 4122</a> spec for details) and is perfect if you need a universally unique number&#8230; say, for generating IDs in a database.</p></li>
-<li><h3>SecureRandom#urlsafe_base64</h3>
-
-<p>If you&#8217;re creating a URL shortener then this method will end up being incredibly useful. The resulting string only includes characters that are URL safe (as the method name suggests), and while the string is not as unique as one generated by UUID, it will still be fairly random. Guaranteeing uniqueness across an application with a small loop would still probably be a wise idea though:</p></li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">permalink</span> <span class="o">=</span> <span class="kp">loop</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">permalink</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">urlsafe_base64</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">break</span> <span class="n">permalink</span> <span class="k">unless</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_permalink</span><span class="p">(</span><span class="n">permalink</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><h3>SecureRandom#base64</h3>
-
-<p>As above, except that +, /, and = are included in the output. The addition of three more characters significantly improves the randomness of this method, though, so use it when the resulting string doesn&#8217;t need to be in a URL.</p></li>
-</ul>
-
-
-<p>Regardless of what you&#8217;re working on, the new SecureRandom stuff will end up being incredibly useful for you. Go <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> to see some of the other neat stuff it includes!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Don't Mess With Primary Keys]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys/"/>
-    <updated>2012-03-04T19:11:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/04/dont-mess-with-primary-keys</id>
-    <content type="html"><![CDATA[<p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
-
-<p>Recently I&#8217;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &#8220;how do I mess with the primary key column?&#8221;</p>
-
-<p>The answer is always, invariably, the same: don&#8217;t.</p>
-
-<!-- more -->
-
-
-<p>It might seem sensible to tuck some sort of business logic away into your primary key. Just earlier today, <a href="http://stackoverflow.com/questions/9558715/changing-models-id-type-from-integer-to-decimal-makes-all-entries-try-to-be-0-0/9558832#9558832">I answered a question</a> from a guy who wanted to turn his primary key column into a decimal, and have the part before the decimal be equal to the primary key of another table &#8211; so you&#8217;d have 75.001 and 75.002, with 75 being the primary key of the orders table. A cute idea for a new column like order_number or something like that, but just a plain awful idea for a primary key.</p>
-
-<p>Primary keys, when you get right down to it, are database artifacts. They&#8217;re useful because they allow databases to expose powerful relations for our data: without a way for databases to reference individual rows that are guaranteed to be unique, even the most basic joins would be impossible. And because they&#8217;re important for databases, the assumption seems to be that they&#8217;re important for people too.</p>
-
-<p>Part of this is Rails&#8217; fault. By exposing URLs with primary keys by default (like users/4), one would automatically assume that the primary key is important data for a user to know (your key is 4 and that&#8217;s important!). In reality nothing could be further from the truth: the ID for a user is arbitrary database-internal logic and has no business facing users at all. I wish Rails going forward came bundled with the really awesome <a href="https://github.com/norman/friendly_id">FriendlyId</a> Gem that makes some unique database column appear to your internal application logic as the real ID for that table. Then you&#8217;d have URLs like users/josh, and that both looks better and obfuscates the primary key.</p>
-
-<p>As a sidenote, this is why UUID-based keys like <a href="http://www.mongodb.org/display/DOCS/Object+IDs">MongoDB&#8217;s</a> and <a href="https://github.com/Veraticus/Dynamoid">Dynamoid&#8217;s</a> are rather nifty &#8211; they make really ugly ID-based URLs by default so force you to choose a better column to use as a URL slug.</p>
-
-<p>The problem with all this attention on the primary key is that, invariably, people want to change it. Changing primary keys is awful. It will disassociate data all throughout your database, it messes with table autoincrementing&#8230; it will lead to problems right at the moment, and even more down the road you won&#8217;t even foresee. Or even worse, you&#8217;ll want to choose something nonstandard as a primary key (or not choose one at all) &#8211; and you&#8217;ll want to perform a join and be forced to deal with the consequences of your decision. Hint: they won&#8217;t be pretty.</p>
-
-<p>So do yourself a favor. View the ID column as what it really is: an internal database construction. It should be an auto-incrementing integer, no excuses. If you want any kind of business logic, make a new column for it and manage it separately. You&#8217;ll be glad you did, I promise.</p>
 ]]></content>
   </entry>
   
