@@ -32,14 +32,15 @@ Jun 28 2012 posted in rails How Not to &hellip;">
 <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="/javascripts/waypoints.js" type="text/javascript"></script>
 <script type="text/javascript">
-$.noConflict();
-jQuery(document).ready(function($) {
-  $('nav').waypoint(function(event, direction) {
-    $(this).toggleClass('sticky', direction === "down");
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
   });
-});
 </script>
   
   <script type="text/javascript">
@@ -71,9 +72,7 @@ jQuery(document).ready(function($) {
 </header>
   <nav role="navigation">
     <div id='navigation'>
-        <div class="navribbon ribbon-wrapper">
-          <div class="ribbon-front">
-            <ul class="subscription" data-subscription="rss">
+      <ul class="subscription" data-subscription="rss">
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
@@ -92,14 +91,6 @@ jQuery(document).ready(function($) {
 </ul>
 
 
-          </div>
-          <div class="ribbon-edge-topleft"></div>
-          <div class="ribbon-edge-topright"></div>
-          <div class="ribbon-edge-bottomleft"></div>
-          <div class="ribbon-edge-bottomright"></div>
-          <div class="ribbon-back-left"></div>
-          <div class="ribbon-back-right"></div>
-        </div>
     </div>
   </nav>
   <div id="main">
