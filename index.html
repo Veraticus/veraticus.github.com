@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Josh Symonds</title>
+  <title>Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,10 +24,21 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Josh Symonds" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/javascripts/waypoints.js" type="text/javascript"></script>
+<script type="text/javascript">
+$.noConflict();
+jQuery(document).ready(function($) {
+  $('nav').waypoint(function(event, direction) {
+    $(this).toggleClass('sticky', direction === "down");
+  });
+});
+</script>
   
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -46,14 +57,21 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Josh Symonds</a></h1>
-  
-    <h2>Ruby on Rails, Servers, and Coding</h2>
-  
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
 </hgroup>
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <nav role="navigation">
+    <div id='navigation'>
+        <div class="navribbon ribbon-wrapper">
+          <div class="ribbon-front">
+            <ul class="subscription" data-subscription="rss">
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
@@ -66,12 +84,22 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
+  <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
   <li><a href="/resume/">Resume</a></li>
 </ul>
 
-</nav>
+
+          </div>
+          <div class="ribbon-edge-topleft"></div>
+          <div class="ribbon-edge-topright"></div>
+          <div class="ribbon-edge-bottomleft"></div>
+          <div class="ribbon-edge-bottomright"></div>
+          <div class="ribbon-back-left"></div>
+          <div class="ribbon-back-right"></div>
+        </div>
+    </div>
+  </nav>
   <div id="main">
     <div id="content">
       <div class="blog-index">
@@ -507,8 +535,7 @@
   
     <section>
   <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <img src='http://www.gravatar.com/avatar/7668fdefde74e42b48fe657d71cdcc4c.png' class="left" width='75' height='75' />
-  <p>I&#8217;m CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats. I blog about how they fit.</p>
+  <p>I&#8217;m CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
@@ -563,12 +590,16 @@
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
   Copyright &copy; 2012 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-</footer>
+
+    </div>
+  </footer>
   
 
 <script type="text/javascript">
