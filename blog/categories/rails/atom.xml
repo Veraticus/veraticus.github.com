@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-04T14:06:28-05:00</updated>
+  <updated>2012-07-04T14:42:38-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,82 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Rails is the Most American Framework (and PHP is the Least)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/"/>
-    <updated>2012-07-04T12:26:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least</id>
-    <content type="html"><![CDATA[<p><a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">I'm no stranger to controversy.</a> I'm not afraid to stand up and say what millions of coders already know -- but what most people don't know is that I'm also extremely patriotic.</p>
-
-<p><img src="http://f.cl.ly/items/1V0z0n1Z3C3Q101I0I3z/boldly_french.jpg" alt="Boldly patriotic" /></p>
-
-<p>That's me, boldly pointing the way into the brighter, awesomer future of America. As I was sitting down to write the next in my series of <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">concerns on Rails</a>, my boyfriend (who is also a die-hard, red-blooded, Commie-hating patriot) suggested that I marry my love of Rails code and my love of the US of A in a very special blog post.</p>
-
-<p>But a post like that -- as daringly insightful as it might be -- just wouldn't be good enough for this blog. You see, my posts are also highly topical, and everyone knows Rails and America go together like chocolate and peanut butter. Pointing that out wouldn't really be exciting or new. I needed a special sauce to truly set my contribution apart: and that's when I remembered that a lot has been said recently about how <a href="http://me.veekun.com/blog/2012/04/09/php-a-fractal-of-bad-design/">horrible</a>/<a href="http://fabien.potencier.org/article/64/php-is-much-better-than-what-you-think">wonderful</a> PHP is.</p>
-
-<p>For I have a unique insight that no one else has ever considered in this debate: I know for a fact that Rails is easily the most American framework in existence, and PHP is the least. Thus I have at last resolved this tedious debate. PHP is indeed awful, and possibly also sponsored by the Axis of Evil, and Rails is as American as apple pie and the colors red, white, and blue. How did I arrive at this conclusion? Really, it's just common sense, but if you're not patriotic enough to figure it out I've helpfully included my reasoning.</p>
-
-<!-- more -->
-
-
-<h2>Rails is the Most American Framework</h2>
-
-<p>In order to examine Rails' blindingly obvious American-ness, we need a sensible rubric. How do you say one thing is more American than another? Well, I've helpfully come up with a completely objective barometer of Americana. Everyone would agree that the three core tenents of the United States are freedom, liberty, and database agnosticism -- so what better ways than those to rate Rails itself?</p>
-
-<h3>Freedom &amp; Liberty</h3>
-
-<p>One of Rails' core features is freedom. I know this is true because it was built that way by <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">David Heinemeyer Hansson</a>, who is perhaps the most real and most original of American patriots.</p>
-
-<p><img src="http://4.bp.blogspot.com/-aLryA2Bey-w/TY6usViKtAI/AAAAAAAACiE/B2qQeW_ags0/s1600/heinemeier.article.jpg" alt="The man himself" /></p>
-
-<p>DHH is a Danish programmer, and Denmark is pretty close to France, which is very American because the Frenchman Napoleon sold Lousiana to America in 1803. So he's definitely included in the American cultural halo effect, making him a United States citizen from the moment he was born.</p>
-
-<p>But even more importantly than that, I have inside knowledge that David (we're on a first name basis) is working on a "Men of 37signals" beefcake calendar. Nothing is more American than men baring nearly everything for money, and indeed, nothing represents liberty more than successful entrepreneurs stripping for petty cash.</p>
-
-<h3>Liberty &amp; Database Agnosticism</h3>
-
-<p>Really I think this point needs no explanation. But here's one anyway: when the framers of our Constitution wrote in that that hallowed document, "it becomes necessary for one people to dissolve the political bands which have connected them with another," they were doing more than obliquely referencing the creation of Rails nearly 200 years later. They were talking about dissolving the ties connecting an application to its database.</p>
-
-<p>They were <em>liberating</em> the Internet from the cruel confines of the databases that constrained it.</p>
-
-<p>Using object-relational mapping like ActiveRecord, document-relational mapping like Mongoid, or even document-relational mapping like the far superior <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a> is the true fulfillment of this centuries-old promise. This more than anything else represents Americanism: true, real liberty. Liberty you can touch, if you wanted to print out the source code and rub it all over your body.</p>
-
-<p>Which is what any real American would do.</p>
-
-<h2>PHP is the Work of Evil</h2>
-
-<p>Obviously, since Rails is a framework and PHP is a language, comparing the two is like comparing red apples to green apples. And that metaphor is even more apt here -- because PHP is indeed very red. And by that I mean Communist. But examining PHP's socialist leanings is fruitless: everyone knows there's greater evils than socialism in the world. The greatest of American leaders helpfully enumerated them for us.</p>
-
-<p><img src="http://3.bp.blogspot.com/-GNEL1sdGcvA/T0xJfvragjI/AAAAAAAAEF0/t5Nuvs6IEoA/s1600/George-W.-Bush.jpg" alt="Greatest American Leader" /></p>
-
-<p>They are Iran, Iraq, and North Korea.</p>
-
-<h3>Iran &amp; Iraq</h3>
-
-<p>Damningly, Iran and Iraq share a subcontintent with the country in which Zend Technologies itself is founded -- Israel. Just as the American freedom effect haloed DHH into citizenship, the evil anti-halo effect condemns Zend and everything it's created, which includes PHP. As a Jew who has visited Israel twice, I know this to be the case since I've seen it with my very own eyes. And nothing beats anecdotal evidence.</p>
-
-<p>Iran and Iraq also share numerous letters in their names with the worst perpetrator of PHP on the planet: India. (I'm counting the "i"s twice, so they have more letters in common than they ordinarily might.) Lots of Indians program PHP, and thus we can safely say many of India's most awesome works of art were created with PHP. The fact that other countries can make things that are arguably better than what American's done is inherently anti-American. For example:</p>
-
-<p><img src="http://www-bgr-com.vimg.net/wp-content/uploads/2011/03/india110314124035.jpg" alt="Created with PHP" /></p>
-
-<p>Just looking at that makes me sick.</p>
-
-<h3>North Korea</h3>
-
-<p>But I think North Korea deserves its own, special callout. The only PHP programmer I personally know is Korean. He also bears more than a passing resemblance to Kim Jong-un.</p>
-
-<p><img src="http://www.csmonitor.com/var/ezflow_site/storage/images/media/content/2012/0415/0415_kim_jong_un/12281745-1-eng-US/0415_Kim_jong_un_full_600.jpg" alt="This is him" /></p>
-
-<p>Kim Jong-un is the latest in a line of horrible, hereditary dictators that ruthlessly oppress their people. Doesn't that sound familiar to you, PHP programmers? Because if it doesn't, it should. It's the heart of what being American isn't -- just like PHP itself.</p>
-
-<h2>What does this mean for you?</h2>
-
-<p>I think the answer to my rhetorical question here is pretty obvious. But if you really need all this boiled down for you -- maybe because you're a PHP programmer and you're too busy hating America to have real reading comprehension -- here it is:</p>
-
-<p><em>You should totally be buying the "Men of 37signals" calendar</em>. I hear Mr. July is super hot.</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
@@ -318,6 +242,136 @@ end
 <p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don't want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
 
 <p>With only a few lines of code, it's easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don't have to sacrifice DRY to do so. If you have a lot of data that's expressed through only one controller, consider dynamic routing like this. It's easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Quick &amp; Easy User Preferences in Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/"/>
+    <updated>2012-05-16T18:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails</id>
+    <content type="html"><![CDATA[<p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn't like what was presently out there. I don't really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code's for you.</p>
+
+<!-- more -->
+
+
+<h2>Setting Up Preferences</h2>
+
+<p>You need a preference model. It should look like this:</p>
+
+<p>```ruby
+class Preference &lt; ActiveRecord::Base
+  belongs_to :user</p>
+
+<p>  validates_uniqueness_of :name, :scope => :user_id</p>
+
+<p>  attr_accessible :name, :value
+end
+```</p>
+
+<p>I used this migration to create it:</p>
+
+<p>```ruby
+class CreatePreferences &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code>create_table :preferences do |t|
+  t.string :name, :value
+  t.integer :user_id
+  t.timestamps
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>You might note that the value of all preferences, regardless of if they're supposed to be Boolean or datetime, is a string. Keep this in mind when you have to query this field later. (That is, if you want to search for all preferences where the value is true, you'll want to search for "1". And similarly, doing <code>user.preferences.first.true?</code> will always return <code>true</code>, as any string value is true. So, coder beware!)</p>
+
+<h2>Using Them</h2>
+
+<p>Ideally, this is what we want the user model to look like.</p>
+
+<p>```ruby
+class User &lt; ActiveRecord::Base
+  include Preferences</p>
+
+<p>  preference :chime, false
+  preference :name, "Josh"
+  preference :awesome, true</p>
+
+<p>  ...
+end
+```</p>
+
+<p>Simple but straightforward: we include the module and then define each preference, with its name first and default value second. Ideally we don't want to save default values to the database, since that would just make a lot of unnecessary records.</p>
+
+<h2>The Preferences Module</h2>
+
+<p>So let's make that happen in that <code>include Preferences</code> line! This is the real heart of the preferences engine.</p>
+
+<p>```ruby
+module Preferences
+  extend ActiveSupport::Concern</p>
+
+<p>  included do</p>
+
+<pre><code>has_many :preferences
+@@preferences = {}
+</code></pre>
+
+<p>  end</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def preference(name, default)
+  preferences = self.class_variable_get(:'@@preferences')
+  preferences[name] = default
+  self.class_variable_set(:'@@preferences', preferences)
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  def read_preference(name)</p>
+
+<pre><code>if p = self.preferences.where(:name =&gt; name).first
+  return p
+end
+return self.preferences.new(:name =&gt; name, :value =&gt; @@preferences[name]) if @@preferences.has_key?(name)
+nil
+</code></pre>
+
+<p>  end</p>
+
+<p>  def write_preference(name, value)</p>
+
+<pre><code>p = self.preferences.find_or_create_by_name(name)
+p.update_attribute(:value, value)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def method_missing(method, *args)</p>
+
+<pre><code>if @@preferences.keys.any?{|k| method =~ /#{k}/}
+  if method =~ /=/
+    self.write_preference(method.gsub('=', ''), *args)
+  else
+    self.read_preference(method)
+  end
+else
+  super
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This is really pretty simple. Upon inclusion it tells the model that it's a part of that it <code>has_many :preferences</code> and sets up a class variable hash to store preferences and their defaults. When you declare <code>preference :chime, true</code> it records that in the class variable, and then all instances will respond to either <code>user.chime = true</code> or <code>user.write_preference(:chime, true)</code>. You can read values with <code>user.chime</code> or <code>user.read_preference(:chime)</code>. If a value isn't written in the database, it returns the default value instead.</p>
+
+<p>This probably has a level or two of refactoring that could happen around it. Maybe when I have time I will turn it into a more sensible gem, but until then, if anyone needs quick and dirty preferences... here you go.</p>
 ]]></content>
   </entry>
   

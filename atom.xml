@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-04T14:06:28-05:00</updated>
+  <updated>2012-07-04T14:42:38-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,82 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Rails is the Most American Framework (and PHP is the Least)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/"/>
-    <updated>2012-07-04T12:26:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least</id>
-    <content type="html"><![CDATA[<p><a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">I&#8217;m no stranger to controversy.</a> I&#8217;m not afraid to stand up and say what millions of coders already know &#8211; but what most people don&#8217;t know is that I&#8217;m also extremely patriotic.</p>
-
-<p><img src="http://f.cl.ly/items/1V0z0n1Z3C3Q101I0I3z/boldly_french.jpg" alt="Boldly patriotic" /></p>
-
-<p>That&#8217;s me, boldly pointing the way into the brighter, awesomer future of America. As I was sitting down to write the next in my series of <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">concerns on Rails</a>, my boyfriend (who is also a die-hard, red-blooded, Commie-hating patriot) suggested that I marry my love of Rails code and my love of the US of A in a very special blog post.</p>
-
-<p>But a post like that &#8211; as daringly insightful as it might be &#8211; just wouldn&#8217;t be good enough for this blog. You see, my posts are also highly topical, and everyone knows Rails and America go together like chocolate and peanut butter. Pointing that out wouldn&#8217;t really be exciting or new. I needed a special sauce to truly set my contribution apart: and that&#8217;s when I remembered that a lot has been said recently about how <a href="http://me.veekun.com/blog/2012/04/09/php-a-fractal-of-bad-design/">horrible</a>/<a href="http://fabien.potencier.org/article/64/php-is-much-better-than-what-you-think">wonderful</a> PHP is.</p>
-
-<p>For I have a unique insight that no one else has ever considered in this debate: I know for a fact that Rails is easily the most American framework in existence, and PHP is the least. Thus I have at last resolved this tedious debate. PHP is indeed awful, and possibly also sponsored by the Axis of Evil, and Rails is as American as apple pie and the colors red, white, and blue. How did I arrive at this conclusion? Really, it&#8217;s just common sense, but if you&#8217;re not patriotic enough to figure it out I&#8217;ve helpfully included my reasoning.</p>
-
-<!-- more -->
-
-
-<h2>Rails is the Most American Framework</h2>
-
-<p>In order to examine Rails&#8217; blindingly obvious American-ness, we need a sensible rubric. How do you say one thing is more American than another? Well, I&#8217;ve helpfully come up with a completely objective barometer of Americana. Everyone would agree that the three core tenents of the United States are freedom, liberty, and database agnosticism &#8211; so what better ways than those to rate Rails itself?</p>
-
-<h3>Freedom &amp; Liberty</h3>
-
-<p>One of Rails&#8217; core features is freedom. I know this is true because it was built that way by <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">David Heinemeyer Hansson</a>, who is perhaps the most real and most original of American patriots.</p>
-
-<p><img src="http://4.bp.blogspot.com/-aLryA2Bey-w/TY6usViKtAI/AAAAAAAACiE/B2qQeW_ags0/s1600/heinemeier.article.jpg" alt="The man himself" /></p>
-
-<p>DHH is a Danish programmer, and Denmark is pretty close to France, which is very American because the Frenchman Napoleon sold Lousiana to America in 1803. So he&#8217;s definitely included in the American cultural halo effect, making him a United States citizen from the moment he was born.</p>
-
-<p>But even more importantly than that, I have inside knowledge that David (we&#8217;re on a first name basis) is working on a &#8220;Men of 37signals&#8221; beefcake calendar. Nothing is more American than men baring nearly everything for money, and indeed, nothing represents liberty more than successful entrepreneurs stripping for petty cash.</p>
-
-<h3>Liberty &amp; Database Agnosticism</h3>
-
-<p>Really I think this point needs no explanation. But here&#8217;s one anyway: when the framers of our Constitution wrote in that that hallowed document, &#8220;it becomes necessary for one people to dissolve the political bands which have connected them with another,&#8221; they were doing more than obliquely referencing the creation of Rails nearly 200 years later. They were talking about dissolving the ties connecting an application to its database.</p>
-
-<p>They were <em>liberating</em> the Internet from the cruel confines of the databases that constrained it.</p>
-
-<p>Using object-relational mapping like ActiveRecord, document-relational mapping like Mongoid, or even document-relational mapping like the far superior <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a> is the true fulfillment of this centuries-old promise. This more than anything else represents Americanism: true, real liberty. Liberty you can touch, if you wanted to print out the source code and rub it all over your body.</p>
-
-<p>Which is what any real American would do.</p>
-
-<h2>PHP is the Work of Evil</h2>
-
-<p>Obviously, since Rails is a framework and PHP is a language, comparing the two is like comparing red apples to green apples. And that metaphor is even more apt here &#8211; because PHP is indeed very red. And by that I mean Communist. But examining PHP&#8217;s socialist leanings is fruitless: everyone knows there&#8217;s greater evils than socialism in the world. The greatest of American leaders helpfully enumerated them for us.</p>
-
-<p><img src="http://3.bp.blogspot.com/-GNEL1sdGcvA/T0xJfvragjI/AAAAAAAAEF0/t5Nuvs6IEoA/s1600/George-W.-Bush.jpg" alt="Greatest American Leader" /></p>
-
-<p>They are Iran, Iraq, and North Korea.</p>
-
-<h3>Iran &amp; Iraq</h3>
-
-<p>Damningly, Iran and Iraq share a subcontintent with the country in which Zend Technologies itself is founded &#8211; Israel. Just as the American freedom effect haloed DHH into citizenship, the evil anti-halo effect condemns Zend and everything it&#8217;s created, which includes PHP. As a Jew who has visited Israel twice, I know this to be the case since I&#8217;ve seen it with my very own eyes. And nothing beats anecdotal evidence.</p>
-
-<p>Iran and Iraq also share numerous letters in their names with the worst perpetrator of PHP on the planet: India. (I&#8217;m counting the &#8220;i&#8221;s twice, so they have more letters in common than they ordinarily might.) Lots of Indians program PHP, and thus we can safely say many of India&#8217;s most awesome works of art were created with PHP. The fact that other countries can make things that are arguably better than what American&#8217;s done is inherently anti-American. For example:</p>
-
-<p><img src="http://www-bgr-com.vimg.net/wp-content/uploads/2011/03/india110314124035.jpg" alt="Created with PHP" /></p>
-
-<p>Just looking at that makes me sick.</p>
-
-<h3>North Korea</h3>
-
-<p>But I think North Korea deserves its own, special callout. The only PHP programmer I personally know is Korean. He also bears more than a passing resemblance to Kim Jong-un.</p>
-
-<p><img src="http://www.csmonitor.com/var/ezflow_site/storage/images/media/content/2012/0415/0415_kim_jong_un/12281745-1-eng-US/0415_Kim_jong_un_full_600.jpg" alt="This is him" /></p>
-
-<p>Kim Jong-un is the latest in a line of horrible, hereditary dictators that ruthlessly oppress their people. Doesn&#8217;t that sound familiar to you, PHP programmers? Because if it doesn&#8217;t, it should. It&#8217;s the heart of what being American isn&#8217;t &#8211; just like PHP itself.</p>
-
-<h2>What does this mean for you?</h2>
-
-<p>I think the answer to my rhetorical question here is pretty obvious. But if you really need all this boiled down for you &#8211; maybe because you&#8217;re a PHP programmer and you&#8217;re too busy hating America to have real reading comprehension &#8211; here it is:</p>
-
-<p><em>You should totally be buying the &#8220;Men of 37signals&#8221; calendar</em>. I hear Mr. July is super hot.</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
@@ -2232,6 +2156,70 @@
 
 
 <p>And the split is complete! Of course it sounds pretty easy when you gloss over most of the hard work in step #2, but hey, the way to make complicated projects seem achievable is to reduce them into manageable steps. I intend to follow this road map like the Pope follows the Bible &#8211; that is, using the good parts and ignoring the rest. Zing! But I&#8217;ll report back in a future post to indicate how well these steps worked for me. Until then, wish me luck!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby in the Sandbox: SandRBox]]></title>
+    <link href="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/"/>
+    <updated>2012-03-31T11:19:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox</id>
+    <content type="html"><![CDATA[<p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They&#8217;re always looking for people to teach new classes, so I figured I would teach an introduction to programming class &#8211; an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner&#8217;s language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it&#8217;s super fun.</p>
+
+<p>Unfortunately, getting stuff installed on the computers at the cyber center is kind of a headache. Like most chronically underfunded but well-meaning institutions, there are about three levels of bureaucracy between you and getting anything done. And teaching Ruby without the aid of irb would be next to impossible. So what&#8217;s a guy to do?</p>
+
+<p>Simple: <a href="http://sandrbox.herokuapp.com/">create irb online</a>.</p>
+
+<!-- more -->
+
+
+<p>Now, I hear what you&#8217;re saying: &#8220;Josh, that already exists, and it&#8217;s called <a href="http://tryruby.org/">tryruby.org</a>!&#8221; Unfortunately, I don&#8217;t like tryruby all that much. I have nothing but respect for their mission, but the service itself is achingly slow and frequently it won&#8217;t work at all. I don&#8217;t know what they&#8217;re running it on (the only code I could find on github was months old), but I figured I could whip up something better.</p>
+
+<p><a href="https://github.com/Veraticus/Sandrbox">Turns out I was right</a>. Sandrbox is a simple project that I&#8217;m actually pretty proud of; it makes use of some very edge-case metaprogramming concepts to create as secure an irb environment as I could whip up. In addition to removing dangerous methods on classes (and their metaclasses), it has some really nice syntactical sugar that makes it easy to understand where you are in a block. And when the execution of your secure code is done, it restores all the classes and methods that were missing while removing any new ones that were added, guaranteeing that your environment will be exactly the same as before you started executing code.</p>
+
+<p>This is obviously important if you intend to run that code on a server somewhere &#8211; after all, you can&#8217;t have someone doing something like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sb">`killall -9 thin`</span> <span class="c1"># bad</span>
+</span><span class='line'><span class="no">Kernel</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;rm -rf /&quot;</span><span class="p">)</span> <span class="c1"># worse</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These methods when executed in Sandrbox are instead gently sanitized:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;`killall -9 thin`&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="c1"># =&gt; [&quot;NameError: undefined local variable or method ``&#39; for Kernel:Module&quot;]</span>
+</span><span class='line'><span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;Kernel.exec(&quot;rm -rf /&quot;)&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="c1"># =&gt; [&quot;NameError: undefined local variable or method `exec&#39; for Kernel:Module&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While still allowing you to retain the power and complexity of Ruby:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;class Foo&#39;</span><span class="p">,</span> <span class="s1">&#39;def test&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;Hi!&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo.new.test&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="c1"># =&gt; [nil, &#39;&quot;Hi!&quot;&#39;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Even cooler is that it automatically does some parsing for you, so that you know when code can be executed or the user is probably not done yet typing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">response</span> <span class="o">=</span> <span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;class Foo&#39;</span><span class="p">,</span> <span class="s1">&#39;def test&#39;</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">output</span> <span class="c1"># []</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">complete?</span> <span class="c1"># false</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">indent_level</span> <span class="c1"># 2</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">indent_character</span> <span class="c1"># &#39;def&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course &#8211; it&#8217;ll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can&#8217;t destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can&#8217;t say that it&#8217;s totally secure yet, but it&#8217;s a damn sight better than uncensored irb, and after a week or two of work I bet I&#8217;ll be able to get it locked down pretty damn tight.</p>
+
+<p>But until then, go ahead and try to break it!</p>
 ]]></content>
   </entry>
   
