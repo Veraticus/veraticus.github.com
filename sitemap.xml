@@ -158,7 +158,11 @@
         <loc>
             http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/
         </loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-07-04T16:48:12-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/</loc>
+        <lastmod>2012-07-04T17:14:49-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/404.html</loc>
@@ -166,11 +170,11 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-07-04T17:14:49-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-07-04T17:14:49-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>

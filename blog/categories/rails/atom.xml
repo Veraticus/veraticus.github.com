@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-04T14:42:38-05:00</updated>
+  <updated>2012-07-04T17:15:49-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -14,13 +14,108 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Rails Concerns II: Taggable]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/"/>
+    <updated>2012-07-04T15:31:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable</id>
+    <content type="html"><![CDATA[<p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I'll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you're going to have to roll your own solution. That's what I'm doing for GirlsGuideTo, and this is how I implemented it.</p>
+
+<!-- more -->
+
+
+<h2>The Tag Model</h2>
+
+<p>The tag model itself is fairly straightforward:</p>
+
+<p>```ruby
+class Tag &lt; ActiveRecord::Base
+  has_many :taggings</p>
+
+<p>  has_many :addresses, through: :taggings, source: :taggable, source_type: Address
+  has_many :users, through: :taggings, source: :taggable, source_type: User
+end
+```</p>
+
+<p>Unfortunately, you can't just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don't work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can't <code>SELECT * from taggables</code>, since there is no taggables table.</p>
+
+<p>This is frustrating, but easy enough to work around. You'll have to specify every model that's taggable in the <code>Tag</code> class. But since we'll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you're confident, you can define a taggables method yourself:</p>
+
+<p>```ruby
+  def taggables</p>
+
+<pre><code>[addresses + users].flatten
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you'll want to display the different kinds of taggables in different places anyway.</p>
+
+<h2>The Join Model</h2>
+
+<p>Tag has-and-belongs-to-many taggables through a join model. That model is <code>Tagging</code>, and should look like this:</p>
+
+<p>```ruby
+class Tagging &lt; ActiveRecord::Base
+  attr_accessible :tag_id, :taggable_id, :taggable_type</p>
+
+<p>  belongs_to :tag
+  belongs_to :taggable, :polymorphic => true
+end
+```ruby</p>
+
+<p>There's nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won't fill in the association correctly.</p>
+
+<h2>The Taggable Concern</h2>
+
+<p>Finally, we can get to the concern itself. This is how I've set it up:</p>
+
+<p>```ruby
+module Taggable
+  extend ActiveSupport::Concern</p>
+
+<p>  included do</p>
+
+<pre><code>has_many :taggings, :as =&gt; :taggable
+has_many :tags, :through =&gt; :taggings
+</code></pre>
+
+<p>  end</p>
+
+<p>  def tag(name)</p>
+
+<pre><code>name.strip!
+tag = Tag.find_or_create_by_name(name)
+self.taggings.find_or_create_by_tag_id(tag.id)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def tag_names</p>
+
+<pre><code>tags.collect(&amp;:name)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we'll be including this concern in multiple ActiveRecord models -- and those models will automatically <code>has_many</code> :taggings and :tags.</p>
+
+<p>And on those models we'll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn't exist before, it will automatically be created, and then it'll be added to the model's taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
+
+<p>Next time I discuss concerns, I'll talk about an ActionController concern to improve your page's SEO and Facebook Graph integration. It'll be pretty awesome, so stay tuned!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
     <link href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/"/>
     <updated>2012-07-01T20:32:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet</id>
     <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it's easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren't only for code refuse -- by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that's where all the functionality for shipping lies... whereas a newcomer to your application would have to search through the order model to find it.</p>
 
-<p>I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated nad really involved -- but more than that, concerns just make your code better, so you should definitely be using them!</p>
+<p>I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated and really involved -- but more than that, concerns just make your code better, so you should definitely be using them!</p>
 
 <!-- more -->
 
@@ -242,136 +337,6 @@ end
 <p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don't want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
 
 <p>With only a few lines of code, it's easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don't have to sacrifice DRY to do so. If you have a lot of data that's expressed through only one controller, consider dynamic routing like this. It's easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Quick &amp; Easy User Preferences in Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/"/>
-    <updated>2012-05-16T18:11:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails</id>
-    <content type="html"><![CDATA[<p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn't like what was presently out there. I don't really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code's for you.</p>
-
-<!-- more -->
-
-
-<h2>Setting Up Preferences</h2>
-
-<p>You need a preference model. It should look like this:</p>
-
-<p>```ruby
-class Preference &lt; ActiveRecord::Base
-  belongs_to :user</p>
-
-<p>  validates_uniqueness_of :name, :scope => :user_id</p>
-
-<p>  attr_accessible :name, :value
-end
-```</p>
-
-<p>I used this migration to create it:</p>
-
-<p>```ruby
-class CreatePreferences &lt; ActiveRecord::Migration
-  def change</p>
-
-<pre><code>create_table :preferences do |t|
-  t.string :name, :value
-  t.integer :user_id
-  t.timestamps
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>You might note that the value of all preferences, regardless of if they're supposed to be Boolean or datetime, is a string. Keep this in mind when you have to query this field later. (That is, if you want to search for all preferences where the value is true, you'll want to search for "1". And similarly, doing <code>user.preferences.first.true?</code> will always return <code>true</code>, as any string value is true. So, coder beware!)</p>
-
-<h2>Using Them</h2>
-
-<p>Ideally, this is what we want the user model to look like.</p>
-
-<p>```ruby
-class User &lt; ActiveRecord::Base
-  include Preferences</p>
-
-<p>  preference :chime, false
-  preference :name, "Josh"
-  preference :awesome, true</p>
-
-<p>  ...
-end
-```</p>
-
-<p>Simple but straightforward: we include the module and then define each preference, with its name first and default value second. Ideally we don't want to save default values to the database, since that would just make a lot of unnecessary records.</p>
-
-<h2>The Preferences Module</h2>
-
-<p>So let's make that happen in that <code>include Preferences</code> line! This is the real heart of the preferences engine.</p>
-
-<p>```ruby
-module Preferences
-  extend ActiveSupport::Concern</p>
-
-<p>  included do</p>
-
-<pre><code>has_many :preferences
-@@preferences = {}
-</code></pre>
-
-<p>  end</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>def preference(name, default)
-  preferences = self.class_variable_get(:'@@preferences')
-  preferences[name] = default
-  self.class_variable_set(:'@@preferences', preferences)
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  def read_preference(name)</p>
-
-<pre><code>if p = self.preferences.where(:name =&gt; name).first
-  return p
-end
-return self.preferences.new(:name =&gt; name, :value =&gt; @@preferences[name]) if @@preferences.has_key?(name)
-nil
-</code></pre>
-
-<p>  end</p>
-
-<p>  def write_preference(name, value)</p>
-
-<pre><code>p = self.preferences.find_or_create_by_name(name)
-p.update_attribute(:value, value)
-</code></pre>
-
-<p>  end</p>
-
-<p>  def method_missing(method, *args)</p>
-
-<pre><code>if @@preferences.keys.any?{|k| method =~ /#{k}/}
-  if method =~ /=/
-    self.write_preference(method.gsub('=', ''), *args)
-  else
-    self.read_preference(method)
-  end
-else
-  super
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>This is really pretty simple. Upon inclusion it tells the model that it's a part of that it <code>has_many :preferences</code> and sets up a class variable hash to store preferences and their defaults. When you declare <code>preference :chime, true</code> it records that in the class variable, and then all instances will respond to either <code>user.chime = true</code> or <code>user.write_preference(:chime, true)</code>. You can read values with <code>user.chime</code> or <code>user.read_preference(:chime)</code>. If a value isn't written in the database, it returns the default value instead.</p>
-
-<p>This probably has a level or two of refactoring that could happen around it. Maybe when I have time I will turn it into a more sensible gem, but until then, if anyone needs quick and dirty preferences... here you go.</p>
 ]]></content>
   </entry>
   
