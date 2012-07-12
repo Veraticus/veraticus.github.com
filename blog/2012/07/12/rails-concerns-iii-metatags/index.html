@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Concerns III: Metatags - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Following parts one and [two] of my series on Rails concerns, I&#8217;m going to finish up with an extremely useful controller concern: automatically &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation">
+    <div id='navigation'>
+      <ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+
+    </div>
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Concerns III: Metatags</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-12T09:48:00-05:00" pubdate data-updated="true">Jul 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and [two] of my series on Rails concerns, I&#8217;m going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren&#8217;t already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook&#8217;s Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the [meta-tags] gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
+
+<!-- more -->
+
+
+<h2>Setup</h2>
+
+<p>Include the meta-tags gem in your Gemfile:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;meta-tags&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;meta_tags&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While the gem itself hasn&#8217;t been updated for awhile, that doesn&#8217;t really matter; it still functions quite well for our purposes. Once it&#8217;s in the Gemfile, we&#8217;ll configure some sensible defaults in our application layout, <code>application.html.erb</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">meta</span> <span class="n">charset</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="sx">%= display_meta_tags :site =</span><span class="o">&gt;</span> <span class="s1">&#39;Your Site Name Here&#39;</span><span class="p">,</span> <span class="ss">:keywords</span> <span class="o">=&gt;</span> <span class="no">Metatags</span><span class="o">::</span><span class="no">KEYWORDS</span> <span class="sx">%&gt;</span>
+</span><span class='line'><span class="sx">  ...</span>
+</span><span class='line'><span class="sx">&lt;/head&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&#8217;ll be defining that <code>CONSTANTS</code> constant shortly. This ensures that on each page the name of your site appears in the title, all by itself if you don&#8217;t specify anything else, and that keywords appear in the keywords <code>meta</code> tag, which robots like the Googlebot use when computing your page&#8217;s relevance.</p>
+
+<h2>The Concern</h2>
+
+<p>The meta-tags gem allows us to specify additional hashed options in either controllers or views: these options are concatenated with the defaults specified above to create attractive and meaningful metatags for each and every page. Since controllers tend to encapsulate models, I elected to make this a controller concern. (And forget doing this in views: replicating this code in each and every view is not my idea of a good time.) So our controller should, ideally, look somewhat like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:find_user</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Metatags</span>
+</span><span class='line'>  <span class="n">metatags</span> <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="ss">:summary</span><span class="p">,</span> <span class="ss">:short_tag</span> <span class="o">=&gt;</span> <span class="ss">:slug</span><span class="p">,</span> <span class="ss">:keywords</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:canonical</span> <span class="o">=&gt;</span> <span class="ss">:user_url</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">find_user</span>
+</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We specify with a hash how the metatags should be constructed: the keys of the hash are the names of each metatag we intend to use, while the values are the methods that need to be executed on the controller&#8217;s object in order to get the information for that tag. In other words, if we have an object called <code>@user</code>, then we want the title of the page to include <code>@user.name</code> &#8211; and that&#8217;s represent by a hash that looks like <code>:title =&gt; :name</code>. However, this won&#8217;t work for every key and value. For example, the <code>:canonical</code> key should indicate how to find the canonical URL of this resource, so we&#8217;ll need a special exception for that&#8230; and the Facebook Open Graph name for <code>:canonical</code> is <code>:url</code>, so we&#8217;ll need to switch it when we generate the Facebook tags.</p>
+
+<p>This, then, is the actual module itself:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Metatags</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">OG_TAGS</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:title</span><span class="p">,</span> <span class="ss">:type</span><span class="p">,</span> <span class="ss">:image</span><span class="p">,</span> <span class="ss">:url</span><span class="p">,</span> <span class="ss">:description</span><span class="o">]</span>
+</span><span class='line'>  <span class="no">KEYWORDS</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;here&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">append_before_filter</span> <span class="ss">:set_metatags</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">metatags</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@hash</span> <span class="o">=</span> <span class="nb">hash</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">set_metatags</span>
+</span><span class='line'>    <span class="n">object</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">underscore</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">singularize</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">hash</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="ss">:@hash</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">object</span>
+</span><span class='line'>      <span class="n">new_hash</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:open_graph</span> <span class="o">=&gt;</span> <span class="p">{}}</span>
+</span><span class='line'>      <span class="nb">hash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tag</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="n">object</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span> <span class="k">if</span> <span class="n">object</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:keywords</span>
+</span><span class='line'>          <span class="n">value</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="no">KEYWORDS</span>
+</span><span class='line'>        <span class="k">elsif</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:canonical</span>
+</span><span class='line'>          <span class="n">value</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="n">object</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">new_hash</span><span class="o">[</span><span class="n">tag</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span class='line'>        <span class="n">tag</span> <span class="o">=</span> <span class="ss">:url</span> <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:canonical</span>
+</span><span class='line'>        <span class="n">new_hash</span><span class="o">[</span><span class="ss">:open_graph</span><span class="o">][</span><span class="n">tag</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="no">OG_TAGS</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">set_meta_tags</span> <span class="n">new_hash</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Obviously this concern is somewhat complicated: bear with me and I&#8217;ll explain it.</p>
+
+<p>At the top of the code, we define which OpenGraph tags we care about, as well as the default keywords for our application. When the module is included, it appends a <code>before_filter</code> to its controller that will try to set all the metatag information. However, it also creates a new class method on its included class, a side-effect of having a child module called <code>ClassMethods</code>: in this case, it provides included controllers with a method called <code>metatags</code> that accepts a hash of metatag names and method names, as I discussed above.</p>
+
+<p>Finally, we have a private method called <code>set_metatags</code> that performs the actual heavy lifting of the concern. It searches for an instance variable named after the controller itself: so if you have a <code>UsersController</code>, it tries to find an instance variable called <code>@user</code>. If that object exists, it tries to populate a new hash with the result of sending it each hash value.</p>
+
+<p>We have two special exceptions we&#8217;re concerned with. First, we don&#8217;t want to replace the existing site keywords &#8211; we only want to add to them. So if the tag is <code>:keywords</code> we add the keywords in <code>KEYWORDS</code> to whichever ones we passed to <code>meta_tags</code>. Second, if the tag is <code>:canonical</code>, we do something a little special. We assume the key is a Rails named route that will accept one argument, the controller&#8217;s object, to generate a correct canonical URL.</p>
+
+<p>Underneath that, we switch the name of the <code>:canonical</code> tag to <code>:url</code> so that the Facebook Open Graph tags are set up correctly. With that you&#8217;re all done. Each controller will automatically try to query its object as you specified and set metatag information for each view based on the results of those queries.</p>
+
+<h2>Caveats</h2>
+
+<p>Because the metatag creation happens in a <code>before_filter</code>, the ordering of your filters becomes crucially important. If you have a <code>before_filter</code> that finds your controller&#8217;s primary object like my controller sample above, it&#8217;s vital that you place the <code>before_filter</code> above the concern&#8217;s <code>include</code>, or, if you&#8217;d prefer, use <code>prepend_before_filter</code> instead of <code>before_filter</code>. Otherwise the metatag concern will place its <code>before_filter</code> ahead of the one that finds your object, your object will be nil when <code>set_metatags</code> runs, and the metatag information will never display correctly on the page.</p>
+
+<p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application&#8217;s specific concerns.</p>
+
+<p>This ends the first part of my series on Rails concerns. While I don&#8217;t have anything else exciting to show off presently, the concern pattern is a powerful one that I&#8217;ve used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I&#8217;ll definitely continue talking about awesome Rails concerns.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-12T09:48:00-05:00" pubdate data-updated="true">Jul 12<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/04/rails-concerns-ii-taggable/" title="Previous Post: Rails Concerns II: Taggable">&laquo; Rails Concerns II: Taggable</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>I'm CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/04/rails-concerns-ii-taggable/">Rails Concerns II: Taggable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+
+    </div>
+  </footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
