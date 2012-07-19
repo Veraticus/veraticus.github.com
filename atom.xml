@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-12T14:45:14-05:00</updated>
+  <updated>2012-07-18T23:06:36-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,232 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/"/>
+    <updated>2012-07-18T19:38:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
+
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&#8217;ve done this in a better way &#8211; by extracting the changes out into a new Cocoapod spec repository &#8211; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+
+<!-- more -->
+
+
+<h2>1. Set up the Rakefile</h2>
+
+<p>First, you need to add the ShareKit sharerers you want into your Rakefile.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-cocoapods&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Facebook&#39;</span>
+</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Twitter&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I couldn&#8217;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&#8217;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &#8211; and the rest of this walkthrough &#8211; I&#8217;ll assume the only sharers you&#8217;re using will be Facebook and Twitter.</p>
+
+<h2>2. Create a ShareKit Configuration File</h2>
+
+<p>I put mine in <code>app/extensions/sharekit_configuration.rb</code>, and it looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SharekitConfiguration</span> <span class="o">&lt;</span> <span class="no">DefaultSHKConfigurator</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">appName</span>
+</span><span class='line'>    <span class="s1">&#39;YourAppName&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">appURL</span>
+</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">facebookAppId</span>
+</span><span class='line'>    <span class="s1">&#39;1234567890&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterConsumerKey</span>
+</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterSecret</span>
+</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterCallbackUrl</span>
+</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After you create the file, you need to load it in your <code>app_delegate.rb</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="no">SHKConfiguration</span><span class="o">.</span><span class="n">sharedInstanceWithConfigurator</span><span class="p">(</span><span class="no">SharekitConfiguration</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">init</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">SHK</span><span class="o">.</span><span class="n">flushOfflineQueue</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That <code>SHK.flushOfflineQueue</code> will try to send stored shared content, if there is any, so make sure to include it.</p>
+
+<h2>3. Alter your Cocoapod Sources</h2>
+
+<p>This is the ugly hack. The Cocoapod version of the Facebook iOS SDK is not the correct one; the ShareKit people provide their own fork that includes the functionality you need. (If you don&#8217;t use it, the Facebook login won&#8217;t work at all.) But also the version of ShareKit is old and the Facebook sharing functionality appears to be broken in it anyway, so you might as well update that to the most recent version as well.</p>
+
+<p>All Cocoapod spec information is stored in <code>~/.cocoapods/master</code>. The first file we&#8217;ll change is the Facebook iOS SDK pod spec. It&#8217;s located at <code>~/.cocoapods/master/Facebook-iOS-SDK/1.2/Facebook-iOS-SDK.podspec</code>, and you want to change the line of it that defines the source to look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;git://github.com/ShareKit/facebook-ios-sdk.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;397c0b62b116a9680035e87a07ab936e1c5dfce6&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This points to the most recent commit of the ShareKit Facebook iOS SDK fork. And similarly, we should update the ShareKit pod as well, which is located at <code>~/.cocoapods/master/ShareKit/2.0/ShareKit.podspec</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span>  <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ShareKit/ShareKit.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;a249839dde09e326b1806e22ab3ddb77d733fce9&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. Manually Copy Resources</h2>
+
+<p>ShareKit expects that its bundle and plist will be present in the resources directory, and you&#8217;ll have to manually move them there for it to work.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp vendor/Pods/ShareKit/Classes/ShareKit/Core/SHKSharers.plist resources/
+</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/
+</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/ShareKit.bundle/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For some inexplicable reason ShareKit seems to want the bundle both in the resources directory and as a subdirectory in its own bundle. I have no idea why this is but I couldn&#8217;t get ShareKit working without this step.</p>
+
+<h2>5. Hook up the Share Action</h2>
+
+<p>This is the simplest, most straightforward step. In your view:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="vi">@share</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeCustom</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Tap to Share&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateNormal</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
+</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">action</span><span class="ss">:&#39;share&#39;</span><span class="p">,</span> <span class="n">forControlEvents</span><span class="ss">:UIControlEventTouchUpInside</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@share</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in your controller:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">share</span>
+</span><span class='line'>  <span class="n">item</span> <span class="o">=</span> <span class="no">SHKItem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;This is the text you&#39;ll be sharing!&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">actionSheet</span> <span class="o">=</span> <span class="no">SHKActionSheet</span><span class="o">.</span><span class="n">actionSheetForItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">SHK</span><span class="o">.</span><span class="n">setRootViewController</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">actionSheet</span><span class="o">.</span><span class="n">showInView</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s all there is to it! When you touch the &#8216;Tap to Share&#8217; button, you should see the ShareKit action sheet pop up with all of the functionality you&#8217;d expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
+
+<p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns III: Metatags]]></title>
@@ -2334,78 +2560,6 @@
 <p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
 
 <p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How I Scaled Hipstamatic]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/"/>
-    <updated>2012-04-06T10:58:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic</id>
-    <content type="html"><![CDATA[<p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I&#8217;ve been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don&#8217;t have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
-
-<p>Now, take a look at our average response time over the last month.</p>
-
-<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
-
-<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&#8217;m proud of our 115ms average response time. Proud but not satisfied &#8211; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&#8217;s no reason we can&#8217;t achieve 50-70ms response times with better caching and slimmer applications.</p>
-
-<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That&#8217;s an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
-
-<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic&#8217;s web site and web services fast. (Or, at the very least, a lot faster.)</p>
-
-<!-- more -->
-
-
-<h2>Cache <em>Everything</em></h2>
-
-<p>This is easily the most important, most crucial rule to making your applications fast. You&#8217;d be surprised what you can cache, and how much time caching will save. Memcached access times are ridiculously fast, faster even than the fastest database query. Stick everything in your cache. Everything. <em>Everything</em>.</p>
-
-<p><img src="http://f.cl.ly/items/3f0J2M0H3o3h0w1X1i3m/cache-all-the-things.jpg" alt="Cache all the things" /></p>
-
-<p>This is such an important rule I even gave you an annoying memegenerator image of it. Yes, people, it&#8217;s memegenerator important.</p>
-
-<p>You really can&#8217;t go overboard enough when it comes to caching. Make resque jobs whose only purpose is to warm your caches. Use <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> to sensibly and programmatically expire caches. Almost 90% of our application traffic returns the same (or very similar) JSON and HTML. By caching those responses, we save massive amounts of time, and more importantly, boatloads of money (due to lessened server load).</p>
-
-<h2>Choose Your Tools Wisely</h2>
-
-<p>Choose software that is frequently updated and widely used in the community. Choose software that is robust: by that I mean resistant to failure, and that has survived years of use in live, highly available environments. And finally and most importantly, choose software that is fast. Very, very fast.</p>
-
-<p>Two years ago, we switched from a single, shared instance on A Small Orange to Amazon&#8217;s Elastic Cloud, allowing us to scale each of our components as necessary and independently from each other. Speed gains were noticeable immediately, but even better was the fact that there was a whole bunch of excellent software easily available to help us manage and scale our cloud presence. (See my earlier post <a href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">on Rubber</a>).</p>
-
-<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don&#8217;t want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive &#8211; the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
-
-<p>Take the time and do the research. There&#8217;s a best tool for you waiting out there &#8211; finding it will make your life a thousand times easier.</p>
-
-<h2>Less is More</h2>
-
-<p>For a long time, incoming requests to the app were load balanced through <a href="http://haproxy.1wt.eu/">HAProxy</a> before reaching a Passenger instance. HAProxy is an amazing piece of software; it&#8217;s extremely fast and gives you an awesome drill-down into incoming requests and your server status.</p>
-
-<p>It also added 10 milliseconds to our response times on average.</p>
-
-<p>If a piece of your stack isn&#8217;t mission critical (and HAProxy, for us, was just a nice piece of software and not mission critical) then you should remove it. Amazing graphics and interesting metrics are less important than your response time. Examine your stack carefully, with a very critical eye, and whatever isn&#8217;t absolutely necessary I would strongly recommend cutting out entirely.</p>
-
-<p>What I found helpful to do was draw a quick flow chart of how a request is actually serviced. Nothing that you intend to present to your boss; just a small approximation of your stack. Each step on that chain adds time to that request returning a response. If it adds time to the request turnaround, it needs to be adding something important to that response. Otherwise, it needs to go.</p>
-
-<h2>Achieve Balance</h2>
-
-<p>When we were extensively using <a href="http://redis.io/">redis</a> as a semi-persistent datastore, I constantly experienced bottlenecks for redis connections. But you can encounter this problem anywhere in your server setup: I also had to deal with MySQL bottlenecks and, in one extremely memorable instance, Unicorn queue bottlenecks. These are all issues with load balancing inside the stack.</p>
-
-<p>There&#8217;s never a part of your stack that is immune to load balancing problems. Once you correctly scale one part, another component that performed adequately will suddenly start chugging under unexpected load or new use conditions. And, unfortunately, pre-optimization can backfire; sometimes you&#8217;ll target the wrong part of your stack for optimizations, and other times you&#8217;ll scale something that won&#8217;t experience a bottleneck at all.</p>
-
-<p>I recommend against trying to pre-scale unless you&#8217;re sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act &#8211; you can guess to a limited extent where you&#8217;ll tip after the next step, but you can never be sure until you actually take it. That&#8217;s why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
-
-<p>Formal plans generally aren&#8217;t required, but know what steps you&#8217;d take if something started to fail. Even ten seconds of idle thought can save you agonizing minutes of unavailability.</p>
-
-<h2>Use 75% of Every Server</h2>
-
-<p>This rule applies doubly to servers on EC2. Instances that reach 100% memory or CPU utilization are instances that are very difficult to fix (and are much more prone to crashing in a shared environment). You can&#8217;t SSH into them because they take forever to respond; you can&#8217;t reboot them because they don&#8217;t respond to Amazon&#8217;s control plane. They are about to become horrible zombies in your setup, taking up space but refusing to die, and you&#8217;ll have to route around them to keep your uptime intact.</p>
-
-<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me &#8211; not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
-
-<p>If you&#8217;re using less than 75%, then you can likely combine services together and remove servers. And if you&#8217;re using more&#8230; well, I have <a href="http://www.pagerduty.com/">PagerDuty</a> configured to call me if at any time a server reaches 85% resource usage, and those are calls I take very seriously.</p>
-
-<p>I&#8217;m sure I&#8217;ll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas &#8211; for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
 ]]></content>
   </entry>
   
