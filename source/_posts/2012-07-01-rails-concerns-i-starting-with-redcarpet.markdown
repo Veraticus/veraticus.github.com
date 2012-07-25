@@ -7,7 +7,7 @@ categories: [rails]
 ---
 Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns [a lot in the new Basecamp](http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp), and it's easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren't only for code refuse -- by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that's where all the functionality for shipping lies... whereas a newcomer to your application would have to search through the order model to find it.
 
-I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated nad really involved -- but more than that, concerns just make your code better, so you should definitely be using them!
+I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated and really involved -- but more than that, concerns just make your code better, so you should definitely be using them!
 
 <!-- more -->
 
