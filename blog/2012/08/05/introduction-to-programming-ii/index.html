@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Introduction to Programming II - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation">
+    <div id='navigation'>
+      <ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+
+    </div>
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Introduction to Programming II</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T17:48:00-05:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&#8217;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &#8211; I&#8217;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&#8217;s browser.</p>
+
+<!-- more -->
+
+
+<h2>Digging Deeper into Ruby</h2>
+
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &#8211; integers, strings, and floats &#8211; and we also learned what methods are and how they can be used to manipulate those objects. Today we&#8217;ll start by learning about variables, a key concept in computer programming. Afterwards, we&#8217;ll use variables to understand more about Ruby&#8217;s basic objects, and then we&#8217;ll discover how we can create and manipulate entirely new classes of objects.</p>
+
+<h3>Variables</h3>
+
+<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you&#8217;ll need to reference the same piece of data over and over again. Maybe you have a string that&#8217;s particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
+
+<p>In Ruby, variable names are all lower-case, and they can&#8217;t contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you&#8217;ll see its value: so when you type <code>mary</code>, you&#8217;ll see <code>"little lamb"</code>.</p>
+
+<p>Let&#8217;s do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, type <code>mary</code>. It has the value of <code>'little lamb'</code>. This is how you assign variables.</p></li>
+<li><p>Let&#8217;s put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you&#8217;re actually using that string. So when you type <code>mary + 'chop'</code>, you&#8217;re actually saying <code>'little lamb' + 'chop'</code>.</p></li>
+<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>&#8217; previously, <code>mary</code>&#8217;s value hasn&#8217;t changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
+<li><p>Try <code>mary = mary + 'chop'</code>. Now the variable <code>mary</code> is going to be <code>'little lambchop'</code>, because we assigned it again.</p></li>
+<li><p>Try <code>dinner = mary</code>. The variable <code>dinner</code> now has the same value as the variable <code>mary</code>, which is to say, <code>'little lambchop'</code>.</p></li>
+<li><p>Let&#8217;s change what we&#8217;re having for dinner. Try <code>dinner = 'big lambchop'</code>. We&#8217;ve changed the value of <code>dinner</code>: what do you think&#8217;s happened to the value of <code>mary</code>?</p></li>
+<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn&#8217;t changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn&#8217;t affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
+<li><p>Let&#8217;s use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
+<li><p>Finally, let&#8217;s change our number. Try <code>number = number * 3</code>.</p></li>
+</ol>
+
+
+<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It&#8217;s so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
+
+<p>Let&#8217;s explore variable reassignment in an <strong>exercise</strong>.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, try <code>mary += 'chop'</code>. This is exactly equivalent to <code>mary = mary + 'chop'</code>.</p></li>
+<li><p>Try <code>number = 3</code>. Now, try <code>number *= 4</code>. This is exactly equivalent to <code>number = number * 4</code>.</p></li>
+</ol>
+
+
+<p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
+
+<p>Now that we understand variables, the rest of Ruby&#8217;s world opens up before us. The basic types we discussed &#8211; integers, strings, floats, and variables &#8211; form the foundation for the Ruby programming language. Now that we&#8217;ve learned about them, we can learn about some exciting new objects&#8230; and then eventually how to create new kinds of objects of our very own!</p>
+
+<h3>Organizing Data</h3>
+
+<p>We know now how we would put in numbers and letters in a Ruby program. But what if you want to organize them? Say you wanted to create a list of names, or perhaps you needed a dictionary of words. What would be the best way to do that?</p>
+
+<p>That&#8217;s what we&#8217;ll discover now.</p>
+
+<h3>Arrays</h3>
+
+<p>Arrays are lists of objects. They look like this:</p>
+
+<p><code>["This", "is", 'an', 'array', 123]</code></p>
+
+<p>The brackets around the array are telling you what it is &#8211; an array. The elements of the array are separated by commas. This array has five elements &#8211; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&#8217;s as big as you need.</p>
+
+<p>Let&#8217;s try some <strong>exercises</strong> to understand how to use arrays.</p>
+
+<ol>
+<li><p>Let&#8217;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
+<li><p>Let&#8217;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
+<li><p>Being friendless sucks. Let&#8217;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &#8216;tom&#8217;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &#8211; without the parenthesis or the dot &#8211; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let&#8217;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &#8211; the object to be inserted into the array &#8211; and push it onto the very end.</p></li>
+<li><p>When you count an array&#8217;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&#8217;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
+<li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
+<li><p>This is all well and good, but let&#8217;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&#8217;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
+</ol>
+
+
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &#8211; that is, the first element is always the first, the last element is always the last &#8211; you can encode a lot of information in them and be confident of accessing it later.</p>
+
+<h3>Hashes</h3>
+
+<p>A hash is like a dictionary. In a dictionary, you look up a word &#8211; say, &#8216;zebra&#8217; &#8211; and read a definition (&#8216;a big white and black striped horse-like animal&#8217;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &#8216;zebra&#8217; in a dictionary: it&#8217;s what you use to look up information in a hash. Values are the definitions: they&#8217;re what you get back when you look up a word.</p>
+
+<p>Hashes look like this:</p>
+
+<p><code>{'mary' =&gt; 'little lamb', 'freddy' =&gt; 1, 'zebra' =&gt; 'a big white and black striped horse-like animal', 1 =&gt; 3}</code></p>
+
+<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They&#8217;re very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first&#8230; but inside a hash, there&#8217;s no guarantee that the element we just added will be the last. Let&#8217;s try some <strong>exercises</strong> to explore this exciting new data structure.</p>
+
+<ol>
+<li><p>First, let&#8217;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&#8217;d have made a blank hash; instead we&#8217;re starting it with an entry.</p></li>
+<li><p>Let&#8217;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &#8211; &#8216;peacock&#8217; &#8211; to a new value &#8211; &#8216;beautiful&#8217;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &#8211; so the keys and values might not appear in the same positions you&#8217;d expect.</p></li>
+<li><p>Keys have to be unique in a hash &#8211; if you assign a value to a key that already exists, it will replace that key&#8217;s existing value. Let&#8217;s change the value of &#8216;zebra&#8217;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &#8216;zebra&#8217; is &#8216;striped&#8217;, instead of &#8216;animal&#8217;.</p></li>
+<li><p>Finally, data structures can contain other data structures. Let&#8217;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
+</ol>
+
+
+<p>Hashes are a great format for storing information in a way that we want to quickly look up later. Whereas arrays are for lists of things, hashes are very much like dictionaries.</p>
+
+<p>We&#8217;ll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It&#8217;s time to use what we&#8217;ve learned to create our very first program.</p>
+
+<h3>Our First Program</h3>
+
+<p>We now know enough to write our very first program in Ruby! We need two methods we haven&#8217;t discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let&#8217;s use those methods to create a program that automatically tabulates points for us.</p>
+
+<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&#8217;t really covered yet. When you write code in there, and press the &#8216;play&#8217; button in the upper right, the code will be executed and you&#8217;ll see the result on the right-hand side. Let&#8217;s try entering this in to the text editor half of repl.it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">scores</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Who just scored points?&#39;</span>
+</span><span class='line'><span class="nb">name</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;How many more points did they get?&#39;</span>
+</span><span class='line'><span class="n">points</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scores</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">points</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;The current standings are: &#39;</span> <span class="o">+</span> <span class="n">scores</span><span class="o">.</span><span class="n">inspect</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&#8217;s dissect this progrma line-by-line to understand what&#8217;s happening here.</p>
+
+<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn&#8217;t already been assigned: we&#8217;ll cover how it works more in the next lesson.</p>
+
+<p>In the second line, we ask the user who scored points.</p>
+
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &#8211; but that return isn&#8217;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+
+<p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
+
+<p>The seventh line performs hash assignment, like we just learned: the score is inserted into the hash so that we can keep track of it.</p>
+
+<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that&#8217;s easily understandable to humans.</p>
+
+<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we&#8217;ll discover how to have the program automatically loop so that we don&#8217;t have to keep running it manually.</p>
+
+<h3>Your First Program</h3>
+
+<p>Now that we know a little about Ruby, it&#8217;s time for you to make your very first program all on your own!</p>
+
+<p>Let&#8217;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
+
+<p>Next time, we&#8217;ll learn how to control flow through our Ruby programs, and we&#8217;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T17:48:00-05:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/beginner/'>beginner</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/18/installing-sharekit-with-rubymotion/" title="Previous Post: Installing ShareKit with RubyMotion">&laquo; Installing ShareKit with RubyMotion</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>I'm CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit with RubyMotion</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/04/rails-concerns-ii-taggable/">Rails Concerns II: Taggable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+
+    </div>
+  </footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

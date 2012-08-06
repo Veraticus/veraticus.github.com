@@ -136,12 +136,13 @@
 
 <p>You&#8217;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&#8217;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &#8211; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
 
-<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called sandRBox. In our first <strong>exercise</strong>, we&#8217;ll go to sandRBox and type in an example expression.</p>
+<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we&#8217;ll go to repl.it and type in an example expression.</p>
 
 <ol>
 <li><p>Open up your web browser.</p></li>
-<li><p>In the address bar, type <code>sandrbox.com</code>, and press enter.</p></li>
-<li><p>In the page that opens, type <code>1 + 1</code>, and press enter.</p></li>
+<li><p>In the address bar, type <code>repl.it</code>, and press enter.</p></li>
+<li><p>Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.</p></li>
+<li><p>The right half of the screen is the Ruby console. Type <code>1 + 1</code> into it and press enter.</p></li>
 </ol>
 
 
@@ -232,13 +233,24 @@
 <p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
 
 <ol>
-<li><p>Try <code>1.+1</code>.</p></li>
-<li><p>Try <code>2.-1</code>.</p></li>
-<li><p>Try <code>"One".+"One"</code>.</p></li>
+<li><p>Try <code>1.+(1)</code>.</p></li>
+<li><p>Try <code>2.-(1)</code>.</p></li>
+<li><p>Try <code>"One".+("One")</code>.</p></li>
 </ol>
 
 
-<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them. Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the NoMethodError.</p>
+<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them.</p>
+
+<p>You might be wondering: what&#8217;s with the parenthesis containing the 1 and &#8220;one&#8221;? That&#8217;s an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let&#8217;s do some quick <strong>exercises</strong> to see how methods accept arguments.</p>
+
+<ol>
+<li><p>Try <code>'hello'.delete('l')</code>. The argument to the <code>delete</code> method tells it which letter it should delete from the string.</p></li>
+<li><p>Try <code>'space'.center(20)</code>. The argument to the <code>center</code> method tells the string how many spaces it should be centered in.</p></li>
+<li><p>Try <code>'space'.center(20, '-')</code>. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to <code>center</code> tells it what character to pad the string with. In this case, it gives us a lot of dashes.</p></li>
+</ol>
+
+
+<p>Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the <code>NoMethodError</code>.</p>
 
 <ol>
 <li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
@@ -247,7 +259,7 @@
 </ol>
 
 
-<p>With the NoMethodError, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
+<p>With the <code>NoMethodError</code>, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
 
 <h3>Conversion</h3>
 
@@ -343,6 +355,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit with RubyMotion</a>
       </li>
     
@@ -356,10 +372,6 @@
     
       <li class="post">
         <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
       </li>
     
   </ul>

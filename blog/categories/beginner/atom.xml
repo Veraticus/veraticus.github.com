@@ -4,7 +4,7 @@
   <title><![CDATA[Category: beginner | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/beginner/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-18T23:06:36-05:00</updated>
+  <updated>2012-08-06T10:54:51-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,153 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to Programming II]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/"/>
+    <updated>2012-08-05T17:48:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii</id>
+    <content type="html"><![CDATA[<p>It took me a long time to author this -- and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I'm engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox -- I'm using <a href="http://repl.it">repl.it</a> now, since that runs on the individual's browser.</p>
+
+<!-- more -->
+
+
+<h2>Digging Deeper into Ruby</h2>
+
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby -- integers, strings, and floats -- and we also learned what methods are and how they can be used to manipulate those objects. Today we'll start by learning about variables, a key concept in computer programming. Afterwards, we'll use variables to understand more about Ruby's basic objects, and then we'll discover how we can create and manipulate entirely new classes of objects.</p>
+
+<h3>Variables</h3>
+
+<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you'll need to reference the same piece of data over and over again. Maybe you have a string that's particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
+
+<p>In Ruby, variable names are all lower-case, and they can't contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you'll see its value: so when you type <code>mary</code>, you'll see <code>"little lamb"</code>.</p>
+
+<p>Let's do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, type <code>mary</code>. It has the value of <code>'little lamb'</code>. This is how you assign variables.</p></li>
+<li><p>Let's put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you're actually using that string. So when you type <code>mary + 'chop'</code>, you're actually saying <code>'little lamb' + 'chop'</code>.</p></li>
+<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>' previously, <code>mary</code>'s value hasn't changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
+<li><p>Try <code>mary = mary + 'chop'</code>. Now the variable <code>mary</code> is going to be <code>'little lambchop'</code>, because we assigned it again.</p></li>
+<li><p>Try <code>dinner = mary</code>. The variable <code>dinner</code> now has the same value as the variable <code>mary</code>, which is to say, <code>'little lambchop'</code>.</p></li>
+<li><p>Let's change what we're having for dinner. Try <code>dinner = 'big lambchop'</code>. We've changed the value of <code>dinner</code>: what do you think's happened to the value of <code>mary</code>?</p></li>
+<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn't changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn't affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
+<li><p>Let's use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
+<li><p>Finally, let's change our number. Try <code>number = number * 3</code>.</p></li>
+</ol>
+
+
+<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It's so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
+
+<p>Let's explore variable reassignment in an <strong>exercise</strong>.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, try <code>mary += 'chop'</code>. This is exactly equivalent to <code>mary = mary + 'chop'</code>.</p></li>
+<li><p>Try <code>number = 3</code>. Now, try <code>number *= 4</code>. This is exactly equivalent to <code>number = number * 4</code>.</p></li>
+</ol>
+
+
+<p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
+
+<p>Now that we understand variables, the rest of Ruby's world opens up before us. The basic types we discussed -- integers, strings, floats, and variables -- form the foundation for the Ruby programming language. Now that we've learned about them, we can learn about some exciting new objects... and then eventually how to create new kinds of objects of our very own!</p>
+
+<h3>Organizing Data</h3>
+
+<p>We know now how we would put in numbers and letters in a Ruby program. But what if you want to organize them? Say you wanted to create a list of names, or perhaps you needed a dictionary of words. What would be the best way to do that?</p>
+
+<p>That's what we'll discover now.</p>
+
+<h3>Arrays</h3>
+
+<p>Arrays are lists of objects. They look like this:</p>
+
+<p><code>["This", "is", 'an', 'array', 123]</code></p>
+
+<p>The brackets around the array are telling you what it is -- an array. The elements of the array are separated by commas. This array has five elements -- four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it's as big as you need.</p>
+
+<p>Let's try some <strong>exercises</strong> to understand how to use arrays.</p>
+
+<ol>
+<li><p>Let's make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
+<li><p>Let's learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
+<li><p>Being friendless sucks. Let's add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string 'tom'. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> -- without the parenthesis or the dot -- in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let's add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument -- the object to be inserted into the array -- and push it onto the very end.</p></li>
+<li><p>When you count an array's elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let's see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
+<li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
+<li><p>This is all well and good, but let's say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that's identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
+</ol>
+
+
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements -- that is, the first element is always the first, the last element is always the last -- you can encode a lot of information in them and be confident of accessing it later.</p>
+
+<h3>Hashes</h3>
+
+<p>A hash is like a dictionary. In a dictionary, you look up a word -- say, 'zebra' -- and read a definition ('a big white and black striped horse-like animal'). Similarly, in a hash, you look up keys and receive values in return. A key is like the word 'zebra' in a dictionary: it's what you use to look up information in a hash. Values are the definitions: they're what you get back when you look up a word.</p>
+
+<p>Hashes look like this:</p>
+
+<p><code>{'mary' =&gt; 'little lamb', 'freddy' =&gt; 1, 'zebra' =&gt; 'a big white and black striped horse-like animal', 1 =&gt; 3}</code></p>
+
+<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They're very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first... but inside a hash, there's no guarantee that the element we just added will be the last. Let's try some <strong>exercises</strong> to explore this exciting new data structure.</p>
+
+<ol>
+<li><p>First, let's make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we'd have made a blank hash; instead we're starting it with an entry.</p></li>
+<li><p>Let's look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key -- 'peacock' -- to a new value -- 'beautiful'. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved -- so the keys and values might not appear in the same positions you'd expect.</p></li>
+<li><p>Keys have to be unique in a hash -- if you assign a value to a key that already exists, it will replace that key's existing value. Let's change the value of 'zebra'. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of 'zebra' is 'striped', instead of 'animal'.</p></li>
+<li><p>Finally, data structures can contain other data structures. Let's add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
+</ol>
+
+
+<p>Hashes are a great format for storing information in a way that we want to quickly look up later. Whereas arrays are for lists of things, hashes are very much like dictionaries.</p>
+
+<p>We'll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It's time to use what we've learned to create our very first program.</p>
+
+<h3>Our First Program</h3>
+
+<p>We now know enough to write our very first program in Ruby! We need two methods we haven't discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let's use those methods to create a program that automatically tabulates points for us.</p>
+
+<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven't really covered yet. When you write code in there, and press the 'play' button in the upper right, the code will be executed and you'll see the result on the right-hand side. Let's try entering this in to the text editor half of repl.it:</p>
+
+<p>```ruby
+scores ||= {}
+puts 'Who just scored points?'
+name = gets.chomp
+puts 'How many more points did they get?'
+points = gets.chomp</p>
+
+<p>scores[name] = points
+puts 'The current standings are: ' + scores.inspect
+```</p>
+
+<p>Let's dissect this progrma line-by-line to understand what's happening here.</p>
+
+<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn't already been assigned: we'll cover how it works more in the next lesson.</p>
+
+<p>In the second line, we ask the user who scored points.</p>
+
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return -- but that return isn't helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+
+<p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
+
+<p>The seventh line performs hash assignment, like we just learned: the score is inserted into the hash so that we can keep track of it.</p>
+
+<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that's easily understandable to humans.</p>
+
+<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we'll discover how to have the program automatically loop so that we don't have to keep running it manually.</p>
+
+<h3>Your First Program</h3>
+
+<p>Now that we know a little about Ruby, it's time for you to make your very first program all on your own!</p>
+
+<p>Let's create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
+
+<p>Next time, we'll learn how to control flow through our Ruby programs, and we'll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
@@ -106,12 +253,13 @@ end
 
 <p>You'll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it's also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby -- for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
 
-<p>To learn Ruby, we'll be using an online tool that allows us to quickly and easily try Ruby, called sandRBox. In our first <strong>exercise</strong>, we'll go to sandRBox and type in an example expression.</p>
+<p>To learn Ruby, we'll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we'll go to repl.it and type in an example expression.</p>
 
 <ol>
 <li><p>Open up your web browser.</p></li>
-<li><p>In the address bar, type <code>sandrbox.com</code>, and press enter.</p></li>
-<li><p>In the page that opens, type <code>1 + 1</code>, and press enter.</p></li>
+<li><p>In the address bar, type <code>repl.it</code>, and press enter.</p></li>
+<li><p>Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.</p></li>
+<li><p>The right half of the screen is the Ruby console. Type <code>1 + 1</code> into it and press enter.</p></li>
 </ol>
 
 
@@ -202,13 +350,24 @@ end
 <p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
 
 <ol>
-<li><p>Try <code>1.+1</code>.</p></li>
-<li><p>Try <code>2.-1</code>.</p></li>
-<li><p>Try <code>"One".+"One"</code>.</p></li>
+<li><p>Try <code>1.+(1)</code>.</p></li>
+<li><p>Try <code>2.-(1)</code>.</p></li>
+<li><p>Try <code>"One".+("One")</code>.</p></li>
 </ol>
 
 
-<p>The plus method is special. You don't need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them. Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you'll probably see a lot of: the NoMethodError.</p>
+<p>The plus method is special. You don't need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them.</p>
+
+<p>You might be wondering: what's with the parenthesis containing the 1 and "one"? That's an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let's do some quick <strong>exercises</strong> to see how methods accept arguments.</p>
+
+<ol>
+<li><p>Try <code>'hello'.delete('l')</code>. The argument to the <code>delete</code> method tells it which letter it should delete from the string.</p></li>
+<li><p>Try <code>'space'.center(20)</code>. The argument to the <code>center</code> method tells the string how many spaces it should be centered in.</p></li>
+<li><p>Try <code>'space'.center(20, '-')</code>. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to <code>center</code> tells it what character to pad the string with. In this case, it gives us a lot of dashes.</p></li>
+</ol>
+
+
+<p>Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you'll probably see a lot of: the <code>NoMethodError</code>.</p>
 
 <ol>
 <li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
@@ -217,7 +376,7 @@ end
 </ol>
 
 
-<p>With the NoMethodError, Ruby is letting you know that a method you tried to call on an object didn't exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby's nice way of telling you that you messed up somewhere.</p>
+<p>With the <code>NoMethodError</code>, Ruby is letting you know that a method you tried to call on an object didn't exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby's nice way of telling you that you messed up somewhere.</p>
 
 <h3>Conversion</h3>
 
@@ -369,36 +528,6 @@ end
 <p>In Dynamoid, we perform benchmarking in this method before sending the response along, allowing you to see how long the actual request took in DynamoDB.</p>
 
 <p>Ultimately, you should use <code>delegate</code> if possible... but if it isn't, then either of these two options should get you started to avoid programming unpleasantness. Don't address your objects through other objects -- your code will look better and be more maintainable if you take some time to isolate methods!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Classifying and Refactoring Your Code]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code/"/>
-    <updated>2012-03-16T00:39:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/16/classifying-and-refactoring-your-code</id>
-    <content type="html"><![CDATA[<p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I've discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I'd share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I've learned will aid others.</p>
-
-<!-- more -->
-
-
-<h2>Hashes = Objects</h2>
-
-<p>In the earlier iterations of Dynamoid, I was passing around almost everything in hashes, and the calculations I was performing on those hashes was growing more and more complicated as I went, with logic flying around my files like a flock of disorganized birds. When I was putting index logic into criteria chains, I realized that keeping indexes as hashes was an enormous mistake... and one I wish I had realized earlier.</p>
-
-<p>As I was refactoring my code I realized that I pass hashes around in a number of places. Hashes work well initially to store small amounts of data, but if you're using them for that purpose you almost certainly want a real object instead. Just whip that hash apart into a class and you'll be surprised how much code will go in there, and how much simpler your application will be for your trouble.</p>
-
-<h2>Refactor Early, Refactor Often</h2>
-
-<p>I tend to be my own harshest critic, but honestly, my first pass at features tends to be messy at best. I make my tests pass (always test first, btw, but that's so fundamental I'm not going to include it as a point) but usually in the most complicated, slowest, unpleasant way possible. Take some time after the tests pass to stare at your code a bit and decide if that's really the best way to go about doing things. Usually a change will jump out at you immediately, but don't be afraid to just come back to the code later if nothing presents itself.</p>
-
-<p>Tests allow you to do this kind of refactoring free of charge. I always imagine tests as the scaffolding around my code; no matter how tall the code gets, with the scaffolding it'll never fall over.</p>
-
-<h2>Document!</h2>
-
-<p>I'm really bad at this one myself, but I'm going to be going back through Dynamoid in the very near future and adding documentation to all my methods. Even if your code is a one-liner, people will read documentation over code every time. So document that code! Especially in a collaborative environment, documentation is critical for making your project easy to contribute to.</p>
-
-<p>I'm sure other things will pop out at me after some thought, but these are the biggest takeaways Dynamoid has given me. Hopefully they'll be of use to someone else as well.</p>
 ]]></content>
   </entry>
   

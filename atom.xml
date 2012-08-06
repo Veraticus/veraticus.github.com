@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-18T23:06:36-05:00</updated>
+  <updated>2012-08-06T10:54:51-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to Programming II]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/"/>
+    <updated>2012-08-05T17:48:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii</id>
+    <content type="html"><![CDATA[<p>It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&#8217;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &#8211; I&#8217;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&#8217;s browser.</p>
+
+<!-- more -->
+
+
+<h2>Digging Deeper into Ruby</h2>
+
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &#8211; integers, strings, and floats &#8211; and we also learned what methods are and how they can be used to manipulate those objects. Today we&#8217;ll start by learning about variables, a key concept in computer programming. Afterwards, we&#8217;ll use variables to understand more about Ruby&#8217;s basic objects, and then we&#8217;ll discover how we can create and manipulate entirely new classes of objects.</p>
+
+<h3>Variables</h3>
+
+<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you&#8217;ll need to reference the same piece of data over and over again. Maybe you have a string that&#8217;s particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
+
+<p>In Ruby, variable names are all lower-case, and they can&#8217;t contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you&#8217;ll see its value: so when you type <code>mary</code>, you&#8217;ll see <code>"little lamb"</code>.</p>
+
+<p>Let&#8217;s do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, type <code>mary</code>. It has the value of <code>'little lamb'</code>. This is how you assign variables.</p></li>
+<li><p>Let&#8217;s put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you&#8217;re actually using that string. So when you type <code>mary + 'chop'</code>, you&#8217;re actually saying <code>'little lamb' + 'chop'</code>.</p></li>
+<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>&#8217; previously, <code>mary</code>&#8217;s value hasn&#8217;t changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
+<li><p>Try <code>mary = mary + 'chop'</code>. Now the variable <code>mary</code> is going to be <code>'little lambchop'</code>, because we assigned it again.</p></li>
+<li><p>Try <code>dinner = mary</code>. The variable <code>dinner</code> now has the same value as the variable <code>mary</code>, which is to say, <code>'little lambchop'</code>.</p></li>
+<li><p>Let&#8217;s change what we&#8217;re having for dinner. Try <code>dinner = 'big lambchop'</code>. We&#8217;ve changed the value of <code>dinner</code>: what do you think&#8217;s happened to the value of <code>mary</code>?</p></li>
+<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn&#8217;t changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn&#8217;t affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
+<li><p>Let&#8217;s use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
+<li><p>Finally, let&#8217;s change our number. Try <code>number = number * 3</code>.</p></li>
+</ol>
+
+
+<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It&#8217;s so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
+
+<p>Let&#8217;s explore variable reassignment in an <strong>exercise</strong>.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, try <code>mary += 'chop'</code>. This is exactly equivalent to <code>mary = mary + 'chop'</code>.</p></li>
+<li><p>Try <code>number = 3</code>. Now, try <code>number *= 4</code>. This is exactly equivalent to <code>number = number * 4</code>.</p></li>
+</ol>
+
+
+<p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
+
+<p>Now that we understand variables, the rest of Ruby&#8217;s world opens up before us. The basic types we discussed &#8211; integers, strings, floats, and variables &#8211; form the foundation for the Ruby programming language. Now that we&#8217;ve learned about them, we can learn about some exciting new objects&#8230; and then eventually how to create new kinds of objects of our very own!</p>
+
+<h3>Organizing Data</h3>
+
+<p>We know now how we would put in numbers and letters in a Ruby program. But what if you want to organize them? Say you wanted to create a list of names, or perhaps you needed a dictionary of words. What would be the best way to do that?</p>
+
+<p>That&#8217;s what we&#8217;ll discover now.</p>
+
+<h3>Arrays</h3>
+
+<p>Arrays are lists of objects. They look like this:</p>
+
+<p><code>["This", "is", 'an', 'array', 123]</code></p>
+
+<p>The brackets around the array are telling you what it is &#8211; an array. The elements of the array are separated by commas. This array has five elements &#8211; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&#8217;s as big as you need.</p>
+
+<p>Let&#8217;s try some <strong>exercises</strong> to understand how to use arrays.</p>
+
+<ol>
+<li><p>Let&#8217;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
+<li><p>Let&#8217;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
+<li><p>Being friendless sucks. Let&#8217;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &#8216;tom&#8217;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &#8211; without the parenthesis or the dot &#8211; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let&#8217;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &#8211; the object to be inserted into the array &#8211; and push it onto the very end.</p></li>
+<li><p>When you count an array&#8217;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&#8217;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
+<li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
+<li><p>This is all well and good, but let&#8217;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&#8217;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
+</ol>
+
+
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &#8211; that is, the first element is always the first, the last element is always the last &#8211; you can encode a lot of information in them and be confident of accessing it later.</p>
+
+<h3>Hashes</h3>
+
+<p>A hash is like a dictionary. In a dictionary, you look up a word &#8211; say, &#8216;zebra&#8217; &#8211; and read a definition (&#8216;a big white and black striped horse-like animal&#8217;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &#8216;zebra&#8217; in a dictionary: it&#8217;s what you use to look up information in a hash. Values are the definitions: they&#8217;re what you get back when you look up a word.</p>
+
+<p>Hashes look like this:</p>
+
+<p><code>{'mary' =&gt; 'little lamb', 'freddy' =&gt; 1, 'zebra' =&gt; 'a big white and black striped horse-like animal', 1 =&gt; 3}</code></p>
+
+<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They&#8217;re very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first&#8230; but inside a hash, there&#8217;s no guarantee that the element we just added will be the last. Let&#8217;s try some <strong>exercises</strong> to explore this exciting new data structure.</p>
+
+<ol>
+<li><p>First, let&#8217;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&#8217;d have made a blank hash; instead we&#8217;re starting it with an entry.</p></li>
+<li><p>Let&#8217;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &#8211; &#8216;peacock&#8217; &#8211; to a new value &#8211; &#8216;beautiful&#8217;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &#8211; so the keys and values might not appear in the same positions you&#8217;d expect.</p></li>
+<li><p>Keys have to be unique in a hash &#8211; if you assign a value to a key that already exists, it will replace that key&#8217;s existing value. Let&#8217;s change the value of &#8216;zebra&#8217;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &#8216;zebra&#8217; is &#8216;striped&#8217;, instead of &#8216;animal&#8217;.</p></li>
+<li><p>Finally, data structures can contain other data structures. Let&#8217;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
+</ol>
+
+
+<p>Hashes are a great format for storing information in a way that we want to quickly look up later. Whereas arrays are for lists of things, hashes are very much like dictionaries.</p>
+
+<p>We&#8217;ll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It&#8217;s time to use what we&#8217;ve learned to create our very first program.</p>
+
+<h3>Our First Program</h3>
+
+<p>We now know enough to write our very first program in Ruby! We need two methods we haven&#8217;t discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let&#8217;s use those methods to create a program that automatically tabulates points for us.</p>
+
+<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&#8217;t really covered yet. When you write code in there, and press the &#8216;play&#8217; button in the upper right, the code will be executed and you&#8217;ll see the result on the right-hand side. Let&#8217;s try entering this in to the text editor half of repl.it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">scores</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Who just scored points?&#39;</span>
+</span><span class='line'><span class="nb">name</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;How many more points did they get?&#39;</span>
+</span><span class='line'><span class="n">points</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scores</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">points</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;The current standings are: &#39;</span> <span class="o">+</span> <span class="n">scores</span><span class="o">.</span><span class="n">inspect</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&#8217;s dissect this progrma line-by-line to understand what&#8217;s happening here.</p>
+
+<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn&#8217;t already been assigned: we&#8217;ll cover how it works more in the next lesson.</p>
+
+<p>In the second line, we ask the user who scored points.</p>
+
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &#8211; but that return isn&#8217;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+
+<p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
+
+<p>The seventh line performs hash assignment, like we just learned: the score is inserted into the hash so that we can keep track of it.</p>
+
+<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that&#8217;s easily understandable to humans.</p>
+
+<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we&#8217;ll discover how to have the program automatically loop so that we don&#8217;t have to keep running it manually.</p>
+
+<h3>Your First Program</h3>
+
+<p>Now that we know a little about Ruby, it&#8217;s time for you to make your very first program all on your own!</p>
+
+<p>Let&#8217;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
+
+<p>Next time, we&#8217;ll learn how to control flow through our Ruby programs, and we&#8217;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
@@ -1985,12 +2140,13 @@
 
 <p>You&#8217;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&#8217;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &#8211; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
 
-<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called sandRBox. In our first <strong>exercise</strong>, we&#8217;ll go to sandRBox and type in an example expression.</p>
+<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we&#8217;ll go to repl.it and type in an example expression.</p>
 
 <ol>
 <li><p>Open up your web browser.</p></li>
-<li><p>In the address bar, type <code>sandrbox.com</code>, and press enter.</p></li>
-<li><p>In the page that opens, type <code>1 + 1</code>, and press enter.</p></li>
+<li><p>In the address bar, type <code>repl.it</code>, and press enter.</p></li>
+<li><p>Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.</p></li>
+<li><p>The right half of the screen is the Ruby console. Type <code>1 + 1</code> into it and press enter.</p></li>
 </ol>
 
 
@@ -2081,13 +2237,24 @@
 <p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
 
 <ol>
-<li><p>Try <code>1.+1</code>.</p></li>
-<li><p>Try <code>2.-1</code>.</p></li>
-<li><p>Try <code>"One".+"One"</code>.</p></li>
+<li><p>Try <code>1.+(1)</code>.</p></li>
+<li><p>Try <code>2.-(1)</code>.</p></li>
+<li><p>Try <code>"One".+("One")</code>.</p></li>
 </ol>
 
 
-<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them. Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the NoMethodError.</p>
+<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them.</p>
+
+<p>You might be wondering: what&#8217;s with the parenthesis containing the 1 and &#8220;one&#8221;? That&#8217;s an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let&#8217;s do some quick <strong>exercises</strong> to see how methods accept arguments.</p>
+
+<ol>
+<li><p>Try <code>'hello'.delete('l')</code>. The argument to the <code>delete</code> method tells it which letter it should delete from the string.</p></li>
+<li><p>Try <code>'space'.center(20)</code>. The argument to the <code>center</code> method tells the string how many spaces it should be centered in.</p></li>
+<li><p>Try <code>'space'.center(20, '-')</code>. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to <code>center</code> tells it what character to pad the string with. In this case, it gives us a lot of dashes.</p></li>
+</ol>
+
+
+<p>Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the <code>NoMethodError</code>.</p>
 
 <ol>
 <li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
@@ -2096,7 +2263,7 @@
 </ol>
 
 
-<p>With the NoMethodError, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
+<p>With the <code>NoMethodError</code>, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
 
 <h3>Conversion</h3>
 
@@ -2438,128 +2605,6 @@
 <p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you&#8217;re at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary &#8211; getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you&#8217;re getting hammered, and don&#8217;t be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
 
 <p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we&#8217;re saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Achieving 100% Uptime]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/"/>
-    <updated>2012-04-09T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime</id>
-    <content type="html"><![CDATA[<p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
-
-<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users&#8217; perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email &#8211; it&#8217;s a good indication of how well I did my job in the previous week. And for a couple weeks now I&#8217;m happy to report I&#8217;ve been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
-
-<p>How do you achieve numbers like these? Unfortunately getting to 100% isn&#8217;t an easy road, and I want to state up front that I also don&#8217;t think it&#8217;s a realistic goal. Issues you can&#8217;t control can ruin your uptime number, and you shouldn&#8217;t feel broken up about that. It happens to everybody. But it&#8217;s always good setting goals that are difficult to achieve, and this one is no different.</p>
-
-<p>So what&#8217;s the secret to 100% uptime?</p>
-
-<!-- more -->
-
-
-<h2>Watch It Constantly</h2>
-
-<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they&#8217;ll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
-
-<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications&#8217; behavior and warn you when that behavior becomes dangerous. Here&#8217;s a sample of our unicorn monit file:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  <span class="k">if </span>totalmem &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
-</span><span class='line'>  <span class="k">if </span>totalmem &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
-</span><span class='line'>  <span class="k">if </span>cpu &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
-</span><span class='line'>  <span class="k">if </span>cpu &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This states that I get an alert when unicorn&#8217;s total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
-
-<p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
-
-<p>Yes, this is a lot of monitoring. But I feel like even this isn&#8217;t enough. You can&#8217;t watch your stack too carefully, and you can&#8217;t have too many tools in place to help you analyze what&#8217;s going on. Consider this trifecta of tools only a start, but at least it&#8217;s a good one.</p>
-
-<h2>Seamless Deploys</h2>
-
-<p>On an average week I deploy seven to ten times. Of course, this entire process is invisible to our users; the magic that makes this happen is <a href="http://unicorn.bogomips.org/">unicorn</a>. There have been many posts on the wonders of unicorn and how to configure it correctly. I will simply post the part of our <code>unicorn.rb</code> that allows us to do seamless restarting, which you can find in a number of gists essentially unmodified.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">old_pid</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">.</span><span class="n">config</span><span class="o">[</span><span class="ss">:pid</span><span class="o">]</span><span class="si">}</span><span class="s2">.oldbin&quot;</span>
-</span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">server</span><span class="o">.</span><span class="n">pid</span> <span class="o">!=</span> <span class="n">old_pid</span>
-</span><span class='line'>    <span class="k">begin</span>
-</span><span class='line'>      <span class="no">Process</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="s2">&quot;QUIT&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">rescue</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ENOENT</span><span class="p">,</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ESRCH</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The command we use to restart unicorn is:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  <span class="k">if</span> <span class="o">[</span> ! -f <span class="s1">&#39;/pids/unicorn.pid&#39;</span> <span class="o">]</span>; <span class="k">then </span><span class="nb">cd </span>current_path <span class="o">&amp;&amp;</span> bundle <span class="nb">exec </span>unicorn_rails -c ./config/unicorn.rb -E production -D; <span class="k">else </span><span class="nb">kill</span> -USR2 <span class="sb">`</span>cat /pids/unicorn.pid<span class="sb">`</span>; <span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it&#8217;s ready to start processing connections.</p>
-
-<h2>Migrations Without Downtime</h2>
-
-<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you&#8217;re changing how existing code interacts with the database &#8211; for new tables, simply migrate before deploying and you&#8217;re done. If only it could be that easy all the time&#8230;</p>
-
-<p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddOrdersCountToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
-</span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">m</span><span class="o">.</span><span class="n">ddl</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE </span><span class="si">#{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> ADD COLUMN orders_count INT(11) default 0&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
-</span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">m</span><span class="o">.</span><span class="n">ddl</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE </span><span class="si">#{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> DROP COLUMN orders_count&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you&#8217;re gonna need to get your hands dirty. Using this method you&#8217;ll be able to become the envy of your friends and peers, for you&#8217;ll be able to execute zero downtime migrations.</p>
-
-<p>And those three points are the main ways I&#8217;ve reduced our downtime. It&#8217;s a difficult road to 100%, but it&#8217;s worth it because you can stare at pretty graphs like this:</p>
-
-<p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
-
-<p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
 ]]></content>
   </entry>
   
