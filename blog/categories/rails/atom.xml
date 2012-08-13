@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-08-06T10:58:40-05:00</updated>
+  <updated>2012-08-13T14:47:06-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,103 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Error Pages, Corrected]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/"/>
+    <updated>2012-08-13T14:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected</id>
+    <content type="html"><![CDATA[<p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn't experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don't then my post on dynamic error pages won't work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
+
+<!-- more -->
+
+
+<h2>The Problem</h2>
+
+<p>Summarized elegantly <a href="https://github.com/rails/rails/issues/671">here</a>:</p>
+
+<blockquote><p>In Rails 2.3.x, one is able to stick this in ApplicationController to present the user with a custom 404 screen:</p>
+
+<p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
+
+<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController -- the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
+
+<p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it's raised in Rack, not the application itself.</p>
+
+<h2>The Solution</h2>
+
+<p>Requires a couple changes on our parts. First, let's change our application_controller.rb:</p>
+
+<p><code>ruby
+unless Rails.application.config.consider_all_requests_local
+  rescue_from Exception, with: :render_500
+  rescue_from ActionController::RoutingError, with: :render_404
+  rescue_from ActionController::UnknownController, with: :render_404
+  rescue_from AbstractController::ActionNotFound, with: :render_404 # To prevent Rails 3.2.8 deprecation warnings
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+end
+</code></p>
+
+<p>So far, just as usual. Now we define the actual actions:</p>
+
+<p>```ruby
+  def render_500</p>
+
+<pre><code>render_exception(500, exception.message, exception)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def render_404(exception = nil)</p>
+
+<pre><code>render_exception(404, 'Page not found', exception)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def render_exception(status = 500, message = 'Server error', exception)</p>
+
+<pre><code>@status = status
+@message = message
+
+if exception
+  Rails.logger.fatal "\n#{exception.class.to_s} (#{exception.message})"
+  Rails.logger.fatal exception.backtrace.join("\n")
+else
+  Rails.logger.fatal "No route matches [#{env['REQUEST_METHOD']}] #{env['PATH_INFO'].inspect}"
+end
+
+render template: "errors/error", formats: [:html], layout: 'application', status: @status
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>Since we're going to be exposing <code>render_404</code> as an action, now, we have to make parameters into it optional: but we know that if <code>render_exception</code> doesn't receive an exception, it actually got a 404.</p>
+
+<p>Finally, we need to add a globbed, wildcard route at the conclusion of our routes.rb. But if we just add one in, then engines and Gems that also rely on wildcard routes will fail. The solution is to do this through our application.rb, like so:</p>
+
+<p>```ruby
+module MyApplication
+  class Application &lt; Rails::Application</p>
+
+<p>  ...</p>
+
+<p>  # 404 catcher
+  config.after_initialize do |app|</p>
+
+<pre><code>app.routes.append{ match '*a', :to =&gt; 'application#render_404' } unless config.consider_all_requests_local
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Now it won't punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
+
+<p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns III: Metatags]]></title>
@@ -301,7 +398,9 @@ redcarpet :body
     <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
     <updated>2012-06-28T15:09:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
-    <content type="html"><![CDATA[<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.</p>
+    <content type="html"><![CDATA[<blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
+
+<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.</p>
 
 <p>But it'd be even awesomer if actual errors in your application referenced this UUID, wouldn't it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, "I encountered error 123xyz," rather than force you to look through a huge amount of backlog to find their specific exception?</p>
 
@@ -361,38 +460,6 @@ render template: "errors/error", formats: [:html], layout: 'application', status
 </code></p>
 
 <p>Dynamic error pages like what I'm suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it's pretty unlikely that'll happen. Just be careful when using this system -- maybe even don't render the exception in your usual layout, but render it in an error-specific one -- to reduce the chance of your error pages also erroring, and you'll be golden.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Designing Sites for Users]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
-    <updated>2012-06-17T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
-    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult -- not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities -- and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
-
-<!-- more -->
-
-
-<h2>Mailcheck</h2>
-
-<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that's pretty impressive.</p>
-
-<p>I also love Mailcheck's philosophy. The guiding idea here -- that users will make errors, and software should respond efficiently to correct them -- is true no matter what you're making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app's flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
-
-<h2>Chosen</h2>
-
-<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
-
-<p>Chosen expresses another important usability concept -- accessibility. Modern software can be ridiculously complicated, but most users don't care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user's perspective.</p>
-
-<h2>Bandit</h2>
-
-<p>There's been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I've done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I'll be using it extensively moving into the future.</p>
-
-<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don't need a set number of tests (as per A/B testing) and you aren't confined to only two options. Ultimately, you don't need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that's pretty awesome.</p>
-
-<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you're guaranteed to make software that's much more usable than it would be otherwise.</p>
 ]]></content>
   </entry>
   

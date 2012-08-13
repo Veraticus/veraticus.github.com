@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamic Error Pages - Hi, I'm Josh Symonds</title>
+  <title>Dynamic Error Pages, Corrected - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="This post has been superseded by Dynamic Error Pages, Corrected. Check that out first. One of the coolest features of Rails 3.2 is tagged logging. &hellip;">
+  <meta name="description" content="Earlier today @alan_meier pointed out that in certain circumstances, my post on dynamic error pages leads to unexpected results: namely, though most &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,7 +98,7 @@
   
   <header>
     
-      <h1 class="entry-title">Dynamic Error Pages</h1>
+      <h1 class="entry-title">Dynamic Error Pages, Corrected</h1>
     
     
       <p class="meta">
@@ -114,27 +114,33 @@
   
 
 
-<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
-
-<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
-
-<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
-
-<p>Happily, you can do just this!</p>
+<div class="entry-content"><p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&#8217;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&#8217;t then my post on dynamic error pages won&#8217;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
 
 <!-- more -->
 
 
-<h2>Rescue_from Madness</h2>
+<h2>The Problem</h2>
 
-<p>Doing so requires abusing rescue_from a little bit, though. Set up something like this in your application_controller.rb:</p>
+<p>Summarized elegantly <a href="https://github.com/rails/rails/issues/671">here</a>:</p>
+
+<blockquote><p>In Rails 2.3.x, one is able to stick this in ApplicationController to present the user with a custom 404 screen:</p>
+
+<p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
+
+<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController &#8211; the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
+
+<p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it&#8217;s raised in Rack, not the application itself.</p>
+
+<h2>The Solution</h2>
+
+<p>Requires a couple changes on our parts. First, let&#8217;s change our application_controller.rb:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -147,13 +153,13 @@
 </span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_500</span>
 </span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
 </span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownAction</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">AbstractController</span><span class="o">::</span><span class="no">ActionNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span> <span class="c1"># To prevent Rails 3.2.8 deprecation warnings</span>
 </span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This will prevent any error from rendering the default Rails error pages. Instead we&#8217;ll set up our own error pages like so:</p>
+<p>So far, just as usual. Now we define the actual actions:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -172,12 +178,18 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span>
 </span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
@@ -185,23 +197,49 @@
 </span><span class='line'>  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
 </span><span class='line'>    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
-</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
-</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exception</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;No route matches [</span><span class="si">#{</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">].</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
 </span><span class='line'>    <span class="n">render</span> <span class="n">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="n">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="vi">@status</span>
 </span><span class='line'>  <span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>And finally, in your view, actually include the request&#8217;s unique identifier:</p>
+<p>Since we&#8217;re going to be exposing <code>render_404</code> as an action, now, we have to make parameters into it optional: but we know that if <code>render_exception</code> doesn&#8217;t receive an exception, it actually got a 404.</p>
+
+<p>Finally, we need to add a globbed, wildcard route at the conclusion of our routes.rb. But if we just add one in, then engines and Gems that also rely on wildcard routes will fail. The solution is to do this through our application.rb, like so:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;&lt;</span><span class="sx">%= @message.split(/\s/).collect(&amp;:capitalize).join(&#39; &#39;) %&gt; &lt;small&gt;&lt;%=</span> <span class="vi">@status</span> <span class="sx">%&gt;&lt;/small&gt;</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
-</span><span class='line'><span class="sr">  &lt;h3&gt;Error Code: &lt;%= request.env[&#39;action_dispatch.request_id&#39;] %&gt; &lt;/</span><span class="n">h3</span><span class="o">&gt;</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">MyApplication</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># 404 catcher</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">after_initialize</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">append</span><span class="p">{</span> <span class="n">match</span> <span class="s1">&#39;*a&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;application#render_404&#39;</span> <span class="p">}</span> <span class="k">unless</span> <span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Dynamic error pages like what I&#8217;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&#8217;s pretty unlikely that&#8217;ll happen. Just be careful when using this system &#8211; maybe even don&#8217;t render the exception in your usual layout, but render it in an error-specific one &#8211; to reduce the chance of your error pages also erroring, and you&#8217;ll be golden.</p>
+<p>Now it won&#8217;t punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
+
+<p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
 </div>
 
 
@@ -224,7 +262,7 @@
   
 
 
-<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -238,7 +276,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -251,10 +289,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/06/20/how-not-to-apply-for-a-job/" title="Previous Post: How Not to Apply for a Job">&laquo; How Not to Apply for a Job</a>
+        <a class="basic-alignment left" href="/blog/2012/08/05/introduction-to-programming-ii/" title="Previous Post: Introduction to Programming II">&laquo; Introduction to Programming II</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" title="Next Post: Rails Concerns I: Starting with Redcarpet">Rails Concerns I: Starting with Redcarpet &raquo;</a>
       
     </p>
   </footer>
@@ -354,8 +390,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/';
         var disqus_script = 'embed.js';
       
     (function () {
