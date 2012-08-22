@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-04T14:06:28-05:00</updated>
+  <updated>2012-08-22T11:31:44-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,181 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/"/>
+    <updated>2012-07-18T19:38:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
+
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could've done this in a better way -- by extracting the changes out into a new Cocoapod spec repository -- and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+
+<!-- more -->
+
+
+<h2>1. Set up the Rakefile</h2>
+
+<p>First, you need to add the ShareKit sharerers you want into your Rakefile.</p>
+
+<p>```ruby
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project'
+require 'motion-cocoapods'</p>
+
+<p>Motion::Project::App.setup do |app|
+  app.pods do</p>
+
+<pre><code>pod 'ShareKit/Facebook'
+pod 'ShareKit/Twitter'
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>I couldn't get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you'll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app -- and the rest of this walkthrough -- I'll assume the only sharers you're using will be Facebook and Twitter.</p>
+
+<h2>2. Create a ShareKit Configuration File</h2>
+
+<p>I put mine in <code>app/extensions/sharekit_configuration.rb</code>, and it looks like this:</p>
+
+<p>```ruby
+class SharekitConfiguration &lt; DefaultSHKConfigurator</p>
+
+<p>  def appName</p>
+
+<pre><code>'YourAppName'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def appURL</p>
+
+<pre><code>'http://yourappurl.com'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def facebookAppId</p>
+
+<pre><code>'1234567890'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def twitterConsumerKey</p>
+
+<pre><code>'abcedfgh1234567890'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def twitterSecret</p>
+
+<pre><code>'abcedfgh1234567890'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def twitterCallbackUrl</p>
+
+<pre><code>'http://yourappurl.com'
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>After you create the file, you need to load it in your <code>app_delegate.rb</code>.</p>
+
+<p>```ruby
+  def application(application, didFinishLaunchingWithOptions:launchOptions)</p>
+
+<pre><code>...
+
+SHKConfiguration.sharedInstanceWithConfigurator(SharekitConfiguration.alloc.init)
+SHK.flushOfflineQueue
+
+...
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>That <code>SHK.flushOfflineQueue</code> will try to send stored shared content, if there is any, so make sure to include it.</p>
+
+<h2>3. Alter your Cocoapod Sources</h2>
+
+<p>This is the ugly hack. The Cocoapod version of the Facebook iOS SDK is not the correct one; the ShareKit people provide their own fork that includes the functionality you need. (If you don't use it, the Facebook login won't work at all.) But also the version of ShareKit is old and the Facebook sharing functionality appears to be broken in it anyway, so you might as well update that to the most recent version as well.</p>
+
+<p>All Cocoapod spec information is stored in <code>~/.cocoapods/master</code>. The first file we'll change is the Facebook iOS SDK pod spec. It's located at <code>~/.cocoapods/master/Facebook-iOS-SDK/1.2/Facebook-iOS-SDK.podspec</code>, and you want to change the line of it that defines the source to look like this:</p>
+
+<p><code>ruby
+Pod::Spec.new do |s|
+  ...
+  s.source   = { :git =&gt; 'git://github.com/ShareKit/facebook-ios-sdk.git', :commit =&gt; '397c0b62b116a9680035e87a07ab936e1c5dfce6' }
+  ...
+end
+</code></p>
+
+<p>This points to the most recent commit of the ShareKit Facebook iOS SDK fork. And similarly, we should update the ShareKit pod as well, which is located at <code>~/.cocoapods/master/ShareKit/2.0/ShareKit.podspec</code>.</p>
+
+<p><code>ruby
+Pod::Spec.new do |s|
+  ...
+  s.source   = { :git  =&gt; 'https://github.com/ShareKit/ShareKit.git', :commit =&gt; 'a249839dde09e326b1806e22ab3ddb77d733fce9' }
+  ...
+end
+</code></p>
+
+<h2>4. Manually Copy Resources</h2>
+
+<p>ShareKit expects that its bundle and plist will be present in the resources directory, and you'll have to manually move them there for it to work.</p>
+
+<p><code>bash
+cp vendor/Pods/ShareKit/Classes/ShareKit/Core/SHKSharers.plist resources/
+cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/
+cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/ShareKit.bundle/
+</code></p>
+
+<p>For some inexplicable reason ShareKit seems to want the bundle both in the resources directory and as a subdirectory in its own bundle. I have no idea why this is but I couldn't get ShareKit working without this step.</p>
+
+<h2>5. Hook up the Share Action</h2>
+
+<p>This is the simplest, most straightforward step. In your view:</p>
+
+<p><code>ruby
+def initWithFrame(frame)
+  ...
+  @share = UIButton.buttonWithType(UIButtonTypeCustom)
+  @share.setTitle("Tap to Share", forState:UIControlStateNormal)
+  @share.frame = [[60, 300], [200, 30]]
+  @share.addTarget(controller, action:'share', forControlEvents:UIControlEventTouchUpInside)
+  self.addSubview(@share)
+  ...
+end
+</code></p>
+
+<p>And in your controller:</p>
+
+<p>```ruby
+def share
+  item = SHKItem.text("This is the text you'll be sharing!")
+  actionSheet = SHKActionSheet.actionSheetForItem(item)</p>
+
+<p>  SHK.setRootViewController(self)</p>
+
+<p>  actionSheet.showInView(self.view)
+end
+```</p>
+
+<p>That's all there is to it! When you touch the 'Tap to Share' button, you should see the ShareKit action sheet pop up with all of the functionality you'd expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
+
+<p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[From the RubyMotion Simulator to Your Friend's iPhone]]></title>

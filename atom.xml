@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-04T14:06:28-05:00</updated>
+  <updated>2012-08-22T11:31:44-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -14,78 +14,1032 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Rails is the Most American Framework (and PHP is the Least)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/"/>
-    <updated>2012-07-04T12:26:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least</id>
-    <content type="html"><![CDATA[<p><a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">I&#8217;m no stranger to controversy.</a> I&#8217;m not afraid to stand up and say what millions of coders already know &#8211; but what most people don&#8217;t know is that I&#8217;m also extremely patriotic.</p>
-
-<p><img src="http://f.cl.ly/items/1V0z0n1Z3C3Q101I0I3z/boldly_french.jpg" alt="Boldly patriotic" /></p>
-
-<p>That&#8217;s me, boldly pointing the way into the brighter, awesomer future of America. As I was sitting down to write the next in my series of <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">concerns on Rails</a>, my boyfriend (who is also a die-hard, red-blooded, Commie-hating patriot) suggested that I marry my love of Rails code and my love of the US of A in a very special blog post.</p>
-
-<p>But a post like that &#8211; as daringly insightful as it might be &#8211; just wouldn&#8217;t be good enough for this blog. You see, my posts are also highly topical, and everyone knows Rails and America go together like chocolate and peanut butter. Pointing that out wouldn&#8217;t really be exciting or new. I needed a special sauce to truly set my contribution apart: and that&#8217;s when I remembered that a lot has been said recently about how <a href="http://me.veekun.com/blog/2012/04/09/php-a-fractal-of-bad-design/">horrible</a>/<a href="http://fabien.potencier.org/article/64/php-is-much-better-than-what-you-think">wonderful</a> PHP is.</p>
-
-<p>For I have a unique insight that no one else has ever considered in this debate: I know for a fact that Rails is easily the most American framework in existence, and PHP is the least. Thus I have at last resolved this tedious debate. PHP is indeed awful, and possibly also sponsored by the Axis of Evil, and Rails is as American as apple pie and the colors red, white, and blue. How did I arrive at this conclusion? Really, it&#8217;s just common sense, but if you&#8217;re not patriotic enough to figure it out I&#8217;ve helpfully included my reasoning.</p>
+    <title type="html"><![CDATA[Introduction to Programming III]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/21/introduction-to-programming-iii/"/>
+    <updated>2012-08-21T10:56:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/21/introduction-to-programming-iii</id>
+    <content type="html"><![CDATA[<p>Another in the exciting introduction to programming series! This is looking like it&#8217;ll be a four-part series; at least, I think I&#8217;m running into a wall in terms of complexity that I think defines the end of &#8220;introduction.&#8221; Still, I hope it&#8217;ll be helpful to someone, and it&#8217;ll hopefully be a popular class at the Center on Halsted.</p>
 
 <!-- more -->
 
 
-<h2>Rails is the Most American Framework</h2>
+<h2>Flow Control</h2>
 
-<p>In order to examine Rails&#8217; blindingly obvious American-ness, we need a sensible rubric. How do you say one thing is more American than another? Well, I&#8217;ve helpfully come up with a completely objective barometer of Americana. Everyone would agree that the three core tenents of the United States are freedom, liberty, and database agnosticism &#8211; so what better ways than those to rate Rails itself?</p>
+<p>In this lesson, we&#8217;re going to learn how to give our programs some structure. While your very first program was pretty exciting, it also left a little to be desired. What if you wanted to change what we said based on the person&#8217;s name or hobby? And how do we make Ruby keep repeating the program without manually pressing the &#8220;play&#8221; button by ourselves?</p>
 
-<h3>Freedom &amp; Liberty</h3>
+<p>We&#8217;re about to learn the means to do that, and we&#8217;ll start with a fundamental concept in computer programming: comparisons.</p>
 
-<p>One of Rails&#8217; core features is freedom. I know this is true because it was built that way by <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">David Heinemeyer Hansson</a>, who is perhaps the most real and most original of American patriots.</p>
+<h3>Comparisons</h3>
 
-<p><img src="http://4.bp.blogspot.com/-aLryA2Bey-w/TY6usViKtAI/AAAAAAAACiE/B2qQeW_ags0/s1600/heinemeier.article.jpg" alt="The man himself" /></p>
+<p>Many programs rely on comparisons of data to execute properly. For example, consider y. If you put in your email address and password, it has to figure out if those are actually equivalent to what&#8217;s been stored on the website. As another example, think of an mp3 player. When the song has played the entire length of its track, it has to automatically move to the next track. To do that sort of thing, computer programs rely on comparisons.</p>
 
-<p>DHH is a Danish programmer, and Denmark is pretty close to France, which is very American because the Frenchman Napoleon sold Lousiana to America in 1803. So he&#8217;s definitely included in the American cultural halo effect, making him a United States citizen from the moment he was born.</p>
+<p>All comparisons return <code>true</code> or <code>false</code>. <code>true</code> and <code>false</code> are special objects in Ruby: we use them all the time, as you&#8217;ll see very shortly. Let&#8217;s learn about comparisons in an exciting <em>*exercise</em>.</p>
 
-<p>But even more importantly than that, I have inside knowledge that David (we&#8217;re on a first name basis) is working on a &#8220;Men of 37signals&#8221; beefcake calendar. Nothing is more American than men baring nearly everything for money, and indeed, nothing represents liberty more than successful entrepreneurs stripping for petty cash.</p>
+<ol>
+<li><p>Type <code>1 == 1</code>. This is the equality comparison. It checks if two objects are exactly equal to each other. We use two equals here, instead of one, because one equal is for variable assignment (as we learned last lesson). Two equals are for equality comparison.</p></li>
+<li><p>Try <code>'string' == 'other string'</code>. Obviously these two strings are different: the comparison returns false.</p></li>
+<li><p>Try <code>'mary' == 'mary'</code>. Since these two strings are the same, we get true.</p></li>
+<li><p>Try <code>1 &gt; 2</code>. Greater than and less than are other comparison operators: they tell you when numbers are, obviously, greater than or less than other numbers.</p></li>
+<li><p>Try <code>2 &lt; 2</code>. Two is not less than two, it is equal to two; so this comparison returns false.</p></li>
+<li><p>Try <code>2 &lt;= 2</code>. This is the less than or equal to operator: it has an equivalent greater than or equal to operator, <code>&gt;=</code>.</p></li>
+<li><p>Try <code>'cat' &lt; 'dog'</code>. This part is a litle confusing: when you compare strings, it compares the actual byte values of the first differing letters. Thus, on most computers, <code>'z' &gt; 'a'</code> will be true! This can be very unexpected and is a reason why you generally don&#8217;t use greater than or less than on strings.</p></li>
+<li><p>Instead, a common string method that returns <code>true</code> or <code>false</code> is <code>include?</code>. Try <code>'zookeeper'.include?('zoo')</code>. This returns true, because the string &#8216;zookeeper&#8217; does indeed contain the substring &#8216;zoo.&#8217;</p></li>
+</ol>
 
-<h3>Liberty &amp; Database Agnosticism</h3>
 
-<p>Really I think this point needs no explanation. But here&#8217;s one anyway: when the framers of our Constitution wrote in that that hallowed document, &#8220;it becomes necessary for one people to dissolve the political bands which have connected them with another,&#8221; they were doing more than obliquely referencing the creation of Rails nearly 200 years later. They were talking about dissolving the ties connecting an application to its database.</p>
+<p>As I said before, we use <code>true</code> and <code>false</code> all the time: and their primary use is for branching.</p>
 
-<p>They were <em>liberating</em> the Internet from the cruel confines of the databases that constrained it.</p>
+<h3>Branching</h3>
 
-<p>Using object-relational mapping like ActiveRecord, document-relational mapping like Mongoid, or even document-relational mapping like the far superior <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a> is the true fulfillment of this centuries-old promise. This more than anything else represents Americanism: true, real liberty. Liberty you can touch, if you wanted to print out the source code and rub it all over your body.</p>
+<p>Very frequently, you&#8217;ll want to vary what your program does based on a comparison. If the user enters in the word &#8216;dog&#8217;, you want to print our &#8216;bark&#8217;: but if they enter in &#8216;cat&#8217;, you want to print out &#8216;meow&#8217;. We already know how to compare the strings &#8216;dog&#8217; and &#8216;cat&#8217;: but how do we change what our program does based on the result of comparisons?</p>
 
-<p>Which is what any real American would do.</p>
+<p>We use branching! Branching is a simple concept but very powerful. Let&#8217;s write our second program to understand how we can use branching in Ruby.</p>
 
-<h2>PHP is the Work of Evil</h2>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;What animal do you want to hear?&quot;</span>
+</span><span class='line'><span class="n">animal</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="n">animal</span> <span class="o">==</span> <span class="s1">&#39;cat&#39;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Meow!&quot;</span>
+</span><span class='line'><span class="k">elsif</span> <span class="n">animal</span> <span class="o">==</span> <span class="s1">&#39;dog&#39;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Bark.&quot;</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Moo...&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>Obviously, since Rails is a framework and PHP is a language, comparing the two is like comparing red apples to green apples. And that metaphor is even more apt here &#8211; because PHP is indeed very red. And by that I mean Communist. But examining PHP&#8217;s socialist leanings is fruitless: everyone knows there&#8217;s greater evils than socialism in the world. The greatest of American leaders helpfully enumerated them for us.</p>
 
-<p><img src="http://3.bp.blogspot.com/-GNEL1sdGcvA/T0xJfvragjI/AAAAAAAAEF0/t5Nuvs6IEoA/s1600/George-W.-Bush.jpg" alt="Greatest American Leader" /></p>
+<p>Remember <code>puts</code> and <code>gets</code> from our last lesson, along with <code>chomp</code> to get rid of newlines? We&#8217;re using them again: <code>puts</code> outputs information to the console, whereas <code>gets</code> gets it in. But the new and exciting stuff here is the <code>if</code> statement.</p>
 
-<p>They are Iran, Iraq, and North Korea.</p>
+<p>An <code>if</code> statement in Ruby allows us to change what our program does on the fly. When you type <code>if</code>, the first thing afterwards has to be a conditional that evaluates to <code>true</code> or <code>false</code>. If the statement is true, the very next line is executed; in this case, we puts &#8220;Meow!&#8221;.</p>
 
-<h3>Iran &amp; Iraq</h3>
+<p>If that conditional isn&#8217;t <code>true</code>, however, we skip that line entirely and move along. In this case, the computer moves to the next statement: <code>elsif</code>. As you might have guessed, <code>elsif</code> is computer speak for &#8220;else if.&#8221; In other words, if the first if statement is false, try this one instead. Just like <code>if</code>, <code>elsif</code> takes one condition that must evaluate to <code>true</code> or <code>false</code>, and just like <code>if</code>, if the statement isn&#8217;t true, it moves on to the next one. We can have as many <code>elsif</code>s as we like after an initial <code>if</code>: the first one that is true, though, will cause the other ones to all be skipped. It&#8217;s an &#8220;else if&#8221;, after all, not an &#8220;and if!&#8221;</p>
 
-<p>Damningly, Iran and Iraq share a subcontintent with the country in which Zend Technologies itself is founded &#8211; Israel. Just as the American freedom effect haloed DHH into citizenship, the evil anti-halo effect condemns Zend and everything it&#8217;s created, which includes PHP. As a Jew who has visited Israel twice, I know this to be the case since I&#8217;ve seen it with my very own eyes. And nothing beats anecdotal evidence.</p>
+<p>The final piece of this conditional puzzle is <code>else</code>. If all the previous conditions have been false, then what we&#8217;ve provided in <code>else</code> will be executed. In this case, if you didn&#8217;t enter in &#8216;cat&#8217; or &#8216;dog,&#8217; then we assume you must want a cow and we put out &#8220;Moo&#8230;&#8221;.</p>
 
-<p>Iran and Iraq also share numerous letters in their names with the worst perpetrator of PHP on the planet: India. (I&#8217;m counting the &#8220;i&#8221;s twice, so they have more letters in common than they ordinarily might.) Lots of Indians program PHP, and thus we can safely say many of India&#8217;s most awesome works of art were created with PHP. The fact that other countries can make things that are arguably better than what American&#8217;s done is inherently anti-American. For example:</p>
+<p>All <code>if</code> statements have to end with an <code>end</code>. A lot of multi-line programming needs an <code>end</code> at the very end: otherwise the computer won&#8217;t know where the <code>if</code> terminates.</p>
 
-<p><img src="http://www-bgr-com.vimg.net/wp-content/uploads/2011/03/india110314124035.jpg" alt="Created with PHP" /></p>
+<p>Let&#8217;s try another new program &#8211; except this time you&#8217;ll make it on your own. Let&#8217;s use a new string method, called <code>capitalize</code>. Ask what the user&#8217;s name is, and then get it from the command line. Check if what they typed is equal to what they typed, capitalized. If it is, then welcome them to Introduction to Programming. If it isn&#8217;t, ask them to try again with a capitalized name&#8230; since the most important part of programming is correct capitalization!</p>
 
-<p>Just looking at that makes me sick.</p>
+<h3>Looping</h3>
 
-<h3>North Korea</h3>
+<p>Of course, running this program over and over again isn&#8217;t exactly the most fun thing in the entire universe. I bet you&#8217;ve heard that computers are great at mindless, repetitive tasks&#8230; but here, it&#8217;s you clicking on that little &#8220;play&#8221; button making the program run. Doesn&#8217;t that seem like an injustice?</p>
 
-<p>But I think North Korea deserves its own, special callout. The only PHP programmer I personally know is Korean. He also bears more than a passing resemblance to Kim Jong-un.</p>
+<p>Happily, we can fix this problem. Let&#8217;s try another program to illustrate how easy it is to repeat stuff in Ruby.</p>
 
-<p><img src="http://www.csmonitor.com/var/ezflow_site/storage/images/media/content/2012/0415/0415_kim_jong_un/12281745-1-eng-US/0415_Kim_jong_un_full_600.jpg" alt="This is him" /></p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">100</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;I love programming!&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>Kim Jong-un is the latest in a line of horrible, hereditary dictators that ruthlessly oppress their people. Doesn&#8217;t that sound familiar to you, PHP programmers? Because if it doesn&#8217;t, it should. It&#8217;s the heart of what being American isn&#8217;t &#8211; just like PHP itself.</p>
 
-<h2>What does this mean for you?</h2>
+<p>That should probably leave you breathless, saying &#8220;I love programming!&#8221; a hundred times. What exactly happened here, though?</p>
 
-<p>I think the answer to my rhetorical question here is pretty obvious. But if you really need all this boiled down for you &#8211; maybe because you&#8217;re a PHP programmer and you&#8217;re too busy hating America to have real reading comprehension &#8211; here it is:</p>
+<p><code>times</code> is a method on integers that takes a new kind of Ruby construct: a block. A block is a small, encapsulated bit of code that a lot of Ruby methods accept. These methods that want blocks always do something with the code in the block. In this case, <code>times</code> simply repeats the block over and over, for as many times as the integer it was called on.</p>
 
-<p><em>You should totally be buying the &#8220;Men of 37signals&#8221; calendar</em>. I hear Mr. July is super hot.</p>
+<p><code>do</code> defines the start of a block; <code>end</code> is, obviously, the end. Everything between the <code>do</code> and the <code>end</code> is part of the block, and in this case will be repeated 100 times.</p>
+
+<p>What if we don&#8217;t want to repeat this merely 100 times, though? What if we want to repeat something endlessly? For that, let&#8217;s make a completely new program.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;This is an endless loop! Type &#39;q&#39; to quit.&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kp">loop</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">response</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;q&#39;</span>
+</span><span class='line'>    <span class="k">break</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="n">response</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This program uses a block to do most of its work: but the method we&#8217;re using to start that block is <code>loop</code>. As you probably guessed, <code>loop</code> will repeat the programming inside the block endlessly, never exiting if it can help it. The special method <code>break</code> that we use inside the block is one of only two ways to exit a loop that is permanently repeating.</p>
+
+<p>Let&#8217;s try another loop, but this time, let&#8217;s &#8220;forget&#8221; to include a break statement.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">loop</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Sayonara repl.it&quot;</span>
+</span><span class='line'>  <span class="nb">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That sleep method commands the computer to wait for 1 second whenever it encounters it: in this case, the computer will output &#8220;Sayonara repl.it&#8221;, wait one second, and then do it all again.</p>
+
+<p>Oh no! We forgot to include a break statement, and now our computer will repeat this poor program forever. What are we supposed to do?</p>
+
+<h3>The End of Repl.it</h3>
+
+<p>Unfortunately, there&#8217;s not a whole lot we can do&#8230; on repl.it.</p>
+
+<p>We&#8217;ve learned about the basic types of Ruby: integers, strings, and floats. We&#8217;ve learned how to use methods on them, and we&#8217;ve learned about Ruby&#8217;s basic data structures &#8211; arrays and hashes. We&#8217;ve even learned about variables and comparisons. And through it all, repl.it has been our constant ally and friend.</p>
+
+<p>Now we have to abandon it.</p>
+
+<p>That might sound harsh, but remember that repl.it is only a tool for learning Ruby. Real computer programming takes place not in a browser, but on your own computer. When a program goes haywire on our own computer, we have special tools for terminating it and restoring the system&#8217;s functionality. But on repl.it, those tools don&#8217;t work. So as we get into more complicated programming, we&#8217;ll have to migrate away from repl.it and onto some more complicated tools: but along with additional complexity comes greater power.</p>
+
+<h3>Installing Ruby Locally</h3>
+
+<p>For the purposes of this class, I&#8217;ve installed Ruby on all the computers beforehand. But if you ever want to install Ruby on your own computer at home, it&#8217;s really simple. Instructions for downloading Ruby can be found on the official Ruby website at ruby-lang.org: just click on the &#8220;Download Ruby&#8221; button in the upper-right to get started, and the downloader will walk you through the installation process.</p>
+
+<p>To verify that we&#8217;ve installed Ruby correctly, let&#8217;s open up an important tool that we&#8217;ll be using a lot during programming: the command prompt. A command prompt is part of an operating system. It lets you type commands into the computer directly: they&#8217;re powerful but also rather opaque, because you need to know the commands and what they do beforehand.</p>
+
+<p>To start the command prompt, click on the &#8220;Start&#8221; menu. Then click &#8220;Run&#8230;&#8221;, type in &#8220;cmd&#8221;, and press enter.</p>
+
+<p>Welcome to the command prompt.</p>
+
+<p>There are a number of commands you can type here, but we want to start interactive Ruby. Interactive Ruby is the right-hand side of repl.it: a window where we can type Ruby commands and see them executed immediately. To start interactive Ruby, type <code>irb</code> into the command prompt and press &#8220;enter.&#8221; You&#8217;ll see a window very similar to the one on the right side of repl.it.</p>
+
+<p>Now, let&#8217;s try that last program again, this time on our own local computer.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">loop</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Sayonara repl.it&quot;</span>
+</span><span class='line'>  <span class="nb">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Oh no, we forgot to put in a break again! But this time we can fix our out-of-control program. Press &#8220;Ctrl&#8221; and &#8220;C&#8221; simultaneously to break the program. &#8220;Ctrl-C&#8221; is a shortcut for programs in the command prompt that instructs them to exit immediately. Computer programmers call this &#8220;breaking&#8221; or &#8220;aborting&#8221; the program.</p>
+
+<p>Now we have Ruby on our computer. Interactive Ruby is a great way of writing short snippets of code and testing functionality, and you&#8217;ll use it frequently for smaller, simpler applications.</p>
+
+<h3>Coding Locally</h3>
+
+<p>Now we understand how to get interactive Ruby back. But being able to write programs and then execute them afterwards was actually pretty helpful too. How do we get back the left-hand side of repl.it, the one that let us write code and then run it all at once?</p>
+
+<p>Most computer programs are actually just text files, so we can just use our favorite text editor! The hard work of converting the text into computer instructions is handled by the language itself, so theoretically you could write a computer program in Microsoft Word if you wanted to. But there are way better programs for programming: they provide shortcuts to run the program, help you remember method names, and provide syntax correction if you get something wrong. Let&#8217;s use one of those instead.</p>
+
+<p>I&#8217;ve already installed a free program called Notepad++ onto your computers. It does a lot of what I&#8217;ve said above, and as a bonus doesn&#8217;t cost a dime. You can find out more about it (and download it at home) at its <a href="http://notepad-plus-plus.org/">website</a>. We&#8217;ll be using Notepad++ to program Ruby, so double click its icon on your desktop to start it up. Let&#8217;s write a simple program to test it out.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">loop</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;What&#39;s your name?&quot;</span>
+</span><span class='line'>  <span class="nb">name</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="s2">&quot;Josh&quot;</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;You&#39;re teaching a class!&quot;</span>
+</span><span class='line'>  <span class="k">elsif</span> <span class="nb">name</span> <span class="o">==</span> <span class="s2">&quot;Alisa&quot;</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;That&#39;s Josh&#39;s sister&#39;s name.&quot;</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;Hi, &quot;</span> <span class="o">+</span> <span class="nb">name</span><span class="o">.</span><span class="n">capitalize</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The content of this program should be fairly familiar to you by now. Save it and give it a filename of <code>name.rb</code>. .rb is the extension for Ruby programs: it tells the computer that the text file you saved is intended to be run by the Ruby interpreter. Now, just double-click the file in the location you saved it and you&#8217;ll see it run. Magical!</p>
+
+<p>You can also run the program manually from the command-line. To do so, navigate to the folder in which you saved it by using <code>cd</code> (the command line instruction to change directories). So if you saved it in a folder called &#8220;My Documents&#8221;, you&#8217;d use <code>cd "My Documents\"</code> to navigate there. Once you&#8217;re in the same folder as the program, type <code>ruby name.rb</code> to run the program. This is exactly the same as double-clicking on the program icon as above, except by doing it through the command line you&#8217;re doing it like a programming pro!</p>
+
+<h3>Next Time</h3>
+
+<p>In our next and last class, we&#8217;ll learn more about flow control using Ruby&#8217;s powerful and expressive enumerators. We&#8217;ll learn about classes, how to write our own classes and methods, and write a couple exciting and awesome programs.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Error Pages, Corrected]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/"/>
+    <updated>2012-08-13T14:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected</id>
+    <content type="html"><![CDATA[<p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&#8217;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&#8217;t then my post on dynamic error pages won&#8217;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
+
+<!-- more -->
+
+
+<h2>The Problem</h2>
+
+<p>Summarized elegantly <a href="https://github.com/rails/rails/issues/671">here</a>:</p>
+
+<blockquote><p>In Rails 2.3.x, one is able to stick this in ApplicationController to present the user with a custom 404 screen:</p>
+
+<p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
+
+<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController &#8211; the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
+
+<p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it&#8217;s raised in Rack, not the application itself.</p>
+
+<h2>The Solution</h2>
+
+<p>Requires a couple changes on our parts. First, let&#8217;s change our application_controller.rb:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_500</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">AbstractController</span><span class="o">::</span><span class="no">ActionNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span> <span class="c1"># To prevent Rails 3.2.8 deprecation warnings</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So far, just as usual. Now we define the actual actions:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span>
+</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
+</span><span class='line'>    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">exception</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;No route matches [</span><span class="si">#{</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">].</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">render</span> <span class="n">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="n">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="vi">@status</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Since we&#8217;re going to be exposing <code>render_404</code> as an action, now, we have to make parameters into it optional: but we know that if <code>render_exception</code> doesn&#8217;t receive an exception, it actually got a 404.</p>
+
+<p>Finally, we need to add a globbed, wildcard route at the conclusion of our routes.rb. But if we just add one in, then engines and Gems that also rely on wildcard routes will fail. The solution is to do this through our application.rb, like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">MyApplication</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># 404 catcher</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">after_initialize</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">append</span><span class="p">{</span> <span class="n">match</span> <span class="s1">&#39;*a&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;application#render_404&#39;</span> <span class="p">}</span> <span class="k">unless</span> <span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now it won&#8217;t punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
+
+<p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to Programming II]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/"/>
+    <updated>2012-08-05T17:48:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii</id>
+    <content type="html"><![CDATA[<p>It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&#8217;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &#8211; I&#8217;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&#8217;s browser.</p>
+
+<!-- more -->
+
+
+<h2>Digging Deeper into Ruby</h2>
+
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &#8211; integers, strings, and floats &#8211; and we also learned what methods are and how they can be used to manipulate those objects. Today we&#8217;ll start by learning about variables, a key concept in computer programming. Afterwards, we&#8217;ll use variables to understand more about Ruby&#8217;s basic objects, and then we&#8217;ll discover how we can create and manipulate entirely new classes of objects.</p>
+
+<h3>Variables</h3>
+
+<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you&#8217;ll need to reference the same piece of data over and over again. Maybe you have a string that&#8217;s particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
+
+<p>In Ruby, variable names are all lower-case, and they can&#8217;t contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you&#8217;ll see its value: so when you type <code>mary</code>, you&#8217;ll see <code>"little lamb"</code>.</p>
+
+<p>Let&#8217;s do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, type <code>mary</code>. It has the value of <code>'little lamb'</code>. This is how you assign variables.</p></li>
+<li><p>Let&#8217;s put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you&#8217;re actually using that string. So when you type <code>mary + 'chop'</code>, you&#8217;re actually saying <code>'little lamb' + 'chop'</code>.</p></li>
+<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>&#8217; previously, <code>mary</code>&#8217;s value hasn&#8217;t changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
+<li><p>Try <code>mary = mary + 'chop'</code>. Now the variable <code>mary</code> is going to be <code>'little lambchop'</code>, because we assigned it again.</p></li>
+<li><p>Try <code>dinner = mary</code>. The variable <code>dinner</code> now has the same value as the variable <code>mary</code>, which is to say, <code>'little lambchop'</code>.</p></li>
+<li><p>Let&#8217;s change what we&#8217;re having for dinner. Try <code>dinner = 'big lambchop'</code>. We&#8217;ve changed the value of <code>dinner</code>: what do you think&#8217;s happened to the value of <code>mary</code>?</p></li>
+<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn&#8217;t changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn&#8217;t affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
+<li><p>Let&#8217;s use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
+<li><p>Finally, let&#8217;s change our number. Try <code>number = number * 3</code>.</p></li>
+</ol>
+
+
+<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It&#8217;s so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
+
+<p>Let&#8217;s explore variable reassignment in an <strong>exercise</strong>.</p>
+
+<ol>
+<li><p>Try <code>mary = 'little lamb'</code>. Now, try <code>mary += 'chop'</code>. This is exactly equivalent to <code>mary = mary + 'chop'</code>.</p></li>
+<li><p>Try <code>number = 3</code>. Now, try <code>number *= 4</code>. This is exactly equivalent to <code>number = number * 4</code>.</p></li>
+</ol>
+
+
+<p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
+
+<p>Now that we understand variables, the rest of Ruby&#8217;s world opens up before us. The basic types we discussed &#8211; integers, strings, floats, and variables &#8211; form the foundation for the Ruby programming language. Now that we&#8217;ve learned about them, we can learn about some exciting new objects&#8230; and then eventually how to create new kinds of objects of our very own!</p>
+
+<h3>Organizing Data</h3>
+
+<p>We know now how we would put in numbers and letters in a Ruby program. But what if you want to organize them? Say you wanted to create a list of names, or perhaps you needed a dictionary of words. What would be the best way to do that?</p>
+
+<p>That&#8217;s what we&#8217;ll discover now.</p>
+
+<h3>Arrays</h3>
+
+<p>Arrays are lists of objects. They look like this:</p>
+
+<p><code>["This", "is", 'an', 'array', 123]</code></p>
+
+<p>The brackets around the array are telling you what it is &#8211; an array. The elements of the array are separated by commas. This array has five elements &#8211; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&#8217;s as big as you need.</p>
+
+<p>Let&#8217;s try some <strong>exercises</strong> to understand how to use arrays.</p>
+
+<ol>
+<li><p>Let&#8217;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
+<li><p>Let&#8217;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
+<li><p>Being friendless sucks. Let&#8217;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &#8216;tom&#8217;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &#8211; without the parenthesis or the dot &#8211; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let&#8217;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &#8211; the object to be inserted into the array &#8211; and push it onto the very end.</p></li>
+<li><p>When you count an array&#8217;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&#8217;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
+<li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
+<li><p>This is all well and good, but let&#8217;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&#8217;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
+</ol>
+
+
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &#8211; that is, the first element is always the first, the last element is always the last &#8211; you can encode a lot of information in them and be confident of accessing it later.</p>
+
+<h3>Hashes</h3>
+
+<p>A hash is like a dictionary. In a dictionary, you look up a word &#8211; say, &#8216;zebra&#8217; &#8211; and read a definition (&#8216;a big white and black striped horse-like animal&#8217;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &#8216;zebra&#8217; in a dictionary: it&#8217;s what you use to look up information in a hash. Values are the definitions: they&#8217;re what you get back when you look up a word.</p>
+
+<p>Hashes look like this:</p>
+
+<p><code>{'mary' =&gt; 'little lamb', 'freddy' =&gt; 1, 'zebra' =&gt; 'a big white and black striped horse-like animal', 1 =&gt; 3}</code></p>
+
+<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They&#8217;re very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first&#8230; but inside a hash, there&#8217;s no guarantee that the element we just added will be the last. Let&#8217;s try some <strong>exercises</strong> to explore this exciting new data structure.</p>
+
+<ol>
+<li><p>First, let&#8217;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&#8217;d have made a blank hash; instead we&#8217;re starting it with an entry.</p></li>
+<li><p>Let&#8217;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &#8211; &#8216;peacock&#8217; &#8211; to a new value &#8211; &#8216;beautiful&#8217;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &#8211; so the keys and values might not appear in the same positions you&#8217;d expect.</p></li>
+<li><p>Keys have to be unique in a hash &#8211; if you assign a value to a key that already exists, it will replace that key&#8217;s existing value. Let&#8217;s change the value of &#8216;zebra&#8217;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &#8216;zebra&#8217; is &#8216;striped&#8217;, instead of &#8216;animal&#8217;.</p></li>
+<li><p>Finally, data structures can contain other data structures. Let&#8217;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
+</ol>
+
+
+<p>Hashes are a great format for storing information in a way that we want to quickly look up later. Whereas arrays are for lists of things, hashes are very much like dictionaries.</p>
+
+<p>We&#8217;ll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It&#8217;s time to use what we&#8217;ve learned to create our very first program.</p>
+
+<h3>Our First Program</h3>
+
+<p>We now know enough to write our very first program in Ruby! We need two methods we haven&#8217;t discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let&#8217;s use those methods to create a program that automatically tabulates points for us.</p>
+
+<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&#8217;t really covered yet. When you write code in there, and press the &#8216;play&#8217; button in the upper right, the code will be executed and you&#8217;ll see the result on the right-hand side. Let&#8217;s try entering this in to the text editor half of repl.it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">scores</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Who just scored points?&#39;</span>
+</span><span class='line'><span class="nb">name</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;How many more points did they get?&#39;</span>
+</span><span class='line'><span class="n">points</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scores</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">points</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;The current standings are: &#39;</span> <span class="o">+</span> <span class="n">scores</span><span class="o">.</span><span class="n">inspect</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&#8217;s dissect this progrma line-by-line to understand what&#8217;s happening here.</p>
+
+<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn&#8217;t already been assigned: we&#8217;ll cover how it works more in the next lesson.</p>
+
+<p>In the second line, we ask the user who scored points.</p>
+
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &#8211; but that return isn&#8217;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+
+<p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
+
+<p>The seventh line performs hash assignment, like we just learned: the score is inserted into the hash so that we can keep track of it.</p>
+
+<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that&#8217;s easily understandable to humans.</p>
+
+<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we&#8217;ll discover how to have the program automatically loop so that we don&#8217;t have to keep running it manually.</p>
+
+<h3>Your First Program</h3>
+
+<p>Now that we know a little about Ruby, it&#8217;s time for you to make your very first program all on your own!</p>
+
+<p>Let&#8217;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
+
+<p>Next time, we&#8217;ll learn how to control flow through our Ruby programs, and we&#8217;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/"/>
+    <updated>2012-07-18T19:38:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
+
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&#8217;ve done this in a better way &#8211; by extracting the changes out into a new Cocoapod spec repository &#8211; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+
+<!-- more -->
+
+
+<h2>1. Set up the Rakefile</h2>
+
+<p>First, you need to add the ShareKit sharerers you want into your Rakefile.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-cocoapods&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Facebook&#39;</span>
+</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Twitter&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I couldn&#8217;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&#8217;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &#8211; and the rest of this walkthrough &#8211; I&#8217;ll assume the only sharers you&#8217;re using will be Facebook and Twitter.</p>
+
+<h2>2. Create a ShareKit Configuration File</h2>
+
+<p>I put mine in <code>app/extensions/sharekit_configuration.rb</code>, and it looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SharekitConfiguration</span> <span class="o">&lt;</span> <span class="no">DefaultSHKConfigurator</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">appName</span>
+</span><span class='line'>    <span class="s1">&#39;YourAppName&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">appURL</span>
+</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">facebookAppId</span>
+</span><span class='line'>    <span class="s1">&#39;1234567890&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterConsumerKey</span>
+</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterSecret</span>
+</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterCallbackUrl</span>
+</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After you create the file, you need to load it in your <code>app_delegate.rb</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="no">SHKConfiguration</span><span class="o">.</span><span class="n">sharedInstanceWithConfigurator</span><span class="p">(</span><span class="no">SharekitConfiguration</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">init</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">SHK</span><span class="o">.</span><span class="n">flushOfflineQueue</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That <code>SHK.flushOfflineQueue</code> will try to send stored shared content, if there is any, so make sure to include it.</p>
+
+<h2>3. Alter your Cocoapod Sources</h2>
+
+<p>This is the ugly hack. The Cocoapod version of the Facebook iOS SDK is not the correct one; the ShareKit people provide their own fork that includes the functionality you need. (If you don&#8217;t use it, the Facebook login won&#8217;t work at all.) But also the version of ShareKit is old and the Facebook sharing functionality appears to be broken in it anyway, so you might as well update that to the most recent version as well.</p>
+
+<p>All Cocoapod spec information is stored in <code>~/.cocoapods/master</code>. The first file we&#8217;ll change is the Facebook iOS SDK pod spec. It&#8217;s located at <code>~/.cocoapods/master/Facebook-iOS-SDK/1.2/Facebook-iOS-SDK.podspec</code>, and you want to change the line of it that defines the source to look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;git://github.com/ShareKit/facebook-ios-sdk.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;397c0b62b116a9680035e87a07ab936e1c5dfce6&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This points to the most recent commit of the ShareKit Facebook iOS SDK fork. And similarly, we should update the ShareKit pod as well, which is located at <code>~/.cocoapods/master/ShareKit/2.0/ShareKit.podspec</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span>  <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ShareKit/ShareKit.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;a249839dde09e326b1806e22ab3ddb77d733fce9&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. Manually Copy Resources</h2>
+
+<p>ShareKit expects that its bundle and plist will be present in the resources directory, and you&#8217;ll have to manually move them there for it to work.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp vendor/Pods/ShareKit/Classes/ShareKit/Core/SHKSharers.plist resources/
+</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/
+</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/ShareKit.bundle/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For some inexplicable reason ShareKit seems to want the bundle both in the resources directory and as a subdirectory in its own bundle. I have no idea why this is but I couldn&#8217;t get ShareKit working without this step.</p>
+
+<h2>5. Hook up the Share Action</h2>
+
+<p>This is the simplest, most straightforward step. In your view:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="vi">@share</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeCustom</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Tap to Share&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateNormal</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
+</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">action</span><span class="ss">:&#39;share&#39;</span><span class="p">,</span> <span class="n">forControlEvents</span><span class="ss">:UIControlEventTouchUpInside</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@share</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in your controller:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">share</span>
+</span><span class='line'>  <span class="n">item</span> <span class="o">=</span> <span class="no">SHKItem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;This is the text you&#39;ll be sharing!&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">actionSheet</span> <span class="o">=</span> <span class="no">SHKActionSheet</span><span class="o">.</span><span class="n">actionSheetForItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">SHK</span><span class="o">.</span><span class="n">setRootViewController</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">actionSheet</span><span class="o">.</span><span class="n">showInView</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s all there is to it! When you touch the &#8216;Tap to Share&#8217; button, you should see the ShareKit action sheet pop up with all of the functionality you&#8217;d expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
+
+<p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns III: Metatags]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/"/>
+    <updated>2012-07-12T09:48:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags</id>
+    <content type="html"><![CDATA[<p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and <a href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/">two</a> of my series on Rails concerns, I&#8217;m going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren&#8217;t already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook&#8217;s Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the <a href="https://github.com/kpumuk/meta-tags/">meta-tags</a> gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
+
+<!-- more -->
+
+
+<h2>Setup</h2>
+
+<p>Include the meta-tags gem in your Gemfile:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;meta-tags&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;meta_tags&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While the gem itself hasn&#8217;t been updated for awhile, that doesn&#8217;t really matter; it still functions quite well for our purposes. Once it&#8217;s in the Gemfile, we&#8217;ll configure some sensible defaults in our application layout, <code>application.html.erb</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">meta</span> <span class="n">charset</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="sx">%= display_meta_tags :site =</span><span class="o">&gt;</span> <span class="s1">&#39;Your Site Name Here&#39;</span><span class="p">,</span> <span class="ss">:keywords</span> <span class="o">=&gt;</span> <span class="no">Metatags</span><span class="o">::</span><span class="no">KEYWORDS</span> <span class="sx">%&gt;</span>
+</span><span class='line'><span class="sx">  ...</span>
+</span><span class='line'><span class="sx">&lt;/head&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&#8217;ll be defining that <code>CONSTANTS</code> constant shortly. This ensures that on each page the name of your site appears in the title, all by itself if you don&#8217;t specify anything else, and that keywords appear in the keywords <code>meta</code> tag, which robots like the Googlebot use when computing your page&#8217;s relevance.</p>
+
+<h2>The Concern</h2>
+
+<p>The meta-tags gem allows us to specify additional hashed options in either controllers or views: these options are concatenated with the defaults specified above to create attractive and meaningful metatags for each and every page. Since controllers tend to encapsulate models, I elected to make this a controller concern. (And forget doing this in views: replicating this code in each and every view is not my idea of a good time.) So our controller should, ideally, look somewhat like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:find_user</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Metatags</span>
+</span><span class='line'>  <span class="n">metatags</span> <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="ss">:summary</span><span class="p">,</span> <span class="ss">:short_tag</span> <span class="o">=&gt;</span> <span class="ss">:slug</span><span class="p">,</span> <span class="ss">:keywords</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:canonical</span> <span class="o">=&gt;</span> <span class="ss">:user_url</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">find_user</span>
+</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We specify with a hash how the metatags should be constructed: the keys of the hash are the names of each metatag we intend to use, while the values are the methods that need to be executed on the controller&#8217;s object in order to get the information for that tag. In other words, if we have an object called <code>@user</code>, then we want the title of the page to include <code>@user.name</code> &#8211; and that&#8217;s represented by a hash that looks like <code>:title =&gt; :name</code>. However, this won&#8217;t work for every key and value. For example, the <code>:canonical</code> key should indicate how to find the canonical URL of this resource, so we&#8217;ll need a special exception for that&#8230; and the Facebook Open Graph name for <code>:canonical</code> is <code>:url</code>, so we&#8217;ll need to switch it when we generate the Facebook tags.</p>
+
+<p>This, then, is the actual module itself:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Metatags</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">OG_TAGS</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:title</span><span class="p">,</span> <span class="ss">:type</span><span class="p">,</span> <span class="ss">:image</span><span class="p">,</span> <span class="ss">:url</span><span class="p">,</span> <span class="ss">:description</span><span class="o">]</span>
+</span><span class='line'>  <span class="no">KEYWORDS</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;here&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">append_before_filter</span> <span class="ss">:set_metatags</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">metatags</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@hash</span> <span class="o">=</span> <span class="nb">hash</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">set_metatags</span>
+</span><span class='line'>    <span class="n">object</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">underscore</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">singularize</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">hash</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="ss">:@hash</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">object</span>
+</span><span class='line'>      <span class="n">new_hash</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:open_graph</span> <span class="o">=&gt;</span> <span class="p">{}}</span>
+</span><span class='line'>      <span class="nb">hash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tag</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="n">object</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span> <span class="k">if</span> <span class="n">object</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:keywords</span>
+</span><span class='line'>          <span class="n">value</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="no">KEYWORDS</span>
+</span><span class='line'>        <span class="k">elsif</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:canonical</span>
+</span><span class='line'>          <span class="n">value</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="n">object</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">new_hash</span><span class="o">[</span><span class="n">tag</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span class='line'>        <span class="n">tag</span> <span class="o">=</span> <span class="ss">:url</span> <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:canonical</span>
+</span><span class='line'>        <span class="n">new_hash</span><span class="o">[</span><span class="ss">:open_graph</span><span class="o">][</span><span class="n">tag</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="no">OG_TAGS</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">set_meta_tags</span> <span class="n">new_hash</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Obviously this concern is somewhat complicated: bear with me and I&#8217;ll explain it.</p>
+
+<p>At the top of the code, we define which OpenGraph tags we care about, as well as the default keywords for our application. When the module is included, it appends a <code>before_filter</code> to its controller that will try to set all the metatag information. However, it also creates a new class method on its included class, a side-effect of having a child module called <code>ClassMethods</code>: in this case, it provides included controllers with a method called <code>metatags</code> that accepts a hash of metatag names and method names, as I discussed above.</p>
+
+<p>Finally, we have a private method called <code>set_metatags</code> that performs the actual heavy lifting of the concern. It searches for an instance variable named after the controller itself: so if you have a <code>UsersController</code>, it tries to find an instance variable called <code>@user</code>. If that object exists, it tries to populate a new hash with the result of sending it each hash value.</p>
+
+<p>We have two special exceptions we&#8217;re concerned with. First, we don&#8217;t want to replace the existing site keywords &#8211; we only want to add to them. So if the tag is <code>:keywords</code> we add the keywords in <code>KEYWORDS</code> to whichever ones we passed to <code>meta_tags</code>. Second, if the tag is <code>:canonical</code>, we do something a little special. We assume the key is a Rails named route that will accept one argument, the controller&#8217;s object, to generate a correct canonical URL.</p>
+
+<p>Underneath that, we switch the name of the <code>:canonical</code> tag to <code>:url</code> so that the Facebook Open Graph tags are set up correctly. With that you&#8217;re all done. Each controller will automatically try to query its object as you specified and set metatag information for each view based on the results of those queries.</p>
+
+<h2>Caveats</h2>
+
+<p>Because the metatag creation happens in a <code>before_filter</code>, the ordering of your filters becomes crucially important. If you have a <code>before_filter</code> that finds your controller&#8217;s primary object like my controller sample above, it&#8217;s vital that you place the <code>before_filter</code> above the concern&#8217;s <code>include</code>, or, if you&#8217;d prefer, use <code>prepend_before_filter</code> instead of <code>before_filter</code>. Otherwise the metatag concern will place its <code>before_filter</code> ahead of the one that finds your object, your object will be nil when <code>set_metatags</code> runs, and the metatag information will never display correctly on the page.</p>
+
+<p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application&#8217;s specific concerns.</p>
+
+<p>This ends the first part of my series on Rails concerns. While I don&#8217;t have anything else exciting to show off presently, the concern pattern is a powerful one that I&#8217;ve used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I&#8217;ll definitely continue talking about awesome Rails concerns.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns II: Taggable]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/"/>
+    <updated>2012-07-04T15:31:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable</id>
+    <content type="html"><![CDATA[<p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&#8217;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&#8217;re going to have to roll your own solution. That&#8217;s what I&#8217;m doing for GirlsGuideTo, and this is how I implemented it.</p>
+
+<!-- more -->
+
+
+<h2>The Tag Model</h2>
+
+<p>The tag model itself is fairly straightforward:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:taggings</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:addresses</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">Address</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:users</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">User</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unfortunately, you can&#8217;t just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don&#8217;t work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can&#8217;t <code>SELECT * from taggables</code>, since there is no taggables table.</p>
+
+<p>This is frustrating, but easy enough to work around. You&#8217;ll have to specify every model that&#8217;s taggable in the <code>Tag</code> class. But since we&#8217;ll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you&#8217;re confident, you can define a taggables method yourself:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">taggables</span>
+</span><span class='line'>    <span class="o">[</span><span class="n">addresses</span> <span class="o">+</span> <span class="n">users</span><span class="o">].</span><span class="n">flatten</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you&#8217;ll want to display the different kinds of taggables in different places anyway.</p>
+
+<h2>The Join Model</h2>
+
+<p>Tag has-and-belongs-to-many taggables through a join model. That model is <code>Tagging</code>, and should look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tagging</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:tag_id</span><span class="p">,</span> <span class="ss">:taggable_id</span><span class="p">,</span> <span class="ss">:taggable_type</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:tag</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ruby</p>
+
+<p>There&#8217;s nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won&#8217;t fill in the association correctly.</p>
+
+<h2>The Taggable Concern</h2>
+
+<p>Finally, we can get to the concern itself. This is how I&#8217;ve set it up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Taggable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:taggable</span>
+</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:taggings</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">name</span><span class="o">.</span><span class="n">strip!</span>
+</span><span class='line'>    <span class="n">tag</span> <span class="o">=</span> <span class="no">Tag</span><span class="o">.</span><span class="n">find_or_create_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">taggings</span><span class="o">.</span><span class="n">find_or_create_by_tag_id</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">tag_names</span>
+</span><span class='line'>    <span class="n">tags</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we&#8217;ll be including this concern in multiple ActiveRecord models &#8211; and those models will automatically <code>has_many</code> :taggings and :tags.</p>
+
+<p>And on those models we&#8217;ll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn&#8217;t exist before, it will automatically be created, and then it&#8217;ll be added to the model&#8217;s taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
+
+<p>Next time I discuss concerns, I&#8217;ll talk about an ActionController concern to improve your page&#8217;s SEO and Facebook Graph integration. It&#8217;ll be pretty awesome, so stay tuned!</p>
 ]]></content>
   </entry>
   
@@ -96,7 +1050,7 @@
     <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet</id>
     <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
 
-<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated nad really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated and really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
 
 <!-- more -->
 
@@ -174,7 +1128,9 @@
     <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
     <updated>2012-06-28T15:09:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
-    <content type="html"><![CDATA[<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
+    <content type="html"><![CDATA[<blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
+
+<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
 
 <p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
 
@@ -1541,12 +2497,13 @@
 
 <p>You&#8217;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&#8217;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &#8211; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
 
-<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called sandRBox. In our first <strong>exercise</strong>, we&#8217;ll go to sandRBox and type in an example expression.</p>
+<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we&#8217;ll go to repl.it and type in an example expression.</p>
 
 <ol>
 <li><p>Open up your web browser.</p></li>
-<li><p>In the address bar, type <code>sandrbox.com</code>, and press enter.</p></li>
-<li><p>In the page that opens, type <code>1 + 1</code>, and press enter.</p></li>
+<li><p>In the address bar, type <code>repl.it</code>, and press enter.</p></li>
+<li><p>Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.</p></li>
+<li><p>The right half of the screen is the Ruby console. Type <code>1 + 1</code> into it and press enter.</p></li>
 </ol>
 
 
@@ -1637,13 +2594,24 @@
 <p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
 
 <ol>
-<li><p>Try <code>1.+1</code>.</p></li>
-<li><p>Try <code>2.-1</code>.</p></li>
-<li><p>Try <code>"One".+"One"</code>.</p></li>
+<li><p>Try <code>1.+(1)</code>.</p></li>
+<li><p>Try <code>2.-(1)</code>.</p></li>
+<li><p>Try <code>"One".+("One")</code>.</p></li>
 </ol>
 
 
-<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them. Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the NoMethodError.</p>
+<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them.</p>
+
+<p>You might be wondering: what&#8217;s with the parenthesis containing the 1 and &#8220;one&#8221;? That&#8217;s an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let&#8217;s do some quick <strong>exercises</strong> to see how methods accept arguments.</p>
+
+<ol>
+<li><p>Try <code>'hello'.delete('l')</code>. The argument to the <code>delete</code> method tells it which letter it should delete from the string.</p></li>
+<li><p>Try <code>'space'.center(20)</code>. The argument to the <code>center</code> method tells the string how many spaces it should be centered in.</p></li>
+<li><p>Try <code>'space'.center(20, '-')</code>. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to <code>center</code> tells it what character to pad the string with. In this case, it gives us a lot of dashes.</p></li>
+</ol>
+
+
+<p>Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the <code>NoMethodError</code>.</p>
 
 <ol>
 <li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
@@ -1652,7 +2620,7 @@
 </ol>
 
 
-<p>With the NoMethodError, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
+<p>With the <code>NoMethodError</code>, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
 
 <h3>Conversion</h3>
 
@@ -1831,407 +2799,6 @@
 <p>All the sudoing is to ensure no weirdness happens with directories being owned by someone other than Hipstabot, which would prevent git from pulling correctly.</p>
 
 <p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I&#8217;m not involved in any step of the process. Creating workflows like this &#8211; that make what people do easier and better &#8211; is one of the greatest joys of being a programmer, and I hope someone finds this post helpful in accomplishing something similar.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Testing Elasticsearch in Rails with Tire]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/"/>
-    <updated>2012-04-15T23:38:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous entry on elasticsearch</a>, I promised I would elaborate on testing <a href="http://www.elasticsearch.org/">elasticsearch</a> (and <a href="https://github.com/karmi/tire">tire</a>) in Rails applications. There&#8217;s not really a whole lot of secret sauce to it, but I figured it&#8217;d make a good, quick post with some crunchy code for a late night. While writing, though, I realized I could also talk about a small problem I ran into while using tire &#8211; specifically relating to index regeneration. This isn&#8217;t a major flaw, but it did waste some of my time, so I figured documenting it (prior to fixing it) would be a sensible idea.</p>
-
-<!-- more -->
-
-
-<h2>Testing Tire</h2>
-
-<p>There are two components to testing tire: the first is emptying the index before tests where the contents of the index matters, and the second is ensuring that you only delete the index you want, rather than your development index (which would be annoying). Deleting the correct index is really easy. You just want something like this in your model:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Tire</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Search</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">index_name</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="s2">-search-photos&quot;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Specifying <code>index_name</code> as dependent on the Rails environment ensures that your development index won&#8217;t be destroyed by the next bit of code.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">clear_photo_index</span>
-</span><span class='line'>  <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">delete</span>
-</span><span class='line'>  <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:mappings</span> <span class="o">=&gt;</span> <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">mapping_to_hash</span><span class="p">,</span> <span class="ss">:settings</span> <span class="o">=&gt;</span> <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span>
-</span><span class='line'>  <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">refresh</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I stuck that code in <code>test_helper.rb</code> and I call it before each of my photo tests. The first line, obviously, deletes the entire index. The second recreates it, using the mappings and settings already specified in the Photo model. And then we refresh it just to make sure that tire agrees with elasticsearch about the indexed fields.</p>
-
-<h2>Caveat Indexor</h2>
-
-<p>Overall, tire and elasticsearch have been joys to use. I have experienced unexpected behavior in tire though, particularly relating to index mappings. Obviously, deleting an index in tire works just as expected &#8211; the index and all its associated data goes away. Also deleted are the field mappings for that index. However, what happens when you try to create a new object without reloading the class that defined it?</p>
-
-<p>Tire still faithfully stores the object into the deleted index. This invokes elasticsearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/api/index_.html">automatic index creation</a> logic, which attempts to determine the types of your fields manually. Unfortunately, it never seems to correctly identify geo_point fields properly. For example, this is what my index mapping should look like:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="s2">&quot;photo&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;properties&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;account_id&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;string&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;string&quot;</span><span class="p">},</span> <span class="s2">&quot;lat_lng&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;geo_point&quot;</span><span class="p">},</span> <span class="s2">&quot;name&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;analyzer&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;snowball&quot;</span><span class="p">}}}}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But if I delete the index and then insert an object into it, elasticsearch automatically determines the types as follows:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="s2">&quot;photo&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;properties&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;_type&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;string&quot;</span><span class="p">},</span> <span class="s2">&quot;account_id&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;long&quot;</span><span class="p">},</span> <span class="s2">&quot;id&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;long&quot;</span><span class="p">},</span> <span class="s2">&quot;lat_lng&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;string&quot;</span><span class="p">},</span> <span class="s2">&quot;name&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;string&quot;</span><span class="p">}}}}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The key difference here is that <code>lat_lng</code> is not a geo_point but is instead a string, which prevents any of the index geolocation queries from being run on it. You can correct this problem by deleting the index and reloading the class in which the index is defined, which causes tire to create the index again from your provided mapping. (Or run the <code>tire.index.create</code> code from above.) But I spent a tiring(pun!) hour trying to figure out why my indexes kept on receiving inappropriate field types before hitting on this as the reason.</p>
-
-<p>Similarly, and possibly more frustratingly, if you are incrementally developing an index, changes to your mapping won&#8217;t appear in the index until you delete said index and reload its defining class. Again, deleting the index and inserting data immediately will cause elasticsearch to guess the field mappings for your index, with tragically inconsistent results.</p>
-
-<p>I told the very talented <a href="https://github.com/karmi">karmi</a> about this problem and he sensibly suggested I write a failing test for it, though unfortunately I haven&#8217;t had the time to sit down and really do that. In the meantime, just know that this annoyance exists, and if you&#8217;re working on tire indexes, make sure you religiously delete the mapping and then reload the class before you attempt to use the index again.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Reducing Our AWS Costs by 60%]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent/"/>
-    <updated>2012-04-12T13:30:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent</id>
-    <content type="html"><![CDATA[<p>Hipstamatic&#8217;s Rails application is deployed to Amazon&#8217;s Elastic Cloud, and we make extensive use of Amazon&#8217;s Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
-
-<!-- more -->
-
-
-<h2>Improve Database Performance</h2>
-
-<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here&#8217;s what I did to decrease load on our database:</p>
-
-<h3>Find Slow Queries</h3>
-
-<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2&#8217;s <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won&#8217;t show up since they aren&#8217;t running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;factory_girl&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;.test/factories.rb&#39;</span> <span class="c1"># or wherever your factory file is located</span>
-</span><span class='line'><span class="mi">200000</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-</span><span class='line'>  <span class="no">Factory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:photo</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Repeat as needed. Remember your production system will likely have millions of records; get as close as you can to this without overwhelming your development machine.</p>
-
-<h3>Index Lots</h3>
-
-<p>Index the crap out of everything. It&#8217;s nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you&#8217;ll rapidly discover that various fields that aren&#8217;t indexed together should be, but examining the individual queries your application makes and ensuring they&#8217;re all indexed is an awesome (though boring) use of your time.</p>
-
-<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you&#8217;ll have to get into your code yourself to find out what really needs indexing. Automated tools can&#8217;t really replace actual hands-on experience&#8230; at least, not in this case.</p>
-
-<h3>Don&#8217;t Use Your Database</h3>
-
-<p>Sticking something into the database isn&#8217;t always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn&#8217;t another tool to do that job. In particular, think about:</p>
-
-<ul>
-<li><h4>memcached</h4>
-
-<p>If you want to rapidly retrieve data and it&#8217;s in key-value form, and persistence doesn&#8217;t really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
-<li><h4>redis</h4>
-
-<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets &#8211; especially if these data structures are going to end up being extremely large or called very frequently &#8211; use redis.</p></li>
-<li><h4>elasticsearch</h4>
-
-<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can&#8217;t say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you&#8217;re performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
-</ul>
-
-
-<h2>Use More Caching</h2>
-
-<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess&#8230;) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
-
-<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I&#8217;d be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
-
-<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails&#8217; helper methods won&#8217;t find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">after_save</span><span class="p">(</span><span class="n">object</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">[</span><span class="ss">:domain1</span><span class="p">,</span> <span class="ss">:domain2</span><span class="p">,</span> <span class="ss">:domain3</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">domain</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">expire_fragment</span> <span class="s2">&quot;views/</span><span class="si">#{</span><span class="n">domain</span><span class="si">}</span><span class="s2">/objects/</span><span class="si">#{</span><span class="n">object</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I have this extracted out on a per-environment basis, specifying the domains to expire in our environment files. It works out really well.</p>
-
-<h2>Be Responsive</h2>
-
-<p>One of the great things about being deployed to the cloud is that you can &#8211; and should! &#8211; scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they&#8217;ll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
-
-<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you&#8217;re at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary &#8211; getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you&#8217;re getting hammered, and don&#8217;t be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
-
-<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we&#8217;re saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Achieving 100% Uptime]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime/"/>
-    <updated>2012-04-09T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/09/achieving-100-percent-uptime</id>
-    <content type="html"><![CDATA[<p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
-
-<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users&#8217; perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email &#8211; it&#8217;s a good indication of how well I did my job in the previous week. And for a couple weeks now I&#8217;m happy to report I&#8217;ve been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
-
-<p>How do you achieve numbers like these? Unfortunately getting to 100% isn&#8217;t an easy road, and I want to state up front that I also don&#8217;t think it&#8217;s a realistic goal. Issues you can&#8217;t control can ruin your uptime number, and you shouldn&#8217;t feel broken up about that. It happens to everybody. But it&#8217;s always good setting goals that are difficult to achieve, and this one is no different.</p>
-
-<p>So what&#8217;s the secret to 100% uptime?</p>
-
-<!-- more -->
-
-
-<h2>Watch It Constantly</h2>
-
-<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they&#8217;ll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
-
-<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications&#8217; behavior and warn you when that behavior becomes dangerous. Here&#8217;s a sample of our unicorn monit file:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  <span class="k">if </span>totalmem &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
-</span><span class='line'>  <span class="k">if </span>totalmem &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
-</span><span class='line'>  <span class="k">if </span>cpu &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
-</span><span class='line'>  <span class="k">if </span>cpu &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This states that I get an alert when unicorn&#8217;s total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
-
-<p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
-
-<p>Yes, this is a lot of monitoring. But I feel like even this isn&#8217;t enough. You can&#8217;t watch your stack too carefully, and you can&#8217;t have too many tools in place to help you analyze what&#8217;s going on. Consider this trifecta of tools only a start, but at least it&#8217;s a good one.</p>
-
-<h2>Seamless Deploys</h2>
-
-<p>On an average week I deploy seven to ten times. Of course, this entire process is invisible to our users; the magic that makes this happen is <a href="http://unicorn.bogomips.org/">unicorn</a>. There have been many posts on the wonders of unicorn and how to configure it correctly. I will simply post the part of our <code>unicorn.rb</code> that allows us to do seamless restarting, which you can find in a number of gists essentially unmodified.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">old_pid</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">.</span><span class="n">config</span><span class="o">[</span><span class="ss">:pid</span><span class="o">]</span><span class="si">}</span><span class="s2">.oldbin&quot;</span>
-</span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">server</span><span class="o">.</span><span class="n">pid</span> <span class="o">!=</span> <span class="n">old_pid</span>
-</span><span class='line'>    <span class="k">begin</span>
-</span><span class='line'>      <span class="no">Process</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="s2">&quot;QUIT&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">rescue</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ENOENT</span><span class="p">,</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ESRCH</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The command we use to restart unicorn is:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  <span class="k">if</span> <span class="o">[</span> ! -f <span class="s1">&#39;/pids/unicorn.pid&#39;</span> <span class="o">]</span>; <span class="k">then </span><span class="nb">cd </span>current_path <span class="o">&amp;&amp;</span> bundle <span class="nb">exec </span>unicorn_rails -c ./config/unicorn.rb -E production -D; <span class="k">else </span><span class="nb">kill</span> -USR2 <span class="sb">`</span>cat /pids/unicorn.pid<span class="sb">`</span>; <span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it&#8217;s ready to start processing connections.</p>
-
-<h2>Migrations Without Downtime</h2>
-
-<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you&#8217;re changing how existing code interacts with the database &#8211; for new tables, simply migrate before deploying and you&#8217;re done. If only it could be that easy all the time&#8230;</p>
-
-<p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddOrdersCountToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
-</span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">m</span><span class="o">.</span><span class="n">ddl</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE </span><span class="si">#{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> ADD COLUMN orders_count INT(11) default 0&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
-</span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">m</span><span class="o">.</span><span class="n">ddl</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE </span><span class="si">#{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> DROP COLUMN orders_count&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you&#8217;re gonna need to get your hands dirty. Using this method you&#8217;ll be able to become the envy of your friends and peers, for you&#8217;ll be able to execute zero downtime migrations.</p>
-
-<p>And those three points are the main ways I&#8217;ve reduced our downtime. It&#8217;s a difficult road to 100%, but it&#8217;s worth it because you can stare at pretty graphs like this:</p>
-
-<p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
-
-<p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How I Scaled Hipstamatic]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/"/>
-    <updated>2012-04-06T10:58:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic</id>
-    <content type="html"><![CDATA[<p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I&#8217;ve been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don&#8217;t have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
-
-<p>Now, take a look at our average response time over the last month.</p>
-
-<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
-
-<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&#8217;m proud of our 115ms average response time. Proud but not satisfied &#8211; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&#8217;s no reason we can&#8217;t achieve 50-70ms response times with better caching and slimmer applications.</p>
-
-<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That&#8217;s an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
-
-<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic&#8217;s web site and web services fast. (Or, at the very least, a lot faster.)</p>
-
-<!-- more -->
-
-
-<h2>Cache <em>Everything</em></h2>
-
-<p>This is easily the most important, most crucial rule to making your applications fast. You&#8217;d be surprised what you can cache, and how much time caching will save. Memcached access times are ridiculously fast, faster even than the fastest database query. Stick everything in your cache. Everything. <em>Everything</em>.</p>
-
-<p><img src="http://f.cl.ly/items/3f0J2M0H3o3h0w1X1i3m/cache-all-the-things.jpg" alt="Cache all the things" /></p>
-
-<p>This is such an important rule I even gave you an annoying memegenerator image of it. Yes, people, it&#8217;s memegenerator important.</p>
-
-<p>You really can&#8217;t go overboard enough when it comes to caching. Make resque jobs whose only purpose is to warm your caches. Use <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> to sensibly and programmatically expire caches. Almost 90% of our application traffic returns the same (or very similar) JSON and HTML. By caching those responses, we save massive amounts of time, and more importantly, boatloads of money (due to lessened server load).</p>
-
-<h2>Choose Your Tools Wisely</h2>
-
-<p>Choose software that is frequently updated and widely used in the community. Choose software that is robust: by that I mean resistant to failure, and that has survived years of use in live, highly available environments. And finally and most importantly, choose software that is fast. Very, very fast.</p>
-
-<p>Two years ago, we switched from a single, shared instance on A Small Orange to Amazon&#8217;s Elastic Cloud, allowing us to scale each of our components as necessary and independently from each other. Speed gains were noticeable immediately, but even better was the fact that there was a whole bunch of excellent software easily available to help us manage and scale our cloud presence. (See my earlier post <a href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">on Rubber</a>).</p>
-
-<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don&#8217;t want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive &#8211; the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
-
-<p>Take the time and do the research. There&#8217;s a best tool for you waiting out there &#8211; finding it will make your life a thousand times easier.</p>
-
-<h2>Less is More</h2>
-
-<p>For a long time, incoming requests to the app were load balanced through <a href="http://haproxy.1wt.eu/">HAProxy</a> before reaching a Passenger instance. HAProxy is an amazing piece of software; it&#8217;s extremely fast and gives you an awesome drill-down into incoming requests and your server status.</p>
-
-<p>It also added 10 milliseconds to our response times on average.</p>
-
-<p>If a piece of your stack isn&#8217;t mission critical (and HAProxy, for us, was just a nice piece of software and not mission critical) then you should remove it. Amazing graphics and interesting metrics are less important than your response time. Examine your stack carefully, with a very critical eye, and whatever isn&#8217;t absolutely necessary I would strongly recommend cutting out entirely.</p>
-
-<p>What I found helpful to do was draw a quick flow chart of how a request is actually serviced. Nothing that you intend to present to your boss; just a small approximation of your stack. Each step on that chain adds time to that request returning a response. If it adds time to the request turnaround, it needs to be adding something important to that response. Otherwise, it needs to go.</p>
-
-<h2>Achieve Balance</h2>
-
-<p>When we were extensively using <a href="http://redis.io/">redis</a> as a semi-persistent datastore, I constantly experienced bottlenecks for redis connections. But you can encounter this problem anywhere in your server setup: I also had to deal with MySQL bottlenecks and, in one extremely memorable instance, Unicorn queue bottlenecks. These are all issues with load balancing inside the stack.</p>
-
-<p>There&#8217;s never a part of your stack that is immune to load balancing problems. Once you correctly scale one part, another component that performed adequately will suddenly start chugging under unexpected load or new use conditions. And, unfortunately, pre-optimization can backfire; sometimes you&#8217;ll target the wrong part of your stack for optimizations, and other times you&#8217;ll scale something that won&#8217;t experience a bottleneck at all.</p>
-
-<p>I recommend against trying to pre-scale unless you&#8217;re sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act &#8211; you can guess to a limited extent where you&#8217;ll tip after the next step, but you can never be sure until you actually take it. That&#8217;s why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
-
-<p>Formal plans generally aren&#8217;t required, but know what steps you&#8217;d take if something started to fail. Even ten seconds of idle thought can save you agonizing minutes of unavailability.</p>
-
-<h2>Use 75% of Every Server</h2>
-
-<p>This rule applies doubly to servers on EC2. Instances that reach 100% memory or CPU utilization are instances that are very difficult to fix (and are much more prone to crashing in a shared environment). You can&#8217;t SSH into them because they take forever to respond; you can&#8217;t reboot them because they don&#8217;t respond to Amazon&#8217;s control plane. They are about to become horrible zombies in your setup, taking up space but refusing to die, and you&#8217;ll have to route around them to keep your uptime intact.</p>
-
-<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me &#8211; not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
-
-<p>If you&#8217;re using less than 75%, then you can likely combine services together and remove servers. And if you&#8217;re using more&#8230; well, I have <a href="http://www.pagerduty.com/">PagerDuty</a> configured to call me if at any time a server reaches 85% resource usage, and those are calls I take very seriously.</p>
-
-<p>I&#8217;m sure I&#8217;ll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas &#8211; for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Refactor a Large and Old Project]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/"/>
-    <updated>2012-04-03T10:06:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project</id>
-    <content type="html"><![CDATA[<p>The Rails application backing Hipstamatic is very, very large. It started over two years ago as a Rails 2.1 project, and has been continuously improved since then &#8211; moving to Rails 3.2, adding in redis and resque, and then adding in elasticsearch. During that time the database has bounced around continuously in size and importance as we move data from MySQL to data stores that are <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">better suited for it</a>. And while at the start it handled only contests and submissions, since then we&#8217;ve added in orders, the family album, D-Series support, and even more exciting behind-the-scenes stuff.</p>
-
-<p>And as you can imagine from a project that&#8217;s undergone continuous improvement for a long time, it&#8217;s kind of a mess. A lot of stuff was done without an eye towards our future needs, and, even more embarrassingly, a lot of stuff was done with a future need in mind &#8211; and, of course, that need never materialized, so the code is named or structured improperly.</p>
-
-<p>The temptation with any project as large and old as this is to do <a href="http://chadfowler.com/2006/12/27/the-big-rewrite">the Big Rewrite</a>. I&#8217;ve been involved in a few of those, and my advice regarding them is quite simple:</p>
-
-<!-- more -->
-
-
-<h1>DON&#8217;T DO IT</h1>
-
-<p>There are <a href="http://mentalized.net/journal/2010/10/04/avoiding_the_big_rewrite/">multiple</a> <a href="http://www.joelonsoftware.com/articles/fog0000000069.html">articles</a> <a href="http://blog.objectmentor.com/articles/2009/01/09/the-big-redesign-in-the-sky">discussing</a> why the Big Rewrite is a horrible idea, and reiterating their excellent points here isn&#8217;t my intention. Instead I&#8217;m going to discuss the plan I&#8217;ve decided on for our own project, which I&#8217;m going to call, in lieu of the Big Rewrite, the Proper Refactoring.</p>
-
-<p>Our Proper Refactoring will split our one monolithic application apart into a number of services, exposing their APIs for the happiness of our users while hiding the internals of their business logic from parts of the application that don&#8217;t care about it. If you want to follow along on our process (or do your own Proper Refactoring), I wrote down a quick summary of the three (well, four) simple stages that will take us from having one large working app to many small working apps!</p>
-
-<ol>
-<li><h3>Test it all first.</h3>
-
-<p>This entire process is doomed to failure if your application isn&#8217;t tested. There&#8217;s no way you can achieve 100% test coverage, regardless of what <a href="https://github.com/colszowka/simplecov">SimpleCov</a> tells you &#8211; there&#8217;s always that quick fix you stuck in to fix a small problem that isn&#8217;t tested and won&#8217;t show up in any coverage report. But you need to get as close as humanly possible, because stuff will break (like that quick fix), and you can limit how much breakage occurs by testing everything you can before you start.</p>
-
-<p>Happily, Hipstamatic is well tested, so step zero for us is pretty well completed. I still anticipate problems will occur as we make the change, and of course as I find code that isn&#8217;t adequately tested I&#8217;ll write tests for it&#8230; but both of those are unavoidable.</p></li>
-<li><h3>Find breakpoints and map splits.</h3>
-
-<p>Hipstamatic will be turning into five services: authentication, photos, contests, ordering, and D-Series cameras. Our main goal is to silo concerns apart from each other, making each part of the application more failure resistant and robust while allowing us to develop them all independently from each other if necessary. I&#8217;m not 100% settled on this separation of concerns, but the order that I listed them is the order I&#8217;ll be working on them. If it seems like something just has to be married to something else, I&#8217;ll combine them together and that&#8217;ll be that.</p>
-
-<p>So if you&#8217;re doing this on your own project, split your application into units that are atomic enough that they can be changed independently from each other, but not so atomic that close couplings are undone. My benchmark for this is going to be if I have two projects open simultaneously and keep coding in the two of them in tandem, most likely they should be merged.</p></li>
-<li><h3>Start copying and pasting.</h3>
-
-<p>The fun part! Take the parts necessary for the one fragment you&#8217;re working on and merge them into one coherent project. Crucically, <em>don&#8217;t change anything except what&#8217;s absolutely necessary</em>. You&#8217;ll find code that you want to change, trust me. Just slap some TODOs on that baby and keep moving. It&#8217;s important that you change as little as possible, because the process is already breaking apart your nice pretty app. If you start changing the pieces once they&#8217;re broken, you&#8217;ll find they don&#8217;t fit back together quite right, and that will be an enormous headache to fix.</p></li>
-<li><h3>Add relevant bits to the API Gem.</h3>
-
-<p>For our web services to understand each other, and to prevent duplication of code, I&#8217;ll be extracting connector bits into a Gem that each application (and indeed any application that wants to consume our API) can use. It&#8217;ll most likely be heavily based on <a href="https://github.com/jnunemaker/httparty">httparty</a> since ActiveResource isn&#8217;t anywhere near as actively developed.</p></li>
-</ol>
-
-
-<p>And the split is complete! Of course it sounds pretty easy when you gloss over most of the hard work in step #2, but hey, the way to make complicated projects seem achievable is to reduce them into manageable steps. I intend to follow this road map like the Pope follows the Bible &#8211; that is, using the good parts and ignoring the rest. Zing! But I&#8217;ll report back in a future post to indicate how well these steps worked for me. Until then, wish me luck!</p>
 ]]></content>
   </entry>
   

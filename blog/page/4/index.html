@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
+  <meta name="description" content="Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,219 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/16/classifying-and-refactoring-your-code/">Classifying and Refactoring Your Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I&#8217;d share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I&#8217;ve learned will aid others.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/16/classifying-and-refactoring-your-code/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/13/fnordmetric-native-rails-metrics/">Fnordmetric: Native Rails Metrics</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-13T22:05:00-05:00" pubdate data-updated="true">Mar 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the weekend I spent some time getting <a href="https://github.com/paulasmuth/fnordmetric">Fnordmetric</a> set up in an application. On the surface it looks really cool and quite nifty, but I ran into some trouble getting it configured how I wanted it and figured I&#8217;d make a post about it. I think I might have been struggling against the conventions in it a little too much, but it was still an instructive battle.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/13/fnordmetric-native-rails-metrics/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/">Rails 3: Arel, Arel_Table, and Squeel</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-10T10:17:00-06:00" pubdate data-updated="true">Mar 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &#8211; ActiveRecord&#8217;s own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
+
+<p>Well, in reality, that isn&#8217;t quite what happened. ActiveRecord&#8217;s Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">Ruby 1.9 Awesomeness Part 1: SecureRandom</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T19:07:00-06:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ruby 1.9 includes a lot of neat stuff, and one of the coolest things is the SecureRandom module.</p>
+
+<p>SecureRandom presents a plethora of useful methods for creating random numbers and strings. You can <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> for a full list, but some of the more personally useful methods I&#8217;ve found are:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/04/dont-mess-with-primary-keys/">Don&#8217;t Mess With Primary Keys</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T19:11:00-06:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
+
+<p>Recently I&#8217;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &#8220;how do I mess with the primary key column?&#8221;</p>
+
+<p>The answer is always, invariably, the same: don&#8217;t.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/04/dont-mess-with-primary-keys/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -339,53 +552,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&#8217;d make a quick post about it.</p>
-
-<h2>Resource temporarily unavailable - Timeout reading from the socket</h2>
-
-<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &#8211; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
-
-<h2>unexpected token at &#8216;OK&#8217; (Resque::Helpers::DecodeException)</h2>
-
-<p>This one took a bit more tracking down to fix.</p>
-
-<p>The newest versions of resque (I&#8217;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &#8211; for example, returning &#8220;OK.&#8221; Upgrading your redis server handily fixes this problem.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -404,23 +573,23 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/">Rails is the Most American Framework (and PHP is the Least)</a>
+        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
+        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
+        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a>
+        <a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit with RubyMotion</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/17/designing-sites-for-users/">Designing Sites for Users</a>
+        <a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a>
       </li>
     
   </ul>
@@ -444,6 +613,15 @@
 </section>
 
 
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/veraticus@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
 
 
 
@@ -479,7 +657,24 @@
 
 
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
 
 
 

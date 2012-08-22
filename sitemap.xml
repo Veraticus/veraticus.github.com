@@ -100,7 +100,7 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/</loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-08-06T10:40:25-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/</loc>
@@ -152,19 +152,37 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/</loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-08-13T14:46:29-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/
         </loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-07-04T16:48:12-05:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/
-        </loc>
-        <lastmod>2012-07-04T14:02:25-05:00</lastmod>
+        <loc>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/</loc>
+        <lastmod>2012-07-04T17:14:49-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/</loc>
+        <lastmod>2012-07-12T14:45:09-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/</loc>
+        <lastmod>2012-07-18T23:06:15-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/</loc>
+        <lastmod>2012-08-06T10:54:31-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/</loc>
+        <lastmod>2012-08-13T14:47:00-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2012/08/21/introduction-to-programming-iii/</loc>
+        <lastmod>2012-08-22T11:31:31-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/404.html</loc>
@@ -172,14 +190,14 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2012-07-04T14:02:25-05:00</lastmod>
+        <lastmod>2012-08-22T11:31:31-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2012-07-04T14:02:25-05:00</lastmod>
+        <lastmod>2012-08-22T11:31:31-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>
-        <lastmod>2012-07-02T17:30:52-05:00</lastmod>
+        <lastmod>2012-07-13T17:08:13-05:00</lastmod>
     </url>
 </urlset>

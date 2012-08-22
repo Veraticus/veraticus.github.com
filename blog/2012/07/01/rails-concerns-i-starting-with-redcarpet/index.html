@@ -123,7 +123,7 @@
 
 <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
 
-<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated nad really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated and really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
 
 <!-- more -->
 
@@ -232,6 +232,10 @@
   <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" >Tweet</a>
   
   
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
   
 </div>
 
@@ -241,7 +245,7 @@
         <a class="basic-alignment left" href="/blog/2012/06/28/dynamic-error-pages/" title="Previous Post: Dynamic Error Pages">&laquo; Dynamic Error Pages</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/" title="Next Post: Rails is the Most American Framework (and PHP is the Least)">Rails is the Most American Framework (and PHP is the Least) &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/07/04/rails-concerns-ii-taggable/" title="Next Post: Rails Concerns II: Taggable">Rails Concerns II: Taggable &raquo;</a>
       
     </p>
   </footer>
@@ -266,23 +270,23 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/">Rails is the Most American Framework (and PHP is the Least)</a>
+        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting with Redcarpet</a>
+        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a>
+        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a>
+        <a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit with RubyMotion</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/06/17/designing-sites-for-users/">Designing Sites for Users</a>
+        <a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a>
       </li>
     
   </ul>
@@ -306,6 +310,15 @@
 </section>
 
 
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/veraticus@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
 
 
 
@@ -345,7 +358,24 @@
 
 
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
 
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-07-04T14:06:28-05:00</updated>
+  <updated>2012-08-22T11:31:44-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -14,78 +14,323 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Rails is the Most American Framework (and PHP is the Least)]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least/"/>
-    <updated>2012-07-04T12:26:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/04/rails-is-the-most-american-framework-and-php-is-the-least</id>
-    <content type="html"><![CDATA[<p><a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">I'm no stranger to controversy.</a> I'm not afraid to stand up and say what millions of coders already know -- but what most people don't know is that I'm also extremely patriotic.</p>
-
-<p><img src="http://f.cl.ly/items/1V0z0n1Z3C3Q101I0I3z/boldly_french.jpg" alt="Boldly patriotic" /></p>
-
-<p>That's me, boldly pointing the way into the brighter, awesomer future of America. As I was sitting down to write the next in my series of <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">concerns on Rails</a>, my boyfriend (who is also a die-hard, red-blooded, Commie-hating patriot) suggested that I marry my love of Rails code and my love of the US of A in a very special blog post.</p>
-
-<p>But a post like that -- as daringly insightful as it might be -- just wouldn't be good enough for this blog. You see, my posts are also highly topical, and everyone knows Rails and America go together like chocolate and peanut butter. Pointing that out wouldn't really be exciting or new. I needed a special sauce to truly set my contribution apart: and that's when I remembered that a lot has been said recently about how <a href="http://me.veekun.com/blog/2012/04/09/php-a-fractal-of-bad-design/">horrible</a>/<a href="http://fabien.potencier.org/article/64/php-is-much-better-than-what-you-think">wonderful</a> PHP is.</p>
-
-<p>For I have a unique insight that no one else has ever considered in this debate: I know for a fact that Rails is easily the most American framework in existence, and PHP is the least. Thus I have at last resolved this tedious debate. PHP is indeed awful, and possibly also sponsored by the Axis of Evil, and Rails is as American as apple pie and the colors red, white, and blue. How did I arrive at this conclusion? Really, it's just common sense, but if you're not patriotic enough to figure it out I've helpfully included my reasoning.</p>
+    <title type="html"><![CDATA[Dynamic Error Pages, Corrected]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/"/>
+    <updated>2012-08-13T14:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected</id>
+    <content type="html"><![CDATA[<p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn't experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don't then my post on dynamic error pages won't work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
 
 <!-- more -->
 
 
-<h2>Rails is the Most American Framework</h2>
+<h2>The Problem</h2>
 
-<p>In order to examine Rails' blindingly obvious American-ness, we need a sensible rubric. How do you say one thing is more American than another? Well, I've helpfully come up with a completely objective barometer of Americana. Everyone would agree that the three core tenents of the United States are freedom, liberty, and database agnosticism -- so what better ways than those to rate Rails itself?</p>
+<p>Summarized elegantly <a href="https://github.com/rails/rails/issues/671">here</a>:</p>
 
-<h3>Freedom &amp; Liberty</h3>
+<blockquote><p>In Rails 2.3.x, one is able to stick this in ApplicationController to present the user with a custom 404 screen:</p>
 
-<p>One of Rails' core features is freedom. I know this is true because it was built that way by <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">David Heinemeyer Hansson</a>, who is perhaps the most real and most original of American patriots.</p>
+<p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
 
-<p><img src="http://4.bp.blogspot.com/-aLryA2Bey-w/TY6usViKtAI/AAAAAAAACiE/B2qQeW_ags0/s1600/heinemeier.article.jpg" alt="The man himself" /></p>
+<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController -- the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
 
-<p>DHH is a Danish programmer, and Denmark is pretty close to France, which is very American because the Frenchman Napoleon sold Lousiana to America in 1803. So he's definitely included in the American cultural halo effect, making him a United States citizen from the moment he was born.</p>
+<p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it's raised in Rack, not the application itself.</p>
 
-<p>But even more importantly than that, I have inside knowledge that David (we're on a first name basis) is working on a "Men of 37signals" beefcake calendar. Nothing is more American than men baring nearly everything for money, and indeed, nothing represents liberty more than successful entrepreneurs stripping for petty cash.</p>
+<h2>The Solution</h2>
 
-<h3>Liberty &amp; Database Agnosticism</h3>
+<p>Requires a couple changes on our parts. First, let's change our application_controller.rb:</p>
 
-<p>Really I think this point needs no explanation. But here's one anyway: when the framers of our Constitution wrote in that that hallowed document, "it becomes necessary for one people to dissolve the political bands which have connected them with another," they were doing more than obliquely referencing the creation of Rails nearly 200 years later. They were talking about dissolving the ties connecting an application to its database.</p>
+<p><code>ruby
+unless Rails.application.config.consider_all_requests_local
+  rescue_from Exception, with: :render_500
+  rescue_from ActionController::RoutingError, with: :render_404
+  rescue_from ActionController::UnknownController, with: :render_404
+  rescue_from AbstractController::ActionNotFound, with: :render_404 # To prevent Rails 3.2.8 deprecation warnings
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+end
+</code></p>
 
-<p>They were <em>liberating</em> the Internet from the cruel confines of the databases that constrained it.</p>
+<p>So far, just as usual. Now we define the actual actions:</p>
 
-<p>Using object-relational mapping like ActiveRecord, document-relational mapping like Mongoid, or even document-relational mapping like the far superior <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a> is the true fulfillment of this centuries-old promise. This more than anything else represents Americanism: true, real liberty. Liberty you can touch, if you wanted to print out the source code and rub it all over your body.</p>
+<p>```ruby
+  def render_500</p>
 
-<p>Which is what any real American would do.</p>
+<pre><code>render_exception(500, exception.message, exception)
+</code></pre>
 
-<h2>PHP is the Work of Evil</h2>
+<p>  end</p>
 
-<p>Obviously, since Rails is a framework and PHP is a language, comparing the two is like comparing red apples to green apples. And that metaphor is even more apt here -- because PHP is indeed very red. And by that I mean Communist. But examining PHP's socialist leanings is fruitless: everyone knows there's greater evils than socialism in the world. The greatest of American leaders helpfully enumerated them for us.</p>
+<p>  def render_404(exception = nil)</p>
 
-<p><img src="http://3.bp.blogspot.com/-GNEL1sdGcvA/T0xJfvragjI/AAAAAAAAEF0/t5Nuvs6IEoA/s1600/George-W.-Bush.jpg" alt="Greatest American Leader" /></p>
+<pre><code>render_exception(404, 'Page not found', exception)
+</code></pre>
 
-<p>They are Iran, Iraq, and North Korea.</p>
+<p>  end</p>
 
-<h3>Iran &amp; Iraq</h3>
+<p>  def render_exception(status = 500, message = 'Server error', exception)</p>
 
-<p>Damningly, Iran and Iraq share a subcontintent with the country in which Zend Technologies itself is founded -- Israel. Just as the American freedom effect haloed DHH into citizenship, the evil anti-halo effect condemns Zend and everything it's created, which includes PHP. As a Jew who has visited Israel twice, I know this to be the case since I've seen it with my very own eyes. And nothing beats anecdotal evidence.</p>
+<pre><code>@status = status
+@message = message
 
-<p>Iran and Iraq also share numerous letters in their names with the worst perpetrator of PHP on the planet: India. (I'm counting the "i"s twice, so they have more letters in common than they ordinarily might.) Lots of Indians program PHP, and thus we can safely say many of India's most awesome works of art were created with PHP. The fact that other countries can make things that are arguably better than what American's done is inherently anti-American. For example:</p>
+if exception
+  Rails.logger.fatal "\n#{exception.class.to_s} (#{exception.message})"
+  Rails.logger.fatal exception.backtrace.join("\n")
+else
+  Rails.logger.fatal "No route matches [#{env['REQUEST_METHOD']}] #{env['PATH_INFO'].inspect}"
+end
 
-<p><img src="http://www-bgr-com.vimg.net/wp-content/uploads/2011/03/india110314124035.jpg" alt="Created with PHP" /></p>
+render template: "errors/error", formats: [:html], layout: 'application', status: @status
+</code></pre>
 
-<p>Just looking at that makes me sick.</p>
+<p>  end
+```</p>
 
-<h3>North Korea</h3>
+<p>Since we're going to be exposing <code>render_404</code> as an action, now, we have to make parameters into it optional: but we know that if <code>render_exception</code> doesn't receive an exception, it actually got a 404.</p>
 
-<p>But I think North Korea deserves its own, special callout. The only PHP programmer I personally know is Korean. He also bears more than a passing resemblance to Kim Jong-un.</p>
+<p>Finally, we need to add a globbed, wildcard route at the conclusion of our routes.rb. But if we just add one in, then engines and Gems that also rely on wildcard routes will fail. The solution is to do this through our application.rb, like so:</p>
 
-<p><img src="http://www.csmonitor.com/var/ezflow_site/storage/images/media/content/2012/0415/0415_kim_jong_un/12281745-1-eng-US/0415_Kim_jong_un_full_600.jpg" alt="This is him" /></p>
+<p>```ruby
+module MyApplication
+  class Application &lt; Rails::Application</p>
 
-<p>Kim Jong-un is the latest in a line of horrible, hereditary dictators that ruthlessly oppress their people. Doesn't that sound familiar to you, PHP programmers? Because if it doesn't, it should. It's the heart of what being American isn't -- just like PHP itself.</p>
+<p>  ...</p>
 
-<h2>What does this mean for you?</h2>
+<p>  # 404 catcher
+  config.after_initialize do |app|</p>
 
-<p>I think the answer to my rhetorical question here is pretty obvious. But if you really need all this boiled down for you -- maybe because you're a PHP programmer and you're too busy hating America to have real reading comprehension -- here it is:</p>
+<pre><code>app.routes.append{ match '*a', :to =&gt; 'application#render_404' } unless config.consider_all_requests_local
+</code></pre>
 
-<p><em>You should totally be buying the "Men of 37signals" calendar</em>. I hear Mr. July is super hot.</p>
+<p>  end
+end
+```</p>
+
+<p>Now it won't punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
+
+<p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns III: Metatags]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/"/>
+    <updated>2012-07-12T09:48:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags</id>
+    <content type="html"><![CDATA[<p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and <a href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/">two</a> of my series on Rails concerns, I'm going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren't already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook's Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the <a href="https://github.com/kpumuk/meta-tags/">meta-tags</a> gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
+
+<!-- more -->
+
+
+<h2>Setup</h2>
+
+<p>Include the meta-tags gem in your Gemfile:</p>
+
+<p><code>ruby
+gem 'meta-tags', :require =&gt; 'meta_tags'
+</code></p>
+
+<p>While the gem itself hasn't been updated for awhile, that doesn't really matter; it still functions quite well for our purposes. Once it's in the Gemfile, we'll configure some sensible defaults in our application layout, <code>application.html.erb</code>.</p>
+
+<p><code>ruby
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;%= display_meta_tags :site =&gt; 'Your Site Name Here', :keywords =&gt; Metatags::KEYWORDS %&gt;
+  ...
+&lt;/head&gt;
+</code></p>
+
+<p>We'll be defining that <code>CONSTANTS</code> constant shortly. This ensures that on each page the name of your site appears in the title, all by itself if you don't specify anything else, and that keywords appear in the keywords <code>meta</code> tag, which robots like the Googlebot use when computing your page's relevance.</p>
+
+<h2>The Concern</h2>
+
+<p>The meta-tags gem allows us to specify additional hashed options in either controllers or views: these options are concatenated with the defaults specified above to create attractive and meaningful metatags for each and every page. Since controllers tend to encapsulate models, I elected to make this a controller concern. (And forget doing this in views: replicating this code in each and every view is not my idea of a good time.) So our controller should, ideally, look somewhat like this:</p>
+
+<p>```ruby
+class UsersController &lt; ApplicationController
+  before_filter :find_user</p>
+
+<p>  include Metatags
+  metatags :title => :name, :description => :summary, :short_tag => :slug, :keywords => :name, :canonical => :user_url</p>
+
+<p>  private</p>
+
+<p>  def find_user</p>
+
+<pre><code>@user = User.find(params[:id]) if params[:id]
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>We specify with a hash how the metatags should be constructed: the keys of the hash are the names of each metatag we intend to use, while the values are the methods that need to be executed on the controller's object in order to get the information for that tag. In other words, if we have an object called <code>@user</code>, then we want the title of the page to include <code>@user.name</code> -- and that's represented by a hash that looks like <code>:title =&gt; :name</code>. However, this won't work for every key and value. For example, the <code>:canonical</code> key should indicate how to find the canonical URL of this resource, so we'll need a special exception for that... and the Facebook Open Graph name for <code>:canonical</code> is <code>:url</code>, so we'll need to switch it when we generate the Facebook tags.</p>
+
+<p>This, then, is the actual module itself:</p>
+
+<p>```ruby
+module Metatags
+  extend ActiveSupport::Concern</p>
+
+<p>  OG_TAGS = [:title, :type, :image, :url, :description]
+  KEYWORDS = ['default', 'keywords', 'here']</p>
+
+<p>  included do</p>
+
+<pre><code>append_before_filter :set_metatags
+</code></pre>
+
+<p>  end</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def metatags(hash)
+  @hash = hash
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  private</p>
+
+<p>  def set_metatags</p>
+
+<pre><code>object = self.instance_variable_get("@#{self.class.to_s.underscore.split('_').first.singularize}")
+hash = self.class.instance_variable_get(:@hash)
+
+if object
+  new_hash = {:open_graph =&gt; {}}
+  hash.each do |tag, method|
+    value = object.send(method) if object.respond_to?(method)
+
+    if tag == :keywords
+      value = Array(value) + KEYWORDS
+    elsif tag == :canonical
+      value = self.send(method, object)
+    end
+
+    new_hash[tag] = value
+    tag = :url if tag == :canonical
+    new_hash[:open_graph][tag] = value if OG_TAGS.include?(tag)
+  end
+  set_meta_tags new_hash
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>Obviously this concern is somewhat complicated: bear with me and I'll explain it.</p>
+
+<p>At the top of the code, we define which OpenGraph tags we care about, as well as the default keywords for our application. When the module is included, it appends a <code>before_filter</code> to its controller that will try to set all the metatag information. However, it also creates a new class method on its included class, a side-effect of having a child module called <code>ClassMethods</code>: in this case, it provides included controllers with a method called <code>metatags</code> that accepts a hash of metatag names and method names, as I discussed above.</p>
+
+<p>Finally, we have a private method called <code>set_metatags</code> that performs the actual heavy lifting of the concern. It searches for an instance variable named after the controller itself: so if you have a <code>UsersController</code>, it tries to find an instance variable called <code>@user</code>. If that object exists, it tries to populate a new hash with the result of sending it each hash value.</p>
+
+<p>We have two special exceptions we're concerned with. First, we don't want to replace the existing site keywords -- we only want to add to them. So if the tag is <code>:keywords</code> we add the keywords in <code>KEYWORDS</code> to whichever ones we passed to <code>meta_tags</code>. Second, if the tag is <code>:canonical</code>, we do something a little special. We assume the key is a Rails named route that will accept one argument, the controller's object, to generate a correct canonical URL.</p>
+
+<p>Underneath that, we switch the name of the <code>:canonical</code> tag to <code>:url</code> so that the Facebook Open Graph tags are set up correctly. With that you're all done. Each controller will automatically try to query its object as you specified and set metatag information for each view based on the results of those queries.</p>
+
+<h2>Caveats</h2>
+
+<p>Because the metatag creation happens in a <code>before_filter</code>, the ordering of your filters becomes crucially important. If you have a <code>before_filter</code> that finds your controller's primary object like my controller sample above, it's vital that you place the <code>before_filter</code> above the concern's <code>include</code>, or, if you'd prefer, use <code>prepend_before_filter</code> instead of <code>before_filter</code>. Otherwise the metatag concern will place its <code>before_filter</code> ahead of the one that finds your object, your object will be nil when <code>set_metatags</code> runs, and the metatag information will never display correctly on the page.</p>
+
+<p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application's specific concerns.</p>
+
+<p>This ends the first part of my series on Rails concerns. While I don't have anything else exciting to show off presently, the concern pattern is a powerful one that I've used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I'll definitely continue talking about awesome Rails concerns.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns II: Taggable]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/"/>
+    <updated>2012-07-04T15:31:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable</id>
+    <content type="html"><![CDATA[<p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I'll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you're going to have to roll your own solution. That's what I'm doing for GirlsGuideTo, and this is how I implemented it.</p>
+
+<!-- more -->
+
+
+<h2>The Tag Model</h2>
+
+<p>The tag model itself is fairly straightforward:</p>
+
+<p>```ruby
+class Tag &lt; ActiveRecord::Base
+  has_many :taggings</p>
+
+<p>  has_many :addresses, through: :taggings, source: :taggable, source_type: Address
+  has_many :users, through: :taggings, source: :taggable, source_type: User
+end
+```</p>
+
+<p>Unfortunately, you can't just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don't work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can't <code>SELECT * from taggables</code>, since there is no taggables table.</p>
+
+<p>This is frustrating, but easy enough to work around. You'll have to specify every model that's taggable in the <code>Tag</code> class. But since we'll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you're confident, you can define a taggables method yourself:</p>
+
+<p>```ruby
+  def taggables</p>
+
+<pre><code>[addresses + users].flatten
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you'll want to display the different kinds of taggables in different places anyway.</p>
+
+<h2>The Join Model</h2>
+
+<p>Tag has-and-belongs-to-many taggables through a join model. That model is <code>Tagging</code>, and should look like this:</p>
+
+<p>```ruby
+class Tagging &lt; ActiveRecord::Base
+  attr_accessible :tag_id, :taggable_id, :taggable_type</p>
+
+<p>  belongs_to :tag
+  belongs_to :taggable, :polymorphic => true
+end
+```ruby</p>
+
+<p>There's nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won't fill in the association correctly.</p>
+
+<h2>The Taggable Concern</h2>
+
+<p>Finally, we can get to the concern itself. This is how I've set it up:</p>
+
+<p>```ruby
+module Taggable
+  extend ActiveSupport::Concern</p>
+
+<p>  included do</p>
+
+<pre><code>has_many :taggings, :as =&gt; :taggable
+has_many :tags, :through =&gt; :taggings
+</code></pre>
+
+<p>  end</p>
+
+<p>  def tag(name)</p>
+
+<pre><code>name.strip!
+tag = Tag.find_or_create_by_name(name)
+self.taggings.find_or_create_by_tag_id(tag.id)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def tag_names</p>
+
+<pre><code>tags.collect(&amp;:name)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we'll be including this concern in multiple ActiveRecord models -- and those models will automatically <code>has_many</code> :taggings and :tags.</p>
+
+<p>And on those models we'll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn't exist before, it will automatically be created, and then it'll be added to the model's taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
+
+<p>Next time I discuss concerns, I'll talk about an ActionController concern to improve your page's SEO and Facebook Graph integration. It'll be pretty awesome, so stay tuned!</p>
 ]]></content>
   </entry>
   
@@ -96,7 +341,7 @@
     <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet</id>
     <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it's easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren't only for code refuse -- by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that's where all the functionality for shipping lies... whereas a newcomer to your application would have to search through the order model to find it.</p>
 
-<p>I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated nad really involved -- but more than that, concerns just make your code better, so you should definitely be using them!</p>
+<p>I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated and really involved -- but more than that, concerns just make your code better, so you should definitely be using them!</p>
 
 <!-- more -->
 
@@ -153,7 +398,9 @@ redcarpet :body
     <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
     <updated>2012-06-28T15:09:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
-    <content type="html"><![CDATA[<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.</p>
+    <content type="html"><![CDATA[<blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
+
+<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.</p>
 
 <p>But it'd be even awesomer if actual errors in your application referenced this UUID, wouldn't it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, "I encountered error 123xyz," rather than force you to look through a huge amount of backlog to find their specific exception?</p>
 
@@ -213,111 +460,6 @@ render template: "errors/error", formats: [:html], layout: 'application', status
 </code></p>
 
 <p>Dynamic error pages like what I'm suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it's pretty unlikely that'll happen. Just be careful when using this system -- maybe even don't render the exception in your usual layout, but render it in an error-specific one -- to reduce the chance of your error pages also erroring, and you'll be golden.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Designing Sites for Users]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
-    <updated>2012-06-17T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
-    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult -- not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities -- and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
-
-<!-- more -->
-
-
-<h2>Mailcheck</h2>
-
-<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that's pretty impressive.</p>
-
-<p>I also love Mailcheck's philosophy. The guiding idea here -- that users will make errors, and software should respond efficiently to correct them -- is true no matter what you're making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app's flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
-
-<h2>Chosen</h2>
-
-<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
-
-<p>Chosen expresses another important usability concept -- accessibility. Modern software can be ridiculously complicated, but most users don't care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user's perspective.</p>
-
-<h2>Bandit</h2>
-
-<p>There's been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I've done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I'll be using it extensively moving into the future.</p>
-
-<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don't need a set number of tests (as per A/B testing) and you aren't confined to only two options. Ultimately, you don't need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that's pretty awesome.</p>
-
-<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you're guaranteed to make software that's much more usable than it would be otherwise.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Routing with Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/"/>
-    <updated>2012-05-22T23:08:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails</id>
-    <content type="html"><![CDATA[<p>I love Rails' routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we're ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
-
-<!-- more -->
-
-
-<h2>The Problem</h2>
-
-<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they're all really similar -- they all have a name, a description, some assets associated to them... And so they're all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
-
-<p><code>
-  gear/alfred
-  gear/dreampop
-  gear/stache
-</code></p>
-
-<p>And that's kind of tragic. Each type of gear should have its own route, even if they're all in the same model. Something like this would be both more readable and more expressive:</p>
-
-<p><code>
-  lenses/alfred
-  flashes/dreampop
-  films/stache
-</code></p>
-
-<p>Of course, having a controller for each kind of gear would be crazy. Happily, Rails provides some easy routing solutions!</p>
-
-<h2>The Solution</h2>
-
-<p>In our routes.rb, for each kind of resource that we're expecting, we create matching routes:</p>
-
-<p><code>ruby
-[:lenses, :films, :flashes, :cases].each do |gear|
-  match "#{gear}/:id", :controller =&gt; :gear, :action =&gt; :show, :type =&gt; gear, :as =&gt; gear
-end
-</code></p>
-
-<p>Let's dissect this routing statement in two steps. For the first, obviously, we're linking a route like <code>lenses/a1</code> or <code>flashes/cherry</code> to the gear controller. Importantly we're also passing a type: either lenses, films, flashes, or cases, instructing the controller which endpoint we want. In said controller, we should make sure that this passed type and the name of the piece of gear match. Otherwise people would go to <code>lenses/dreampop</code> or <code>flashes/alfred</code> and still see the correct resource despite specifying an invalid type and name combination. That would just be madness!</p>
-
-<p>```ruby
-class GearController &lt; ApplicationController
-  before_filter :find_gear</p>
-
-<p>  private</p>
-
-<p>  def find_gear</p>
-
-<pre><code>@gear = Gear.type(params[:type].to_s.singularize).where(:reference =&gt; params[:id]).first if params[:id]
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>Type is a named scope that matches the passed params[:type] to a database column storing the actual type of gear. So this will try to find a lens or flash or what have you with the appropriate reference name. Simple enough.</p>
-
-<p>For the second part of the above route, the <code>:as =&gt; gear</code> part creates named routes like lenses_path and films_url. With that in mind, it's easy for us to dynamically generate links based only on the gear object. This is the helper that allows us to do so:</p>
-
-<p><code>ruby
-def multi_path(obj)
-  self.send("#{obj.type.pluralize.downcase}_path".to_sym, obj.reference)
-end
-</code></p>
-
-<p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don't want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
-
-<p>With only a few lines of code, it's easy to make routes that were previously clunky and unexpressive into sensible, readable endpoints. And you don't have to sacrifice DRY to do so. If you have a lot of data that's expressed through only one controller, consider dynamic routing like this. It's easier for customers to remember URLs that are readable to them, and this is a good way to make that happen.</p>
 ]]></content>
   </entry>
   
