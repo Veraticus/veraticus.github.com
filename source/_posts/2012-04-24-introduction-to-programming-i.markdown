@@ -19,13 +19,15 @@ Many people are intimidated by the idea of learning computer programming -- they
 
 You'll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it's also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby -- for example, Github, Hulu, and Twitter are all implemented in Ruby.
 
-To learn Ruby, we'll be using an online tool that allows us to quickly and easily try Ruby, called sandRBox. In our first **exercise**, we'll go to sandRBox and type in an example expression.
+To learn Ruby, we'll be using an online tool that allows us to quickly and easily try Ruby, called [repl.it](http://repl.it). In our first **exercise**, we'll go to repl.it and type in an example expression.
 
 1. Open up your web browser.
 
-2. In the address bar, type `sandrbox.com`, and press enter.
+2. In the address bar, type `repl.it`, and press enter.
 
-3. In the page that opens, type `1 + 1`, and press enter.
+3. Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.
+
+4. The right half of the screen is the Ruby console. Type `1 + 1` into it and press enter.
 
 The output of your command is returned to you immediately. Congratulations, you're a computer programmer!
 
@@ -115,13 +117,23 @@ Ruby tries to be as sensible as possible. Methods are named to be unsurprising a
 
 Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method `+`! Yes, you were already using methods without even realizing what they were. Try a quick **exercise** to prove it.
 
-1. Try `1.+1`. 
+1. Try `1.+(1)`. 
 
-2. Try `2.-1`.
+2. Try `2.-(1)`.
 
-3. Try `"One".+"One"`.
+3. Try `"One".+("One")`.
 
-The plus method is special. You don't need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, `+` concatenates strings together. But on numbers, it actually adds them. Unfortunately, not all methods are present on every object. Try this **exercise** to get a new, exciting Ruby error that you'll probably see a lot of: the NoMethodError.
+The plus method is special. You don't need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, `+` concatenates strings together. But on numbers, it actually adds them.
+
+You might be wondering: what's with the parenthesis containing the 1 and "one"? That's an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let's do some quick **exercises** to see how methods accept arguments.
+
+1. Try `'hello'.delete('l')`. The argument to the `delete` method tells it which letter it should delete from the string.
+
+2. Try `'space'.center(20)`. The argument to the `center` method tells the string how many spaces it should be centered in.
+
+3. Try `'space'.center(20, '-')`. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to `center` tells it what character to pad the string with. In this case, it gives us a lot of dashes. 
+
+Unfortunately, not all methods are present on every object. Try this **exercise** to get a new, exciting Ruby error that you'll probably see a lot of: the `NoMethodError`.
 
 1. Try `1.reverse`. Whoops: `reverse` is a method for strings only.
 
@@ -129,7 +141,7 @@ The plus method is special. You don't need a period before it, but on almost all
 
 3. Try `"Hello".zero?` So is `zero?`.
 
-With the NoMethodError, Ruby is letting you know that a method you tried to call on an object didn't exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby's nice way of telling you that you messed up somewhere.
+With the `NoMethodError`, Ruby is letting you know that a method you tried to call on an object didn't exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby's nice way of telling you that you messed up somewhere.
 
 ### Conversion
 

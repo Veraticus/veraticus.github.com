@@ -5,6 +5,8 @@ date: 2012-06-28 15:09
 comments: true
 categories: [rails]
 ---
+> **This post has been superseded by [Dynamic Error Pages, Corrected](http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/). Check that out first.**
+
 One of the coolest features of Rails 3.2 is [tagged logging](http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html). Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.
 
 But it'd be even awesomer if actual errors in your application referenced this UUID, wouldn't it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, "I encountered error 123xyz," rather than force you to look through a huge amount of backlog to find their specific exception?
