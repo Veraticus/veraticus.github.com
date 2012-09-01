@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-08-22T11:31:44-05:00</updated>
+  <updated>2012-08-31T20:19:55-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kinotify, a RubyMotion App]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/"/>
+    <updated>2012-08-31T20:03:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app</id>
+    <content type="html"><![CDATA[<p>Today, I&#8217;d like to announce the official release of my first RubyMotion app &#8211; <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Kinotify</a>! Kinotify is a simple app with a lofty goal: to notify you of the release of upcoming movies, either in theaters or on DVD. You can search for movies &#8211; in case you have something you really want to be notified of in the future, say a rerelease of Dirty Dancing or the future release of Avatar II &#8211; or just see all upcoming releases. Notifications you set will arrive at 2PM local time on your phone, and you can set the app to remind you of a release a month, week, three days, and/or one day in advance.</p>
+
+<p>The UI, icon, and website were all designed by my good friend and super-talented dude <a href="https://twitter.com/lukesbeard">Luke Beard</a>, so they all look totally awesome. And on the flipside, the Rails server and RubyMotion app were all done by yours truly&#8230; so any faults (and I&#8217;m sure there are some I haven&#8217;t found) are mine and mine alone.</p>
+
+<p>It was a long road to actually releasing this app. I started designing Kinotify with a good friend of mine (who had the original idea and inspiration for the application) way back in March, so it&#8217;s been months of labor, testing, asset acquisition, releasing and refining and coding. But I think the results speak for themselves: Kinotify is a pretty awesome application, and even better I think it&#8217;s a great example of what RubyMotion is capable of. It uses remote notifications, core data, Twitter/Facebook sharing, networking and reachability&#8230; and thanks to RubyMotion it was all pretty painless to get it working together.</p>
+
+<p>This week I&#8217;ll make another blog post describing what took so long, where my time and energy were spent, and the general process of releasing a RubyMotion app on the iTunes store. But I just got the approval email from Apple so I wanted to unleash Kinotify on the world officially. So what are you waiting for? It&#8217;s only 99 cents! <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Go get Kinotify already!</a></p>
+
+<p>And if you have any problems or want new features, the best way to contact me is on <a href="https://twitter.com/Veraticus">Twitter</a>. Thanks!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introduction to Programming III]]></title>
@@ -2641,164 +2658,6 @@
 <h3>Next Session</h3>
 
 <p>Now that we&#8217;ve covered the basics of Ruby, we&#8217;ll put what we&#8217;ve learned into action. Using variables, we&#8217;ll create our first Ruby programs, and finally make the computer work for us!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Middleman for Non-Techies]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/"/>
-    <updated>2012-04-21T11:56:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies</id>
-    <content type="html"><![CDATA[<p>I didn&#8217;t make a post on the 18th because I&#8217;ve been in San Francisco at <a href="http://www.refinery29.com/hipstamatic-office-pictures">the Hipstamatic offices</a>, which are totally awesome. The work I&#8217;ve been doing here has taken up all of my time, so I didn&#8217;t even get the chance to start writing a post until today. While I was here, I met <a href="http://lukesbeard.com/">Luke Beard</a>, a super talented designer who&#8217;s been touching up a lot of our sites. For example, the excellent <a href="http://disposable.hipstamatic.com/">disposable.hipstamatic.com</a> site is all his handiwork. I wanted to streamline his development process, so that he could deploy his work without feeling blocked by my (usually extremely full) schedule.</p>
-
-<p>We&#8217;re going to use <a href="https://github.com/middleman/middleman">Middleman</a> to achieve this, in addition to some other nice effects: automatic minification of JS and CSS and smushing of images. Middleman is essentially intended for developers, though; it requires commandline tools that can be fairly intimidating to those who&#8217;ve never really bothered popping open the console before. So here&#8217;s some small tweaks I made to our HTML projects to make the whole process easier on Luke and any future designers we hire.</p>
-
-<!-- more -->
-
-
-<h2>Use Middleman 3</h2>
-
-<p>Luke doesn&#8217;t use CoffeeScript or Sass (yet), so the CSS files he creates are just pure CSS. In Middleman 2, .css files aren&#8217;t automatically minified unless they&#8217;re run through a secondary processor, like Scss or Compass. This was extremely frustrating to figure out, but is happily really easy to fix. Use Middleman 3. Middleman 3 is in beta and you can install it like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>gem install middleman --pre
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The Middleman 3 beta has a number of <a href="http://awardwinningfjords.com/2012/01/03/middleman-3-beta.html">other cool features</a> that are worth checking out. In my limited experience using it, there aren&#8217;t any major syntax changes; my Middleman 2 projects converted without a single hitch.</p>
-
-<h2>Circumvent the Console</h2>
-
-<p>Once people figure out git, they universally love it. Most of our non-technical people who&#8217;ve been introduced to it use <a href="http://mac.github.com/">Github for Mac</a>, though, because honestly the console commands are kind of arcane. Half way through an explanation of the syntax of <code>git add</code>, I realized I was really barking up the wrong tree. So I didn&#8217;t want to force people to open a console window, cd into the Middleman directory, and start up a server. As simple as that sounds, I knew it would be an enormous point of failure.</p>
-
-<p>So I made a quick little script I inserted into the Middleman project directories.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/usr/bin/env ruby</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">Kernel</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;cd </span><span class="si">#{</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp;&amp; middleman&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>I called it <code>start</code>. Chmod it 0755, and then when the designer checks out the repository, they can just double-click on <code>start</code> to automatically boot up the middleman console.</p>
-
-<h2>Deploy with Hubot</h2>
-
-<p>Of course, we also wanted to make it easy to deploy. My deploy script is stolen entirely from a <a href="https://gist.github.com/1902178">gist</a>:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SSH_USER</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span>
-</span><span class='line'><span class="no">SSH_HOST</span> <span class="o">=</span> <span class="s1">&#39;www.example.com&#39;</span>
-</span><span class='line'><span class="no">SSH_DIR</span>  <span class="o">=</span> <span class="s1">&#39;/var/www/html/www.example.com&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Build the website from source&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:build</span> <span class="k">do</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Building website&quot;</span>
-</span><span class='line'>  <span class="n">status</span> <span class="o">=</span> <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;middleman build --clean&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="n">status</span> <span class="p">?</span> <span class="s2">&quot;OK&quot;</span> <span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Run the preview server at http://localhost:4567&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:preview</span> <span class="k">do</span>
-</span><span class='line'>  <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;middleman server&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Deploy website via rsync&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:deploy</span> <span class="k">do</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Deploying website via rsync to </span><span class="si">#{</span><span class="no">SSH_HOST</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>  <span class="n">status</span> <span class="o">=</span> <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;rsync -avze &#39;ssh&#39; --delete build/ </span><span class="si">#{</span><span class="no">SSH_USER</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="no">SSH_HOST</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="no">SSH_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="n">status</span> <span class="p">?</span> <span class="s2">&quot;OK&quot;</span> <span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">desc</span> <span class="s2">&quot;Build and deploy website&quot;</span>
-</span><span class='line'><span class="n">task</span> <span class="ss">:gen_deploy</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:build</span><span class="p">,</span> <span class="ss">:deploy</span><span class="o">]</span> <span class="k">do</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nv">module.exports = </span><span class="nf">(robot) -&gt;</span>
-</span><span class='line'>  <span class="nx">robot</span><span class="p">.</span><span class="nx">respond</span> <span class="sr">/deploy site (\w*)/i</span><span class="p">,</span> <span class="nf">(msg) -&gt;</span>
-</span><span class='line'>    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;util&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nv">site = </span><span class="nx">msg</span><span class="p">.</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Initiating deploy&quot;</span>
-</span><span class='line'>    <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
-</span><span class='line'>      <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error pulling repository:&quot;</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
-</span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Building &amp; deploying site&quot;</span>
-</span><span class='line'>        <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
-</span><span class='line'>          <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error building site:&quot;</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
-</span><span class='line'>          <span class="k">else</span>
-</span><span class='line'>            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Deploy complete&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">chomp = </span><span class="nf">(text) -&gt;</span>
-</span><span class='line'>  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>All the sudoing is to ensure no weirdness happens with directories being owned by someone other than Hipstabot, which would prevent git from pulling correctly.</p>
-
-<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I&#8217;m not involved in any step of the process. Creating workflows like this &#8211; that make what people do easier and better &#8211; is one of the greatest joys of being a programmer, and I hope someone finds this post helpful in accomplishing something similar.</p>
 ]]></content>
   </entry>
   
