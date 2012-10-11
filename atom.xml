@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-10T19:23:50-05:00</updated>
+  <updated>2012-10-11T02:10:22-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -202,7 +202,7 @@
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">redirected?</span>
 </span><span class='line'>    <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
 </span><span class='line'>      <span class="k">return</span> <span class="kp">true</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
