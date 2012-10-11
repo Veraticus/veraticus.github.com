@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-08-31T20:19:55-05:00</updated>
+  <updated>2012-10-10T19:23:50-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,209 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Seamless POST Logins with Rack Middleware]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/10/seamless-post-logins-with-rack-middleware/"/>
+    <updated>2012-10-10T18:47:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/10/seamless-post-logins-with-rack-middleware</id>
+    <content type="html"><![CDATA[<p>It&#8217;s not uncommon to have login-required forms accessible to users who aren&#8217;t logged in &#8211; for example, maybe you&#8217;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &#8220;post&#8221; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&#8217;s not logged in presses the button? In most Rails applications, they&#8217;d be logged in, redirected back to the page they were referred from, and they&#8217;d have to click the thumbs-up again.</p>
+
+<p>That sort of sucks. They already clicked it once. Why can&#8217;t we remember that?</p>
+
+<p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
+
+<!-- more -->
+
+
+<h2>Pre-Controller Setup</h2>
+
+<p>This method is rather login-agnostic; it should work if you&#8217;re using <a href="https://github.com/plataformatec/devise">Devise</a>, <a href="https://github.com/intridea/omniauth">OmniAuth</a>, <a href="https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview">both</a>, or neither. For the purposes of my examples, however, I&#8217;m using OmniAuth.</p>
+
+<p>First, put some code wherever you redirect to force login. I do that when I see a <code>CanCan::AccessDenied</code> error, but you should do it wherever makes sense for you. Here&#8217;s an example method very similar to the one I use.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">redirect_to_login</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">login_path</span><span class="p">(</span><span class="n">return_to</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">return_post_params</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="n">return_method</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>login_path</code> should redirect somewhere sensible: I chose sessions#new. Once there, we reset the session (to prevent any funny business) and then assign a bunch of attractive new session variables.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">new</span>
+</span><span class='line'>    <span class="n">reset_session</span>
+</span><span class='line'>    <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">params</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">params</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="s2">&quot;/auth/facebook&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Since I&#8217;m using OmniAuth and Facebook, this will result in the user being logged in. In the login callback &#8211; I chose sessions#create &#8211; we need to do some special detection and redirection.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">user</span>
+</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+</span><span class='line'>      <span class="n">flash</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Hi &lt;b&gt;</span><span class="si">#{</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&lt;/b&gt;, you are now logged in.&quot;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">!=</span> <span class="s1">&#39;GET&#39;</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="s1">&#39;/redirect_back&#39;</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_url</span><span class="p">,</span> <span class="n">flash</span><span class="p">:</span> <span class="p">{</span><span class="n">error</span><span class="p">:</span> <span class="s1">&#39;You could not be logged in.&#39;</span><span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The interesting portion is <code>redirect_to '/redirect_back'</code>. That&#8217;s our middleware hook: when the session variables are set correctly, and you go to <code>/redirect_back</code>, the middleware will activate and do a POST to the application. So, in essence, <code>/redirect_back</code> stands in for whatever request you just tried to go. That&#8217;s why this doesn&#8217;t work with GET requests: with a GET, the new URL for the page will be <code>/redirect_back</code> regardless of what the page is, which looks pretty weird.</p>
+
+<h2>The Middleware</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">RedirectBack</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@app</span> <span class="o">=</span> <span class="n">app</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">req</span> <span class="o">=</span> <span class="no">Rack</span><span class="o">::</span><span class="no">Request</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/redirect_back&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span> <span class="o">&amp;&amp;</span>
+</span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_method</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_post_params</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">[</span><span class="n">param</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">new_url</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_to</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">[</span><span class="s1">&#39;REQUEST_PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;REQUEST_URI&#39;</span><span class="p">,</span> <span class="s1">&#39;PATH_INFO&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">env</span><span class="o">[</span><span class="n">req</span><span class="o">]</span> <span class="o">=</span> <span class="n">new_url</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The whole idea of this middleware is to reformat the path and add in all the appropriate params from the session variables, and then call the Rails application with it. Rails believes that &#8211; despite the URL being <code>redirect_back</code> &#8211; we&#8217;ve made a correctly-formatted post and processes it correctly, sending another redirect to the client when it&#8217;s completed.</p>
+
+<h2>Post-Controller Setup</h2>
+
+<p>The only problem is that, since we&#8217;re dealing with forms here, Rails needs a CSRF token. Without it, it&#8217;ll purge the session at the beginning of the request and we&#8217;ll end up in a redirect loop.</p>
+
+<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&#8217;t use the cookie session storage mechanism (and you should not be), you can be sure enough of hte user&#8217;s identity to ignore the authenticity token on this one request.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">protect_from_forgery</span>
+</span><span class='line'>  <span class="n">skip_before_filter</span> <span class="ss">:verify_authenticity_token</span><span class="p">,</span> <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="ss">:redirected?</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">redirected?</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As a bonus we also clean out the session a little bit so that <code>/redirect_back</code> won&#8217;t work again.</p>
+
+<p>And that&#8217;s that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output &#8211; all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can&#8217;t be beat.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kinotify, a RubyMotion App]]></title>
@@ -2491,173 +2694,6 @@
 <p>So I&#8217;m not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
 
 <p>Unless I hear compelling arguments otherwise, I&#8217;ll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I&#8217;m working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introduction to Programming I]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/"/>
-    <updated>2012-04-24T12:04:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i</id>
-    <content type="html"><![CDATA[<p>This is a copy of the handout I&#8217;ll be giving to students for my upcoming class at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>, creatively titled &#8220;Introduction to Programming.&#8221; It borrows structure rather liberally from Chris Pine&#8217;s <a href="http://pine.fm/LearnToProgram">Learn to Program</a>, but the content is my own.</p>
-
-<!-- more -->
-
-
-<h2>Getting Started with Ruby</h2>
-
-<h3>Welcome to Programming</h3>
-
-<p>Computer programming is the skill that allows you to make computers do what you want. Computers are excellent at menial, repetitive tasks that require little oversight and no creativity: but you can also use them to make amazing websites, games, and applications. Whether it&#8217;s a simple program to make your day-to-day life easier, or a complicated application that gives you full-time employment, computer programming is invaluable professionally and also rewarding personally. Even better, it&#8217;s lots of fun!</p>
-
-<p>Many people are intimidated by the idea of learning computer programming &#8211; they&#8217;re worried you need complicated math or lots of formal training to do well. Nothing could be further from the truth. Computer programming can be learned by anyone and is very much learning a new language. All you need to succeed at computer programming is familiarity with computers, a willingness to learn, and a computer to do the programming on.</p>
-
-<p>You&#8217;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&#8217;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &#8211; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
-
-<p>To learn Ruby, we&#8217;ll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we&#8217;ll go to repl.it and type in an example expression.</p>
-
-<ol>
-<li><p>Open up your web browser.</p></li>
-<li><p>In the address bar, type <code>repl.it</code>, and press enter.</p></li>
-<li><p>Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.</p></li>
-<li><p>The right half of the screen is the Ruby console. Type <code>1 + 1</code> into it and press enter.</p></li>
-</ol>
-
-
-<p>The output of your command is returned to you immediately. Congratulations, you&#8217;re a computer programmer!</p>
-
-<h3>Numbers</h3>
-
-<p>Computers are really excellent at math. In this <strong>exercise</strong>, we&#8217;ll learn how to do math in Ruby.</p>
-
-<ol>
-<li><p>Try <code>2 * 3</code>. <code>*</code> is the multiplication operator.</p></li>
-<li><p>Try <code>9 / 3</code>. <code>/</code> is the division operator.</p></li>
-<li><p>Try <code>2+2</code>. You don&#8217;t need spaces around the operator; in fact, Ruby doesn&#8217;t care how many spaces appear in a statement.</p></li>
-<li><p>Try <code>-9 - 3</code>. By putting a minus in front of a number, it becomes negative.</p></li>
-<li><p>Try <code>9 / 0</code>. This is your first ever error message in Ruby. The kind of error appears before the colon (ZeroDivisionError, in this case); some helpful error text appears afterwards. Obviously, this error means you can&#8217;t divide by zero.</p></li>
-<li><p>Try <code>5 / 2</code>. It might surprise you that the result is 2 instead of 2.5; what&#8217;s going on here?</p></li>
-</ol>
-
-
-<p>In Ruby, there are two kinds of numbers. There are <strong>integers</strong> &#8211; that is, whole numbers, whether positive or negative &#8211; and there are <strong>floats</strong>. Floats (short for &#8220;floating-point numbers&#8221;) are numbers with any kind of decimal place, even if that decimal place is zero. <code>55.123</code>, <code>-231.4</code>, <code>0.001</code>, and <code>5.0</code> are all floats.</p>
-
-<p>Most of the time, you&#8217;ll be using integers. This is because most people (and thus most programs) deal in whole things: you don&#8217;t receive 4.3 emails, or view 1.8 webpages, or listen to 5.24 of a song. Floats are used when you&#8217;re doing more complicated mathematics, for example graphics or physics.</p>
-
-<p>In this <strong>exercise</strong>, let&#8217;s do some math on floats.</p>
-
-<ol>
-<li><p>Try <code>2.0 * 3.0</code>. Of course, the answer <code>6.0</code> is the same as the answer for integer math, <code>6</code>.</p></li>
-<li><p>Try <code>5.0 / 2.0</code>. Now that answer looks a lot more like what we&#8217;d expect!</p></li>
-<li><p>Try <code>-9.0 + 8.0</code>. Everything you would expect to work in integers works fine on floats.</p></li>
-<li><p>Try <code>(598.0 / (92.0 - 90.0)) * 43.0 + 2.0</code>. Even complicated math is easy with computers!</p></li>
-</ol>
-
-
-<h3>Strings</h3>
-
-<p>Numbers are exciting, but people generally use words a lot more than they do numbers. We refer to letters, words, and sentences in Ruby as <strong>strings</strong>. Strings in Ruby are always encapsulated by either single or double-quotes. In this <strong>exercise</strong>, we&#8217;ll write a few strings to see how they work.</p>
-
-<ol>
-<li><p>Try <code>'Hello.'</code>. Notice that when Ruby returns a string to us, it&#8217;s always in double quotes, even if we typed it in single quotes.</p></li>
-<li><p>Try <code>"This is a big fancy string."</code>. Strings can be of any length and can contain any characters: spaces or punctuation included.</p></li>
-<li><p>Try <code>'2 is my favorite number'</code>. Numbers that are in strings are just more words.</p></li>
-<li><p>Try <code>'Well isn't this nice.'</code>. Oh no!</p></li>
-<li><p>Try <code>"She said, "This is foolish!""</code> What&#8217;s happening?</p></li>
-</ol>
-
-
-<p>You&#8217;ll get a syntax error for the last two statements above. In both cases, Ruby is expecting a single quote or double quote to end the string, but instead we&#8217;re using one inside the actual string itself. Ruby is only a computer language. Unlike a human reading either of those sentences, it can&#8217;t tell which quotation marks are part of the sentence and which are intended to start and end the string; instead it gives us a syntax error.</p>
-
-<p>Strings are fun to type, but they&#8217;re even more fun to actually use! Let&#8217;s do an <strong>exercise</strong> that shows us the power of strings.</p>
-
-<ol>
-<li><p>Try <code>'Hello' * 3</code>. Whoops, we probably wanted to put a space in there. Let&#8217;s try it again with <code>'Hello ' * 3</code>. There, isn&#8217;t that much better?</p></li>
-<li><p>Try <code>'Message in ' + 'a bottle.'</code> Again, space is important.</p></li>
-<li><p>Try <code>'12' * 3</code>. Is this different than what you&#8217;d expect?</p></li>
-<li><p>Try <code>'12' + '12' + '12'</code>. How about that?</p></li>
-</ol>
-
-
-<p>The last two won&#8217;t actually do math, like you might expect. Remember <code>'12'</code> is a string: <code>12</code> is an integer! So <code>'12'</code> is no different from <code>'sandwiches'</code> or <code>'love'</code> &#8211; it&#8217;s a word to Ruby, not a number. If you try to use strings as numbers, Ruby won&#8217;t understand what you mean. Here&#8217;s a quick <strong>exercise</strong> to illustrate this point.</p>
-
-<ol>
-<li><p>Try <code>'14' + 14</code>.</p></li>
-<li><p>Try <code>3 * 'bacon'</code>.</p></li>
-</ol>
-
-
-<p>If you think about it, both of these errors make sense. What would it mean to add 14 to the word &#8220;fourteen?&#8221; How do you multiply three by bacon? Remember, computers can only do what you tell them. If you tell them to do things that don&#8217;t make any sense, they&#8217;ll return errors. Still, wouldn&#8217;t it be nice to be able to add <code>'14'</code> to <code>14</code> and get 28, like we&#8217;d expect?</p>
-
-<h3>Methods</h3>
-
-<p>What do <code>1</code>, <code>"Hello"</code>, and <code>'My favorite number is 3'</code> all have in common? In Ruby, they&#8217;re all objects. Ruby objects are very similar to real-world objects. Objects in Ruby can do things, just like objects you interact with every day. A car can drive, a cat can meow, and a person can smile. Objects in Ruby can do things as well; and the things that they can do are called <strong>methods</strong>.</p>
-
-<p>In Ruby, you make an object perform a method with a period, and then the name of the method you want to call. So if you could use Ruby on your car, you would use <code>car.drive</code> to drive it, and if your cat wanted to meow, it would do <code>cat.meow</code>. Let&#8217;s try a quick <strong>exercise</strong> to see how easy it is to use methods.</p>
-
-<ol>
-<li><p>Try <code>'Hello'.reverse</code>. reverse is a method for strings: it reverses the string for you. How helpful! In this example, &#8216;Hello&#8217; is the object. The period instructs Ruby that a method is coming up next, and reverse is the name of the method.</p></li>
-<li><p>Try <code>1.odd?</code>. Ruby tells you <code>true</code>, which obviously means that 1 is an odd number.</p></li>
-<li><p>Try <code>1.zero?</code>. One is not zero, so Ruby returns <code>false</code>.</p></li>
-<li><p>Try <code>'Sentence!'.length</code>. Length is a string method that returns how many characters are in that string.</p></li>
-<li><p>Try <code>'I want to yell this'.upcase</code>. Upcase transforms a string into all capitals.</p></li>
-</ol>
-
-
-<p>There are dozens of possible methods for strings and numbers. Learning Ruby is very much like learning a new language &#8211; while you will learn the grammar and the most commonly-used words in this class, you&#8217;ll eventually want to grab a dictionary and look up more words yourself. Ruby&#8217;s documentation contains a simple, complete, easy-to-read list of methods and is free online. There are instructions for finding it at the end of this handout.</p>
-
-<p>Ruby tries to be as sensible as possible. Methods are named to be unsurprising and predictable. For example, if you know about <code>upcase</code>, you can guess that there&#8217;s a similar method called <code>downcase</code> that does exactly the opposite &#8211; that is, it would convert all letters into lowercase. And you&#8217;d be right!</p>
-
-<p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
-
-<ol>
-<li><p>Try <code>1.+(1)</code>.</p></li>
-<li><p>Try <code>2.-(1)</code>.</p></li>
-<li><p>Try <code>"One".+("One")</code>.</p></li>
-</ol>
-
-
-<p>The plus method is special. You don&#8217;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them.</p>
-
-<p>You might be wondering: what&#8217;s with the parenthesis containing the 1 and &#8220;one&#8221;? That&#8217;s an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let&#8217;s do some quick <strong>exercises</strong> to see how methods accept arguments.</p>
-
-<ol>
-<li><p>Try <code>'hello'.delete('l')</code>. The argument to the <code>delete</code> method tells it which letter it should delete from the string.</p></li>
-<li><p>Try <code>'space'.center(20)</code>. The argument to the <code>center</code> method tells the string how many spaces it should be centered in.</p></li>
-<li><p>Try <code>'space'.center(20, '-')</code>. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to <code>center</code> tells it what character to pad the string with. In this case, it gives us a lot of dashes.</p></li>
-</ol>
-
-
-<p>Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&#8217;ll probably see a lot of: the <code>NoMethodError</code>.</p>
-
-<ol>
-<li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
-<li><p>Try <code>"Hello".odd?</code> Drat. Looks like <code>odd?</code> is only for numbers.</p></li>
-<li><p>Try <code>"Hello".zero?</code> So is <code>zero?</code>.</p></li>
-</ol>
-
-
-<p>With the <code>NoMethodError</code>, Ruby is letting you know that a method you tried to call on an object didn&#8217;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&#8217;s nice way of telling you that you messed up somewhere.</p>
-
-<h3>Conversion</h3>
-
-<p>Remember earlier how we thought it&#8217;d be nice if you could add <code>'14'</code> and <code>14</code> together to get 28? We now have all the ingredients to make this happen. Ruby has methods that convert one kind of object into another kind of object. In this <strong>exercise</strong>, we&#8217;ll do some exciting conversions!</p>
-
-<ol>
-<li><p>Try <code>1.to_s</code>. to_s means &#8220;to string.&#8221; Notice that the result comes back with quotation marks &#8211; this isn&#8217;t the number 1 anymore, but instead the word &#8220;1&#8221;!</p></li>
-<li><p>Try <code>1.to_f</code>. to_f means &#8220;to float.&#8221; The result is the number 1 as a float &#8211; that is, 1.0.</p></li>
-<li><p>Try <code>2.3.to_i</code>. to_i means &#8220;to integer.&#8221; Because integers can only be whole numbers, the trailing .3 is dropped, converting the number to 2.</p></li>
-<li><p>Try <code>'3'.to_i</code>. The word &#8220;3&#8221; is now the number 3.</p></li>
-<li><p>Try <code>'14'.to_i + 14</code>. Pretty convenient, huh?</p></li>
-<li><p>Try <code>'Hello'.to_i</code>.</p></li>
-</ol>
-
-
-<p>The result of that last one might surprise you. Ruby tries very hard to perform conversions sensibly, but when it can&#8217;t convert a string, it&#8217;ll return zero instead. So be careful of what you&#8217;re trying to convert, or else you might get zero back instead.</p>
-
-<h3>Next Session</h3>
-
-<p>Now that we&#8217;ve covered the basics of Ruby, we&#8217;ll put what we&#8217;ve learned into action. Using variables, we&#8217;ll create our first Ruby programs, and finally make the computer work for us!</p>
 ]]></content>
   </entry>
   
