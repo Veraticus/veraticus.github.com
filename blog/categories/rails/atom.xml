@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-08-22T11:31:44-05:00</updated>
+  <updated>2012-10-10T19:23:50-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,154 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Seamless POST Logins with Rack Middleware]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/10/seamless-post-logins-with-rack-middleware/"/>
+    <updated>2012-10-10T18:47:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/10/seamless-post-logins-with-rack-middleware</id>
+    <content type="html"><![CDATA[<p>It's not uncommon to have login-required forms accessible to users who aren't logged in -- for example, maybe you're trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big "post" button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who's not logged in presses the button? In most Rails applications, they'd be logged in, redirected back to the page they were referred from, and they'd have to click the thumbs-up again.</p>
+
+<p>That sort of sucks. They already clicked it once. Why can't we remember that?</p>
+
+<p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
+
+<!-- more -->
+
+
+<h2>Pre-Controller Setup</h2>
+
+<p>This method is rather login-agnostic; it should work if you're using <a href="https://github.com/plataformatec/devise">Devise</a>, <a href="https://github.com/intridea/omniauth">OmniAuth</a>, <a href="https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview">both</a>, or neither. For the purposes of my examples, however, I'm using OmniAuth.</p>
+
+<p>First, put some code wherever you redirect to force login. I do that when I see a <code>CanCan::AccessDenied</code> error, but you should do it wherever makes sense for you. Here's an example method very similar to the one I use.</p>
+
+<p>```ruby
+class ApplicationController</p>
+
+<p>  private</p>
+
+<p>  def redirect_to_login</p>
+
+<pre><code>redirect_to login_path(return_to: request.path, return_post_params: params, return_method: request.method)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>login_path</code> should redirect somewhere sensible: I chose sessions#new. Once there, we reset the session (to prevent any funny business) and then assign a bunch of attractive new session variables.</p>
+
+<p>```ruby
+class SessionsController &lt; ApplicationController
+  def new</p>
+
+<pre><code>reset_session
+session[:return_to], session[:return_post_params], session[:return_method] = params[:return_to], params[:return_post_params], params[:return_method]
+
+redirect_to "/auth/facebook"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Since I'm using OmniAuth and Facebook, this will result in the user being logged in. In the login callback -- I chose sessions#create -- we need to do some special detection and redirection.</p>
+
+<p>```ruby
+class SessionsController &lt; ApplicationController
+  def create</p>
+
+<pre><code>user = User.create(request.env)
+
+if user
+  session[:user_id] = user.id
+  flash[:success] = "Hi &lt;b&gt;#{user.name}&lt;/b&gt;, you are now logged in."
+
+  if session[:return_method] != 'GET'
+    redirect_to '/redirect_back'
+  else
+    redirect_to session[:return_to]
+  end
+else
+  redirect_to root_url, flash: {error: 'You could not be logged in.'}
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>The interesting portion is <code>redirect_to '/redirect_back'</code>. That's our middleware hook: when the session variables are set correctly, and you go to <code>/redirect_back</code>, the middleware will activate and do a POST to the application. So, in essence, <code>/redirect_back</code> stands in for whatever request you just tried to go. That's why this doesn't work with GET requests: with a GET, the new URL for the page will be <code>/redirect_back</code> regardless of what the page is, which looks pretty weird.</p>
+
+<h2>The Middleware</h2>
+
+<p>```ruby
+class RedirectBack</p>
+
+<p>  def initialize(app)</p>
+
+<pre><code>@app = app
+</code></pre>
+
+<p>  end</p>
+
+<p>  def call(env)</p>
+
+<pre><code>req = Rack::Request.new(env)
+
+if req.path == '/redirect_back' &amp;&amp; req.session[:return_method] &amp;&amp; req.session[:return_post_params] &amp;&amp;
+  req.session[:return_to] &amp;&amp; req.session[:user_id]
+
+  env['REQUEST_METHOD'] = req.session.delete(:return_method)
+  req.session.delete(:return_post_params).each do |param, val|
+    req.params[param] = val
+  end
+
+  new_url = req.session.delete(:return_to)
+  ['REQUEST_PATH', 'REQUEST_URI', 'PATH_INFO'].each do |req|
+    env[req] = new_url
+  end
+  req.session[:redirected] = true
+end
+
+@app.call(env)
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>The whole idea of this middleware is to reformat the path and add in all the appropriate params from the session variables, and then call the Rails application with it. Rails believes that -- despite the URL being <code>redirect_back</code> -- we've made a correctly-formatted post and processes it correctly, sending another redirect to the client when it's completed.</p>
+
+<h2>Post-Controller Setup</h2>
+
+<p>The only problem is that, since we're dealing with forms here, Rails needs a CSRF token. Without it, it'll purge the session at the beginning of the request and we'll end up in a redirect loop.</p>
+
+<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don't use the cookie session storage mechanism (and you should not be), you can be sure enough of hte user's identity to ignore the authenticity token on this one request.</p>
+
+<p>```ruby
+class ApplicationController &lt; ActionController::Base
+  protect_from_forgery
+  skip_before_filter :verify_authenticity_token, :if => :redirected?</p>
+
+<p>  def redirected?</p>
+
+<pre><code>if session[:redirected]
+  session[:return_to], session[:return_post_params], session[:return_method] = nil
+  return true
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>As a bonus we also clean out the session a little bit so that <code>/redirect_back</code> won't work again.</p>
+
+<p>And that's that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output -- all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can't be beat.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dynamic Error Pages, Corrected]]></title>
@@ -390,76 +538,6 @@ redcarpet :body
 <p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you're curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
 
 <p>That's just the starts of Rails concerns, though. Next time I'll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Error Pages]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
-    <updated>2012-06-28T15:09:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
-    <content type="html"><![CDATA[<blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
-
-<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It's generally pretty awesome.</p>
-
-<p>But it'd be even awesomer if actual errors in your application referenced this UUID, wouldn't it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, "I encountered error 123xyz," rather than force you to look through a huge amount of backlog to find their specific exception?</p>
-
-<p>Happily, you can do just this!</p>
-
-<!-- more -->
-
-
-<h2>Rescue_from Madness</h2>
-
-<p>Doing so requires abusing rescue_from a little bit, though. Set up something like this in your application_controller.rb:</p>
-
-<p><code>ruby
-unless Rails.application.config.consider_all_requests_local
-  rescue_from Exception, with: :render_500
-  rescue_from ActionController::RoutingError, with: :render_404
-  rescue_from ActionController::UnknownController, with: :render_404
-  rescue_from ActionController::UnknownAction, with: :render_404
-  rescue_from ActiveRecord::RecordNotFound, with: :render_404
-end
-</code></p>
-
-<p>This will prevent any error from rendering the default Rails error pages. Instead we'll set up our own error pages like so:</p>
-
-<p>```ruby
-  def render_500(exception)</p>
-
-<pre><code>render_exception(500, exception.message, exception)
-</code></pre>
-
-<p>  end</p>
-
-<p>  def render_404(exception)</p>
-
-<pre><code>render_exception(404, 'Page not found', exception)
-</code></pre>
-
-<p>  end</p>
-
-<p>  def render_exception(status = 500, message = 'Server error', exception)</p>
-
-<pre><code>@status = status
-@message = message
-Rails.logger.fatal "\n#{exception.class.to_s} (#{exception.message})"
-Rails.logger.fatal exception.backtrace.join("\n")
-render template: "errors/error", formats: [:html], layout: 'application', status: @status
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>And finally, in your view, actually include the request's unique identifier:</p>
-
-<p><code>ruby
-  &lt;h1&gt;&lt;%= @message.split(/\s/).collect(&amp;:capitalize).join(' ') %&gt; &lt;small&gt;&lt;%= @status %&gt;&lt;/small&gt;&lt;/h1&gt;
-  &lt;h3&gt;Error Code: &lt;%= request.env['action_dispatch.request_id'] %&gt; &lt;/h3&gt;
-</code></p>
-
-<p>Dynamic error pages like what I'm suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it's pretty unlikely that'll happen. Just be careful when using this system -- maybe even don't render the exception in your usual layout, but render it in an error-specific one -- to reduce the chance of your error pages also erroring, and you'll be golden.</p>
 ]]></content>
   </entry>
   

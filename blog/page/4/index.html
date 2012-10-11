@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&#8217;ve discovered in the process of creating &hellip;">
+  <meta name="description" content="I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,90 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/22/why-i-dont-use-haml/">Why I Don&#8217;t Use Haml</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-22T13:19:00-05:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It&#8217;s actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it&#8217;s very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
+
+<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/22/why-i-dont-use-haml/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/">Sweeping Caches From Resque (or Anywhere Really)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-19T10:29:00-05:00" pubdate data-updated="true">Mar 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Phil Karlton, someone I can only presume is a pretty smart programmer, said <a href="http://martinfowler.com/bliki/TwoHardThings.html">&#8220;there are only two hard things in Computer Science: cache invalidation and naming things.&#8221;</a> He&#8217;s totally right; cache invalidation is one of the biggest headaches when designing highly usable, highly available websites and is something that I&#8217;m sure every Rails programmer worth their salt has struggled with. (Naming things is also a pain but not the focus of this post.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -451,107 +535,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
-
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
-
-<p>But it will soon! The TODO list is particularly exciting:</p>
-
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
-</ul>
-
-
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/21/rapnd-redis-apn-daemon/">Rapnd: Redis APN Daemon</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://github.com/Veraticus/rapnd">rapnd</a> is a gem I developed to create a persistent connection through which to pass messages to Apple&#8217;s Push Notification servers. It&#8217;s pretty neat and you should check it out.</p>
-
-<h2>Why another push notification gem?</h2>
-
-<p>The existing ones just didn&#8217;t do what I wanted. There were some that created persistent daemon connections&#8230; but they were only usable with one app, and we have two apps we want to send push notifications for. There were some with multiple app support, but they didn&#8217;t have daemons or they assumed the existence of ActiveRecord. And in my opinion using ActiveRecord to store notifications is pretty dumb.</p>
-
-<h2>Whoa! ActiveRecord is just fine, bro.</h2>
-
-<p>Yeah, I love ActiveRecord. But it&#8217;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&#8217;t care less about the content or whether or not it was actually delivered &#8211; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&#8217;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
-
-<h2>Why a daemon?</h2>
-
-<p>Well, Apple tells you to do it. But for a more important reason, Apple claims that constantly established and dropped connections to their servers will result in IP blacklisting. I&#8217;ve never actually seen this in practice, but&#8230; well&#8230; why chance it? rapnd uses one connection per daemon and tries to keep it open as long as possible.</p>
-
-<p>So yeah, it&#8217;s pretty cool. Go check out <a href="http://github.com/Veraticus/rapnd">the rapnd github page</a> to see the deets.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -573,6 +556,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins with Rack Middleware</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
       </li>
     
@@ -582,14 +573,6 @@
     
       <li class="post">
         <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit with RubyMotion</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a>
       </li>
     
   </ul>

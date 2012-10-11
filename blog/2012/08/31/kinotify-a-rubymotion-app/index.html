@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Why I Like Rubber - Hi, I'm Josh Symonds</title>
+  <title>Kinotify, a RubyMotion App - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="When I was analyzing tools to deploy applications into Amazon&#8217;s elastic cloud, I settled on rubber as our EC2 provisioner of choice. rubber has &hellip;">
+  <meta name="description" content="Today, I&#8217;d like to announce the official release of my first RubyMotion app &#8211; Kinotify! Kinotify is a simple app with a lofty goal: to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,7 +98,7 @@
   
   <header>
     
-      <h1 class="entry-title">Why I Like Rubber</h1>
+      <h1 class="entry-title">Kinotify, a RubyMotion App</h1>
     
     
       <p class="meta">
@@ -114,34 +114,22 @@
   
 
 
-<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+<time datetime="2012-08-31T20:03:00-05:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>When I was analyzing tools to deploy applications into Amazon&#8217;s elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
+<div class="entry-content"><p>Today, I&#8217;d like to announce the official release of my first RubyMotion app &#8211; <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Kinotify</a>! Kinotify is a simple app with a lofty goal: to notify you of the release of upcoming movies, either in theaters or on DVD. You can search for movies &#8211; in case you have something you really want to be notified of in the future, say a rerelease of Dirty Dancing or the future release of Avatar II &#8211; or just see all upcoming releases. Notifications you set will arrive at 2PM local time on your phone, and you can set the app to remind you of a release a month, week, three days, and/or one day in advance.</p>
 
-<p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&#8217;s super easy to start a server with nothing more than:</p>
+<p>The UI, icon, and website were all designed by my good friend and super-talented dude <a href="https://twitter.com/lukesbeard">Luke Beard</a>, so they all look totally awesome. And on the flipside, the Rails server and RubyMotion app were all done by yours truly&#8230; so any faults (and I&#8217;m sure there are some I haven&#8217;t found) are mine and mine alone.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:create <span class="nv">ALIAS</span><span class="o">=</span>fluttershy <span class="nv">ROLES</span><span class="o">=</span>unicorn
-</span></code></pre></td></tr></table></div></figure>
+<p>It was a long road to actually releasing this app. I started designing Kinotify with a good friend of mine (who had the original idea and inspiration for the application) way back in March, so it&#8217;s been months of labor, testing, asset acquisition, releasing and refining and coding. But I think the results speak for themselves: Kinotify is a pretty awesome application, and even better I think it&#8217;s a great example of what RubyMotion is capable of. It uses remote notifications, core data, Twitter/Facebook sharing, networking and reachability&#8230; and thanks to RubyMotion it was all pretty painless to get it working together.</p>
 
+<p>This week I&#8217;ll make another blog post describing what took so long, where my time and energy were spent, and the general process of releasing a RubyMotion app on the iTunes store. But I just got the approval email from Apple so I wanted to unleash Kinotify on the world officially. So what are you waiting for? It&#8217;s only 99 cents! <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Go get Kinotify already!</a></p>
 
-<p>And bootstrap it with all the software needed for that role with:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:bootstrap <span class="nv">FILTER</span><span class="o">=</span>fluttershy
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course, looking at command line magic doesn&#8217;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
-
-<p>It&#8217;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&#8217;m sure. The good part &#8211; for me at least &#8211; is how close it is to the servers and how well it ties in with Capistrano. There&#8217;s no magic going on and there&#8217;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&#8230; but if you know what you&#8217;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
-
-<p>rubber isn&#8217;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&#8217;s deployed on a per-application basis, it can&#8217;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
+<p>And if you have any problems or want new features, the best way to contact me is on <a href="https://twitter.com/Veraticus">Twitter</a>. Thanks!</p>
 </div>
 
 
@@ -164,12 +152,12 @@
   
 
 
-<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+<time datetime="2012-08-31T20:03:00-05:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rubber/'>rubber</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
+    <a class='category' href='/blog/categories/rubymotion/'>rubymotion</a>
   
 </span>
 
@@ -178,7 +166,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -191,10 +179,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" title="Previous Post: Dynamoid: An ORM for Amazon's DynamoDB">&laquo; Dynamoid: An ORM for Amazon's DynamoDB</a>
+        <a class="basic-alignment left" href="/blog/2012/08/21/introduction-to-programming-iii/" title="Previous Post: Introduction to Programming III">&laquo; Introduction to Programming III</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/" title="Next Post: Setting up Unicorn in a Production Environment">Setting up Unicorn in a Production Environment &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/" title="Next Post: Seamless POST Logins with Rack Middleware">Seamless POST Logins with Rack Middleware &raquo;</a>
       
     </p>
   </footer>
@@ -294,8 +282,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/';
         var disqus_script = 'embed.js';
       
     (function () {
