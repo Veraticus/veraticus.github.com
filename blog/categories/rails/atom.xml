@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-11T12:51:36-05:00</updated>
+  <updated>2012-10-14T21:32:02-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unobtrusive JavaScript Facebook-Style More Button]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/"/>
+    <updated>2012-10-14T21:20:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button</id>
+    <content type="html"><![CDATA[<p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn't have JavaScript, they'd still see something sensible... but if they did, they'd get a sweet fade-in of more content appended right to the content container. Oh, and I also didn't want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn't find anything, so I took a crack at creating it myself. This is the result.</p>
+
+<!-- more -->
+
+
+<h2>How to Use It</h2>
+
+<p>Before coding I sat down and tried to figure out how this beast would work.</p>
+
+<p>Because it was unobtrusive, it should work on standard links, replacing them with an AJAX-y alternative if they have appropriate attributes. I hit on a link that looked like this:</p>
+
+<p>```ruby
+&lt;%= link_to 'More...'.html_safe, root_path(page: @page + 1),</p>
+
+<pre><code>class: 'next_page', 'data-selector' =&gt; '.articles .article',
+'data-container' =&gt; '.articles'%&gt;
+</code></pre>
+
+<p>```</p>
+
+<p>If the link has <code>data-selector</code> and <code>data-container</code> attributes, it's supposed to be an AJAX more button. The selector tells the script what to look for in the new page; the container tells it where to append the newly found elements. With this use case in hand, I proceeded to coding.</p>
+
+<h2>The Code</h2>
+
+<p>I apologize in advance if there's a cleaner way to do this. My CoffeeScript is pretty weak.</p>
+
+<p>```coffeescript
+$(document).ready ->
+  $('[data-selector]').click (event) -></p>
+
+<pre><code>element = $(this)
+url = element.attr 'href'
+return false unless url
+container = $(element.attr 'data-container')
+selector = element.attr 'data-selector'
+more = true
+
+$.ajax
+  url: url
+  success: (data) -&gt;
+    elements = $($(data).find(selector))
+    if elements.length == 0
+      element.html('All content loaded')
+             .addClass('done')
+             .removeAttr('href')
+    else
+      container.append elements
+      elements.css opacity: 0
+      elements.imagesLoaded (event) -&gt;
+        elements.animate opacity: 1
+        element.attr('href', $(data).find('[data-selector]').attr('href')).
+                html('More &amp;raquo;')
+        container.masonry 'appended', elements, true if element.attr('data-masonry')
+
+  beforeSend: -&gt;
+    element.html('Loading more...')
+           .addClass('loading')
+
+return false
+</code></pre>
+
+<p>```</p>
+
+<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we're adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the "More" button again -- or we disable the "More" button if we found no content.</p>
+
+<p>Overall pretty simple but I was satisfied with this solution. Oh, and there's a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Seamless POST Logins with Rack Middleware]]></title>
@@ -482,65 +558,6 @@ end
 <p>And on those models we'll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn't exist before, it will automatically be created, and then it'll be added to the model's taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
 
 <p>Next time I discuss concerns, I'll talk about an ActionController concern to improve your page's SEO and Facebook Graph integration. It'll be pretty awesome, so stay tuned!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns I: Starting with Redcarpet]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/"/>
-    <updated>2012-07-01T20:32:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet</id>
-    <content type="html"><![CDATA[<p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it's easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren't only for code refuse -- by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that's where all the functionality for shipping lies... whereas a newcomer to your application would have to search through the order model to find it.</p>
-
-<p>I've been using concerns extensively in GirlsGuideTo's upcoming application, and I figured it'd be an interesting read if I shared the ones I've made so far. They're not too complicated (this first one I'm posting mostly just to illustrate the concept), but but don't let that fool you. They can be super complicated and really involved -- but more than that, concerns just make your code better, so you should definitely be using them!</p>
-
-<!-- more -->
-
-
-<h2>Redcarpeted</h2>
-
-<p>A lot of fields in GirlsGuideTo are Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
-
-<p>```ruby
-module Redcarpeted
-  extend ActiveSupport::Concern</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>def redcarpet(field)
-  define_method("#{field}_markdown".to_sym) do
-    read_attribute(field)
-  end
-
-  define_method("#{field}_html".to_sym) do
-    Redcarpet.new(read_attribute(field)).to_html
-  end
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p><code>ActiveSupport::Concern</code> is the magic that makes concerns so ... magical. Simply by including another module called <code>ClassMethods</code>, <code>ActiveSupport::Concern</code>automatically knows to extend the base class with those methods when it's included.</p>
-
-<p>In this case, this allows you to do something like this in your model:</p>
-
-<p>```ruby
-  class Post &lt; ActiveRecord::Base</p>
-
-<pre><code>include Redcarpeted
-
-redcarpet :body
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you're curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
-
-<p>That's just the starts of Rails concerns, though. Next time I'll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
 ]]></content>
   </entry>
   

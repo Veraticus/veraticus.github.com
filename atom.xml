@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-11T12:51:36-05:00</updated>
+  <updated>2012-10-14T21:32:02-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unobtrusive JavaScript Facebook-Style More Button]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/"/>
+    <updated>2012-10-14T21:20:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button</id>
+    <content type="html"><![CDATA[<p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
+
+<!-- more -->
+
+
+<h2>How to Use It</h2>
+
+<p>Before coding I sat down and tried to figure out how this beast would work.</p>
+
+<p>Because it was unobtrusive, it should work on standard links, replacing them with an AJAX-y alternative if they have appropriate attributes. I hit on a link that looked like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sx">%= link_to &#39;More...&#39;.html_safe, root_path(page: @page + 1),</span>
+</span><span class='line'><span class="sx">    class: &#39;next_page&#39;, &#39;data-selector&#39; =</span><span class="o">&gt;</span> <span class="s1">&#39;.articles .article&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;data-container&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;.articles&#39;</span><span class="o">%&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If the link has <code>data-selector</code> and <code>data-container</code> attributes, it&#8217;s supposed to be an AJAX more button. The selector tells the script what to look for in the new page; the container tells it where to append the newly found elements. With this use case in hand, I proceeded to coding.</p>
+
+<h2>The Code</h2>
+
+<p>I apologize in advance if there&#8217;s a cleaner way to do this. My CoffeeScript is pretty weak.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(event) -&gt;</span>
+</span><span class='line'>    <span class="nv">element = </span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">url = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;href&#39;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span> <span class="nx">unless</span> <span class="nx">url</span>
+</span><span class='line'>    <span class="nv">container = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-container&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">selector = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-selector&#39;</span>
+</span><span class='line'>    <span class="nv">more = </span><span class="kc">true</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+</span><span class='line'>      <span class="nv">url: </span><span class="nx">url</span>
+</span><span class='line'>      <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
+</span><span class='line'>        <span class="nv">elements = </span><span class="nx">$</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="nx">selector</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">if</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>          <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;All content loaded&#39;</span><span class="p">)</span>
+</span><span class='line'>                 <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;done&#39;</span><span class="p">)</span>
+</span><span class='line'>                 <span class="p">.</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>          <span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">elements</span>
+</span><span class='line'>          <span class="nx">elements</span><span class="p">.</span><span class="nx">css</span> <span class="nv">opacity: </span><span class="mi">0</span>
+</span><span class='line'>          <span class="nx">elements</span><span class="p">.</span><span class="nx">imagesLoaded</span> <span class="nf">(event) -&gt;</span>
+</span><span class='line'>            <span class="nx">elements</span><span class="p">.</span><span class="nx">animate</span> <span class="nv">opacity: </span><span class="mi">1</span>
+</span><span class='line'>            <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)).</span>
+</span><span class='line'>                    <span class="nx">html</span><span class="p">(</span><span class="s">&#39;More &amp;raquo;&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="nx">container</span><span class="p">.</span><span class="nx">masonry</span> <span class="s">&#39;appended&#39;</span><span class="p">,</span> <span class="nx">elements</span><span class="p">,</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-masonry&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">beforeSend: </span><span class="o">-&gt;</span>
+</span><span class='line'>        <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;Loading more...&#39;</span><span class="p">)</span>
+</span><span class='line'>               <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;loading&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we&#8217;re adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the &#8220;More&#8221; button again &#8211; or we disable the &#8220;More&#8221; button if we found no content.</p>
+
+<p>Overall pretty simple but I was satisfied with this solution. Oh, and there&#8217;s a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Seamless POST Logins with Rack Middleware]]></title>
@@ -2636,68 +2740,6 @@
 <h3>Better Than Objective-C</h3>
 
 <p>RubyMotion corrects a lot of the flaws in Objective-C and Xcode. It&#8217;s easier to write and debug; it gives you Ruby&#8217;s powerful programming idioms on top of Objective-C&#8217;s extremely extensive libraries. It bakes in testing and provides an easy, quick way to set up and provision apps. Though it has a number of extremely minor downsides, overall I would unequivocally recommend checking out RubyMotion if you have any interest at all in either Ruby or iOS apps. You&#8217;ll be glad you did.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamoid 0.4.0]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/"/>
-    <updated>2012-05-01T00:04:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&#8217;t worked &#8211; they&#8217;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&#8217;s DynamoDB.</p>
-
-<p>What do I mean by that?</p>
-
-<!-- more -->
-
-
-<h3>Per-table Performance</h3>
-
-<p>Previously to 0.4.0, Dynamoid&#8217;s table provisioning relied on the defaults that Dynamoid provided (100 read, 20 write) and then manual tuning if you wanted to make any changes from there. And that&#8217;s for every table. This was especially frustrating because you can only scale up to twice the current value (though you can do that as many times as you want)&#8230; but the real downer is you can only scale down 20%, and you can only do that once per day. So obviously if my defaults didn&#8217;t work for you, you had to go through a couple of days of readjustment, and who wants that?</p>
-
-<p>Now you can specify performance options for each table you create, using the new <code>table</code> Dynamoid syntax:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tweet</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Dynamoid</span><span class="o">::</span><span class="no">Document</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">table</span> <span class="nb">name</span><span class="p">:</span> <span class="ss">:twitters</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="ss">:tweet_id</span><span class="p">,</span> <span class="n">read_capacity</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">write_capacity</span><span class="p">:</span> <span class="mi">200</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &#8211; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
-
-<h3>Consistent Querying</h3>
-
-<p>Consistency in enormous databases can be a troublesome question to address. I&#8217;ve read <a href="http://nosql.mypopescu.com/post/18844539755/why-dynamodb-consistent-reads-cost-twice-or-whats">that DynamoDB&#8217;s consistent pricing</a> is too high and I agree with Alex&#8217;s points: but we live in a universe where DynamoDB consistent reading is reality, so we may as well make the best of it.</p>
-
-<p>That said, thanks to <a href="https://github.com/ananthakumaran">Anantha Kumaran</a>, Dynamoid can now take full advantage of DynamoDB&#8217;s consistent read feature. Issuing queries like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">consistent</span><span class="o">.</span><span class="n">all</span>
-</span><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="ss">:consistent</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Will retrieve all results, even the most recently-written ones. I gotta say, having people you don&#8217;t even know commit to projects is one of the joys of open source programming, and this feature was written entirely by Anantha (though refactored a bit by yours truly).</p>
-
-<h3>Future Functionality</h3>
-
-<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&#8217;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &#8211; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&#8230; but we already perform indexing, so it wouldn&#8217;t be that bad.</p>
-
-<p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I&#8217;m not sure about this functionality, though, for the same reason that I&#8217;m unsure about adding geolocation.</p>
-
-<p>Geolocation, you say? Yes indeed. Initially I had specced out a <a href="http://en.wikipedia.org/wiki/Geohash">geohash-style</a> geolocation functionality that would allow models to do single-field location and distance finding. The longer I pondered the problem, though, the less compelling this answer seemed to me. Amazing pieces of software have already been developed (like <a href="http://www.elasticsearch.org/">elasticsearch</a>) that are dedicated only to indexing (both text and geolocation). They do it faster and easier than DynamoDB probably ever could, and even Amazon has acknowledged this with the creation of their <a href="http://aws.amazon.com/cloudsearch/">CloudSearch</a> service.</p>
-
-<p>So I&#8217;m not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
-
-<p>Unless I hear compelling arguments otherwise, I&#8217;ll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I&#8217;m working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
 ]]></content>
   </entry>
   
