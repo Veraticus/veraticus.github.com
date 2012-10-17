@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-14T21:32:02-05:00</updated>
+  <updated>2012-10-17T18:23:59-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -186,7 +186,10 @@ class RedirectBack</p>
 if req.path == '/redirect_back' &amp;&amp; req.session[:return_method] &amp;&amp; req.session[:return_post_params] &amp;&amp;
   req.session[:return_to] &amp;&amp; req.session[:user_id]
 
+  env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+
   env['REQUEST_METHOD'] = req.session.delete(:return_method)
+  env["rack.input"] = StringIO.new(Rack::Utils.build_nested_query(req.session[:return_post_params]))
   req.session.delete(:return_post_params).each do |param, val|
     req.params[param] = val
   end
@@ -195,6 +198,7 @@ if req.path == '/redirect_back' &amp;&amp; req.session[:return_method] &amp;&amp
   ['REQUEST_PATH', 'REQUEST_URI', 'PATH_INFO'].each do |req|
     env[req] = new_url
   end
+
   req.session[:redirected] = true
 end
 
@@ -224,6 +228,7 @@ class ApplicationController &lt; ActionController::Base
 <p>  def redirected?</p>
 
 <pre><code>if session[:redirected]
+  flash.keep
   session[:return_to], session[:return_post_params], session[:return_method], session[:redirected] = nil
   self.form_authenticity_token
   return true
