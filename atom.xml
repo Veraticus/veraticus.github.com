@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-17T18:23:59-05:00</updated>
+  <updated>2012-10-22T14:55:13-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns IV: Class Methodable]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/22/rails-concerns-iv-class-methodable/"/>
+    <updated>2012-10-22T14:27:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/22/rails-concerns-iv-class-methodable</id>
+    <content type="html"><![CDATA[<p>In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&#8217;re looking for something? Not me, that&#8217;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+
+<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
+
+<!-- more -->
+
+
+<h2>Methodizing Names</h2>
+
+<p>The first problem with a concern like this is that it&#8217;s no easier to call class methods that have weird characters in them. You can do <code>Tag.send('Health &amp; Wellness')</code> but the goal here is to eliminate intervening calls, so that we end up with <code>Tag.health_wellness</code>. Having <code>send</code> in there looks weird and doesn&#8217;t seem very clean.</p>
+
+<p>I opted to fix this with a new String method I called <code>methodize</code>. Put it in your lib folder and Rails will load it when the application starts.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">String</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">methodize</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\s/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[^a-z0-9]/</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setting a Scope</h2>
+
+<p>The models that employ this concern will probably have different columns you&#8217;ll want to find them by. One might be called &#8216;name&#8217;, whereas another might be &#8216;title&#8217; or &#8216;slug&#8217;. To get around these differences, our concern will assume that each model will have a scope that smooths over these differences. I called that scope &#8216;named&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span>
+</span><span class='line'>  <span class="n">scope</span> <span class="ss">:named</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">where</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">downcase</span><span class="p">)}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Creating the Concern</h2>
+
+<p>The concern itself is quite simple. It consists of one method, <code>class_methodable</code>. We call that with an array of names that we want to turn into class methods. For each of those, we define a singleton method that sets or gets a class variable of the value we&#8217;re looking for. The code itself follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">ClassMethodable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">class_methodable</span><span class="p">(</span><span class="nb">methods</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">methods</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">define_singleton_method</span><span class="p">(</span><span class="nb">method</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">methodize</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">v</span> <span class="o">=</span> <span class="s2">&quot;@@</span><span class="si">#{</span><span class="nb">method</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">methodize</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">if</span> <span class="n">class_variable_defined?</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">class_variable_get</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">else</span>
+</span><span class='line'>            <span class="n">class_variable_set</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">named</span><span class="p">(</span><span class="nb">method</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Using It</h2>
+
+<p>Now that everything&#8217;s in place, actually using the concern is quite simple. In our class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">ClassMethodable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">class_methodable</span> <span class="s1">&#39;Health &amp; Wellness&#39;</span><span class="p">,</span> <span class="s1">&#39;Relationships&#39;</span><span class="p">,</span> <span class="s1">&#39;Other Stuff&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in our code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Tag</span><span class="o">.</span><span class="n">relationships</span> <span class="c1"># =&gt; Tag.named(&#39;Relationships&#39;)</span>
+</span><span class='line'><span class="no">Tag</span><span class="o">.</span><span class="n">health_wellness</span> <span class="c1"># =&gt; Tag.named(&#39;Health &amp; Wellness&#39;)</span>
+</span><span class='line'><span class="no">Tag</span><span class="o">.</span><span class="n">other_stuff</span> <span class="c1"># =&gt; Tag.named(&#39;Other Stuff&#39;)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we can reference our seed data quickly and cleanly, without having to resort constantly to finders.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unobtrusive JavaScript Facebook-Style More Button]]></title>
@@ -2368,388 +2495,6 @@
 <p>Of course, you&#8217;ll want to do something a bit more interactive with your error than just log it, but you get the idea. Meanwhile, on the RubyMotion side, I stole quite a bit of code from <a href="https://github.com/mattetti/BubbleWrap">BubbleWrap</a>, specifically the really excellent <a href="https://github.com/mattetti/BubbleWrap/blob/master/lib/kernel.rb">kernel shortcuts</a>. Being able to do <code>simulator?</code> or <code>ipad?</code> is really awesome and a big time saver. I really hope that RubyMotion gets its own concept of Gems soon; it&#8217;ll make receiving code faster than just copying and pasting it directly into my source.</p>
 
 <p>As I get closer to releasing the app I&#8217;m working on, I&#8217;m sure I&#8217;ll have more interesting tips and tricks to share: these thoughts are really all that stood out to me after a quick review of my code. As I said at the top, I&#8217;m still really impressed with RubyMotion; I&#8217;ve had a few more random crashes without error messages or backtraces, but that&#8217;s my only real complaint so far. We&#8217;ll see how RubyMotion fares as my app moves towards release, but I am personally hopeful, and at the very least it&#8217;s made iPhone programming a lot less painful.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why RubyMotion Is Better Than Objective-C]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/"/>
-    <updated>2012-05-04T02:14:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c</id>
-    <content type="html"><![CDATA[<p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I&#8217;ve done iOS programming before, but I&#8217;ve always found it unpleasant next to programming in other languages. Don&#8217;t get me wrong, Objective-C is better than C or C++, but I don&#8217;t think that&#8217;s saying a whole lot.</p>
-
-<p>I&#8217;ve spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I&#8217;ve come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
-
-<p>Why do I believe this? What makes RubyMotion so superior to straight-up Objective-C?</p>
-
-<!-- more -->
-
-
-<h2>Objective-C is Hard to Use</h2>
-
-<p>That&#8217;s a pretty broad statement. By saying that, I mean that Objective-C is syntactically unwieldy, and that the development tools around it are difficult to employ. In my brief experience with RubyMotion, these are the main pain points it seems to be aiming to solve, so I&#8217;ll discuss them very briefly for comparison&#8217;s sake. I don&#8217;t want to turn this post into hating on Xcode or Objective-C: it&#8217;s really more about how RubyMotion is great.</p>
-
-<p>So, that said, on with the Xcode and Objective-C hating!</p>
-
-<h3>Xcode is Unstable</h3>
-
-<p>There&#8217;s really no other way to put it. How many of you have had Xcode crash for no particularly good reason? And crashes are just the most common errors. Not three days ago I discovered, when I attempted to open a new terminal window, that somehow Xcode had forked over 700 processes and had consumed all available OS process slots. Seriously?</p>
-
-<p><img src="http://veratic.us/GN2c/internal_error.jpg" alt="Internal Error" /></p>
-
-<p>Why does that dialogue even exist? Who is it supposed to help?</p>
-
-<p>Another gem is when your simulator crashes in a particular way that prevents Xcode from opening up any simulator in any app again. I still haven&#8217;t figured out how to fix that without restarting my computer.</p>
-
-<p>I don&#8217;t want to dedicate this post to talking about the many instabilities in Xcode; I could go on, but I think I&#8217;ve made my point already. It&#8217;s buggy.</p>
-
-<h3>Xcode Hides Important Information</h3>
-
-<p>Xcode&#8217;s user interface is nightmarishly complicated. Clutter doesn&#8217;t even begin to describe it.</p>
-
-<p>Put simply, Xcode takes all the build options possible for the Objective-C compiler, organizes them into unhelpful menus and buttons, and succeeds in obfuscating the few that are really important &#8211; the most important settings for your project are hidden behind layers of unintuitive navigation. For example, to enable Zombie Objects, a common debug option for finding and correcting bad access errors, you have to go down one menu, select a navigation option, and then select a tab. That&#8217;s three layers of menus between you and a useful checkbox! How on Earth would anyone find that without the help of Google?</p>
-
-<p>I think the plethora of menus and tabs are intended to make projects approachable and easy for beginners. However, the layers of abstraction make windows cluttered and unhelpful for experienced developers, while being utterly incomprehensible for new ones. As another example, witness the dreaded Project file (the root of any Objective-C application). Click on it and go to your build targets and be assaulted by five tabs, many of them multiple pages long. There are important settings that you should change here. Good luck finding them.</p>
-
-<h3>Objective-C Is Tedious</h3>
-
-<p>I end up doing a lot of copying and pasting in Objective-C. Copying and pasting is boring. Why do I have to have huge statements like this?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">firstColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">thirdColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">fourthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">fifthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">sixthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Hint: I only typed one of those. There&#8217;s a level of abstraction waiting to be unlocked in Objective-C to collapse statements like that into one line (or preferably into nothingness). But, unfortunately, it&#8217;s just not there yet.</p>
-
-<p>I also end up writing a lot of debug statements. Introspection is unavailable at runtime and stack trace debugging, while vastly improved over where it used to be in Xcode 3, is still really unpleasant. Breakpoints and NSLog are the orders of the day in Objective-C, but it makes programming a very time-consuming process, where you spend a lot of effort verifying very little.</p>
-
-<p>Ultimately, instead of solving interesting problems in Objective-C, I seem to spend most of my time on boilerplate code, copied and pasted from other projects or the Internet. It&#8217;s taxing, boring, and very, very tedious.</p>
-
-<h2>RubyMotion is Easy to Use</h2>
-
-<p>So! All the unpleasantness is out of the way. How, then, does RubyMotion solve all these problems? Why is it so, so cool?</p>
-
-<h3>RubyMotion Uses Rake</h3>
-
-<p><code>rake</code> is Ruby&#8217;s <code>make</code> equivalent: it runs tasks on the commandline. By using a simple Rakefile, RubyMotion exposes an elegant and intuitive DSL for building your projects. Instead of layers of complicated menus, you have this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;TestApp&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">interface_orientations</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:portrait</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;.com.TestCompany.TestApp&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;CoreAudio&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span>
-</span><span class='line'>    <span class="n">dependency</span> <span class="s1">&#39;SVProgressHUD&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Easy, elegant expression of the most important options in your application. Take that, build targets!</p>
-
-<h3>RubyMotion is Ruby</h3>
-
-<p>Gone are header files, property and method declarations, and lines of ugly boilerplate variable initializers. RubyMotion is Ruby; that means you declare variables and methods as you need them. A side effect of this (besides shorter, more readable files) is that a lot of long Objective-C code is trimmed really substantially. Check out this snippet from the sample projects showing how easy it is to give a tableView new cells:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">dequeueReusableCellWithIdentifier</span><span class="p">(</span><span class="no">CellID</span><span class="p">)</span> <span class="o">||</span> <span class="no">UITableViewCell</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithStyle</span><span class="p">(</span><span class="no">UITableViewCellStyleSubtitle</span><span class="p">,</span> <span class="n">reuseIdentifier</span><span class="ss">:CellID</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The corresponding Objective-C, of course, looks like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier:</span><span class="n">CellID</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier:</span><span class="n">MyCellIdentifier</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won&#8217;t like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the Smalltalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">LotsaLabels</span> <span class="o">&lt;</span> <span class="no">UIView</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="k">super</span>
-</span><span class='line'>      <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>      <span class="o">[</span><span class="ss">:label1</span><span class="p">,</span> <span class="ss">:label2</span><span class="p">,</span> <span class="ss">:label3</span><span class="p">,</span> <span class="ss">:label4</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_text&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">offset</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">40</span><span class="o">]]</span><span class="p">))</span>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_label&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">55</span> <span class="o">+</span> <span class="n">offset</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">14</span><span class="o">]]</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">text</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_text&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">label</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_label&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">redColor</span>
-</span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">15</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">offset</span> <span class="o">+=</span> <span class="mi">90</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="nb">self</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That would have taken forever and involved a lot of copying and pasting in Objective-C. As you can see, you can call any Objective-C methods from Ruby itself, because all Ruby classes are implemented on top of Objective-C classes &#8211; with the traditional Ruby methods you&#8217;ve grown to know and love baked right on top. Of course, because Ruby is Ruby, there&#8217;s significant room for improvement here. Why not a class to create these labels?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Label</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or if you don&#8217;t like classes, give a module a whirl instead:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Label</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
-</span><span class='line'>    <span class="n">label</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Okay, the module example was a little contrived, but you get the idea.</p>
-
-<p>This is the power of Ruby + Objective-C: you get Ruby&#8217;s powerful and expressive enumerators, metaprogramming, and reflection, but Objective-C&#8217;s APIs and libraries. It&#8217;s like chocolate and peanut butter, they just go together so well.</p>
-
-<p>Oh, and finally, because it&#8217;s Ruby, it considers testing a first class citizen. Every RubyMotion app ships with a spec file that lets you create tests for your iPhone application in a simple and elegant manner that will look familiar to anyone who&#8217;s ever used RSpec:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s2">&quot;Application &#39;TestApp&#39;&quot;</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
-</span><span class='line'>    <span class="vi">@app</span> <span class="o">=</span> <span class="no">UIApplication</span><span class="o">.</span><span class="n">sharedApplication</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;has one window&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="vi">@app</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>RubyMotion Makes Debugging Easy</h3>
-
-<p>Whereas Xcode and Objective-C debugging is painful in the extreme, in RubyMotion it couldn&#8217;t be easier. As soon as you compile and run a project, you enter a runtime loop for both debugging it and reflecting in it. From the simulator itself, you can select interface elements and arbitrarily change them from the commandline; by programatically referencing your application delegate, you can make your simulator call code without even pressing a button.</p>
-
-<p>I don&#8217;t think I&#8217;m doing this feature justice by describing it. You should really go <a href="http://www.rubymotion.com/getting-started/">check out the video</a> to see it in action.</p>
-
-<p>Exceptions also give you sensible error messages, and even backtraces! I put a method in my app that doesn&#8217;t exist. Check out the RubyMotion console output:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">2012</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mo">04</span> <span class="mi">09</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span><span class="o">.</span><span class="mi">843</span> <span class="no">TestApp</span><span class="o">[</span><span class="mi">54214</span><span class="ss">:f803</span><span class="o">]</span> <span class="o">***</span> <span class="no">Terminating</span> <span class="n">app</span> <span class="n">due</span> <span class="n">to</span> <span class="n">uncaught</span> <span class="n">exception</span> <span class="s1">&#39;NoMethodError&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="s1">&#39;lotsa_labels.rb:51:in `block in initWithFrame:&#39;</span><span class="p">:</span> <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`explode&#39; for #&lt;LotsaLabels:0x6c385a0&gt; (NoMethodError)</span>
-</span><span class='line'><span class="sb"> from lotsa_labels.rb:42:in `</span><span class="n">initWithFrame</span><span class="ss">:&#39;</span>
-</span><span class='line'><span class="ss"> from test_view_controller.rb:14:in `loadView&#39;</span>
-</span><span class='line'>  <span class="n">from</span> <span class="n">test_view_controller</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">103</span><span class="ss">:in</span> <span class="sb">`showLabels:&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This isn&#8217;t all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what&#8217;s happening. As a rule you don&#8217;t have to do that nearly as much, though &#8211; or at least I haven&#8217;t so far. Finally, there&#8217;s no great way to get logging output from the application other than outputting directly to stdout. When I want to log stuff, I end up having lines like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Received response: </span><span class="si">#{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Which just splats lines directly into the console. Not the most elegant solution, but it works, and that&#8217;s what counts.</p>
-
-<h3>RubyMotion Isn&#8217;t Perfect</h3>
-
-<p>As you&#8217;ve just gathered, RubyMotion has room for improvement. I know I&#8217;ll miss tab completion from Xcode. Method names never seemed so long as when you have to type them. dequeueReusableCellWithIdentifier, ugh. Without tab completion, you do a lot of copying and pasting from the documentation when you find a method name you like, just to ensure you don&#8217;t accidentally typo it.</p>
-
-<p>I&#8217;ve definitely run into errors with no backtrace at all &#8211; just a straight simulator crash along with no output on the commandline. So there&#8217;s still some ironing out around the whole process that needs to be done. And Cocoapods, for all its awesomeness, won&#8217;t compile JSONKit for some reason. Or I&#8217;m doing something wrong, one of the two.</p>
-
-<p>These are minor implementation errors, though; the overall philosophy and integration is, well&#8230;</p>
-
-<h3>Better Than Objective-C</h3>
-
-<p>RubyMotion corrects a lot of the flaws in Objective-C and Xcode. It&#8217;s easier to write and debug; it gives you Ruby&#8217;s powerful programming idioms on top of Objective-C&#8217;s extremely extensive libraries. It bakes in testing and provides an easy, quick way to set up and provision apps. Though it has a number of extremely minor downsides, overall I would unequivocally recommend checking out RubyMotion if you have any interest at all in either Ruby or iOS apps. You&#8217;ll be glad you did.</p>
 ]]></content>
   </entry>
   

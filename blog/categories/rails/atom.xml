@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-17T18:23:59-05:00</updated>
+  <updated>2012-10-22T14:55:13-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,100 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns IV: Class Methodable]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/22/rails-concerns-iv-class-methodable/"/>
+    <updated>2012-10-22T14:27:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/22/rails-concerns-iv-class-methodable</id>
+    <content type="html"><![CDATA[<p>In my application, seed data is an unfortunate necessity. I don't like it but it's there, and it's tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you're looking for something? Not me, that's for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+
+<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
+
+<!-- more -->
+
+
+<h2>Methodizing Names</h2>
+
+<p>The first problem with a concern like this is that it's no easier to call class methods that have weird characters in them. You can do <code>Tag.send('Health &amp; Wellness')</code> but the goal here is to eliminate intervening calls, so that we end up with <code>Tag.health_wellness</code>. Having <code>send</code> in there looks weird and doesn't seem very clean.</p>
+
+<p>I opted to fix this with a new String method I called <code>methodize</code>. Put it in your lib folder and Rails will load it when the application starts.</p>
+
+<p>```ruby
+class String
+  def methodize</p>
+
+<pre><code>self.gsub(/\s/, '').downcase.gsub(/[^a-z0-9]/, '_')
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h2>Setting a Scope</h2>
+
+<p>The models that employ this concern will probably have different columns you'll want to find them by. One might be called 'name', whereas another might be 'title' or 'slug'. To get around these differences, our concern will assume that each model will have a scope that smooths over these differences. I called that scope 'named'.</p>
+
+<p><code>ruby
+class Tag
+  scope :named, lambda {|n| where(name: n.downcase)}
+end
+</code></p>
+
+<h2>Creating the Concern</h2>
+
+<p>The concern itself is quite simple. It consists of one method, <code>class_methodable</code>. We call that with an array of names that we want to turn into class methods. For each of those, we define a singleton method that sets or gets a class variable of the value we're looking for. The code itself follows:</p>
+
+<p>```ruby
+module ClassMethodable
+  extend ActiveSupport::Concern</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def class_methodable(methods)
+
+  methods.each do |method|
+    define_singleton_method(method.to_s.methodize) do
+      v = "@@#{method.to_s.methodize}"
+
+      if class_variable_defined?(v)
+        class_variable_get(v)
+      else
+        class_variable_set(v, self.named(method.to_s).first)
+      end
+    end
+  end
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<h2>Using It</h2>
+
+<p>Now that everything's in place, actually using the concern is quite simple. In our class:</p>
+
+<p>```ruby
+class Tag
+  include ClassMethodable</p>
+
+<p>  class_methodable 'Health &amp; Wellness', 'Relationships', 'Other Stuff'
+end
+```</p>
+
+<p>And in our code:</p>
+
+<p><code>ruby
+Tag.relationships # =&gt; Tag.named('Relationships')
+Tag.health_wellness # =&gt; Tag.named('Health &amp; Wellness')
+Tag.other_stuff # =&gt; Tag.named('Other Stuff')
+</code></p>
+
+<p>Now we can reference our seed data quickly and cleanly, without having to resort constantly to finders.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unobtrusive JavaScript Facebook-Style More Button]]></title>
@@ -468,101 +562,6 @@ end
 <p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application's specific concerns.</p>
 
 <p>This ends the first part of my series on Rails concerns. While I don't have anything else exciting to show off presently, the concern pattern is a powerful one that I've used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I'll definitely continue talking about awesome Rails concerns.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns II: Taggable]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/"/>
-    <updated>2012-07-04T15:31:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable</id>
-    <content type="html"><![CDATA[<p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I'll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you're going to have to roll your own solution. That's what I'm doing for GirlsGuideTo, and this is how I implemented it.</p>
-
-<!-- more -->
-
-
-<h2>The Tag Model</h2>
-
-<p>The tag model itself is fairly straightforward:</p>
-
-<p>```ruby
-class Tag &lt; ActiveRecord::Base
-  has_many :taggings</p>
-
-<p>  has_many :addresses, through: :taggings, source: :taggable, source_type: Address
-  has_many :users, through: :taggings, source: :taggable, source_type: User
-end
-```</p>
-
-<p>Unfortunately, you can't just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don't work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can't <code>SELECT * from taggables</code>, since there is no taggables table.</p>
-
-<p>This is frustrating, but easy enough to work around. You'll have to specify every model that's taggable in the <code>Tag</code> class. But since we'll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you're confident, you can define a taggables method yourself:</p>
-
-<p>```ruby
-  def taggables</p>
-
-<pre><code>[addresses + users].flatten
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you'll want to display the different kinds of taggables in different places anyway.</p>
-
-<h2>The Join Model</h2>
-
-<p>Tag has-and-belongs-to-many taggables through a join model. That model is <code>Tagging</code>, and should look like this:</p>
-
-<p>```ruby
-class Tagging &lt; ActiveRecord::Base
-  attr_accessible :tag_id, :taggable_id, :taggable_type</p>
-
-<p>  belongs_to :tag
-  belongs_to :taggable, :polymorphic => true
-end
-```ruby</p>
-
-<p>There's nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won't fill in the association correctly.</p>
-
-<h2>The Taggable Concern</h2>
-
-<p>Finally, we can get to the concern itself. This is how I've set it up:</p>
-
-<p>```ruby
-module Taggable
-  extend ActiveSupport::Concern</p>
-
-<p>  included do</p>
-
-<pre><code>has_many :taggings, :as =&gt; :taggable
-has_many :tags, :through =&gt; :taggings
-</code></pre>
-
-<p>  end</p>
-
-<p>  def tag(name)</p>
-
-<pre><code>name.strip!
-tag = Tag.find_or_create_by_name(name)
-self.taggings.find_or_create_by_tag_id(tag.id)
-</code></pre>
-
-<p>  end</p>
-
-<p>  def tag_names</p>
-
-<pre><code>tags.collect(&amp;:name)
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we'll be including this concern in multiple ActiveRecord models -- and those models will automatically <code>has_many</code> :taggings and :tags.</p>
-
-<p>And on those models we'll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn't exist before, it will automatically be created, and then it'll be added to the model's taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
-
-<p>Next time I discuss concerns, I'll talk about an ActionController concern to improve your page's SEO and Facebook Graph integration. It'll be pretty awesome, so stay tuned!</p>
 ]]></content>
   </entry>
   

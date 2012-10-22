@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have &hellip;">
+  <meta name="description" content="In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T14:27:00-05:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&#8217;re looking for something? Not me, that&#8217;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+
+<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -478,49 +521,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting With Redcarpet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
-
-<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated and really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -540,6 +540,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a>
       </li>
     
@@ -553,10 +557,6 @@
     
       <li class="post">
         <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
       </li>
     
   </ul>
