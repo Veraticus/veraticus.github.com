@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It&#8217;s not uncommon to have login-required forms accessible to users who aren&#8217;t logged in &#8211; for example, maybe you&#8217;re trying to &hellip;">
+  <meta name="description" content="I use the wonderful elasticsearch for my searching needs. I described in previous posts how I use and test elasticsearch in general; but in my &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,135 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns v: Searchable With Elasticsearch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T12:50:00-05:00" pubdate data-updated="true">Oct 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
+
+<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T14:27:00-05:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&#8217;re looking for something? Not me, that&#8217;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+
+<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -394,137 +523,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/04/rails-concerns-ii-taggable/">Rails Concerns II: Taggable</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&#8217;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&#8217;re going to have to roll your own solution. That&#8217;s what I&#8217;m doing for GirlsGuideTo, and this is how I implemented it.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/04/rails-concerns-ii-taggable/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting With Redcarpet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
-
-<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated and really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
-
-<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
-
-<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
-
-<p>Happily, you can do just this!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -544,23 +542,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable with Elasticsearch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins with Rack Middleware</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
   </ul>

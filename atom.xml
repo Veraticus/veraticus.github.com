@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-10T19:23:50-05:00</updated>
+  <updated>2012-10-25T13:53:59-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,642 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns V: Searchable with Elasticsearch]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/"/>
+    <updated>2012-10-25T12:50:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch</id>
+    <content type="html"><![CDATA[<p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
+
+<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
+
+<!-- more -->
+
+
+<h2>The Setup</h2>
+
+<p>I have multiple models that are searchable, all of which are searchable in somewhat similar ways. For example, users need left-handed ngram indexing for their names (for autocompletion), but also full searching on the same field; similarly, the titles of content work almost exactly the same way. The only difference between the two was the weights they should use, so I set them up similarly in tire:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">settings</span> <span class="no">ElasticSearchAnalysis</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">mapping</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">indexes</span> <span class="ss">:name</span><span class="p">,</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;multi_field&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nb">name</span><span class="p">:</span> <span class="p">{</span><span class="n">type</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="n">analyzer</span><span class="p">:</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">boost</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>        <span class="n">partial</span><span class="p">:</span> <span class="p">{</span><span class="n">type</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="n">search_analyzer</span><span class="p">:</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">index_analyzer</span><span class="p">:</span> <span class="s1">&#39;partial&#39;</span><span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>ElasticSearchAnalysis</code> is a constant that contains the settings for the partial and full analyzers referenced in the mappings. Of course, I index more fields for content, but ultimately I was using the searchers in the two models in a very similar way: a boolean should of all the different mappings conjoined together. As I was working on the code for the two different models, it was looking more and more similar&#8230; and then when I added in searching to tags and it was just about the same thing, I figured it was time to come up with a concern. I elected to call it <code>searchable</code> and wanted it to look something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Searchable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">settings</span> <span class="no">ElasticSearchAnalysis</span> <span class="k">do</span>
+</span><span class='line'>    <span class="c1"># elasticsearch settings here</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">searchable</span> <span class="ss">:name</span><span class="p">,</span> <span class="s1">&#39;name.partial&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Where I could simply list all the fields I wanted to search.</p>
+
+<h2>The Module</h2>
+
+<p>This is the module I came up with to express this.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">field_options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="vi">@search_fields</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>            <span class="n">fields</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>              <span class="n">should</span> <span class="p">{</span><span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">field_options</span><span class="p">)}</span>
+</span><span class='line'>            <span class="k">end</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you&#8217;ve been following my series on concerns, this shouldn&#8217;t be very surprising stuff. When you call searchable, the fields are added to an instance variable: then, when you call search on the model, we concatenate all the fields together and boolean search across on each of them. So once this is all set up, you&#8217;d use it like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which will generate a tire query like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Extending to More Like This</h2>
+
+<p>Of course, that <code>searcher</code> private method is just begging for another use. Why abstract it out so cleverly and not do something with it? Let&#8217;s use elasticsearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query.html">more like this query</a> so we can quickly find objects like each other (to display in an attractive sidebar, for example). <strong>For this to work, in addition to having tire in your Gemfile, you&#8217;ll also need tire-contrib</strong>. So make sure you have it there or else this will explode.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can say <code>User.more_like('Josh Symonds')</code> and it&#8217;ll find all documents with a more_like_this query for my name. Clever!</p>
+
+<h2>Searching Across Multiple Models</h2>
+
+<p>If you have a single search field on your site (like in the top navbar), most likely you&#8217;ll want to search across multiple models with it: the user could be searching for a person, or a piece of content, or a tag. There&#8217;s no easy way to know for sure what it is they want, so we should search across all of the fields and order the results by their relevance. Though this sounds complicated, with this concern, this is actually surprisingly easy.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>      <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">loaded_classes</span>
+</span><span class='line'>    <span class="vi">@loaded_classes</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>    <span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">pluralize</span><span class="p">}</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>          <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>            <span class="n">should</span> <span class="p">{</span><span class="n">text</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">}</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We changed the <code>searchable</code> method slightly. Now, in addition to adding to an instance variable, it adds to a hash that the module itself keeps track of: this hash contains all the models as keys, and all their fields as values. Then, when we use it, it constructs a search across all those models&#8217; indexes for all the fields those models should be searching. To give a concrete example, let&#8217;s say we use <code>Searchable.search('Josh Symonds')</code> and we have indexes on content titles and user names. This is what the resulting tire query will look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">})</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you have some models that should be more relevant (like an exact tag match should be the most relevant result), give those mappings an appropriate boost inside the tire mappings for the model. Also keep in mind this will return an array of potentially very different objects: users and contents, in this case. You should either make sure they&#8217;re all duck-typed correctly together, or check their type before acting on them. Finally, this will only work in development if you load each model before calling <code>Searchable.search</code>. Just entering the constant name of the model should be enough, but if you don&#8217;t, then the module won&#8217;t know to search with that model. Such is the danger of lazy loading in development.</p>
+
+<h2>The Final Module</h2>
+
+<p>For your reference, this is the final module with all code included.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>      <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">field_options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="vi">@search_fields</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>            <span class="n">fields</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>              <span class="n">should</span> <span class="p">{</span><span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">field_options</span><span class="p">)}</span>
+</span><span class='line'>            <span class="k">end</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">loaded_classes</span>
+</span><span class='line'>    <span class="vi">@loaded_classes</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>    <span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">pluralize</span><span class="p">}</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>          <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>            <span class="n">should</span> <span class="p">{</span><span class="n">text</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">}</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns IV: Class Methodable]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/22/rails-concerns-iv-class-methodable/"/>
+    <updated>2012-10-22T14:27:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/22/rails-concerns-iv-class-methodable</id>
+    <content type="html"><![CDATA[<p>In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&#8217;re looking for something? Not me, that&#8217;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+
+<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
+
+<!-- more -->
+
+
+<h2>Methodizing Names</h2>
+
+<p>The first problem with a concern like this is that it&#8217;s no easier to call class methods that have weird characters in them. You can do <code>Tag.send('Health &amp; Wellness')</code> but the goal here is to eliminate intervening calls, so that we end up with <code>Tag.health_wellness</code>. Having <code>send</code> in there looks weird and doesn&#8217;t seem very clean.</p>
+
+<p>I opted to fix this with a new String method I called <code>methodize</code>. Put it in your lib folder and Rails will load it when the application starts.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">String</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">methodize</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\s/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[^a-z0-9]/</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setting a Scope</h2>
+
+<p>The models that employ this concern will probably have different columns you&#8217;ll want to find them by. One might be called &#8216;name&#8217;, whereas another might be &#8216;title&#8217; or &#8216;slug&#8217;. To get around these differences, our concern will assume that each model will have a scope that smooths over these differences. I called that scope &#8216;named&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span>
+</span><span class='line'>  <span class="n">scope</span> <span class="ss">:named</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">where</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">downcase</span><span class="p">)}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Creating the Concern</h2>
+
+<p>The concern itself is quite simple. It consists of one method, <code>class_methodable</code>. We call that with an array of names that we want to turn into class methods. For each of those, we define a singleton method that sets or gets a class variable of the value we&#8217;re looking for. The code itself follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">ClassMethodable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">class_methodable</span><span class="p">(</span><span class="nb">methods</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">methods</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">define_singleton_method</span><span class="p">(</span><span class="nb">method</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">methodize</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">v</span> <span class="o">=</span> <span class="s2">&quot;@@</span><span class="si">#{</span><span class="nb">method</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">methodize</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">if</span> <span class="n">class_variable_defined?</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">class_variable_get</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">else</span>
+</span><span class='line'>            <span class="n">class_variable_set</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">named</span><span class="p">(</span><span class="nb">method</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Using It</h2>
+
+<p>Now that everything&#8217;s in place, actually using the concern is quite simple. In our class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">ClassMethodable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">class_methodable</span> <span class="s1">&#39;Health &amp; Wellness&#39;</span><span class="p">,</span> <span class="s1">&#39;Relationships&#39;</span><span class="p">,</span> <span class="s1">&#39;Other Stuff&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in our code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Tag</span><span class="o">.</span><span class="n">relationships</span> <span class="c1"># =&gt; Tag.named(&#39;Relationships&#39;)</span>
+</span><span class='line'><span class="no">Tag</span><span class="o">.</span><span class="n">health_wellness</span> <span class="c1"># =&gt; Tag.named(&#39;Health &amp; Wellness&#39;)</span>
+</span><span class='line'><span class="no">Tag</span><span class="o">.</span><span class="n">other_stuff</span> <span class="c1"># =&gt; Tag.named(&#39;Other Stuff&#39;)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we can reference our seed data quickly and cleanly, without having to resort constantly to finders.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unobtrusive JavaScript Facebook-Style More Button]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/"/>
+    <updated>2012-10-14T21:20:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button</id>
+    <content type="html"><![CDATA[<p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
+
+<!-- more -->
+
+
+<h2>How to Use It</h2>
+
+<p>Before coding I sat down and tried to figure out how this beast would work.</p>
+
+<p>Because it was unobtrusive, it should work on standard links, replacing them with an AJAX-y alternative if they have appropriate attributes. I hit on a link that looked like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sx">%= link_to &#39;More...&#39;.html_safe, root_path(page: @page + 1),</span>
+</span><span class='line'><span class="sx">    class: &#39;next_page&#39;, &#39;data-selector&#39; =</span><span class="o">&gt;</span> <span class="s1">&#39;.articles .article&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;data-container&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;.articles&#39;</span><span class="o">%&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If the link has <code>data-selector</code> and <code>data-container</code> attributes, it&#8217;s supposed to be an AJAX more button. The selector tells the script what to look for in the new page; the container tells it where to append the newly found elements. With this use case in hand, I proceeded to coding.</p>
+
+<h2>The Code</h2>
+
+<p>I apologize in advance if there&#8217;s a cleaner way to do this. My CoffeeScript is pretty weak.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(event) -&gt;</span>
+</span><span class='line'>    <span class="nv">element = </span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">url = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;href&#39;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span> <span class="nx">unless</span> <span class="nx">url</span>
+</span><span class='line'>    <span class="nv">container = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-container&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">selector = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-selector&#39;</span>
+</span><span class='line'>    <span class="nv">more = </span><span class="kc">true</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+</span><span class='line'>      <span class="nv">url: </span><span class="nx">url</span>
+</span><span class='line'>      <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
+</span><span class='line'>        <span class="nv">elements = </span><span class="nx">$</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="nx">selector</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">if</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>          <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;All content loaded&#39;</span><span class="p">)</span>
+</span><span class='line'>                 <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;done&#39;</span><span class="p">)</span>
+</span><span class='line'>                 <span class="p">.</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>          <span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">elements</span>
+</span><span class='line'>          <span class="nx">elements</span><span class="p">.</span><span class="nx">css</span> <span class="nv">opacity: </span><span class="mi">0</span>
+</span><span class='line'>          <span class="nx">elements</span><span class="p">.</span><span class="nx">imagesLoaded</span> <span class="nf">(event) -&gt;</span>
+</span><span class='line'>            <span class="nx">elements</span><span class="p">.</span><span class="nx">animate</span> <span class="nv">opacity: </span><span class="mi">1</span>
+</span><span class='line'>            <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)).</span>
+</span><span class='line'>                    <span class="nx">html</span><span class="p">(</span><span class="s">&#39;More &amp;raquo;&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="nx">container</span><span class="p">.</span><span class="nx">masonry</span> <span class="s">&#39;appended&#39;</span><span class="p">,</span> <span class="nx">elements</span><span class="p">,</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-masonry&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">beforeSend: </span><span class="o">-&gt;</span>
+</span><span class='line'>        <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;Loading more...&#39;</span><span class="p">)</span>
+</span><span class='line'>               <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;loading&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we&#8217;re adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the &#8220;More&#8221; button again &#8211; or we disable the &#8220;More&#8221; button if we found no content.</p>
+
+<p>Overall pretty simple but I was satisfied with this solution. Oh, and there&#8217;s a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Seamless POST Logins with Rack Middleware]]></title>
@@ -104,7 +740,7 @@
 </span><span class='line'>      <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">!=</span> <span class="s1">&#39;GET&#39;</span>
 </span><span class='line'>        <span class="n">redirect_to</span> <span class="s1">&#39;/redirect_back&#39;</span>
 </span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;/&#39;</span>
 </span><span class='line'>      <span class="k">end</span>
 </span><span class='line'>    <span class="k">else</span>
 </span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_url</span><span class="p">,</span> <span class="n">flash</span><span class="p">:</span> <span class="p">{</span><span class="n">error</span><span class="p">:</span> <span class="s1">&#39;You could not be logged in.&#39;</span><span class="p">}</span>
@@ -146,6 +782,10 @@
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">RedirectBack</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
@@ -158,7 +798,10 @@
 </span><span class='line'>    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/redirect_back&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span> <span class="o">&amp;&amp;</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
 </span><span class='line'>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;CONTENT_TYPE&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span>
+</span><span class='line'>
 </span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_method</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s2">&quot;rack.input&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIO</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Rack</span><span class="o">::</span><span class="no">Utils</span><span class="o">.</span><span class="n">build_nested_query</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">))</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_post_params</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span>
 </span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">[</span><span class="n">param</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span>
 </span><span class='line'>      <span class="k">end</span>
@@ -167,6 +810,7 @@
 </span><span class='line'>      <span class="o">[</span><span class="s1">&#39;REQUEST_PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;REQUEST_URI&#39;</span><span class="p">,</span> <span class="s1">&#39;PATH_INFO&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="o">|</span>
 </span><span class='line'>        <span class="n">env</span><span class="o">[</span><span class="n">req</span><span class="o">]</span> <span class="o">=</span> <span class="n">new_url</span>
 </span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
@@ -183,7 +827,9 @@
 
 <p>The only problem is that, since we&#8217;re dealing with forms here, Rails needs a CSRF token. Without it, it&#8217;ll purge the session at the beginning of the request and we&#8217;ll end up in a redirect loop.</p>
 
-<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&#8217;t use the cookie session storage mechanism (and you should not be), you can be sure enough of hte user&#8217;s identity to ignore the authenticity token on this one request.</p>
+<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&#8217;t use the cookie session storage mechanism (and you should not be), you can be sure enough of the user&#8217;s identity to ignore the authenticity token on this one request.</p>
+
+<p>We also need to ensure that Rails places a new, correct CSRF token into the session. Otherwise users&#8217; sessions will be deleted by the CSRF handlers upon their next post, which will seem to have an invalid, old token.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -196,13 +842,17 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
 </span><span class='line'>  <span class="n">protect_from_forgery</span>
 </span><span class='line'>  <span class="n">skip_before_filter</span> <span class="ss">:verify_authenticity_token</span><span class="p">,</span> <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="ss">:redirected?</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">redirected?</span>
 </span><span class='line'>    <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="n">flash</span><span class="o">.</span><span class="n">keep</span>
+</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">form_authenticity_token</span>
 </span><span class='line'>      <span class="k">return</span> <span class="kp">true</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
@@ -529,7 +1179,7 @@
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
@@ -2002,698 +2652,6 @@
 <p>Finally, you should be able to <code>rake testflight notes='What a helpful step-by-step guide!'</code> to actually deploy your app to Testflight, and your users should be able to download and install it no problem.</p>
 
 <p>Writing this all down, it seems rather clear and straightforward. While doing it, unfortunately, it is not. Apple&#8217;s documentation is really obtuse and the error messages you get during the process are seriously unhelpful. But happily with this guide you should be more or less good to go.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RubyMotion Tips &amp; Tricks]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/07/rubymotion-tips-and-tricks/"/>
-    <updated>2012-05-07T17:48:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/07/rubymotion-tips-and-tricks</id>
-    <content type="html"><![CDATA[<p>I&#8217;ve been using RubyMotion for four days now. I still like it a lot, and I think the coolest thing about it is the rapidly-evolving community around its use. Ian Phillips figured out how to <a href="http://ianp.org/2012/05/07/rubymotion-and-interface-builder/">link Interface Builder and RubyMotion</a>; Alan deLevie wrote a neat <a href="https://github.com/adelevie/ParseModel">connection to Parse.com</a>. Personally, I&#8217;ve been spending the time writing lots of code. I&#8217;ve just deployed my first RubyMotion app into TestFlight and sent it to some testers. Soon hopefully I&#8217;ll have an actual RubyMotion app, which is pretty exciting! I&#8217;ve learned a lot in the last four days of use and wanted to post a few tips and tricks to hopefully make life easier for other RubyMotionists.</p>
-
-<!-- more -->
-
-
-<h2>Wrap It Up</h2>
-
-<p>I&#8217;m using <code>NSUserDefaults</code> to store some cached data so I don&#8217;t flood my server. Calling <code>NSUserDefaults</code> constantly was really getting me down though, so I made this cute little wrapper class that does all the hard work for me.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Cache</span>
-</span><span class='line'>  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">keys</span>
-</span><span class='line'>      <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">.</span><span class="n">dictionaryRepresentation</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-</span><span class='line'>      <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">[</span><span class="n">cache_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">]</span> <span class="o">=</span> <span class="n">data</span>
-</span><span class='line'>      <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">[</span><span class="n">timestamp_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">]</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
-</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">synchronize</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span class='line'>      <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">[</span><span class="n">cache_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">]</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span class='line'>      <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">.</span><span class="n">removeObjectForKey</span><span class="p">(</span><span class="n">cache_key</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">synchronize</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">exists?</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span class='line'>      <span class="o">!</span><span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">[</span><span class="n">cache_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">].</span><span class="n">nil?</span> <span class="o">&amp;&amp;</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">[</span><span class="n">timestamp_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="mi">3600</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">synchronize</span>
-</span><span class='line'>      <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span><span class="o">.</span><span class="n">synchronize</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">purge</span>
-</span><span class='line'>      <span class="n">keys</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="o">|</span> <span class="nb">self</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">if</span> <span class="n">key</span> <span class="o">=~</span> <span class="n">keyspace</span> <span class="p">}</span>
-</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">synchronize</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">keyspace</span>
-</span><span class='line'>      <span class="s2">&quot;app-cache&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">cache_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span class='line'>      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">keyspace</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">timestamp_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span class='line'>      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">cache_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">-timestamp&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I only want to cache the data for one hour (3600 seconds); that&#8217;s why I only return true for <code>exists?</code> if the keys are younger than that. Using this cache is really simple.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@data</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Cache</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="s1">&#39;cache_key&#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="no">Cache</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;cache_key&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>  <span class="n">results</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Populate the cache with slow work here</span>
-</span><span class='line'>  <span class="no">Cache</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;cache_key&#39;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">results</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The only caveat to this wrapper &#8211; something I need to look at more &#8211; is that you can only store property values in it. In other words, no custom classes, which sort of sucks if you have a lot of models that you want to hold somewhere. I&#8217;m getting around this by storing IDs and then looking them up afterwards in my model. I could use CoreData instead (and the sample app has <a href="https://github.com/HipByte/RubyMotionSamples/blob/master/Locations/app/locations_store.rb">an excellent example of how to use it</a>) but that&#8217;s a level of complexity I don&#8217;t think my app needs yet.</p>
-
-<h2>Don&#8217;t Be Afraid To Use Blocks</h2>
-
-<p>Blocks are one of the coolest parts of Ruby! A lot of Objective-C code can be made more readable and more beautiful by sticking it in block syntax. Here&#8217;s a little UIView helper to show you what I mean.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UIView</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">animate_with_block</span><span class="p">(</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">beginAnimations</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">context</span><span class="ss">:nil</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">animationDuration</span> <span class="o">=</span> <span class="n">duration</span>
-</span><span class='line'>    <span class="k">yield</span>
-</span><span class='line'>    <span class="n">commitAnimations</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Check out the before and after to see how this makes code look oh so much better.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#Before</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">showSelection</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">beginAnimations</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">context</span><span class="ss">:nil</span><span class="p">)</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">animationDuration</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span>
-</span><span class='line'>  <span class="vi">@selection</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="vi">@picker</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">commitAnimations</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># After</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">showSelection</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">animate_with_block</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="vi">@selection</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span class='line'>    <span class="vi">@picker</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There&#8217;s a lot of stuff I ended up wrapping in blocks just for sanity&#8217;s sake; having to commitAnimations or synchronize after every operation is a big downer. Remembering to end blocks is quite a bit easier, and as a bonus makes your code look a lot more readable as well.</p>
-
-<h2>Make Shortcuts</h2>
-
-<p>I stole this one rather blatantly from <a href="http://samsoff.es/posts/rubymotion-review">Sam Soffes</a>. It&#8217;s trivially easy to open up classes and add your own methods to them:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UIColor</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">darkBlueColor</span>
-</span><span class='line'>    <span class="vi">@dark_blue_color</span> <span class="o">||=</span> <span class="nb">self</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">44</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">lightBlueColor</span>
-</span><span class='line'>    <span class="vi">@light_blue_color</span> <span class="o">||=</span> <span class="nb">self</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">21</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">88</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then you have your own cool code like <code>UIColor.darkBlueColor</code> next to the standard UIColor methods. If you find yourself copying and pasting something over and over, don&#8217;t! It&#8217;s super easy to make extensible, quick shortcuts in Ruby. Take advantage of that.</p>
-
-<h2>Stand on the Shoulders of Giants</h2>
-
-<p>There are a lot of RubyMotion projects popping up out there, and there are a lot of existing Cocoapods projects. Why reinvent the wheel? Use other peoples&#8217; smarts to propel your own project ahead quickly and easily; if you find yourself outgrowing your dependencies, then you should consider doing them yourself, but not before.</p>
-
-<p>For example, I&#8217;ve been using <a href="https://github.com/AFNetworking/AFNetworking">AFNetworking</a> to do my networking management, connections, and callbacks &#8211; they already made the whole NSURLConnection stuff easy to use, and I gotta say using it in Ruby is super easy too:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Server</span><span class="o">.</span><span class="n">sharedInstance</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:{</span><span class="ss">:user_id</span> <span class="o">=&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
-</span><span class='line'>  <span class="n">success</span><span class="ss">:lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">operation</span><span class="p">,</span> <span class="n">response</span><span class="o">|</span> <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;User gotten!&#39;</span><span class="p">},</span>
-</span><span class='line'>  <span class="n">failure</span><span class="ss">:lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">operation</span><span class="p">,</span> <span class="n">error</span><span class="o">|</span> <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">#{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)}</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course, you&#8217;ll want to do something a bit more interactive with your error than just log it, but you get the idea. Meanwhile, on the RubyMotion side, I stole quite a bit of code from <a href="https://github.com/mattetti/BubbleWrap">BubbleWrap</a>, specifically the really excellent <a href="https://github.com/mattetti/BubbleWrap/blob/master/lib/kernel.rb">kernel shortcuts</a>. Being able to do <code>simulator?</code> or <code>ipad?</code> is really awesome and a big time saver. I really hope that RubyMotion gets its own concept of Gems soon; it&#8217;ll make receiving code faster than just copying and pasting it directly into my source.</p>
-
-<p>As I get closer to releasing the app I&#8217;m working on, I&#8217;m sure I&#8217;ll have more interesting tips and tricks to share: these thoughts are really all that stood out to me after a quick review of my code. As I said at the top, I&#8217;m still really impressed with RubyMotion; I&#8217;ve had a few more random crashes without error messages or backtraces, but that&#8217;s my only real complaint so far. We&#8217;ll see how RubyMotion fares as my app moves towards release, but I am personally hopeful, and at the very least it&#8217;s made iPhone programming a lot less painful.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why RubyMotion Is Better Than Objective-C]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/"/>
-    <updated>2012-05-04T02:14:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c</id>
-    <content type="html"><![CDATA[<p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I&#8217;ve done iOS programming before, but I&#8217;ve always found it unpleasant next to programming in other languages. Don&#8217;t get me wrong, Objective-C is better than C or C++, but I don&#8217;t think that&#8217;s saying a whole lot.</p>
-
-<p>I&#8217;ve spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I&#8217;ve come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
-
-<p>Why do I believe this? What makes RubyMotion so superior to straight-up Objective-C?</p>
-
-<!-- more -->
-
-
-<h2>Objective-C is Hard to Use</h2>
-
-<p>That&#8217;s a pretty broad statement. By saying that, I mean that Objective-C is syntactically unwieldy, and that the development tools around it are difficult to employ. In my brief experience with RubyMotion, these are the main pain points it seems to be aiming to solve, so I&#8217;ll discuss them very briefly for comparison&#8217;s sake. I don&#8217;t want to turn this post into hating on Xcode or Objective-C: it&#8217;s really more about how RubyMotion is great.</p>
-
-<p>So, that said, on with the Xcode and Objective-C hating!</p>
-
-<h3>Xcode is Unstable</h3>
-
-<p>There&#8217;s really no other way to put it. How many of you have had Xcode crash for no particularly good reason? And crashes are just the most common errors. Not three days ago I discovered, when I attempted to open a new terminal window, that somehow Xcode had forked over 700 processes and had consumed all available OS process slots. Seriously?</p>
-
-<p><img src="http://veratic.us/GN2c/internal_error.jpg" alt="Internal Error" /></p>
-
-<p>Why does that dialogue even exist? Who is it supposed to help?</p>
-
-<p>Another gem is when your simulator crashes in a particular way that prevents Xcode from opening up any simulator in any app again. I still haven&#8217;t figured out how to fix that without restarting my computer.</p>
-
-<p>I don&#8217;t want to dedicate this post to talking about the many instabilities in Xcode; I could go on, but I think I&#8217;ve made my point already. It&#8217;s buggy.</p>
-
-<h3>Xcode Hides Important Information</h3>
-
-<p>Xcode&#8217;s user interface is nightmarishly complicated. Clutter doesn&#8217;t even begin to describe it.</p>
-
-<p>Put simply, Xcode takes all the build options possible for the Objective-C compiler, organizes them into unhelpful menus and buttons, and succeeds in obfuscating the few that are really important &#8211; the most important settings for your project are hidden behind layers of unintuitive navigation. For example, to enable Zombie Objects, a common debug option for finding and correcting bad access errors, you have to go down one menu, select a navigation option, and then select a tab. That&#8217;s three layers of menus between you and a useful checkbox! How on Earth would anyone find that without the help of Google?</p>
-
-<p>I think the plethora of menus and tabs are intended to make projects approachable and easy for beginners. However, the layers of abstraction make windows cluttered and unhelpful for experienced developers, while being utterly incomprehensible for new ones. As another example, witness the dreaded Project file (the root of any Objective-C application). Click on it and go to your build targets and be assaulted by five tabs, many of them multiple pages long. There are important settings that you should change here. Good luck finding them.</p>
-
-<h3>Objective-C Is Tedious</h3>
-
-<p>I end up doing a lot of copying and pasting in Objective-C. Copying and pasting is boring. Why do I have to have huge statements like this?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">firstColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">thirdColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">fourthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">fifthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">sixthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Hint: I only typed one of those. There&#8217;s a level of abstraction waiting to be unlocked in Objective-C to collapse statements like that into one line (or preferably into nothingness). But, unfortunately, it&#8217;s just not there yet.</p>
-
-<p>I also end up writing a lot of debug statements. Introspection is unavailable at runtime and stack trace debugging, while vastly improved over where it used to be in Xcode 3, is still really unpleasant. Breakpoints and NSLog are the orders of the day in Objective-C, but it makes programming a very time-consuming process, where you spend a lot of effort verifying very little.</p>
-
-<p>Ultimately, instead of solving interesting problems in Objective-C, I seem to spend most of my time on boilerplate code, copied and pasted from other projects or the Internet. It&#8217;s taxing, boring, and very, very tedious.</p>
-
-<h2>RubyMotion is Easy to Use</h2>
-
-<p>So! All the unpleasantness is out of the way. How, then, does RubyMotion solve all these problems? Why is it so, so cool?</p>
-
-<h3>RubyMotion Uses Rake</h3>
-
-<p><code>rake</code> is Ruby&#8217;s <code>make</code> equivalent: it runs tasks on the commandline. By using a simple Rakefile, RubyMotion exposes an elegant and intuitive DSL for building your projects. Instead of layers of complicated menus, you have this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;TestApp&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">interface_orientations</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:portrait</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;.com.TestCompany.TestApp&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;CoreAudio&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span>
-</span><span class='line'>    <span class="n">dependency</span> <span class="s1">&#39;SVProgressHUD&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Easy, elegant expression of the most important options in your application. Take that, build targets!</p>
-
-<h3>RubyMotion is Ruby</h3>
-
-<p>Gone are header files, property and method declarations, and lines of ugly boilerplate variable initializers. RubyMotion is Ruby; that means you declare variables and methods as you need them. A side effect of this (besides shorter, more readable files) is that a lot of long Objective-C code is trimmed really substantially. Check out this snippet from the sample projects showing how easy it is to give a tableView new cells:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">dequeueReusableCellWithIdentifier</span><span class="p">(</span><span class="no">CellID</span><span class="p">)</span> <span class="o">||</span> <span class="no">UITableViewCell</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithStyle</span><span class="p">(</span><span class="no">UITableViewCellStyleSubtitle</span><span class="p">,</span> <span class="n">reuseIdentifier</span><span class="ss">:CellID</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The corresponding Objective-C, of course, looks like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier:</span><span class="n">CellID</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier:</span><span class="n">MyCellIdentifier</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won&#8217;t like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the Smalltalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">LotsaLabels</span> <span class="o">&lt;</span> <span class="no">UIView</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="k">super</span>
-</span><span class='line'>      <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>      <span class="o">[</span><span class="ss">:label1</span><span class="p">,</span> <span class="ss">:label2</span><span class="p">,</span> <span class="ss">:label3</span><span class="p">,</span> <span class="ss">:label4</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_text&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">offset</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">40</span><span class="o">]]</span><span class="p">))</span>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_label&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">55</span> <span class="o">+</span> <span class="n">offset</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">14</span><span class="o">]]</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">text</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_text&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">label</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_label&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">redColor</span>
-</span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">15</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</span><span class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">offset</span> <span class="o">+=</span> <span class="mi">90</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="nb">self</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That would have taken forever and involved a lot of copying and pasting in Objective-C. As you can see, you can call any Objective-C methods from Ruby itself, because all Ruby classes are implemented on top of Objective-C classes &#8211; with the traditional Ruby methods you&#8217;ve grown to know and love baked right on top. Of course, because Ruby is Ruby, there&#8217;s significant room for improvement here. Why not a class to create these labels?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Label</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or if you don&#8217;t like classes, give a module a whirl instead:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Label</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
-</span><span class='line'>    <span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
-</span><span class='line'>    <span class="n">label</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Label</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Okay, the module example was a little contrived, but you get the idea.</p>
-
-<p>This is the power of Ruby + Objective-C: you get Ruby&#8217;s powerful and expressive enumerators, metaprogramming, and reflection, but Objective-C&#8217;s APIs and libraries. It&#8217;s like chocolate and peanut butter, they just go together so well.</p>
-
-<p>Oh, and finally, because it&#8217;s Ruby, it considers testing a first class citizen. Every RubyMotion app ships with a spec file that lets you create tests for your iPhone application in a simple and elegant manner that will look familiar to anyone who&#8217;s ever used RSpec:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s2">&quot;Application &#39;TestApp&#39;&quot;</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
-</span><span class='line'>    <span class="vi">@app</span> <span class="o">=</span> <span class="no">UIApplication</span><span class="o">.</span><span class="n">sharedApplication</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;has one window&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="vi">@app</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>RubyMotion Makes Debugging Easy</h3>
-
-<p>Whereas Xcode and Objective-C debugging is painful in the extreme, in RubyMotion it couldn&#8217;t be easier. As soon as you compile and run a project, you enter a runtime loop for both debugging it and reflecting in it. From the simulator itself, you can select interface elements and arbitrarily change them from the commandline; by programatically referencing your application delegate, you can make your simulator call code without even pressing a button.</p>
-
-<p>I don&#8217;t think I&#8217;m doing this feature justice by describing it. You should really go <a href="http://www.rubymotion.com/getting-started/">check out the video</a> to see it in action.</p>
-
-<p>Exceptions also give you sensible error messages, and even backtraces! I put a method in my app that doesn&#8217;t exist. Check out the RubyMotion console output:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">2012</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mo">04</span> <span class="mi">09</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span><span class="o">.</span><span class="mi">843</span> <span class="no">TestApp</span><span class="o">[</span><span class="mi">54214</span><span class="ss">:f803</span><span class="o">]</span> <span class="o">***</span> <span class="no">Terminating</span> <span class="n">app</span> <span class="n">due</span> <span class="n">to</span> <span class="n">uncaught</span> <span class="n">exception</span> <span class="s1">&#39;NoMethodError&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="s1">&#39;lotsa_labels.rb:51:in `block in initWithFrame:&#39;</span><span class="p">:</span> <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`explode&#39; for #&lt;LotsaLabels:0x6c385a0&gt; (NoMethodError)</span>
-</span><span class='line'><span class="sb"> from lotsa_labels.rb:42:in `</span><span class="n">initWithFrame</span><span class="ss">:&#39;</span>
-</span><span class='line'><span class="ss"> from test_view_controller.rb:14:in `loadView&#39;</span>
-</span><span class='line'>  <span class="n">from</span> <span class="n">test_view_controller</span><span class="o">.</span><span class="n">rb</span><span class="p">:</span><span class="mi">103</span><span class="ss">:in</span> <span class="sb">`showLabels:&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This isn&#8217;t all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what&#8217;s happening. As a rule you don&#8217;t have to do that nearly as much, though &#8211; or at least I haven&#8217;t so far. Finally, there&#8217;s no great way to get logging output from the application other than outputting directly to stdout. When I want to log stuff, I end up having lines like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Received response: </span><span class="si">#{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Which just splats lines directly into the console. Not the most elegant solution, but it works, and that&#8217;s what counts.</p>
-
-<h3>RubyMotion Isn&#8217;t Perfect</h3>
-
-<p>As you&#8217;ve just gathered, RubyMotion has room for improvement. I know I&#8217;ll miss tab completion from Xcode. Method names never seemed so long as when you have to type them. dequeueReusableCellWithIdentifier, ugh. Without tab completion, you do a lot of copying and pasting from the documentation when you find a method name you like, just to ensure you don&#8217;t accidentally typo it.</p>
-
-<p>I&#8217;ve definitely run into errors with no backtrace at all &#8211; just a straight simulator crash along with no output on the commandline. So there&#8217;s still some ironing out around the whole process that needs to be done. And Cocoapods, for all its awesomeness, won&#8217;t compile JSONKit for some reason. Or I&#8217;m doing something wrong, one of the two.</p>
-
-<p>These are minor implementation errors, though; the overall philosophy and integration is, well&#8230;</p>
-
-<h3>Better Than Objective-C</h3>
-
-<p>RubyMotion corrects a lot of the flaws in Objective-C and Xcode. It&#8217;s easier to write and debug; it gives you Ruby&#8217;s powerful programming idioms on top of Objective-C&#8217;s extremely extensive libraries. It bakes in testing and provides an easy, quick way to set up and provision apps. Though it has a number of extremely minor downsides, overall I would unequivocally recommend checking out RubyMotion if you have any interest at all in either Ruby or iOS apps. You&#8217;ll be glad you did.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamoid 0.4.0]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/"/>
-    <updated>2012-05-01T00:04:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&#8217;t worked &#8211; they&#8217;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&#8217;s DynamoDB.</p>
-
-<p>What do I mean by that?</p>
-
-<!-- more -->
-
-
-<h3>Per-table Performance</h3>
-
-<p>Previously to 0.4.0, Dynamoid&#8217;s table provisioning relied on the defaults that Dynamoid provided (100 read, 20 write) and then manual tuning if you wanted to make any changes from there. And that&#8217;s for every table. This was especially frustrating because you can only scale up to twice the current value (though you can do that as many times as you want)&#8230; but the real downer is you can only scale down 20%, and you can only do that once per day. So obviously if my defaults didn&#8217;t work for you, you had to go through a couple of days of readjustment, and who wants that?</p>
-
-<p>Now you can specify performance options for each table you create, using the new <code>table</code> Dynamoid syntax:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tweet</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Dynamoid</span><span class="o">::</span><span class="no">Document</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">table</span> <span class="nb">name</span><span class="p">:</span> <span class="ss">:twitters</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="ss">:tweet_id</span><span class="p">,</span> <span class="n">read_capacity</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">write_capacity</span><span class="p">:</span> <span class="mi">200</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &#8211; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
-
-<h3>Consistent Querying</h3>
-
-<p>Consistency in enormous databases can be a troublesome question to address. I&#8217;ve read <a href="http://nosql.mypopescu.com/post/18844539755/why-dynamodb-consistent-reads-cost-twice-or-whats">that DynamoDB&#8217;s consistent pricing</a> is too high and I agree with Alex&#8217;s points: but we live in a universe where DynamoDB consistent reading is reality, so we may as well make the best of it.</p>
-
-<p>That said, thanks to <a href="https://github.com/ananthakumaran">Anantha Kumaran</a>, Dynamoid can now take full advantage of DynamoDB&#8217;s consistent read feature. Issuing queries like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">consistent</span><span class="o">.</span><span class="n">all</span>
-</span><span class='line'><span class="no">Address</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="ss">:consistent</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Will retrieve all results, even the most recently-written ones. I gotta say, having people you don&#8217;t even know commit to projects is one of the joys of open source programming, and this feature was written entirely by Anantha (though refactored a bit by yours truly).</p>
-
-<h3>Future Functionality</h3>
-
-<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&#8217;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &#8211; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&#8230; but we already perform indexing, so it wouldn&#8217;t be that bad.</p>
-
-<p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I&#8217;m not sure about this functionality, though, for the same reason that I&#8217;m unsure about adding geolocation.</p>
-
-<p>Geolocation, you say? Yes indeed. Initially I had specced out a <a href="http://en.wikipedia.org/wiki/Geohash">geohash-style</a> geolocation functionality that would allow models to do single-field location and distance finding. The longer I pondered the problem, though, the less compelling this answer seemed to me. Amazing pieces of software have already been developed (like <a href="http://www.elasticsearch.org/">elasticsearch</a>) that are dedicated only to indexing (both text and geolocation). They do it faster and easier than DynamoDB probably ever could, and even Amazon has acknowledged this with the creation of their <a href="http://aws.amazon.com/cloudsearch/">CloudSearch</a> service.</p>
-
-<p>So I&#8217;m not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
-
-<p>Unless I hear compelling arguments otherwise, I&#8217;ll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I&#8217;m working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
 ]]></content>
   </entry>
   

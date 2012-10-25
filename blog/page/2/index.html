@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been looking about two weeks now for a really fantastic designer for GirlsGuideTo &#8211; a designer that&#8217;s as fabulous as the site &hellip;">
+  <meta name="description" content="For the second part of my series on Rails concerns (following part one earlier this week), I&#8217;ll be dissecting a tagging system and how to make &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,137 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/04/rails-concerns-ii-taggable/">Rails Concerns II: Taggable</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&#8217;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&#8217;re going to have to roll your own solution. That&#8217;s what I&#8217;m doing for GirlsGuideTo, and this is how I implemented it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/04/rails-concerns-ii-taggable/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting With Redcarpet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated and really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
+
+<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
+
+<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
+
+<p>Happily, you can do just this!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -385,135 +516,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/07/rubymotion-tips-and-tricks/">RubyMotion Tips &amp; Tricks</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-07T17:48:00-05:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve been using RubyMotion for four days now. I still like it a lot, and I think the coolest thing about it is the rapidly-evolving community around its use. Ian Phillips figured out how to <a href="http://ianp.org/2012/05/07/rubymotion-and-interface-builder/">link Interface Builder and RubyMotion</a>; Alan deLevie wrote a neat <a href="https://github.com/adelevie/ParseModel">connection to Parse.com</a>. Personally, I&#8217;ve been spending the time writing lots of code. I&#8217;ve just deployed my first RubyMotion app into TestFlight and sent it to some testers. Soon hopefully I&#8217;ll have an actual RubyMotion app, which is pretty exciting! I&#8217;ve learned a lot in the last four days of use and wanted to post a few tips and tricks to hopefully make life easier for other RubyMotionists.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/07/rubymotion-tips-and-tricks/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-04T02:14:00-05:00" pubdate data-updated="true">May 4<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I&#8217;ve done iOS programming before, but I&#8217;ve always found it unpleasant next to programming in other languages. Don&#8217;t get me wrong, Objective-C is better than C or C++, but I don&#8217;t think that&#8217;s saying a whole lot.</p>
-
-<p>I&#8217;ve spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I&#8217;ve come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
-
-<p>Why do I believe this? What makes RubyMotion so superior to straight-up Objective-C?</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-01T00:04:00-05:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&#8217;t worked &#8211; they&#8217;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&#8217;s DynamoDB.</p>
-
-<p>What do I mean by that?</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/01/dynamoid-0-dot-4-0/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -535,23 +537,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable with Elasticsearch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins with Rack Middleware</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
   </ul>

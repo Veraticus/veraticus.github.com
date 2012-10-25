@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Dynamoid is (another) gem I developed, but I think it&#8217;s a lot more exciting than rapnd! I started work on it over Christmas but didn&#8217;t &hellip;">
+  <meta name="description" content="I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,148 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Working Around DynamoDB&#8217;s Limitations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/01/working-around-dynamodbs-limitations/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting Up Unicorn in a Production Environment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-27T10:20:00-06:00" pubdate data-updated="true">Feb 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
+
+<p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/23/why-i-like-rubber/">Why I Like Rubber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When I was analyzing tools to deploy applications into Amazon&#8217;s elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
+
+<p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&#8217;s super easy to start a server with nothing more than:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:create <span class="nv">ALIAS</span><span class="o">=</span>fluttershy <span class="nv">ROLES</span><span class="o">=</span>unicorn
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And bootstrap it with all the software needed for that role with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:bootstrap <span class="nv">FILTER</span><span class="o">=</span>fluttershy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, looking at command line magic doesn&#8217;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
+
+<p>It&#8217;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&#8217;m sure. The good part &#8211; for me at least &#8211; is how close it is to the servers and how well it ties in with Capistrano. There&#8217;s no magic going on and there&#8217;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&#8230; but if you know what you&#8217;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
+
+<p>rubber isn&#8217;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&#8217;s deployed on a per-application basis, it can&#8217;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -262,23 +404,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable with Elasticsearch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins with Rack Middleware</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
   </ul>

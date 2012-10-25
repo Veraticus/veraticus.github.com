@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But &hellip;">
+  <meta name="description" content="I volunteer in the cyber center at the Center on Halsted. They&#8217;re always looking for people to teach new classes, so I figured I would teach an &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,161 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/">Ruby in the Sandbox: SandRBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-31T11:19:00-05:00" pubdate data-updated="true">Mar 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They&#8217;re always looking for people to teach new classes, so I figured I would teach an introduction to programming class &#8211; an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner&#8217;s language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it&#8217;s super fun.</p>
+
+<p>Unfortunately, getting stuff installed on the computers at the cyber center is kind of a headache. Like most chronically underfunded but well-meaning institutions, there are about three levels of bureaucracy between you and getting anything done. And teaching Ruby without the aid of irb would be next to impossible. So what&#8217;s a guy to do?</p>
+
+<p>Simple: <a href="http://sandrbox.herokuapp.com/">create irb online</a>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/">Delegation When Delegate Just Won&#8217;t Work</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-28T15:37:00-05:00" pubdate data-updated="true">Mar 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails provides a really awesome ability to avoid <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a> violations &#8211; the <a href="http://apidock.com/rails/Module/delegate">Module#delegate</a> method. The Law of Demeter is an informal programming guideline, intended to make your code more obvious and more reusable: objects should only call methods on other objects, not objects of those objects. To provide a more concrete example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Law of Demeter violation: @user should not reach into address!</span>
+</span><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># So much better...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Rails, because it&#8217;s cool, provides a quick and easy pattern for making this work:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
+</span><span class='line'>  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="ss">:address</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Calls address.street_address</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check out the <a href="http://apidock.com/rails/Module/delegate">delegate documentation</a> for more information on how this functionality works. But <a href="http://stackoverflow.com/questions/9914400/delegate-all-method-calls-on-a-model-to-an-association">a question I came across on Stack Overflow</a> today asked: what do you when you want to delegate all methods? I do <a href="https://github.com/Veraticus/Dynamoid/blob/master/lib/dynamoid/adapter.rb#L122">something similar in Dynamoid</a> and wanted to talk about how to make this pattern sensible and performant.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">Elasticsearch and Percolation in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-25T11:39:00-05:00" pubdate data-updated="true">Mar 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &#8211; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &#8211; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&#8217;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&#8217;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -393,148 +548,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Working Around DynamoDB&#8217;s Limitations</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
-
-<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/01/working-around-dynamodbs-limitations/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting Up Unicorn in a Production Environment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-27T10:20:00-06:00" pubdate data-updated="true">Feb 27<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
-
-<p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/23/why-i-like-rubber/">Why I Like Rubber</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When I was analyzing tools to deploy applications into Amazon&#8217;s elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
-
-<p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&#8217;s super easy to start a server with nothing more than:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:create <span class="nv">ALIAS</span><span class="o">=</span>fluttershy <span class="nv">ROLES</span><span class="o">=</span>unicorn
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And bootstrap it with all the software needed for that role with:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:bootstrap <span class="nv">FILTER</span><span class="o">=</span>fluttershy
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course, looking at command line magic doesn&#8217;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
-
-<p>It&#8217;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&#8217;m sure. The good part &#8211; for me at least &#8211; is how close it is to the servers and how well it ties in with Capistrano. There&#8217;s no magic going on and there&#8217;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&#8230; but if you know what you&#8217;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
-
-<p>rubber isn&#8217;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&#8217;s deployed on a per-application basis, it can&#8217;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -556,23 +569,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable with Elasticsearch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins with Rack Middleware</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
   </ul>

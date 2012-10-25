@@ -207,7 +207,7 @@
 </span><span class='line'>      <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">!=</span> <span class="s1">&#39;GET&#39;</span>
 </span><span class='line'>        <span class="n">redirect_to</span> <span class="s1">&#39;/redirect_back&#39;</span>
 </span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;/&#39;</span>
 </span><span class='line'>      <span class="k">end</span>
 </span><span class='line'>    <span class="k">else</span>
 </span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_url</span><span class="p">,</span> <span class="n">flash</span><span class="p">:</span> <span class="p">{</span><span class="n">error</span><span class="p">:</span> <span class="s1">&#39;You could not be logged in.&#39;</span><span class="p">}</span>
@@ -249,6 +249,10 @@
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">RedirectBack</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
@@ -261,7 +265,10 @@
 </span><span class='line'>    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/redirect_back&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span> <span class="o">&amp;&amp;</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
 </span><span class='line'>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;CONTENT_TYPE&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span>
+</span><span class='line'>
 </span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_method</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s2">&quot;rack.input&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIO</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Rack</span><span class="o">::</span><span class="no">Utils</span><span class="o">.</span><span class="n">build_nested_query</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">))</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_post_params</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span>
 </span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">[</span><span class="n">param</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span>
 </span><span class='line'>      <span class="k">end</span>
@@ -270,6 +277,7 @@
 </span><span class='line'>      <span class="o">[</span><span class="s1">&#39;REQUEST_PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;REQUEST_URI&#39;</span><span class="p">,</span> <span class="s1">&#39;PATH_INFO&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="o">|</span>
 </span><span class='line'>        <span class="n">env</span><span class="o">[</span><span class="n">req</span><span class="o">]</span> <span class="o">=</span> <span class="n">new_url</span>
 </span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
@@ -286,7 +294,9 @@
 
 <p>The only problem is that, since we&#8217;re dealing with forms here, Rails needs a CSRF token. Without it, it&#8217;ll purge the session at the beginning of the request and we&#8217;ll end up in a redirect loop.</p>
 
-<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&#8217;t use the cookie session storage mechanism (and you should not be), you can be sure enough of hte user&#8217;s identity to ignore the authenticity token on this one request.</p>
+<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&#8217;t use the cookie session storage mechanism (and you should not be), you can be sure enough of the user&#8217;s identity to ignore the authenticity token on this one request.</p>
+
+<p>We also need to ensure that Rails places a new, correct CSRF token into the session. Otherwise users&#8217; sessions will be deleted by the CSRF handlers upon their next post, which will seem to have an invalid, old token.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -299,13 +309,17 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
 </span><span class='line'>  <span class="n">protect_from_forgery</span>
 </span><span class='line'>  <span class="n">skip_before_filter</span> <span class="ss">:verify_authenticity_token</span><span class="p">,</span> <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="ss">:redirected?</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">redirected?</span>
 </span><span class='line'>    <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="n">flash</span><span class="o">.</span><span class="n">keep</span>
+</span><span class='line'>      <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span><span class="p">,</span> <span class="n">session</span><span class="o">[</span><span class="ss">:redirected</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">form_authenticity_token</span>
 </span><span class='line'>      <span class="k">return</span> <span class="kp">true</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
@@ -368,6 +382,8 @@
         <a class="basic-alignment left" href="/blog/2012/08/31/kinotify-a-rubymotion-app/" title="Previous Post: Kinotify, a RubyMotion App">&laquo; Kinotify, a RubyMotion App</a>
       
       
+        <a class="basic-alignment right" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/" title="Next Post: Unobtrusive JavaScript Facebook-Style More Button">Unobtrusive JavaScript Facebook-Style More Button &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -391,23 +407,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable with Elasticsearch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins with Rack Middleware</a>
       </li>
     
       <li class="post">
         <a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a>
       </li>
     
   </ul>
