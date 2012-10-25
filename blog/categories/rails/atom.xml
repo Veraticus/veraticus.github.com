@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-22T14:55:13-05:00</updated>
+  <updated>2012-10-25T13:53:59-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,281 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Concerns V: Searchable with Elasticsearch]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/"/>
+    <updated>2012-10-25T12:50:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch</id>
+    <content type="html"><![CDATA[<p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
+
+<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch's <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
+
+<!-- more -->
+
+
+<h2>The Setup</h2>
+
+<p>I have multiple models that are searchable, all of which are searchable in somewhat similar ways. For example, users need left-handed ngram indexing for their names (for autocompletion), but also full searching on the same field; similarly, the titles of content work almost exactly the same way. The only difference between the two was the weights they should use, so I set them up similarly in tire:</p>
+
+<p>```ruby
+class User</p>
+
+<p>  settings ElasticSearchAnalysis do</p>
+
+<pre><code>mapping do
+  indexes :name, type: 'multi_field', fields: {
+    name: {type: 'string', analyzer: 'full', boost: 3},
+    partial: {type: 'string', search_analyzer: 'full', index_analyzer: 'partial'}
+  }
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p><code>ElasticSearchAnalysis</code> is a constant that contains the settings for the partial and full analyzers referenced in the mappings. Of course, I index more fields for content, but ultimately I was using the searchers in the two models in a very similar way: a boolean should of all the different mappings conjoined together. As I was working on the code for the two different models, it was looking more and more similar... and then when I added in searching to tags and it was just about the same thing, I figured it was time to come up with a concern. I elected to call it <code>searchable</code> and wanted it to look something like this:</p>
+
+<p>```ruby
+class User
+  include Searchable</p>
+
+<p>  settings ElasticSearchAnalysis do</p>
+
+<pre><code># elasticsearch settings here
+</code></pre>
+
+<p>  end</p>
+
+<p>  searchable :name, 'name.partial'
+end
+```</p>
+
+<p>Where I could simply list all the fields I wanted to search.</p>
+
+<h2>The Module</h2>
+
+<p>This is the module I came up with to express this.</p>
+
+<p>```ruby
+module Searchable
+  extend ActiveSupport::Concern</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def searchable(fields)
+  @search_fields = fields
+end
+
+def search(term, options = {})
+  searcher(term, :text, options)
+end
+
+private
+
+def searcher(term, type, options = {}, field_options = {})
+  fields = Array(@search_fields)
+
+  self.tire.search(options.merge(load: true)) do
+    query do
+      boolean do
+        fields.each do |field|
+          should {send(type, field, term, field_options)}
+        end
+      end
+    end
+  end.results
+
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>If you've been following my series on concerns, this shouldn't be very surprising stuff. When you call searchable, the fields are added to an instance variable: then, when you call search on the model, we concatenate all the fields together and boolean search across on each of them. So once this is all set up, you'd use it like this:</p>
+
+<p><code>ruby
+User.search('Josh Symonds')
+</code></p>
+
+<p>Which will generate a tire query like this:</p>
+
+<p>```ruby
+User.tire.search(load: true) do
+  query do</p>
+
+<pre><code>boolean do
+  should text('name', 'Josh Symonds')
+  should text('name.partial', 'Josh Symonds')
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h2>Extending to More Like This</h2>
+
+<p>Of course, that <code>searcher</code> private method is just begging for another use. Why abstract it out so cleverly and not do something with it? Let's use elasticsearch's <a href="http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query.html">more like this query</a> so we can quickly find objects like each other (to display in an attractive sidebar, for example). <strong>For this to work, in addition to having tire in your Gemfile, you'll also need tire-contrib</strong>. So make sure you have it there or else this will explode.</p>
+
+<p>```ruby
+module Searchable
+  extend ActiveSupport::Concern</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>...
+
+def more_like(term, options = {})
+  searcher(term, :more_like_this_field, options, {min_term_freq: 1, min_doc_freq: 2})
+end
+
+...
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Now you can say <code>User.more_like('Josh Symonds')</code> and it'll find all documents with a more_like_this query for my name. Clever!</p>
+
+<h2>Searching Across Multiple Models</h2>
+
+<p>If you have a single search field on your site (like in the top navbar), most likely you'll want to search across multiple models with it: the user could be searching for a person, or a piece of content, or a tag. There's no easy way to know for sure what it is they want, so we should search across all of the fields and order the results by their relevance. Though this sounds complicated, with this concern, this is actually surprisingly easy.</p>
+
+<p>```ruby
+module Searchable
+  extend ActiveSupport::Concern</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def searchable(fields)
+  @search_fields = fields
+  Searchable.loaded_classes[self.to_s] = fields
+end
+
+...
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.loaded_classes</p>
+
+<pre><code>@loaded_classes ||= {}
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.search(term, options = {})</p>
+
+<pre><code>Tire.search(Searchable.loaded_classes.keys.collect {|k| k.downcase.pluralize}.reverse, options.merge(load: true)) do
+  query do
+    boolean do
+      Searchable.loaded_classes.values.flatten.uniq.each do |field|
+        should {text field, term}
+      end
+    end
+  end
+end.results
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>We changed the <code>searchable</code> method slightly. Now, in addition to adding to an instance variable, it adds to a hash that the module itself keeps track of: this hash contains all the models as keys, and all their fields as values. Then, when we use it, it constructs a search across all those models' indexes for all the fields those models should be searching. To give a concrete example, let's say we use <code>Searchable.search('Josh Symonds')</code> and we have indexes on content titles and user names. This is what the resulting tire query will look like:</p>
+
+<p>```ruby
+Tire.search(['users', 'contents'], {load: true}) do
+  query do</p>
+
+<pre><code>boolean do
+  should text('name', 'Josh Symonds')
+  should text('name.partial', 'Josh Symonds')
+  should text('title', 'Josh Symonds')
+  should text('title.partial', 'Josh Symonds')
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>If you have some models that should be more relevant (like an exact tag match should be the most relevant result), give those mappings an appropriate boost inside the tire mappings for the model. Also keep in mind this will return an array of potentially very different objects: users and contents, in this case. You should either make sure they're all duck-typed correctly together, or check their type before acting on them. Finally, this will only work in development if you load each model before calling <code>Searchable.search</code>. Just entering the constant name of the model should be enough, but if you don't, then the module won't know to search with that model. Such is the danger of lazy loading in development.</p>
+
+<h2>The Final Module</h2>
+
+<p>For your reference, this is the final module with all code included.</p>
+
+<p>```ruby
+module Searchable
+  extend ActiveSupport::Concern</p>
+
+<p>  module ClassMethods</p>
+
+<pre><code>def searchable(fields)
+  @search_fields = fields
+  Searchable.loaded_classes[self.to_s] = fields
+end
+
+def search(term, options = {})
+  searcher(term, :text, options)
+end
+
+def more_like(term, options = {})
+  searcher(term, :more_like_this_field, options, {min_term_freq: 1, min_doc_freq: 2})
+end
+
+private
+
+def searcher(term, type, options = {}, field_options = {})
+  fields = Array(@search_fields)
+
+  self.tire.search(options.merge(load: true)) do
+    query do
+      boolean do
+        fields.each do |field|
+          should {send(type, field, term, field_options)}
+        end
+      end
+    end
+  end.results
+
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.loaded_classes</p>
+
+<pre><code>@loaded_classes ||= {}
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.search(term, options = {})</p>
+
+<pre><code>Tire.search(Searchable.loaded_classes.keys.collect {|k| k.downcase.pluralize}.reverse, options.merge(load: true)) do
+  query do
+    boolean do
+      Searchable.loaded_classes.values.flatten.uniq.each do |field|
+        should {text field, term}
+      end
+    end
+  end
+end.results
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns IV: Class Methodable]]></title>
@@ -378,7 +653,7 @@ end
 <p>So far, just as usual. Now we define the actual actions:</p>
 
 <p>```ruby
-  def render_500</p>
+  def render_500(exception = nil)</p>
 
 <pre><code>render_exception(500, exception.message, exception)
 </code></pre>
@@ -433,135 +708,6 @@ end
 <p>Now it won't punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
 
 <p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns III: Metatags]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/"/>
-    <updated>2012-07-12T09:48:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags</id>
-    <content type="html"><![CDATA[<p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and <a href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/">two</a> of my series on Rails concerns, I'm going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren't already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook's Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the <a href="https://github.com/kpumuk/meta-tags/">meta-tags</a> gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
-
-<!-- more -->
-
-
-<h2>Setup</h2>
-
-<p>Include the meta-tags gem in your Gemfile:</p>
-
-<p><code>ruby
-gem 'meta-tags', :require =&gt; 'meta_tags'
-</code></p>
-
-<p>While the gem itself hasn't been updated for awhile, that doesn't really matter; it still functions quite well for our purposes. Once it's in the Gemfile, we'll configure some sensible defaults in our application layout, <code>application.html.erb</code>.</p>
-
-<p><code>ruby
-&lt;head&gt;
-  &lt;meta charset="utf-8"&gt;
-  &lt;%= display_meta_tags :site =&gt; 'Your Site Name Here', :keywords =&gt; Metatags::KEYWORDS %&gt;
-  ...
-&lt;/head&gt;
-</code></p>
-
-<p>We'll be defining that <code>CONSTANTS</code> constant shortly. This ensures that on each page the name of your site appears in the title, all by itself if you don't specify anything else, and that keywords appear in the keywords <code>meta</code> tag, which robots like the Googlebot use when computing your page's relevance.</p>
-
-<h2>The Concern</h2>
-
-<p>The meta-tags gem allows us to specify additional hashed options in either controllers or views: these options are concatenated with the defaults specified above to create attractive and meaningful metatags for each and every page. Since controllers tend to encapsulate models, I elected to make this a controller concern. (And forget doing this in views: replicating this code in each and every view is not my idea of a good time.) So our controller should, ideally, look somewhat like this:</p>
-
-<p>```ruby
-class UsersController &lt; ApplicationController
-  before_filter :find_user</p>
-
-<p>  include Metatags
-  metatags :title => :name, :description => :summary, :short_tag => :slug, :keywords => :name, :canonical => :user_url</p>
-
-<p>  private</p>
-
-<p>  def find_user</p>
-
-<pre><code>@user = User.find(params[:id]) if params[:id]
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>We specify with a hash how the metatags should be constructed: the keys of the hash are the names of each metatag we intend to use, while the values are the methods that need to be executed on the controller's object in order to get the information for that tag. In other words, if we have an object called <code>@user</code>, then we want the title of the page to include <code>@user.name</code> -- and that's represented by a hash that looks like <code>:title =&gt; :name</code>. However, this won't work for every key and value. For example, the <code>:canonical</code> key should indicate how to find the canonical URL of this resource, so we'll need a special exception for that... and the Facebook Open Graph name for <code>:canonical</code> is <code>:url</code>, so we'll need to switch it when we generate the Facebook tags.</p>
-
-<p>This, then, is the actual module itself:</p>
-
-<p>```ruby
-module Metatags
-  extend ActiveSupport::Concern</p>
-
-<p>  OG_TAGS = [:title, :type, :image, :url, :description]
-  KEYWORDS = ['default', 'keywords', 'here']</p>
-
-<p>  included do</p>
-
-<pre><code>append_before_filter :set_metatags
-</code></pre>
-
-<p>  end</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>def metatags(hash)
-  @hash = hash
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  private</p>
-
-<p>  def set_metatags</p>
-
-<pre><code>object = self.instance_variable_get("@#{self.class.to_s.underscore.split('_').first.singularize}")
-hash = self.class.instance_variable_get(:@hash)
-
-if object
-  new_hash = {:open_graph =&gt; {}}
-  hash.each do |tag, method|
-    value = object.send(method) if object.respond_to?(method)
-
-    if tag == :keywords
-      value = Array(value) + KEYWORDS
-    elsif tag == :canonical
-      value = self.send(method, object)
-    end
-
-    new_hash[tag] = value
-    tag = :url if tag == :canonical
-    new_hash[:open_graph][tag] = value if OG_TAGS.include?(tag)
-  end
-  set_meta_tags new_hash
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p>Obviously this concern is somewhat complicated: bear with me and I'll explain it.</p>
-
-<p>At the top of the code, we define which OpenGraph tags we care about, as well as the default keywords for our application. When the module is included, it appends a <code>before_filter</code> to its controller that will try to set all the metatag information. However, it also creates a new class method on its included class, a side-effect of having a child module called <code>ClassMethods</code>: in this case, it provides included controllers with a method called <code>metatags</code> that accepts a hash of metatag names and method names, as I discussed above.</p>
-
-<p>Finally, we have a private method called <code>set_metatags</code> that performs the actual heavy lifting of the concern. It searches for an instance variable named after the controller itself: so if you have a <code>UsersController</code>, it tries to find an instance variable called <code>@user</code>. If that object exists, it tries to populate a new hash with the result of sending it each hash value.</p>
-
-<p>We have two special exceptions we're concerned with. First, we don't want to replace the existing site keywords -- we only want to add to them. So if the tag is <code>:keywords</code> we add the keywords in <code>KEYWORDS</code> to whichever ones we passed to <code>meta_tags</code>. Second, if the tag is <code>:canonical</code>, we do something a little special. We assume the key is a Rails named route that will accept one argument, the controller's object, to generate a correct canonical URL.</p>
-
-<p>Underneath that, we switch the name of the <code>:canonical</code> tag to <code>:url</code> so that the Facebook Open Graph tags are set up correctly. With that you're all done. Each controller will automatically try to query its object as you specified and set metatag information for each view based on the results of those queries.</p>
-
-<h2>Caveats</h2>
-
-<p>Because the metatag creation happens in a <code>before_filter</code>, the ordering of your filters becomes crucially important. If you have a <code>before_filter</code> that finds your controller's primary object like my controller sample above, it's vital that you place the <code>before_filter</code> above the concern's <code>include</code>, or, if you'd prefer, use <code>prepend_before_filter</code> instead of <code>before_filter</code>. Otherwise the metatag concern will place its <code>before_filter</code> ahead of the one that finds your object, your object will be nil when <code>set_metatags</code> runs, and the metatag information will never display correctly on the page.</p>
-
-<p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application's specific concerns.</p>
-
-<p>This ends the first part of my series on Rails concerns. While I don't have anything else exciting to show off presently, the concern pattern is a powerful one that I've used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I'll definitely continue talking about awesome Rails concerns.</p>
 ]]></content>
   </entry>
   

@@ -178,7 +178,7 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/</loc>
-        <lastmod>2012-08-13T14:47:00-05:00</lastmod>
+        <lastmod>2012-10-25T12:45:52-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2012/08/21/introduction-to-programming-iii/</loc>
@@ -205,16 +205,22 @@
         <lastmod>2012-10-22T14:55:00-05:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/
+        </loc>
+        <lastmod>2012-10-25T13:49:28-05:00</lastmod>
+    </url>
+    <url>
         <loc>http://joshsymonds.com/404.html</loc>
         <lastmod>2012-07-02T17:30:52-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2012-10-22T14:55:00-05:00</lastmod>
+        <lastmod>2012-10-25T13:49:28-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2012-10-22T14:55:00-05:00</lastmod>
+        <lastmod>2012-10-25T13:49:28-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>
