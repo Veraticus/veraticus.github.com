@@ -57,7 +57,7 @@ class SessionsController < ApplicationController
       if session[:return_method] != 'GET'
         redirect_to '/redirect_back'
       else
-        redirect_to session[:return_to]
+        redirect_to session[:return_to] || '/'
       end
     else
       redirect_to root_url, flash: {error: 'You could not be logged in.'}
@@ -83,7 +83,10 @@ class RedirectBack
     if req.path == '/redirect_back' && req.session[:return_method] && req.session[:return_post_params] &&
       req.session[:return_to] && req.session[:user_id]
 
+      env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+
       env['REQUEST_METHOD'] = req.session.delete(:return_method)
+      env["rack.input"] = StringIO.new(Rack::Utils.build_nested_query(req.session[:return_post_params]))
       req.session.delete(:return_post_params).each do |param, val|
         req.params[param] = val
       end
@@ -92,6 +95,7 @@ class RedirectBack
       ['REQUEST_PATH', 'REQUEST_URI', 'PATH_INFO'].each do |req|
         env[req] = new_url
       end
+
       req.session[:redirected] = true
     end
 
@@ -107,7 +111,9 @@ The whole idea of this middleware is to reformat the path and add in all the app
 
 The only problem is that, since we're dealing with forms here, Rails needs a CSRF token. Without it, it'll purge the session at the beginning of the request and we'll end up in a redirect loop.
 
-However, remember how we `reset_session` at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don't use the cookie session storage mechanism (and you should not be), you can be sure enough of hte user's identity to ignore the authenticity token on this one request.
+However, remember how we `reset_session` at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don't use the cookie session storage mechanism (and you should not be), you can be sure enough of the user's identity to ignore the authenticity token on this one request.
+
+We also need to ensure that Rails places a new, correct CSRF token into the session. Otherwise users' sessions will be deleted by the CSRF handlers upon their next post, which will seem to have an invalid, old token.
 
 ```ruby
 class ApplicationController < ActionController::Base
@@ -116,7 +122,9 @@ class ApplicationController < ActionController::Base
 
   def redirected?
     if session[:redirected]
-      session[:return_to], session[:return_post_params], session[:return_method] = nil
+      flash.keep
+      session[:return_to], session[:return_post_params], session[:return_method], session[:redirected] = nil
+      self.form_authenticity_token
       return true
     end
   end

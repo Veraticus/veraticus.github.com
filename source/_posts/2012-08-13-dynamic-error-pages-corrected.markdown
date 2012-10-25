@@ -38,7 +38,7 @@ end
 So far, just as usual. Now we define the actual actions:
 
 ```ruby
-  def render_500
+  def render_500(exception = nil)
     render_exception(500, exception.message, exception)
   end
 
