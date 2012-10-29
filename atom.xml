@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-25T13:55:44-05:00</updated>
+  <updated>2012-10-29T18:11:05-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Cache Counters in Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/"/>
+    <updated>2012-10-29T17:55:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails</id>
+    <content type="html"><![CDATA[<p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
+
+<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&#8217;s no need for STI here &#8211; there&#8217;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&#8217;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&#8217;re caching under. You&#8217;re out of luck if you want to change it dynamically.</p>
+
+<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
+
+<!-- more -->
+
+
+<p>The most ideal way to do this is to hook into the existing <a href="http://api.rubyonrails.org/classes/ActiveRecord/CounterCache.html">ActiveRecord CounterCache</a> module. Given that, the code is quite simple, really:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Vote</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:voteable</span><span class="p">,</span> <span class="n">polymorphic</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="n">touch</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">after_create</span> <span class="ss">:increment_counters</span>
+</span><span class='line'>  <span class="n">after_destroy</span> <span class="ss">:decrement_counters</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">[</span><span class="ss">:increment</span><span class="p">,</span> <span class="ss">:decrement</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counters&quot;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">voteable_type</span><span class="o">.</span><span class="n">classify</span><span class="o">.</span><span class="n">constantize</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counter&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">votes_count&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">voteable_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object&#8217;s class after a vote is created or destroyed; note that I don&#8217;t intend to change the type of the vote, but if you do, you&#8217;ll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
+
+<p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
+
+<p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns V: Searchable with Elasticsearch]]></title>
@@ -2519,139 +2572,6 @@
 <p>This is really pretty simple. Upon inclusion it tells the model that it&#8217;s a part of that it <code>has_many :preferences</code> and sets up a class variable hash to store preferences and their defaults. When you declare <code>preference :chime, true</code> it records that in the class variable, and then all instances will respond to either <code>user.chime = true</code> or <code>user.write_preference(:chime, true)</code>. You can read values with <code>user.chime</code> or <code>user.read_preference(:chime)</code>. If a value isn&#8217;t written in the database, it returns the default value instead.</p>
 
 <p>This probably has a level or two of refactoring that could happen around it. Maybe when I have time I will turn it into a more sensible gem, but until then, if anyone needs quick and dirty preferences&#8230; here you go.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[From the RubyMotion Simulator to Your Friend's iPhone]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/"/>
-    <updated>2012-05-10T19:13:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone</id>
-    <content type="html"><![CDATA[<p>I&#8217;ve been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming</a> series today to give the whole Motion thing a break. But I spent far too long on Tuesday getting an app correctly deploying through Testflight, and it was a really painful process. I took copious notes while making it happen, though, so in the interest of saving someone else&#8217;s time, here is my step-by-step guide to successfully getting an app from your RubyMotion simulator onto someone else&#8217;s device.</p>
-
-<!-- more -->
-
-
-<h2>1. Set up your Apple Developer Account</h2>
-
-<p>This step is pretty obvious and if you&#8217;re actually interested in deploying at all, it&#8217;s probably already complete. But I promised a step-by-step guide, and this is certainly step number one (or more like number zero). If you want to deploy to other people&#8217;s devices you need an Apple developer account. Sign up for one at <a href="https://developer.apple.com/membercenter/">Apple&#8217;s developer member center</a>. Buying the iOS development license will set you back $100/year.</p>
-
-<h2>2. Create a Distribution Certificate</h2>
-
-<p>You&#8217;ll have to <a href="https://developer.apple.com/ios/manage/certificates/team/index.action">create a development certificate first</a>. Once that&#8217;s done, set yourself up with a <a href="https://developer.apple.com/ios/manage/certificates/team/distribute.action">distribution certificate</a>.</p>
-
-<p><img src="http://udn.epicgames.com/Three/rsrc/Three/AppleiOSProvisioningPortal/ios_provision_distcert_home.png" alt="Create a Distribution Certificate" /></p>
-
-<p>You need to press that big gray button that says, &#8220;Request Certificate.&#8221; This distribution certificate is what you&#8217;ll need to sign the eventual app with. If you use the wrong certificate or don&#8217;t have one at all, most likely your friends will get the dreaded <a href="http://help.testflightapp.com/customer/portal/articles/402799-i-get-an-%22unable-to-download%22-error-when-installing-my-application">&#8220;Unable to Download&#8221;</a> Testflight error, which is certainly among the least helpful error messages I&#8217;ve ever come across.</p>
-
-<p>When you&#8217;ve saved the distribution certificate, click on it to add it to your keychain. Note its name: it will be something like, &#8220;iPhone Distribution Profile: Your Name.&#8221; Make sure you remember the name of this certificate, as you will need it in step 6.</p>
-
-<h2>3. Add Devices</h2>
-
-<p>This is probably the most straightforward step. Head to the <a href="https://developer.apple.com/ios/manage/devices/index.action">devices section</a>, click the &#8220;Add Devices&#8221; button and start adding devices by their UDID. If you&#8217;re doing this with a friend, link them to the first <a href="http://www.innerfence.com/howto/find-iphone-unique-device-identifier-udid">Google result for finding your UDID</a>, which is both helpful and actually available for viewing by your developer-accountless friends, as opposed to Apple&#8217;s own instructions which are not.</p>
-
-<h2>4. Make an App ID</h2>
-
-<p>Technically this step is optional, but likely you&#8217;ll eventually want to do push notifications, or in-app purchases, or something like that. So you may as well get an App ID now and save yourself the trouble of doing so later.</p>
-
-<p>Head over to the <a href="https://developer.apple.com/ios/manage/bundles/add.action">Create App ID</a> page and fill in all the necessary values. There&#8217;s one field of particular importance to us, however: the bundle identifier. The usual style is <code>com.yourCompany.yourApp</code>, so go for something like that. Remember what you wrote here, as you&#8217;ll need it again in step 6!</p>
-
-<h2>5. Create a Provisioning Profile, Referencing Your Devices</h2>
-
-<p><img src="http://veratic.us/GXmd/provisioning_profile.jpg" alt="Create a Provisioning Profile" /></p>
-
-<p>Head on over to the <a href="https://developer.apple.com/ios/manage/provisioningprofiles/create.action?type=2">distribution provisioning portal</a> and create a distribution provisioning profile. Ensure you select &#8220;Ad Hoc&#8221; for your distribution method (unless you&#8217;re releasing to the App Store), and select the devices you entered in step 3. Submit the profile and hit Command-R until it&#8217;s moved from pending to active. Download it; note the location you saved it to as well as its file name. Another thing we need to know for step 6.</p>
-
-<h2>6. Update your RubyMotion Rakefile</h2>
-
-<p>Stop! Do you have:</p>
-
-<ol>
-<li>The name of your distribution certificate, from step 2?</li>
-<li>The bundle identifier, from step 4?</li>
-<li>The filename and path of the distribution provisioning profile, from step 5?</li>
-</ol>
-
-
-<p>If you answered yes to all those questions, good for you! Proceed onwards. If not, check your reading comprehension skills and go back a few steps.</p>
-
-<p>Now that we have all that important information, we have to put it into our Rakefile.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
-</span><span class='line'>  <span class="c1"># The name of your personal distribution profile, from your keychain.</span>
-</span><span class='line'>  <span class="c1"># Distribution profile, NOT development profile!</span>
-</span><span class='line'>  <span class="c1"># This was from step 2.</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
-</span><span class='line'>  <span class="c1"># The bundle identifier, from step 4.</span>
-</span><span class='line'>  <span class="c1"># Exactly as you typed it then.</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
-</span><span class='line'>  <span class="c1"># The filename and full path of your distribution provisioning profile.</span>
-</span><span class='line'>  <span class="c1"># The name is probably an enormous hex string.</span>
-</span><span class='line'>  <span class="c1"># From step 5.  </span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Failure to set any of these values correctly will result in either compilation errors or installation errors and will probably be nightmarishly difficult to track down and fix.</p>
-
-<h2>7. Set up Testflight</h2>
-
-<p>Follow the steps for doing this on the very helpful <a href="http://www.rubymotion.com/developer-center/articles/testflight/">RubyMotion article</a>. Afterwards, your Rakefile will look something like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-testflight&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">sdk</span> <span class="o">=</span> <span class="s1">&#39;vendor/TestFlightSDK&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">api_token</span> <span class="o">=</span> <span class="s1">&#39;APIToken&#39;</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">team_token</span> <span class="o">=</span> <span class="s1">&#39;TeamToken&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Finally, you should be able to <code>rake testflight notes='What a helpful step-by-step guide!'</code> to actually deploy your app to Testflight, and your users should be able to download and install it no problem.</p>
-
-<p>Writing this all down, it seems rather clear and straightforward. While doing it, unfortunately, it is not. Apple&#8217;s documentation is really obtuse and the error messages you get during the process are seriously unhelpful. But happily with this guide you should be more or less good to go.</p>
 ]]></content>
   </entry>
   

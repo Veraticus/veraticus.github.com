@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamoid: An ORM for Amazon's DynamoDB - Hi, I'm Josh Symonds</title>
+  <title>Dynamic Cache Counters in Rails - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Dynamoid is (another) gem I developed, but I think it&#8217;s a lot more exciting than rapnd! I started work on it over Christmas but didn&#8217;t &hellip;">
+  <meta name="description" content="I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails. The problem is best summed up in a use case. I have a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,7 +98,7 @@
   
   <header>
     
-      <h1 class="entry-title">Dynamoid: An ORM for Amazon's DynamoDB</h1>
+      <h1 class="entry-title">Dynamic Cache Counters in Rails</h1>
     
     
       <p class="meta">
@@ -114,29 +114,58 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
+<div class="entry-content"><p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
 
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
+<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&#8217;s no need for STI here &#8211; there&#8217;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&#8217;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&#8217;re caching under. You&#8217;re out of luck if you want to change it dynamically.</p>
 
-<p>But it will soon! The TODO list is particularly exciting:</p>
+<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
 
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
-</ul>
+<!-- more -->
 
 
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
+<p>The most ideal way to do this is to hook into the existing <a href="http://api.rubyonrails.org/classes/ActiveRecord/CounterCache.html">ActiveRecord CounterCache</a> module. Given that, the code is quite simple, really:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Vote</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:voteable</span><span class="p">,</span> <span class="n">polymorphic</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="n">touch</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">after_create</span> <span class="ss">:increment_counters</span>
+</span><span class='line'>  <span class="n">after_destroy</span> <span class="ss">:decrement_counters</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">[</span><span class="ss">:increment</span><span class="p">,</span> <span class="ss">:decrement</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counters&quot;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">voteable_type</span><span class="o">.</span><span class="n">classify</span><span class="o">.</span><span class="n">constantize</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counter&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">votes_count&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">voteable_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object&#8217;s class after a vote is created or destroyed; note that I don&#8217;t intend to change the type of the vote, but if you do, you&#8217;ll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
+
+<p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
+
+<p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
 </div>
 
 
@@ -159,12 +188,12 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+    <a class='category' href='/blog/categories/rails/'>rails</a>
   
 </span>
 
@@ -173,7 +202,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -186,10 +215,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/21/rapnd-redis-apn-daemon/" title="Previous Post: Rapnd: Redis APN Daemon">&laquo; Rapnd: Redis APN Daemon</a>
+        <a class="basic-alignment left" href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/" title="Previous Post: Rails Concerns V: Searchable with Elasticsearch">&laquo; Rails Concerns V: Searchable with Elasticsearch</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/02/23/why-i-like-rubber/" title="Next Post: Why I Like Rubber">Why I Like Rubber &raquo;</a>
       
     </p>
   </footer>
@@ -289,8 +316,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/';
         var disqus_script = 'embed.js';
       
     (function () {
