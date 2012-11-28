@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gems | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-11-25T21:01:15-06:00</updated>
+  <updated>2012-11-28T01:20:41-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,55 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Huey, for Controlling Phillips Hue Lightbulbs]]></title>
+    <link href="http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/"/>
+    <updated>2012-11-28T01:08:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs</id>
+    <content type="html"><![CDATA[<p>I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty <a href="http://meethue.com">Phillips Hue lightbulbs</a>. I decided to name it <a href="https://github.com/Veraticus/huey">Huey</a>, since I love nothing more than cute and silly names. I only spent a few hours tonight hacking it together, so I'm sure there's a lot of room for improvement, but it works and does everything it's supposed to and seems fairly fault tolerant; so I thought, why not announce it and fix problems when I wake up tomorrow?</p>
+
+<!-- more -->
+
+
+<p>Huey uses <a href="http://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol">SSDP</a> to discover the IP of the Hue hub the first time the code is run. I wish I could take credit for the EventMachine code that went into making this work correctly, but actually I largely cribbed it from Turboladen's <a href="https://github.com/turboladen/upnp">upnp library</a>. I would've just included it as a Gem dependency but for some reason it's not released as a Gem, which is pretty frustrating for situations like this.</p>
+
+<p>I chose a pretty boring UUID for Huey to use: <code>'0123456789abdcef0123456789abcdef'</code>. This works just fine, but if you want to change it Huey is ultra-configurable and you can do so either in a block or directly:</p>
+
+<p>```ruby
+  Huey.configure do |config|</p>
+
+<pre><code>config.uuid = '0123456789abdcef0123456789abcdef'
+</code></pre>
+
+<p>  end
+  # or
+  Huey::Config.uuid = '0123456789abdcef0123456789abcdef'
+```</p>
+
+<p>The first time you issue a request to the Hue hub, you'll likely see an attractive error message like this:</p>
+
+<p><code>ruby
+  Huey::Errors::PressLinkButton: 'Press the link button and try your request again'
+</code></p>
+
+<p>Unfortunately, the first time any request is sent, Hue needs to validate the new client by you actually walking over and touching the link button on the hub. But once you do that, you can just resend the request and it should work fine. Then you can use the whole gamut of the Hue API:</p>
+
+<p>```ruby
+Huey::Bulb.all # Returns an array of your bulbs</p>
+
+<p>bulb = Huey::Bulb.find(1) # Finds the bulb with the ID of 1
+bulb = Huey::Bulb.find('Living Room') # Finds the bulb with the name 'Living Room'</p>
+
+<p>bulb.alert! # Flashes the bulb in question once, useful for checking connectivity
+bulb.on = false # Turn the bulb off
+bulb.bri = 100 # Dim the bulb a little bit
+bulb.ct = 500 # Change the bulb's color
+```</p>
+
+<p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I'll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dynamoid 0.4.0]]></title>
@@ -348,53 +397,6 @@ end
 ```</p>
 
 <p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I'll save details on how I did that for another post.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why I Don't Use Haml]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml/"/>
-    <updated>2012-03-22T13:19:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/22/why-i-dont-use-haml</id>
-    <content type="html"><![CDATA[<p>I initially thought of titling this post something more inflammatory, like "Why Haml Sucks" or "Only Losers Use Haml." But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It's actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it's very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
-
-<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
-
-<!-- more -->
-
-
-<h2>Indentation Sucks (Usually)</h2>
-
-<p>Notice the cute little parenthetical up there? That's because I really do like CoffeeScript, which is just as whitespace-sensitive as Haml. So what's the difference?</p>
-
-<p>CoffeeScript uses indentations to abstract away one of the worst "features" of JavaScript: the dreaded <code>})</code> sequences. Closing arguments and functions again and again is not only a headache, it happens so frequently that some sort of error is inevitable. Strict whitespace rules help us avoid errors in closure. Of course, the same argument can be made about HTML and Haml's whitespace rules, but there's another key difference here.</p>
-
-<p>HTML closures indicate which tag they close. You don't have a forest of <code>)})})}</code>, which even if you indent correctly still won't tell you which parenthesis or bracket they're closing. Instead you have an obvious and syntactic declaration of which tag you're ending when you end it. You can argue that the tag closure is unnecessary (Haml seems largely based on this argument), but you're trading explicit tag closure for explicit whitespace restrictions...</p>
-
-<p>And ultimately (and most damningly), whitespace restrictions make the document harder to read and understand than closing tags. If you have an extremely long page with many nested elements, Haml is very difficult to comprehend and consequently much harder to use.</p>
-
-<h2>If It Ain't Broke...</h2>
-
-<p>SASS and CoffeeScript fix serious errors and oversights in the implementations of their specific languages. CoffeeScript ensures correct lexical scoping of variables; SASS allows variable assignment and better selectors than CSS. Both are enormous improvements on the languages they compile into.</p>
-
-<p>Haml doesn't add anything at all to HTML. There's no special Haml tags that do something HTML couldn't do by itself. It gives you a shortcut for the syntax, but that's essentially it.</p>
-
-<p>And HTML really isn't that bad by itself. The syntax is already fairly clean and clear; it's not like we're lost in a field of, well, parenthesis and curly brackets. Tables can get a little muddy at times, but good HTML and CSS prevent documents from becoming unreadable -- and Haml doesn't offer any interesting or unique tools to improve readability, either.</p>
-
-<h2>Designers Aren't Programmers</h2>
-
-<p>But I think this is the biggest reason I don't use Haml. Frontend designers use CSS, and the best ones employ JavaScript (and program good JavaScript!) -- but every single one is going to be using HTML to create their pages. Eventually, if your site gets big, you're going to want a designer to do some pages for you... and they're not going to be producing Haml, they're going to be producing HTML.</p>
-
-<p>Sure, you can change that HTML to Haml. But let me guarantee you, one day they'll want to change something, and at that point you do one of three things:</p>
-
-<ol>
-<li>Show them the Haml site, tell them to do it all in Haml, and pay for them learning it.</li>
-<li>Take their design and convert it to Haml yourself and then incorporate it into the page.</li>
-<li>Curse your unjust fate and just switch to erb and copypaste their changes in.</li>
-</ol>
-
-
-<p>As I said at the beginning, I like Haml. But it's a markup language for programmers, and ultimately the people who use HTML the most aren't programmers. SASS is barely a programming language, more like a set of syntactical shortcuts; and CoffeeScript appeals to those who program in JavaScript already. Haml just doesn't appeal to the correct audience to use its core feature set, which is a damn shame, because Haml really is pretty cool.</p>
 ]]></content>
   </entry>
   
