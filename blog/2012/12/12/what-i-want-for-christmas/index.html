@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>How to Refactor a Large and Old Project - Hi, I'm Josh Symonds</title>
+  <title>What I Want for Christmas - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="The Rails application backing Hipstamatic is very, very large. It started over two years ago as a Rails 2.1 project, and has been continuously &hellip;">
+  <meta name="description" content="I&#8217;ve been working super hard recently, though not blogging about it, and meanwhile a lot of people have been asking me what I want for the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/12/12/what-i-want-for-christmas/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,7 +98,7 @@
   
   <header>
     
-      <h1 class="entry-title">How to Refactor a Large and Old Project</h1>
+      <h1 class="entry-title">What I Want for Christmas</h1>
     
     
       <p class="meta">
@@ -114,49 +114,40 @@
   
 
 
-<time datetime="2012-04-03T10:06:00-05:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
+<time datetime="2012-12-12T16:08:00-06:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>The Rails application backing Hipstamatic is very, very large. It started over two years ago as a Rails 2.1 project, and has been continuously improved since then &#8211; moving to Rails 3.2, adding in redis and resque, and then adding in elasticsearch. During that time the database has bounced around continuously in size and importance as we move data from MySQL to data stores that are <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">better suited for it</a>. And while at the start it handled only contests and submissions, since then we&#8217;ve added in orders, the family album, D-Series support, and even more exciting behind-the-scenes stuff.</p>
+<div class="entry-content"><p>I&#8217;ve been working super hard recently, though not blogging about it, and meanwhile a lot of people have been asking me what I want for the holiday season.</p>
 
-<p>And as you can imagine from a project that&#8217;s undergone continuous improvement for a long time, it&#8217;s kind of a mess. A lot of stuff was done without an eye towards our future needs, and, even more embarrassingly, a lot of stuff was done with a future need in mind &#8211; and, of course, that need never materialized, so the code is named or structured improperly.</p>
+<p>Thus I&#8217;m taking a massive departure from the normal, professional tone of this blog and publishing a list of the holiday presents that would just bowl me over with joy. If you know and love me, feel free to buy any item from this list &#8211; or multiple ones if you know and love me that much.</p>
 
-<p>The temptation with any project as large and old as this is to do <a href="http://chadfowler.com/2006/12/27/the-big-rewrite">the Big Rewrite</a>. I&#8217;ve been involved in a few of those, and my advice regarding them is quite simple:</p>
+<p>If you don&#8217;t, then don&#8217;t worry about it! I&#8217;ll be back soon with real content that will hopefully be both pithy and edifying.</p>
 
 <!-- more -->
 
 
-<h1>DON&#8217;T DO IT</h1>
-
-<p>There are <a href="http://mentalized.net/journal/2010/10/04/avoiding_the_big_rewrite/">multiple</a> <a href="http://www.joelonsoftware.com/articles/fog0000000069.html">articles</a> <a href="http://blog.objectmentor.com/articles/2009/01/09/the-big-redesign-in-the-sky">discussing</a> why the Big Rewrite is a horrible idea, and reiterating their excellent points here isn&#8217;t my intention. Instead I&#8217;m going to discuss the plan I&#8217;ve decided on for our own project, which I&#8217;m going to call, in lieu of the Big Rewrite, the Proper Refactoring.</p>
-
-<p>Our Proper Refactoring will split our one monolithic application apart into a number of services, exposing their APIs for the happiness of our users while hiding the internals of their business logic from parts of the application that don&#8217;t care about it. If you want to follow along on our process (or do your own Proper Refactoring), I wrote down a quick summary of the three (well, four) simple stages that will take us from having one large working app to many small working apps!</p>
+<p>This is roughly in order of how strongly I desire the item in question.</p>
 
 <ol>
-<li><h3>Test it all first.</h3>
-
-<p>This entire process is doomed to failure if your application isn&#8217;t tested. There&#8217;s no way you can achieve 100% test coverage, regardless of what <a href="https://github.com/colszowka/simplecov">SimpleCov</a> tells you &#8211; there&#8217;s always that quick fix you stuck in to fix a small problem that isn&#8217;t tested and won&#8217;t show up in any coverage report. But you need to get as close as humanly possible, because stuff will break (like that quick fix), and you can limit how much breakage occurs by testing everything you can before you start.</p>
-
-<p>Happily, Hipstamatic is well tested, so step zero for us is pretty well completed. I still anticipate problems will occur as we make the change, and of course as I find code that isn&#8217;t adequately tested I&#8217;ll write tests for it&#8230; but both of those are unavoidable.</p></li>
-<li><h3>Find breakpoints and map splits.</h3>
-
-<p>Hipstamatic will be turning into five services: authentication, photos, contests, ordering, and D-Series cameras. Our main goal is to silo concerns apart from each other, making each part of the application more failure resistant and robust while allowing us to develop them all independently from each other if necessary. I&#8217;m not 100% settled on this separation of concerns, but the order that I listed them is the order I&#8217;ll be working on them. If it seems like something just has to be married to something else, I&#8217;ll combine them together and that&#8217;ll be that.</p>
-
-<p>So if you&#8217;re doing this on your own project, split your application into units that are atomic enough that they can be changed independently from each other, but not so atomic that close couplings are undone. My benchmark for this is going to be if I have two projects open simultaneously and keep coding in the two of them in tandem, most likely they should be merged.</p></li>
-<li><h3>Start copying and pasting.</h3>
-
-<p>The fun part! Take the parts necessary for the one fragment you&#8217;re working on and merge them into one coherent project. Crucically, <em>don&#8217;t change anything except what&#8217;s absolutely necessary</em>. You&#8217;ll find code that you want to change, trust me. Just slap some TODOs on that baby and keep moving. It&#8217;s important that you change as little as possible, because the process is already breaking apart your nice pretty app. If you start changing the pieces once they&#8217;re broken, you&#8217;ll find they don&#8217;t fit back together quite right, and that will be an enormous headache to fix.</p></li>
-<li><h3>Add relevant bits to the API Gem.</h3>
-
-<p>For our web services to understand each other, and to prevent duplication of code, I&#8217;ll be extracting connector bits into a Gem that each application (and indeed any application that wants to consume our API) can use. It&#8217;ll most likely be heavily based on <a href="https://github.com/jnunemaker/httparty">httparty</a> since ActiveResource isn&#8217;t anywhere near as actively developed.</p></li>
+<li>New pair of high-quality in-ear headphones with a microphone (iPhone compatible)</li>
+<li><a href="http://www.nest.com/">Nest Thermostat</a></li>
+<li><a href="https://jawbone.com/up">Jawbone Up</a></li>
+<li>His &amp; his iPhone 5s</li>
+<li>An awesome new logo from the amazing <a href="http://dribbble.com/jose_josedesign">Jose</a> that looks like <a href="http://dribbble.com/shots/480635-she">She</a> but says &#8220;Josh Symonds&#8221;</li>
+<li><a href="https://itunes.apple.com/us/app/baldurs-gate-enhanced-edition/id515114051?mt=8">Baldur&#8217;s Gate: Enhanced Edition for the iPad </a></li>
+<li><a href="http://www.gamestop.com/wii/games/xenoblade-chronicles-gamestop-exclusive/98535">Xenoblade Chronicles for the Wii</a></li>
+<li>A new day of the week</li>
+<li><a href="https://itunes.apple.com/us/app/punch-quest/id554223561?mt=8">Punch Quest for the iPhone</a></li>
+<li><a href="http://smbc.myshopify.com/collections/shirts/products/save-yourself-mammal-shirt-s">&#8220;Save Yourself, Mammal!&#8221; t-shirt</a></li>
+<li><a href="http://store.xkcd.com/products/tech-support">&#8220;Tech Support Flowchart&#8221; t-shirt</a></li>
+<li><a href="http://www.thinkgeek.com/product/aaa5/?pfm=computing_featured_aaa5_2">Bag of Holding</a></li>
+<li><a href="http://www.thinkgeek.com/product/c3bd/">Darth Vader USB Stick</a></li>
 </ol>
 
-
-<p>And the split is complete! Of course it sounds pretty easy when you gloss over most of the hard work in step #2, but hey, the way to make complicated projects seem achievable is to reduce them into manageable steps. I intend to follow this road map like the Pope follows the Bible &#8211; that is, using the good parts and ignoring the rest. Zing! But I&#8217;ll report back in a future post to indicate how well these steps worked for me. Until then, wish me luck!</p>
 </div>
 
 
@@ -179,12 +170,12 @@
   
 
 
-<time datetime="2012-04-03T10:06:00-05:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
+<time datetime="2012-12-12T16:08:00-06:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>rails</a>
+    <a class='category' href='/blog/categories/personal/'>personal</a>
   
 </span>
 
@@ -193,7 +184,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/12/12/what-i-want-for-christmas/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/12/12/what-i-want-for-christmas/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -206,10 +197,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/" title="Previous Post: Ruby in the Sandbox: SandRBox">&laquo; Ruby in the Sandbox: SandRBox</a>
+        <a class="basic-alignment left" href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/" title="Previous Post: Huey, for Controlling Phillips Hue Lightbulbs">&laquo; Huey, for Controlling Phillips Hue Lightbulbs</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/04/06/how-i-scaled-hipstamatic/" title="Next Post: How I Scaled Hipstamatic">How I Scaled Hipstamatic &raquo;</a>
       
     </p>
   </footer>
@@ -309,8 +298,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/12/12/what-i-want-for-christmas/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/12/12/what-i-want-for-christmas/';
         var disqus_script = 'embed.js';
       
     (function () {
