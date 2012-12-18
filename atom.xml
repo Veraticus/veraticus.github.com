@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-12-12T16:23:52-06:00</updated>
+  <updated>2012-12-18T11:55:41-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,137 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Making your Web Pages Ridiculously Fast (Without Breaking Them)]]></title>
+    <link href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/"/>
+    <updated>2012-12-18T10:28:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them</id>
+    <content type="html"><![CDATA[<p>I spent a lot of time optimizing page loading speed on GirlsGuideTo. The result is pages that load almost instantly initially and on subsequent loads; and while I&#8217;m proud of the work I&#8217;ve done in getting these pages zippy, there was no real secret sauce involved. Here I&#8217;ll discuss techniques anyone can use to make their web pages load with amazing rapidity, all without breaking Google Analytics and other scripts you might already have installed.</p>
+
+<!-- more -->
+
+
+<h2>Speed It Up</h2>
+
+<p>There are two JavaScript additions to your page I&#8217;ll be discussing here: head.js and Turbolinks.</p>
+
+<h3>Head.js</h3>
+
+<p>The first ingredient in our speed cake is <a href="http://headjs.com/">head.js</a>. While head.js has a number of components &#8211; media queries and dynamic CSS among them &#8211; the reason it initially became popular, and the reason I&#8217;m talking about it now, is its basic, core functionality. Head.js allows you to asynchronously load your page&#8217;s scripts. This might not sound like an enormous time savings, but consider this: do you use <a href="http://www.google.com/webfonts">Google Web Fonts</a> or <a href="https://typekit.com/">Adobe&#8217;s TypeKit</a>? Chances are you do, since everyone loves fonts. But fonts must be downloaded by the client browser, a process that usually occurs in the page&#8217;s head (before dom rendering has even begun), slowing down the rest of the page load while it waits.</p>
+
+<p>And your user sees an empty browser while they&#8217;re waiting. That&#8217;s unacceptable.</p>
+
+<p>Head.js alleviates this problem by giving you asynchronous script loading. Your application JavaScript, your fonts, jQuery, Google Analytics&#8230; everything that got put into your head that stopped your page from loading now loads at the same time as the rest of your content. Your user sees a page faster and is happier as a result.</p>
+
+<p>Here&#8217;s what the code looks like for GirlsGuideTo:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">head</span><span class="p">.</span><span class="nx">js</span><span class="p">(</span> <span class="p">{</span> <span class="s1">&#39;application&#39;</span><span class="o">:</span> <span class="s1">&#39;//girlsguideto.cloudfront.net/assets/application.js&#39;</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;typekit&#39;</span><span class="o">:</span> <span class="s1">&#39;//use.typekit.net/typekit.js&#39;</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;ga&#39;</span><span class="o">:</span> <span class="s1">&#39;//www.google-analytics.com/ga.js&#39;</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;jquery.embedly-2.1.7&#39;</span><span class="o">:</span> <span class="s1">&#39;//scripts.embed.ly/jquery.embedly-2.1.7.min.js&#39;</span> <span class="p">}</span> <span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course I didn&#8217;t hand-code that myself, I used the super helpful <a href="https://github.com/muitocomplicado/headjs-rails">headjs-rails</a> Gem to put this in my application.html.erb&#8217;s head:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sx">%= javascript_include_tag &quot;head.js&quot; %&gt;</span>
+</span><span class='line'><span class="sx">&lt;%=</span> <span class="n">headjs_include_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="s1">&#39;//use.typekit.net/typekit.js&#39;</span><span class="p">,</span> <span class="s1">&#39;//www.google-analytics.com/ga.js&#39;</span><span class="p">,</span> <span class="s1">&#39;//scripts.embed.ly/jquery.embedly-2.1.7.min.js&#39;</span> <span class="o">%&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pretty easy, huh? Give it a shot and you&#8217;ll see your page load times start really blazing.</p>
+
+<h3>Turbolinks</h3>
+
+<p>Playing off of Defunkt&#8217;s amazing <a href="http://pjax.heroku.com/">pjax</a>, <a href="https://github.com/rails/turbolinks">Turbolinks</a> speeds up your pageloads by making every page request Ajax-y (or more accurately Pjax-y). When you click on a link, Turbolinks will fetch the page you requested and replace the existing document&#8217;s body with its content. No CSS or JavaScript loading occurs, making each page load blazingly fast &#8211; and thanks to the magic of pushState, your back button and everything else you&#8217;d expect on the page still work.</p>
+
+<p>Turbolinks is ridiculously easy to install. Simply add it to your Gemfile and then, in your application.js, add this line:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require turbolinks</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Now Fix It</h2>
+
+<p>If you followed my advice up until this point, you might be stunned to discover your Google Analytics and <code>$(document).ready()</code> stuff has completely broken. No worries! We&#8217;ll fix it, and it&#8217;ll be quick and easy to do so.</p>
+
+<h3>$(document).ready()</h3>
+
+<p>This is the easiest thing to correct. <code>$(document).ready()</code> now fires before all your scripts have finished loading, since each script is loaded asynchronously and separately. So you&#8217;ll either see weird behavior from it, or it won&#8217;t execute at all (since $ will be undefined, as jQuery has yet to load). Simply replace all instances of <code>$(document).ready()</code> with <code>head()</code>. <code>head()</code> is called by head.js when your scripts have loaded. Something like this would make sense:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">head</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// Load Typekit</span>
+</span><span class='line'>  <span class="k">try</span><span class="p">{</span><span class="nx">Typekit</span><span class="p">.</span><span class="nx">load</span><span class="p">();}</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">){}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Load Google Analytics</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">_gaq</span> <span class="o">=</span> <span class="nx">_gaq</span> <span class="o">||</span> <span class="p">[];</span>
+</span><span class='line'>  <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">&#39;_setAccount&#39;</span><span class="p">,</span> <span class="s1">&#39;UA-XXX-1&#39;</span><span class="p">]);</span>
+</span><span class='line'>  <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">&#39;_trackPageview&#39;</span><span class="p">]);</span>
+</span><span class='line'><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Google Analytics</h3>
+
+<p>Google Analytics will load correctly on your initial page load, now. But unfortunately it won&#8217;t load on any subsequent pages, since additional pages are called via Ajax. We need to hook into one of Turbolink&#8217;s events to correctly record users visiting our site:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">head</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;page:change&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">&#39;_trackPageview&#39;</span><span class="p">]);</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'><span class="p">)}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>page:change</code> is called every time Turbolinks fetches and renders a page: when it does so, we call Google analytics manually to inform it to track the current page view.</p>
+
+<h3>Other Scripts</h3>
+
+<p>This should get you 95% of the way to having pages that are incredibly fast and work very well. One last caveat is that any script that loads on <code>$(document).ready()</code> must now also load on <code>page:change</code> as well: ready is not called when the page is already loaded, after all. So if you have CoffeeScript like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+</span><span class='line'>  <span class="nx">doExcitingThings</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&#8217;ll want to add this as well:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+</span><span class='line'>  <span class="nx">doExcitingThings</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span> <span class="s">&#39;page:change&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+</span><span class='line'>  <span class="nx">doExcitingThings</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Remember this is only for scripts that you&#8217;re sure are loaded after jQuery &#8211; scripts loaded asynchronously need to use <code>head()</code> instead of <code>$(document).ready()</code>.</p>
+
+<p>And that&#8217;s all there is to it! With these simple tips (and simple fixes) your pages will be incredibly, ridiculously fast. The only downside to these techniques relates to Turbolinks. If you have a lot of script-specific state on your pages, clearing it out between page loads will probably be a big headache. For most of us, without highly stateful JavaScript applications, all you&#8217;ll see are massive speed improvements. Your users won&#8217;t believe how fast your site is, and best of all, these changes are really easy to implement. So what&#8217;re you waiting for? Get JavaScripting!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What I Want for Christmas]]></title>
@@ -35,7 +166,7 @@
 <li><a href="https://jawbone.com/up">Jawbone Up</a></li>
 <li>His &amp; his iPhone 5s</li>
 <li>An awesome new logo from the amazing <a href="http://dribbble.com/jose_josedesign">Jose</a> that looks like <a href="http://dribbble.com/shots/480635-she">She</a> but says &#8220;Josh Symonds&#8221;</li>
-<li><a href="https://itunes.apple.com/us/app/baldurs-gate-enhanced-edition/id515114051?mt=8">Baldur&#8217;s Gate: Enhanced Edition for the iPad </a></li>
+<li><a href="https://itunes.apple.com/us/app/baldurs-gate-enhanced-edition/id515114051?mt=8">Baldur&#8217;s Gate: Enhanced Edition for the iPad</a></li>
 <li><a href="http://www.gamestop.com/wii/games/xenoblade-chronicles-gamestop-exclusive/98535">Xenoblade Chronicles for the Wii</a></li>
 <li>A new day of the week</li>
 <li><a href="https://itunes.apple.com/us/app/punch-quest/id554223561?mt=8">Punch Quest for the iPhone</a></li>
@@ -2371,36 +2502,6 @@
 <p>So, for a big application, I would stick to doing it by hand. Yes, you&#8217;ll have a few more infrastructure annoyances, but you&#8217;ll need the control.</p>
 
 <p>But! All big appliations started small. There&#8217;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&#8217;s ability to start lean and quick, then don&#8217;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&#8217;s easy and fast. And that&#8217;s the real beauty of Heroku &#8211; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Moving On]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/31/moving-on/"/>
-    <updated>2012-05-31T16:49:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/31/moving-on</id>
-    <content type="html"><![CDATA[<p>I try to keep to a schedule of a post every three days, and I&#8217;ve definitely not been keeping on top of that &#8211; I haven&#8217;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&#8217;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
-
-<!-- more -->
-
-
-<h2>Leaving Hipstamatic</h2>
-
-<p>I&#8217;m leaving my position as web director of Synthetic. I love the company and the product &#8211; I think Hipstamatic has a bright future ahead of it, and it is, in my opinion, easily the best photography app on the market. But my professional growth there had stalled. I was having lots of fun juggling servers, code, customer service, database administration, and, well, everything else technical. Yet I was hungry for more: specifically, opportunities to execute and pursue my own technical vision as a valued partner, not just a valued employee. I wanted to be a decision maker.</p>
-
-<p>Synthetic has always been a company driven by design. You can see it in any of their <a href="http://makebeautiful.hipstamatic.com/">amazing</a> <a href="http://gear.hipstamatic.com">sites</a> (featuring stellar HTML, CSS, and JS by the incomparable <a href="http://lukesbeard.com/">@LukesBeard</a>), and even the design of the Hipstamatic itself, which is retro and cool and usable all at once. But for an ambitious technical guy, direction through design didn&#8217;t leave a lot of opportunity for personal growth. I knew if I wanted to let my voice be heard, I&#8217;d have to go somewhere else to do it.</p>
-
-<h2>Joining GirlsGuideTo</h2>
-
-<p>So what&#8217;s next for Josh Symonds?</p>
-
-<p>I accepted an offer from <a href="http://girlsguideto.com">GirlsGuideTo</a>, an insanely fabulous website for women, to be their CTO and co-founder. Having recently secured a round of seed financing, GirlsGuideTo is positioned really excellently. They have a huge userbase and are poised to really take over their market; their only stumbling block is some really old software and a somewhat dated design. Those are problems I can fix! Within the next month, I intend to give the site a complete graphical and technical overhaul. Under my technical direction (and CEO Brette Borow&#8217;s product management), GirlsGuideTo will grow to be an even more amazing site &#8211; the premiere destination for women to get advice, read awesome articles, and connect with one another.</p>
-
-<p>Within the next couple weeks, I also intend to release my first RubyMotion application to the iTunes App Store. Featuring some excellent designs by the aforementioned <a href="http://lukesbeard.com/">@LukesBeard</a> and some pretty nifty code by yours truly, it represents the culmination of nearly a month spent working during almost all my free time. I think it&#8217;s pretty cool, and I&#8217;ll be spending some time discussing its technical infrastructure and how I used RubyMotion to make it happen.</p>
-
-<p>Finally, what does all this mean for my blog? Well, I&#8217;ll still post awesome code and go on and on about how much I love Ruby. But I&#8217;ll also be talking about the trials and tribulations of a newly-minted CTO at a new startup; finding talent, putting it to use, and in general conquering the world one step at a time. And I promise to get back on my regular, three-day schedule while I do it.</p>
-
-<p>So stick around and keep reading; this blog will only get more interesting!</p>
 ]]></content>
   </entry>
   

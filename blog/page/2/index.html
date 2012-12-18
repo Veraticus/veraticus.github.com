@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but &hellip;">
+  <meta name="description" content="Earlier today @alan_meier pointed out that in certain circumstances, my post on dynamic error pages leads to unexpected results: namely, though most &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&#8217;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&#8217;t then my post on dynamic error pages won&#8217;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/dynamic-error-pages-corrected/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -479,47 +520,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/31/moving-on/">Moving On</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-31T16:49:00-05:00" pubdate data-updated="true">May 31<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I try to keep to a schedule of a post every three days, and I&#8217;ve definitely not been keeping on top of that &#8211; I haven&#8217;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&#8217;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/31/moving-on/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -541,6 +541,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">Making your Web Pages Ridiculously Fast (Without Breaking Them)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/12/12/what-i-want-for-christmas/">What I Want for Christmas</a>
       </li>
     
@@ -554,10 +558,6 @@
     
       <li class="post">
         <a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable with Elasticsearch</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a>
       </li>
     
   </ul>
