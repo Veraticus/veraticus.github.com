@@ -3,9 +3,11 @@ layout: page
 footer: true
 ---
 ## Experience
+### CTO & Cofounder (2012 - Present) @ [Kinotify](http://kinotify.com)
+
 ### CTO & Cofounder (2012 - Present) @ [GirlsGuideTo](http://girlsguideto.com)
 
-### Web Director (2010 - 2012) @ [Synthetic](http://heysynthetic.com)
+### Web Director (2010 - 2012) @ [Hipstamatic](http://hipstamatic.com)
 * Managed a team dedicated to developing, deploying, and maintaining a fast and highly available website and API endpoint for Synthetic, makers of [Hipstamatic](http://hipstamaticapp.com). Our site at [community.hipstamatic.com](http://community.hipstamatic.com) sees millions of requests every month.
 * Administered a dozen Amazon EC2 servers running Ubuntu, Rails, unicorn, nginx, MySQL, memcached, and redis to provide robust and seamless web and iPhone integration. Dynamically altered the size and amount of EC2 instances to provide better throughput and capacity while staying inside budget constraints.
 * Used test-driven development to create a highly complicated, fully automated photo processing and ordering application that processes thousands of dollars in transactions daily. Integrated this ordering system with iPhone endpoints for plist, XML, and JSON.
