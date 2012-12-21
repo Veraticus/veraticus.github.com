@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Huey, for Controlling Phillips Hue Lightbulbs - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty Phillips Hue lightbulbs. I decided to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation">
+    <div id='navigation'>
+      <ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+
+    </div>
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Huey, for Controlling Phillips Hue Lightbulbs</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-28T01:08:00-06:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty <a href="http://meethue.com">Phillips Hue lightbulbs</a>. I decided to name it <a href="https://github.com/Veraticus/huey">Huey</a>, since I love nothing more than cute and silly names. I only spent a few hours tonight hacking it together, so I&#8217;m sure there&#8217;s a lot of room for improvement, but it works and does everything it&#8217;s supposed to and seems fairly fault tolerant; so I thought, why not announce it and fix problems when I wake up tomorrow?</p>
+
+<!-- more -->
+
+
+<p>Huey uses <a href="http://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol">SSDP</a> to discover the IP of the Hue hub the first time the code is run. I wish I could take credit for the EventMachine code that went into making this work correctly, but actually I largely cribbed it from Turboladen&#8217;s <a href="https://github.com/turboladen/upnp">upnp library</a>. I would&#8217;ve just included it as a Gem dependency but for some reason it&#8217;s not released as a Gem, which is pretty frustrating for situations like this.</p>
+
+<p>I chose a pretty boring UUID for Huey to use: <code>'0123456789abdcef0123456789abcdef'</code>. This works just fine, but if you want to change it Huey is ultra-configurable and you can do so either in a block or directly:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1"># or</span>
+</span><span class='line'>  <span class="no">Huey</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first time you issue a request to the Hue hub, you&#8217;ll likely see an attractive error message like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">Huey</span><span class="o">::</span><span class="no">Errors</span><span class="o">::</span><span class="no">PressLinkButton</span><span class="p">:</span> <span class="s1">&#39;Press the link button and try your request again&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unfortunately, the first time any request is sent, Hue needs to validate the new client by you actually walking over and touching the link button on the hub. But once you do that, you can just resend the request and it should work fine. Then you can use the whole gamut of the Hue API:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">all</span> <span class="c1"># Returns an array of your bulbs</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Finds the bulb with the ID of 1</span>
+</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Finds the bulb with the name &#39;Living Room&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">alert!</span> <span class="c1"># Flashes the bulb in question once, useful for checking connectivity</span>
+</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">false</span> <span class="c1"># Turn the bulb off</span>
+</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Dim the bulb a little bit</span>
+</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">ct</span> <span class="o">=</span> <span class="mi">500</span> <span class="c1"># Change the bulb&#39;s color</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I&#8217;ll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-28T01:08:00-06:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/huey/'>huey</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/29/dynamic-cache-counters-in-rails/" title="Previous Post: Dynamic Cache Counters in Rails">&laquo; Dynamic Cache Counters in Rails</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/12/12/what-i-want-for-christmas/" title="Next Post: What I Want for Christmas">What I Want for Christmas &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>, CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/huey-gem-release/">Huey Gem Release</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">Making your Web Pages Ridiculously Fast (Without Breaking Them)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/12/what-i-want-for-christmas/">What I Want for Christmas</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">Huey, for Controlling Phillips Hue Lightbulbs</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/veraticus@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
+  Copyright &copy; 2012 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+
+    </div>
+  </footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/';
+        var disqus_url = 'http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

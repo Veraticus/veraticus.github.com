@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-10-25T13:53:59-05:00</updated>
+  <updated>2012-12-21T14:54:11-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic Cache Counters in Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/"/>
+    <updated>2012-10-29T17:55:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails</id>
+    <content type="html"><![CDATA[<p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
+
+<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there's no need for STI here -- there's really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn't let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you're caching under. You're out of luck if you want to change it dynamically.</p>
+
+<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
+
+<!-- more -->
+
+
+<p>The most ideal way to do this is to hook into the existing <a href="http://api.rubyonrails.org/classes/ActiveRecord/CounterCache.html">ActiveRecord CounterCache</a> module. Given that, the code is quite simple, really:</p>
+
+<p>```ruby
+class Vote &lt; ActiveRecord::Base
+  belongs_to :voteable, polymorphic: true, touch: true</p>
+
+<p>  after_create :increment_counters
+  after_destroy :decrement_counters</p>
+
+<p>  [:increment, :decrement].each do |type|</p>
+
+<pre><code>define_method("#{type}_counters") do
+  voteable_type.classify.constantize.send("#{type}_counter", "#{self.type}votes_count".to_sym, self.voteable_id)
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object's class after a vote is created or destroyed; note that I don't intend to change the type of the vote, but if you do, you'll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
+
+<p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
+
+<p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Concerns V: Searchable with Elasticsearch]]></title>
@@ -611,103 +654,6 @@ end
 <p>As a bonus we also clean out the session a little bit so that <code>/redirect_back</code> won't work again.</p>
 
 <p>And that's that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output -- all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can't be beat.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Error Pages, Corrected]]></title>
-    <link href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/"/>
-    <updated>2012-08-13T14:32:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected</id>
-    <content type="html"><![CDATA[<p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn't experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don't then my post on dynamic error pages won't work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
-
-<!-- more -->
-
-
-<h2>The Problem</h2>
-
-<p>Summarized elegantly <a href="https://github.com/rails/rails/issues/671">here</a>:</p>
-
-<blockquote><p>In Rails 2.3.x, one is able to stick this in ApplicationController to present the user with a custom 404 screen:</p>
-
-<p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
-
-<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController -- the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
-
-<p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it's raised in Rack, not the application itself.</p>
-
-<h2>The Solution</h2>
-
-<p>Requires a couple changes on our parts. First, let's change our application_controller.rb:</p>
-
-<p><code>ruby
-unless Rails.application.config.consider_all_requests_local
-  rescue_from Exception, with: :render_500
-  rescue_from ActionController::RoutingError, with: :render_404
-  rescue_from ActionController::UnknownController, with: :render_404
-  rescue_from AbstractController::ActionNotFound, with: :render_404 # To prevent Rails 3.2.8 deprecation warnings
-  rescue_from ActiveRecord::RecordNotFound, with: :render_404
-end
-</code></p>
-
-<p>So far, just as usual. Now we define the actual actions:</p>
-
-<p>```ruby
-  def render_500(exception = nil)</p>
-
-<pre><code>render_exception(500, exception.message, exception)
-</code></pre>
-
-<p>  end</p>
-
-<p>  def render_404(exception = nil)</p>
-
-<pre><code>render_exception(404, 'Page not found', exception)
-</code></pre>
-
-<p>  end</p>
-
-<p>  def render_exception(status = 500, message = 'Server error', exception)</p>
-
-<pre><code>@status = status
-@message = message
-
-if exception
-  Rails.logger.fatal "\n#{exception.class.to_s} (#{exception.message})"
-  Rails.logger.fatal exception.backtrace.join("\n")
-else
-  Rails.logger.fatal "No route matches [#{env['REQUEST_METHOD']}] #{env['PATH_INFO'].inspect}"
-end
-
-render template: "errors/error", formats: [:html], layout: 'application', status: @status
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>Since we're going to be exposing <code>render_404</code> as an action, now, we have to make parameters into it optional: but we know that if <code>render_exception</code> doesn't receive an exception, it actually got a 404.</p>
-
-<p>Finally, we need to add a globbed, wildcard route at the conclusion of our routes.rb. But if we just add one in, then engines and Gems that also rely on wildcard routes will fail. The solution is to do this through our application.rb, like so:</p>
-
-<p>```ruby
-module MyApplication
-  class Application &lt; Rails::Application</p>
-
-<p>  ...</p>
-
-<p>  # 404 catcher
-  config.after_initialize do |app|</p>
-
-<pre><code>app.routes.append{ match '*a', :to =&gt; 'application#render_404' } unless config.consider_all_requests_local
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>Now it won't punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
-
-<p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
 ]]></content>
   </entry>
   
