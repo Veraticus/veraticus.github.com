@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-12-21T14:54:11-06:00</updated>
+  <updated>2012-12-27T20:10:25-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Breaking Up With GirlsGuideTo]]></title>
+    <link href="http://joshsymonds.com/blog/2012/12/27/breaking-up-with-girlsguideto/"/>
+    <updated>2012-12-27T19:40:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/12/27/breaking-up-with-girlsguideto</id>
+    <content type="html"><![CDATA[<p>It&#8217;s never easy to decide to move on, particularly when you&#8217;re a cofounder. It definitely feels less like a business shakeup and more like a real breakup.</p>
+
+<p>But I must announce that my time at GirlsGuideTo has officially ended.</p>
+
+<p>I&#8217;m proud of the work I&#8217;ve done for GirlsGuideTo. I took a <a href="http://old.girlsguideto.com/home">decrepit, slow PHP Drupal installation</a> and turned it into a <a href="http://girlsguideto.com/">speedy, modernized Rails application</a>. The new GirlsGuideTo uses some incredibly modern technologies to be fast, while still being maintainable and consistent. The pages load near-instantly thanks to <a href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">head.js and Turbolinks</a>, and the Rails code is well-separated and highly tested thanks to some awesome concerns and really nifty Rack middleware.</p>
+
+<p>It also features a really kickass design from my friend <a href="https://twitter.com/LukesBeard">@LukesBeard</a>, so it also looks great in addition to feeling great.</p>
+
+<p>Though I&#8217;m moving to greener pastures, I&#8217;m sure GirlsGuideTo has a bright future ahead of them. As for me, I&#8217;m doing some work for <a href="http://everest.com/">Everest</a> &#8211; they&#8217;re really awesome people that need their backend scaled right into infinity, and I think I&#8217;m the guy to do it for them. In fact, if you download the <a href="https://itunes.apple.com/us/app/everest-live-your-dreams-achieve/id581016826?mt=8">super cool free app</a> or have downloaded it at launch, you&#8217;ve already touched some of my code! The best part about onboarding quickly is having code live in production almost immediately.</p>
+
+<p>So keep on watching this spot for more of the same that you&#8217;ve come to expect &#8211; adrenaline-filled posts on the exciting world of server scalability and optimization.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Huey Gem Release]]></title>
@@ -2436,38 +2455,6 @@
 <p>And, honestly, that&#8217;s all that matters to any prospective employer from their applicants. If you really want to be hired, then you&#8217;ll have to show that you respect the time and energy they&#8217;ve invested in conducting a search for someone like you. Write plainly and to impress &#8211; cram your cover letter with customized material, responding directly to the job posting. Include links early and often to your online presence. And fill your letter with proof after repeated proof that you are the ideal match they&#8217;ve been searching for.</p>
 
 <p>Do all that, and you&#8217;ll get a response to each and every one of your applications. And, hopefully, most of those responses will be positive.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Designing Sites for Users]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users/"/>
-    <updated>2012-06-17T17:52:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/17/designing-sites-for-users</id>
-    <content type="html"><![CDATA[<p>Designing a new site from scratch can be difficult &#8211; not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities &#8211; and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
-
-<!-- more -->
-
-
-<h2>Mailcheck</h2>
-
-<p>The amazing <a href="https://github.com/Kicksend/mailcheck">Mailcheck</a> library is great for any site that accepts email addresses. According to its creators, <a href="http://kicksend.com">Kicksend</a>, <a href="http://blog.kicksend.com/how-we-decreased-sign-up-confirmation-email-bounces-by-50/">Mailcheck reduced email confirmation signup bounces by 50%</a>. Now that&#8217;s pretty impressive.</p>
-
-<p>I also love Mailcheck&#8217;s philosophy. The guiding idea here &#8211; that users will make errors, and software should respond efficiently to correct them &#8211; is true no matter what you&#8217;re making, from an iPhone app to a website. Always remember that users will improperly use your software. Guiding them back to the appropriate path is your responsibility, with libraries like Mailcheck specifically, but also generally through your app&#8217;s flow and and user experience. Every form field that encounters frequent errors should have a Mailcheck-like check around it; your users will thank you by loving your app even more.</p>
-
-<h2>Chosen</h2>
-
-<p><a href="https://github.com/harvesthq/chosen">Chosen</a> is cute little syntactical sugar that turns select boxes from ugly, long monstrosities into helpful little widgets. Check out the <a href="https://github.com/harvesthq/chosen">sample page</a> to see everything that it can do; if you have a select box on your site (and chances are that you do), then you should be using Chosen to help users select items from it more effectively.</p>
-
-<p>Chosen expresses another important usability concept &#8211; accessibility. Modern software can be ridiculously complicated, but most users don&#8217;t care at all for complexity: they want information presented to them clearly, and they want to be able to navigate said information sensibly. By turning enormous select lists into hinting dropdowns, Chosen formats information sensibly and allows users to select what they want quickly. Ideal accessibility from a user&#8217;s perspective.</p>
-
-<h2>Bandit</h2>
-
-<p>There&#8217;s been a fair amount of <a href="http://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html">discussion</a> recently about the <a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a>, especially as it relates to A/B testing. I&#8217;ve done A/B testing with Rails before but never really enjoyed it; but I recently came across the <a href="https://github.com/bmuller/bandit">bandit</a> gem and I know I&#8217;ll be using it extensively moving into the future.</p>
-
-<p>Using multi-armed bandit solutions, you can test lots of options at once, and for as long as you like. Gradually the numbers for the test will reflect the reality of user preference: you don&#8217;t need a set number of tests (as per A/B testing) and you aren&#8217;t confined to only two options. Ultimately, you don&#8217;t need to guess what a user wants. You can make some reasonable guesses and set them all up as possibilities, and over time, user choice will guide the direction of your site. And that&#8217;s pretty awesome.</p>
-
-<p>In the end, usability is about making your software more responsive and more presentable to your audience. Try out these libraries, but more than that, keep in mind the principles that guide them. By following those, you&#8217;re guaranteed to make software that&#8217;s much more usable than it would be otherwise.</p>
 ]]></content>
   </entry>
   
