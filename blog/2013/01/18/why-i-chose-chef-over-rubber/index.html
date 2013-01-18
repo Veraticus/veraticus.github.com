@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rails 3: Arel, Arel_Table, and Squeel - Hi, I'm Josh Symonds</title>
+  <title>Why I Chose Chef Over Rubber - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &#8211; ActiveRecord&#8217;s own relational &hellip;">
+  <meta name="description" content="One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,7 +98,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rails 3: Arel, Arel_Table, and Squeel</h1>
+      <h1 class="entry-title">Why I Chose Chef Over Rubber</h1>
     
     
       <p class="meta">
@@ -114,44 +114,49 @@
   
 
 
-<time datetime="2012-03-10T10:17:00-06:00" pubdate data-updated="true">Mar 10<span>th</span>, 2012</time>
+<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &#8211; ActiveRecord&#8217;s own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
-
-<p>Well, in reality, that isn&#8217;t quite what happened. ActiveRecord&#8217;s Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
+<div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &#8211; and surprising even myself &#8211; I ended up choosing Chef as our solution. Here&#8217;s why.</p>
 
 <!-- more -->
 
 
+<h2>Collaboration</h2>
 
+<p>One of rubber&#8217;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&#8217;ll get a merge conflict in your server yaml file: you really don&#8217;t want to make a mistake resolving <em>that</em> merge conflict.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;sum(model.column) as &#39;model_sum&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="s2">&quot;created_at</span>
-</span><span class='line'><span class="s2">DESC&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;models.created_at &gt; ?&quot;</span><span class="p">,</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>By contrast, it&#8217;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&#8217;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&#8217;s actually going into the servers.</p>
 
+<p>Chef is just a better tool for teams of people.</p>
 
-<p>Or using unpleasant workarounds to address the underlying Arel for the model:</p>
+<h2>Extensibility &amp; Community Support</h2>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="no">Model</span><span class="o">.</span><span class="n">arel_table</span><span class="o">[</span><span class="ss">:title</span><span class="o">].</span><span class="n">matches</span><span class="p">(</span><span class="s1">&#39;%foo%&#39;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>For the tools that rubber provides in its stack &#8211; and it provides a lot &#8211; it&#8217;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&#8217;s no real extensibility, and while it&#8217;s easy enough to roll your own recipes, it&#8217;d definitely be ideal not to repeat work if you&#8217;re fairly confident someone else has already done it.</p>
 
+<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&#8217;re not precisely what you&#8217;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
 
-<p>This is just kinda ugly. Happily, there&#8217;s a Gem that addresses this problem called <a href="https://github.com/ernie/squeel">squeel</a> that makes Arel what, in my mind, it should be. It provides an elegant, simple syntax for creating and managing queries that is sensibly divorced both from the underlying Arel and raw SQL of the database:</p>
+<p>We&#8217;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&#8217;ve been developing internally for us. It&#8217;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Model</span><span class="o">.</span><span class="n">where</span><span class="p">{</span> <span class="p">{</span><span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;Josh&#39;</span> <span class="o">|</span> <span class="n">created_at</span> <span class="o">&lt;=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span><span class="p">}</span> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<h2>More Granularity</h2>
 
+<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&#8217;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
 
-<p>Much easier to understand! The double-curly braces does kind of suck (this is because it&#8217;s a hash inside a proc) but it&#8217;s still a fair but more understandable than the default Arel stuff.</p>
+<p>Similarly changing postfix configuration on a per-environment basis is a snap.</p>
+
+<h1>But Rubber is a Great Tool</h1>
+
+<p>Don&#8217;t get me wrong: I still really like rubber. It doesn&#8217;t fit for Everest&#8217;s use case, definitely &#8211; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
+
+<p>Why? It&#8217;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&#8217;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&#8217;ll go far, but trying to work against its defaults will be really painful.</p>
+
+<h2>Final Word on Chef vs. Puppet</h2>
+
+<p>Doesn&#8217;t matter, choose whichever you like more.</p>
 </div>
 
 
@@ -174,12 +179,12 @@
   
 
 
-<time datetime="2012-03-10T10:17:00-06:00" pubdate data-updated="true">Mar 10<span>th</span>, 2012</time>
+<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/chef/'>chef</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
   
 </span>
 
@@ -188,7 +193,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -201,10 +206,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/" title="Previous Post: Ruby 1.9 Awesomeness Part 1: SecureRandom">&laquo; Ruby 1.9 Awesomeness Part 1: SecureRandom</a>
+        <a class="basic-alignment left" href="/blog/2012/12/27/breaking-up-with-girlsguideto/" title="Previous Post: Breaking Up With GirlsGuideTo">&laquo; Breaking Up With GirlsGuideTo</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/03/13/fnordmetric-native-rails-metrics/" title="Next Post: Fnordmetric: Native Rails Metrics">Fnordmetric: Native Rails Metrics &raquo;</a>
       
     </p>
   </footer>
@@ -304,8 +307,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/';
+        var disqus_url = 'http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/';
         var disqus_script = 'embed.js';
       
     (function () {

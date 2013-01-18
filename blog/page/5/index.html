@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Phil Karlton, someone I can only presume is a pretty smart programmer, said &#8220;there are only two hard things in Computer Science: cache &hellip;">
+  <meta name="description" content="I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/22/why-i-dont-use-haml/">Why I Don&#8217;t Use Haml</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-22T13:19:00-05:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I initially thought of titling this post something more inflammatory, like &#8220;Why Haml Sucks&#8221; or &#8220;Only Losers Use Haml.&#8221; But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It&#8217;s actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it&#8217;s very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
+
+<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/22/why-i-dont-use-haml/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -492,57 +535,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
-
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
-
-<p>But it will soon! The TODO list is particularly exciting:</p>
-
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
-</ul>
-
-
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -557,11 +549,15 @@
   
     <section>
   <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>, CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>. RubyMotion and Rails expert, devops guru and server wrangler. I write Ruby, maintain servers, and wear a lot of different hats.</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/12/27/breaking-up-with-girlsguideto/">Breaking Up With GirlsGuideTo</a>
@@ -577,10 +573,6 @@
     
       <li class="post">
         <a href="/blog/2012/12/12/what-i-want-for-christmas/">What I Want for Christmas</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">Huey, for Controlling Phillips Hue Lightbulbs</a>
       </li>
     
   </ul>
@@ -624,7 +616,7 @@
   <footer role="contentinfo">
     <div id='footer'>
       <p>
-  Copyright &copy; 2012 - Josh Symonds -
+  Copyright &copy; 2013 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

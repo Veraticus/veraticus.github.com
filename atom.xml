@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-12-27T20:10:25-06:00</updated>
+  <updated>2013-01-18T15:33:17-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why I Chose Chef Over Rubber]]></title>
+    <link href="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/"/>
+    <updated>2013-01-18T14:34:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber</id>
+    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &#8211; and surprising even myself &#8211; I ended up choosing Chef as our solution. Here&#8217;s why.</p>
+
+<!-- more -->
+
+
+<h2>Collaboration</h2>
+
+<p>One of rubber&#8217;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&#8217;ll get a merge conflict in your server yaml file: you really don&#8217;t want to make a mistake resolving <em>that</em> merge conflict.</p>
+
+<p>By contrast, it&#8217;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&#8217;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&#8217;s actually going into the servers.</p>
+
+<p>Chef is just a better tool for teams of people.</p>
+
+<h2>Extensibility &amp; Community Support</h2>
+
+<p>For the tools that rubber provides in its stack &#8211; and it provides a lot &#8211; it&#8217;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&#8217;s no real extensibility, and while it&#8217;s easy enough to roll your own recipes, it&#8217;d definitely be ideal not to repeat work if you&#8217;re fairly confident someone else has already done it.</p>
+
+<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&#8217;re not precisely what you&#8217;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
+
+<p>We&#8217;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&#8217;ve been developing internally for us. It&#8217;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
+
+<h2>More Granularity</h2>
+
+<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&#8217;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
+
+<p>Similarly changing postfix configuration on a per-environment basis is a snap.</p>
+
+<h1>But Rubber is a Great Tool</h1>
+
+<p>Don&#8217;t get me wrong: I still really like rubber. It doesn&#8217;t fit for Everest&#8217;s use case, definitely &#8211; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
+
+<p>Why? It&#8217;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&#8217;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&#8217;ll go far, but trying to work against its defaults will be really painful.</p>
+
+<h2>Final Word on Chef vs. Puppet</h2>
+
+<p>Doesn&#8217;t matter, choose whichever you like more.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Breaking Up With GirlsGuideTo]]></title>
@@ -2398,63 +2442,6 @@
 
 
 <p>Dynamic error pages like what I&#8217;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&#8217;s pretty unlikely that&#8217;ll happen. Just be careful when using this system &#8211; maybe even don&#8217;t render the exception in your usual layout, but render it in an error-specific one &#8211; to reduce the chance of your error pages also erroring, and you&#8217;ll be golden.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How Not to Apply for a Job]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/20/how-not-to-apply-for-a-job/"/>
-    <updated>2012-06-20T22:29:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/20/how-not-to-apply-for-a-job</id>
-    <content type="html"><![CDATA[<p>I&#8217;ve been looking about two weeks now for a really fantastic designer for GirlsGuideTo &#8211; a designer that&#8217;s as fabulous as the site itself. Somewhat surprisingly, given how many people are unemployed or underemployed, my search has been really difficult. And not because of a dearth of responses: in fact, quite the opposite. I estimate I&#8217;ve received more than a hundred resumes in response to Craigslist postings, LinkedIn listings, and advertising in Dribbbble. And most surprising to me is the fact that the vast majority of these responses just aren&#8217;t very good.</p>
-
-<p>I&#8217;m sure that many of these resumes and coverletters come from experienced, seasoned professionals with a genuine and burning desire to be paid &#8211; a desire that is equally matched by my hunger to pay them for the amazing work they can do. But frankly, you wouldn&#8217;t know it from reading their letters. 99.9% of them are just&#8230; <em>bad</em>. So, I&#8217;ve taken the time to distill the mountain of resumes in my inbox into three succinct lessons. If you&#8217;re going to apply for a job, please take them to heart before writing your potential employer. Not only will you increase the chances you&#8217;ll actually be hired, but they will definitely thank you for breaking the tide of mediocrity that is surely washing over them. If you&#8217;re the one to stand out, believe me&#8230; you&#8217;ll get noticed.</p>
-
-<!-- more -->
-
-
-<h2>Don&#8217;t Copy and Paste</h2>
-
-<p>Easily the most common mistake I see &#8211; the one that is most likely to make me entirely skip a candidate &#8211; is that the cover letter is copied and pasted. It either doesn&#8217;t include my company name (GirlsGuideTo is somewhat distinctive), or even more embarrassing, is addressed to a different company&#8217;s name. I can always tell when I&#8217;m reading a copy/pasted letter. It&#8217;s generic and boring; it enumerates talents and skills that I have no need for and didn&#8217;t include in my job listing.</p>
-
-<p>I took the time to hand-craft the job posting you read. I know you&#8217;re probably applying to lots of jobs, and I sympathize that being without work &#8211; or trying to find a new job &#8211; is arduous and unpleasant. But if you want to be seriously considered, you must include three things in your cover letter:</p>
-
-<ol>
-<li>The name of the company you&#8217;re applying to,</li>
-<li>The position in the company you&#8217;re applying for,</li>
-<li>Why your skills make you a perfect fit for that position.</li>
-</ol>
-
-
-<p>The third one is obviously the most complicated but also the most necessary. The degree to which you customize your cover letter for the target job will be directly proportional to the number of people that respond positively to it. Believe me, I can tell which people actually wrote even a few choice words actually responding to my listing.</p>
-
-<p>They are the ones that I will write back.</p>
-
-<h2>Don&#8217;t Make Me Find You</h2>
-
-<p>If you&#8217;re an Internet professional &#8211; web designer, programmer, usability expert, whatever &#8211; you must have an online presence. It can be as simple as your LinkedIn profile, but ideally should be a portfolio, with your own personalized URL, summarizing the work you&#8217;ve done, hopefully with lots of links and (even better) pictures. You should link to this summary of you in your cover letter. Be proud of it; include it in the first or second sentence. Say something like, &#8220;You can find my resume, and my portfolio, online at http://myattractivenamehere.com. But the parts that are most directly pertinent to you are&#8230;&#8221; And then go on to list the jobs that you&#8217;ve done that make you perfect for me!</p>
-
-<p>Don&#8217;t include a list of twenty links in your coverletter, saying they&#8217;re you&#8217;re work. If I&#8217;m feeling gracious I might click on the first two. Chances are they won&#8217;t be what I&#8217;m looking for, and then I&#8217;ll consign your resume to the dustbin of defeat. (This outcome might have been averted if you had twenty thumbnails I could quickly glance over on your portfolio, though.)</p>
-
-<p>And for Heaven&#8217;s sake include some kind of link to yourself! Anything at all works. If you&#8217;re really an Internet professional and not just some high school student &#8211; or even if you ARE a high school student &#8211; you should have an online presence somewhere. If you don&#8217;t include links in your resume or your cover letter, the chances of me Googling you to find them are absolutely zero. As are the chances of you landing this job.</p>
-
-<h2>Don&#8217;t Make Me Read Your Resume</h2>
-
-<p>This is a harsh truth, but one I&#8217;ve heard again and again from people who have to make hiring decisions:</p>
-
-<p>We don&#8217;t read resumes unless we&#8217;ve already decided we&#8217;re interested in a candidate.</p>
-
-<p>Your cover letter is going to be your one and only chance to sell yourself. Go all out. If you have skills that you feel are directly applicable to the position, mention them in the cover letter, and then explain why those skills make you suited for the work. Your previous experiences that give you unique and valuable insight into the job should be front and center, in the letter itself.</p>
-
-<p>And most likely, the second place I go, after reading your cover letter, won&#8217;t be your resume either. It&#8217;ll be your online presence, either your portfolio or sample sites you&#8217;ve linked me to. I&#8217;ll only open your resume after I&#8217;ve already decided you&#8217;re most likely a good fit &#8211; and to be honest, I probably won&#8217;t read it very closely anyway, since by that point I&#8217;ve already made a decision.</p>
-
-<p>I know this seems unfair. You might be perfect for me; your resume even lists your numerous and varied accomplishments that make you my ideal match. But your competitor, with a very similar set of experiences, actually told me her accomplishments in her first paragraph. She drew my attention right to them &#8211; I didn&#8217;t even have to look in her resume to start being impressed by her. When I open her portfolio, I&#8217;ll see that she&#8217;s right. She <em>is</em> perfect for me. And then she goes on the shortlist, and you and your perfect resume are skipped over, unopened.</p>
-
-<p>What I&#8217;m really trying to say with this small list of &#8220;don&#8217;ts&#8221; is very simply this: don&#8217;t get lost in the crowd. I don&#8217;t care if the designer we end up choosing is a guy or girl, Chicagoan or San Franciscoan, experienced or freshly graduated. (Also it&#8217;s illegal for me to care, but that&#8217;s beside the point.) All that really matters to me is that they&#8217;re good; and more than being good, they&#8217;re not afraid to say, &#8220;I&#8217;m perfect for you, and here&#8217;s why.&#8221;</p>
-
-<p>And, honestly, that&#8217;s all that matters to any prospective employer from their applicants. If you really want to be hired, then you&#8217;ll have to show that you respect the time and energy they&#8217;ve invested in conducting a search for someone like you. Write plainly and to impress &#8211; cram your cover letter with customized material, responding directly to the job posting. Include links early and often to your online presence. And fill your letter with proof after repeated proof that you are the ideal match they&#8217;ve been searching for.</p>
-
-<p>Do all that, and you&#8217;ll get a response to each and every one of your applications. And, hopefully, most of those responses will be positive.</p>
 ]]></content>
   </entry>
   
