@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chef | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/chef/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-01-18T15:33:17-06:00</updated>
+  <updated>2013-01-22T13:41:45-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,135 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Chef Cookbooks for Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails/"/>
+    <updated>2013-01-22T12:36:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails</id>
+    <content type="html"><![CDATA[<p>I spent awhile trying to find other people's Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I'll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
+
+<!-- more -->
+
+
+<h2>base</h2>
+
+<p><code>ruby
+run_list %W(
+  recipe[chef-client::delete_validation]
+  recipe[chef-client::config]
+  recipe[chef-client::service]
+  recipe[apt]
+  recipe[monit]
+  recipe[postfix]
+  recipe[openssh]
+  recipe[ntp]
+  recipe[vim]
+  recipe[build-essential]
+  recipe[user::data_bag]
+  recipe[logrotate]
+  recipe[ohai]
+  recipe[ruby_build]
+  recipe[rbenv::system]
+  recipe[sudo]
+  recipe[zsh]
+  recipe[oh-my-zsh]
+  recipe[collectd]
+  recipe[collectd::attribute_driven]
+  recipe[htop]
+  recipe[runit]
+  recipe[rsyslog::client]
+)
+</code></p>
+
+<p>This is the run list I'm using as the base for all the servers. I don't think there's anything surprising here, but I do want to point out a few things:</p>
+
+<ul>
+<li><strong>openssh</strong> should be configured like this:</li>
+</ul>
+
+
+<p>```ruby
+  default_attributes 'openssh' => {</p>
+
+<pre><code>  'permit_root_login' =&gt; 'no',
+  'password_authentication' =&gt; 'no'
+}
+</code></pre>
+
+<p>```</p>
+
+<p>You don't want to allow root logins or password logins. It is also probably worthwhile to delete any preexisting sudoer for your AMI image if one exists (like ubuntu for example), using...</p>
+
+<ul>
+<li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It's really helpful.</p></li>
+<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list -- it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn't matter a whole lot to me. But I can definitely see taking this out.</p></li>
+<li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you'll get confused.</p></li>
+</ul>
+
+
+<h2>statistics</h2>
+
+<p>I'm running Graylog2 and Graphite to compile logs and interesting statistics from our servers. This is the runlist that establishes the role dedicated to these two pieces of software, which I called <code>statistics</code>:</p>
+
+<p><code>ruby
+run_list %W(
+  recipe[ebs]
+  recipe[apache2]
+  recipe[statsd]
+  recipe[python]
+  recipe[graphite]
+  recipe[graylog2]
+  recipe[graylog2::apache2]
+)
+</code></p>
+
+<p>I use <a href="https://github.com/titanous/chef-ebs">this EBS cookbook</a> with this configuration:</p>
+
+<p>```ruby
+default_attributes 'ebs' => {</p>
+
+<pre><code>'volumes' =&gt; {
+  '/data' =&gt; {
+    'size' =&gt; 100,
+    'fstype' =&gt; 'xfs'
+  }
+}
+</code></pre>
+
+<p>  }
+```</p>
+
+<p>This server saves and compiles enormous amounts of data, and in order to hold it all correctly I provision an external EBS drive to contain it. I'm actually not even sure 100 gigs is enough space but it seems good for now. elasticsearch, mongodb, and graphite are all set up to save their data to subdirectores in /data. While I could easily have made this a RAID array instead, persistence of this data is not super important to me right now: while it would suck to lose all our analytics information, given our traffic it would rebuild into something useful very quickly anyway.</p>
+
+<p>I would use nginx instead of Apache2, but for a server only accessible internally that will probably not see a lot of traffic, it was much easier and faster to just set up Apache2 and passenger than start unicorns for the Graphite and Graylog web interfaces.</p>
+
+<h2>app</h2>
+
+<p><code>ruby
+run_list %W(
+  recipe[imagemagick]
+  recipe[nginx]
+  recipe[unicorn]
+)
+</code></p>
+
+<p>Probably among the least surprising roles. The application servers use nginx and unicorn for blazingly fast speed. Make sure to add the nginx collectd plugin to this server for additional metrics and monitoring:</p>
+
+<p>```ruby
+default_attributes 'collectd' => {</p>
+
+<pre><code>'plugins' =&gt; {
+  'nginx' =&gt; { }
+}
+</code></pre>
+
+<p>  }
+```</p>
+
+<p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don't discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why I Chose Chef Over Rubber]]></title>

@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-01-18T15:33:17-06:00</updated>
+  <updated>2013-01-22T13:41:45-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,182 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Chef Cookbooks for Rails]]></title>
+    <link href="http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails/"/>
+    <updated>2013-01-22T12:36:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails</id>
+    <content type="html"><![CDATA[<p>I spent awhile trying to find other people&#8217;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I&#8217;ll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
+
+<!-- more -->
+
+
+<h2>base</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run_list</span> <span class="sx">%W(</span>
+</span><span class='line'><span class="sx">  recipe[chef-client::delete_validation]</span>
+</span><span class='line'><span class="sx">  recipe[chef-client::config]</span>
+</span><span class='line'><span class="sx">  recipe[chef-client::service]</span>
+</span><span class='line'><span class="sx">  recipe[apt]</span>
+</span><span class='line'><span class="sx">  recipe[monit]</span>
+</span><span class='line'><span class="sx">  recipe[postfix]</span>
+</span><span class='line'><span class="sx">  recipe[openssh]</span>
+</span><span class='line'><span class="sx">  recipe[ntp]</span>
+</span><span class='line'><span class="sx">  recipe[vim]</span>
+</span><span class='line'><span class="sx">  recipe[build-essential]</span>
+</span><span class='line'><span class="sx">  recipe[user::data_bag]</span>
+</span><span class='line'><span class="sx">  recipe[logrotate]</span>
+</span><span class='line'><span class="sx">  recipe[ohai]</span>
+</span><span class='line'><span class="sx">  recipe[ruby_build]</span>
+</span><span class='line'><span class="sx">  recipe[rbenv::system]</span>
+</span><span class='line'><span class="sx">  recipe[sudo]</span>
+</span><span class='line'><span class="sx">  recipe[zsh]</span>
+</span><span class='line'><span class="sx">  recipe[oh-my-zsh]</span>
+</span><span class='line'><span class="sx">  recipe[collectd]</span>
+</span><span class='line'><span class="sx">  recipe[collectd::attribute_driven]</span>
+</span><span class='line'><span class="sx">  recipe[htop]</span>
+</span><span class='line'><span class="sx">  recipe[runit]</span>
+</span><span class='line'><span class="sx">  recipe[rsyslog::client]</span>
+</span><span class='line'><span class="sx">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is the run list I&#8217;m using as the base for all the servers. I don&#8217;t think there&#8217;s anything surprising here, but I do want to point out a few things:</p>
+
+<ul>
+<li><strong>openssh</strong> should be configured like this:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">default_attributes</span> <span class="s1">&#39;openssh&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s1">&#39;permit_root_login&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;password_authentication&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;no&#39;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You don&#8217;t want to allow root logins or password logins. It is also probably worthwhile to delete any preexisting sudoer for your AMI image if one exists (like ubuntu for example), using&#8230;</p>
+
+<ul>
+<li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It&#8217;s really helpful.</p></li>
+<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &#8211; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&#8217;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
+<li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you&#8217;ll get confused.</p></li>
+</ul>
+
+
+<h2>statistics</h2>
+
+<p>I&#8217;m running Graylog2 and Graphite to compile logs and interesting statistics from our servers. This is the runlist that establishes the role dedicated to these two pieces of software, which I called <code>statistics</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run_list</span> <span class="sx">%W(</span>
+</span><span class='line'><span class="sx">  recipe[ebs]</span>
+</span><span class='line'><span class="sx">  recipe[apache2]</span>
+</span><span class='line'><span class="sx">  recipe[statsd]</span>
+</span><span class='line'><span class="sx">  recipe[python]</span>
+</span><span class='line'><span class="sx">  recipe[graphite]</span>
+</span><span class='line'><span class="sx">  recipe[graylog2]</span>
+</span><span class='line'><span class="sx">  recipe[graylog2::apache2]</span>
+</span><span class='line'><span class="sx">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I use <a href="https://github.com/titanous/chef-ebs">this EBS cookbook</a> with this configuration:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">default_attributes</span> <span class="s1">&#39;ebs&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s1">&#39;volumes&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s1">&#39;/data&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s1">&#39;size&#39;</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;fstype&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;xfs&#39;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This server saves and compiles enormous amounts of data, and in order to hold it all correctly I provision an external EBS drive to contain it. I&#8217;m actually not even sure 100 gigs is enough space but it seems good for now. elasticsearch, mongodb, and graphite are all set up to save their data to subdirectores in /data. While I could easily have made this a RAID array instead, persistence of this data is not super important to me right now: while it would suck to lose all our analytics information, given our traffic it would rebuild into something useful very quickly anyway.</p>
+
+<p>I would use nginx instead of Apache2, but for a server only accessible internally that will probably not see a lot of traffic, it was much easier and faster to just set up Apache2 and passenger than start unicorns for the Graphite and Graylog web interfaces.</p>
+
+<h2>app</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run_list</span> <span class="sx">%W(</span>
+</span><span class='line'><span class="sx">  recipe[imagemagick]</span>
+</span><span class='line'><span class="sx">  recipe[nginx]</span>
+</span><span class='line'><span class="sx">  recipe[unicorn]</span>
+</span><span class='line'><span class="sx">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Probably among the least surprising roles. The application servers use nginx and unicorn for blazingly fast speed. Make sure to add the nginx collectd plugin to this server for additional metrics and monitoring:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">default_attributes</span> <span class="s1">&#39;collectd&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s1">&#39;plugins&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s1">&#39;nginx&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don&#8217;t discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why I Chose Chef Over Rubber]]></title>
@@ -2353,95 +2529,6 @@
 <p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you&#8217;re curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
 
 <p>That&#8217;s just the starts of Rails concerns, though. Next time I&#8217;ll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Error Pages]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/"/>
-    <updated>2012-06-28T15:09:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages</id>
-    <content type="html"><![CDATA[<blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
-
-<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
-
-<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
-
-<p>Happily, you can do just this!</p>
-
-<!-- more -->
-
-
-<h2>Rescue_from Madness</h2>
-
-<p>Doing so requires abusing rescue_from a little bit, though. Set up something like this in your application_controller.rb:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_500</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownAction</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This will prevent any error from rendering the default Rails error pages. Instead we&#8217;ll set up our own error pages like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
-</span><span class='line'>    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
-</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
-</span><span class='line'>    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">render</span> <span class="n">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="n">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="vi">@status</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And finally, in your view, actually include the request&#8217;s unique identifier:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;&lt;</span><span class="sx">%= @message.split(/\s/).collect(&amp;:capitalize).join(&#39; &#39;) %&gt; &lt;small&gt;&lt;%=</span> <span class="vi">@status</span> <span class="sx">%&gt;&lt;/small&gt;</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
-</span><span class='line'><span class="sr">  &lt;h3&gt;Error Code: &lt;%= request.env[&#39;action_dispatch.request_id&#39;] %&gt; &lt;/</span><span class="n">h3</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Dynamic error pages like what I&#8217;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&#8217;s pretty unlikely that&#8217;ll happen. Just be careful when using this system &#8211; maybe even don&#8217;t render the exception in your usual layout, but render it in an error-specific one &#8211; to reduce the chance of your error pages also erroring, and you&#8217;ll be golden.</p>
 ]]></content>
   </entry>
   
