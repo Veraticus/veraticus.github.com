@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-01-22T13:41:45-06:00</updated>
+  <updated>2013-01-22T13:47:20-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -186,6 +186,10 @@
 
 
 <p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don&#8217;t discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
+
+<h1>Security &amp; Safety</h1>
+
+<p>Before you deploy a server using any of these roles, make sure to keep security and safety in mind. A lot of these tools (like Graphite and Graylog2) allow web access and run servers with potential security vulnerabilities. Lock them behind Apache2 basic access, change your EC2 security group settings to allow only certain IP addresses access, and establish a VPN for your internal network. With logs, statistics, and other business-sensitive information, you can never be too security-conscious.</p>
 ]]></content>
   </entry>
   
