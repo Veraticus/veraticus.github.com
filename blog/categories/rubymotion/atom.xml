@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-02-04T18:06:39-06:00</updated>
+  <updated>2013-02-04T18:19:07-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -42,7 +42,7 @@ Motion::Project::App.setup do |app|
 end
 ```</p>
 
-<h2>AFNetworking Delegate</h2>
+<h2>AFNetworking AFHTTPClient Subclass</h2>
 
 <p>I also use the super convenient AFNetworking library to quickly and easily do REST-compliant requests to my servers. This is the code I stick in my AFHTTPClient:</p>
 
