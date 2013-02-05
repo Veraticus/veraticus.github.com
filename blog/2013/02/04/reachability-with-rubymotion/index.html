@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rails Concerns I: Starting with Redcarpet - Hi, I'm Josh Symonds</title>
+  <title>Reachability with RubyMotion - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns a lot in the new Basecamp, and it&#8217;s easy to see why: separation &hellip;">
+  <meta name="description" content="A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -98,7 +98,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rails Concerns I: Starting With Redcarpet</h1>
+      <h1 class="entry-title">Reachability With RubyMotion</h1>
     
     
       <p class="meta">
@@ -114,23 +114,44 @@
   
 
 
-<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+<time datetime="2013-02-04T17:55:00-06:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&#8217;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&#8217;t only for code refuse &#8211; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&#8217;s where all the functionality for shipping lies&#8230; whereas a newcomer to your application would have to search through the order model to find it.</p>
+<div class="entry-content"><p>A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on my blog as well. In addition to detecting network reachability, this code suspends the operation queue when the target host is unreachable, allowing you to continue appending requests and ensuring that they will be delivered in the order they were queued.</p>
 
-<p>I&#8217;ve been using concerns extensively in GirlsGuideTo&#8217;s upcoming application, and I figured it&#8217;d be an interesting read if I shared the ones I&#8217;ve made so far. They&#8217;re not too complicated (this first one I&#8217;m posting mostly just to illustrate the concept), but but don&#8217;t let that fool you. They can be super complicated and really involved &#8211; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+<p>There might be a more efficient way to do something similar, but this works for me.</p>
 
 <!-- more -->
 
 
-<h2>Redcarpeted</h2>
+<h2>Rakefile</h2>
 
-<p>A lot of fields in GirlsGuideTo are Markdown encoded by the pretty awesome <a href="https://github.com/tanoku/redcarpet/">Redcarpet</a> gem. These fields occur across models, and rather than copy and paste code all over the place, I extracted the idea of converting fields to and from Markdown into a concern.</p>
+<p>Add the really awesome <a href="https://github.com/tonymillion/Reachability">Reachability</a> Pod to your project.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;Reachability&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>AFNetworking Delegate</h2>
+
+<p>I also use the super convenient AFNetworking library to quickly and easily do REST-compliant requests to my servers. This is the code I stick in my AFHTTPClient:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -150,30 +171,38 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Redcarpeted</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ServerClient</span> <span class="o">&lt;</span> <span class="no">AFHTTPClient</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>  <span class="c1"># Singleton!</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">instance</span>
+</span><span class='line'>    <span class="vc">@@instance</span> <span class="o">||=</span> <span class="kp">new</span>
+</span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">redcarpet</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_markdown&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">hostname</span>
+</span><span class='line'>    <span class="s1">&#39;http://yourhosthere.com&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">field</span><span class="si">}</span><span class="s2">_html&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>        <span class="no">Redcarpet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">read_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="o">.</span><span class="n">to_html</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">setupReachability</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">maxConcurrentOperationCount</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kp">true</span>
 </span><span class='line'>
+</span><span class='line'>    <span class="vi">@reachability</span> <span class="o">=</span> <span class="no">Reachability</span><span class="o">.</span><span class="n">reachabilityWithHostname</span><span class="p">(</span><span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@reachability</span><span class="o">.</span><span class="n">reachableBlock</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">reachable</span><span class="o">|</span> <span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kp">false</span><span class="p">}</span>
+</span><span class='line'>    <span class="vi">@reachability</span><span class="o">.</span><span class="n">unreachableBlock</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">reachable</span><span class="o">|</span> <span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kp">true</span><span class="p">}</span>
+</span><span class='line'>    <span class="vi">@reachability</span><span class="o">.</span><span class="n">startNotifier</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><code>ActiveSupport::Concern</code> is the magic that makes concerns so &#8230; magical. Simply by including another module called <code>ClassMethods</code>, <code>ActiveSupport::Concern</code>automatically knows to extend the base class with those methods when it&#8217;s included.</p>
+<h2>app_delegate.rb</h2>
 
-<p>In this case, this allows you to do something like this in your model:</p>
+<p>Finally, call the setupReachability method in your app delegate and you&#8217;re done:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -181,18 +210,20 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>    <span class="kp">include</span> <span class="no">Redcarpeted</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">redcarpet</span> <span class="ss">:body</span>
-</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>    <span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">setupReachability</span>
+</span><span class='line'>    <span class="no">AFNetworkActivityIndicatorManager</span><span class="o">.</span><span class="n">sharedManager</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p>Now your Post has two new methods: <code>body_markdown</code> and <code>body_html</code>, allowing you to quickly and easily access the raw Markdown and formatted HTML for any attribute in your model. (And if you&#8217;re curious, the reason to bother including a <code>body_markdown</code> method is in case you decide to override the base method <code>body</code> yourself at some future point.)</p>
-
-<p>That&#8217;s just the starts of Rails concerns, though. Next time I&#8217;ll post a more complicated example with greater ActiveRecord connectivity that will hopefully be a lot more exciting.</p>
 </div>
 
 
@@ -215,12 +246,12 @@
   
 
 
-<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+<time datetime="2013-02-04T17:55:00-06:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>rails</a>
+    <a class='category' href='/blog/categories/rubymotion/'>rubymotion</a>
   
 </span>
 
@@ -229,7 +260,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -242,10 +273,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/06/28/dynamic-error-pages/" title="Previous Post: Dynamic Error Pages">&laquo; Dynamic Error Pages</a>
+        <a class="basic-alignment left" href="/blog/2013/01/22/chef-cookbooks-for-rails/" title="Previous Post: Chef Cookbooks for Rails">&laquo; Chef Cookbooks for Rails</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/07/04/rails-concerns-ii-taggable/" title="Next Post: Rails Concerns II: Taggable">Rails Concerns II: Taggable &raquo;</a>
       
     </p>
   </footer>
@@ -345,8 +374,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/';
-        var disqus_url = 'http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/';
+        var disqus_identifier = 'http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/';
+        var disqus_url = 'http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/';
         var disqus_script = 'embed.js';
       
     (function () {

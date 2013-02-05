@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-01-22T13:47:20-06:00</updated>
+  <updated>2013-02-04T18:06:39-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Reachability with RubyMotion]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/"/>
+    <updated>2013-02-04T17:55:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on my blog as well. In addition to detecting network reachability, this code suspends the operation queue when the target host is unreachable, allowing you to continue appending requests and ensuring that they will be delivered in the order they were queued.</p>
+
+<p>There might be a more efficient way to do something similar, but this works for me.</p>
+
+<!-- more -->
+
+
+<h2>Rakefile</h2>
+
+<p>Add the really awesome <a href="https://github.com/tonymillion/Reachability">Reachability</a> Pod to your project.</p>
+
+<p>```ruby
+Motion::Project::App.setup do |app|
+...
+  app.pods do</p>
+
+<pre><code>pod 'Reachability'
+</code></pre>
+
+<p>  end
+...
+end
+```</p>
+
+<h2>AFNetworking Delegate</h2>
+
+<p>I also use the super convenient AFNetworking library to quickly and easily do REST-compliant requests to my servers. This is the code I stick in my AFHTTPClient:</p>
+
+<p>```ruby
+class ServerClient &lt; AFHTTPClient</p>
+
+<p>  # Singleton!
+  def self.instance</p>
+
+<pre><code>@@instance ||= new
+</code></pre>
+
+<p>  end</p>
+
+<p>  def hostname</p>
+
+<pre><code>'http://yourhosthere.com'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def setupReachability</p>
+
+<pre><code>self.operationQueue.maxConcurrentOperationCount = 1
+self.operationQueue.suspended = true
+
+@reachability = Reachability.reachabilityWithHostname(ServerClient.instance.hostname)
+@reachability.reachableBlock = lambda {|reachable| ServerClient.instance.operationQueue.suspended = false}
+@reachability.unreachableBlock = lambda {|reachable| ServerClient.instance.operationQueue.suspended = true}
+@reachability.startNotifier
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<h2>app_delegate.rb</h2>
+
+<p>Finally, call the setupReachability method in your app delegate and you're done:</p>
+
+<p>```ruby
+class AppDelegate</p>
+
+<p>  def application(application, didFinishLaunchingWithOptions:launchOptions)</p>
+
+<pre><code>...
+ServerClient.instance.setupReachability
+AFNetworkActivityIndicatorManager.sharedManager.enabled = true
+...
+</code></pre>
+
+<p>  end
+end
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kinotify, a RubyMotion App]]></title>
@@ -478,300 +566,6 @@ Server.sharedInstance.getPath("data", parameters:{:user_id =&gt; user.id},
 <p>Of course, you'll want to do something a bit more interactive with your error than just log it, but you get the idea. Meanwhile, on the RubyMotion side, I stole quite a bit of code from <a href="https://github.com/mattetti/BubbleWrap">BubbleWrap</a>, specifically the really excellent <a href="https://github.com/mattetti/BubbleWrap/blob/master/lib/kernel.rb">kernel shortcuts</a>. Being able to do <code>simulator?</code> or <code>ipad?</code> is really awesome and a big time saver. I really hope that RubyMotion gets its own concept of Gems soon; it'll make receiving code faster than just copying and pasting it directly into my source.</p>
 
 <p>As I get closer to releasing the app I'm working on, I'm sure I'll have more interesting tips and tricks to share: these thoughts are really all that stood out to me after a quick review of my code. As I said at the top, I'm still really impressed with RubyMotion; I've had a few more random crashes without error messages or backtraces, but that's my only real complaint so far. We'll see how RubyMotion fares as my app moves towards release, but I am personally hopeful, and at the very least it's made iPhone programming a lot less painful.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why RubyMotion Is Better Than Objective-C]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/"/>
-    <updated>2012-05-04T02:14:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c</id>
-    <content type="html"><![CDATA[<p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I've done iOS programming before, but I've always found it unpleasant next to programming in other languages. Don't get me wrong, Objective-C is better than C or C++, but I don't think that's saying a whole lot.</p>
-
-<p>I've spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I've come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
-
-<p>Why do I believe this? What makes RubyMotion so superior to straight-up Objective-C?</p>
-
-<!-- more -->
-
-
-<h2>Objective-C is Hard to Use</h2>
-
-<p>That's a pretty broad statement. By saying that, I mean that Objective-C is syntactically unwieldy, and that the development tools around it are difficult to employ. In my brief experience with RubyMotion, these are the main pain points it seems to be aiming to solve, so I'll discuss them very briefly for comparison's sake. I don't want to turn this post into hating on Xcode or Objective-C: it's really more about how RubyMotion is great.</p>
-
-<p>So, that said, on with the Xcode and Objective-C hating!</p>
-
-<h3>Xcode is Unstable</h3>
-
-<p>There's really no other way to put it. How many of you have had Xcode crash for no particularly good reason? And crashes are just the most common errors. Not three days ago I discovered, when I attempted to open a new terminal window, that somehow Xcode had forked over 700 processes and had consumed all available OS process slots. Seriously?</p>
-
-<p><img src="http://veratic.us/GN2c/internal_error.jpg" alt="Internal Error" /></p>
-
-<p>Why does that dialogue even exist? Who is it supposed to help?</p>
-
-<p>Another gem is when your simulator crashes in a particular way that prevents Xcode from opening up any simulator in any app again. I still haven't figured out how to fix that without restarting my computer.</p>
-
-<p>I don't want to dedicate this post to talking about the many instabilities in Xcode; I could go on, but I think I've made my point already. It's buggy.</p>
-
-<h3>Xcode Hides Important Information</h3>
-
-<p>Xcode's user interface is nightmarishly complicated. Clutter doesn't even begin to describe it.</p>
-
-<p>Put simply, Xcode takes all the build options possible for the Objective-C compiler, organizes them into unhelpful menus and buttons, and succeeds in obfuscating the few that are really important -- the most important settings for your project are hidden behind layers of unintuitive navigation. For example, to enable Zombie Objects, a common debug option for finding and correcting bad access errors, you have to go down one menu, select a navigation option, and then select a tab. That's three layers of menus between you and a useful checkbox! How on Earth would anyone find that without the help of Google?</p>
-
-<p>I think the plethora of menus and tabs are intended to make projects approachable and easy for beginners. However, the layers of abstraction make windows cluttered and unhelpful for experienced developers, while being utterly incomprehensible for new ones. As another example, witness the dreaded Project file (the root of any Objective-C application). Click on it and go to your build targets and be assaulted by five tabs, many of them multiple pages long. There are important settings that you should change here. Good luck finding them.</p>
-
-<h3>Objective-C Is Tedious</h3>
-
-<p>I end up doing a lot of copying and pasting in Objective-C. Copying and pasting is boring. Why do I have to have huge statements like this?</p>
-
-<p><code>objective-c
-static UIColor *firstColor = nil;
-static UIColor *secondColor = nil;
-static UIColor *thirdColor = nil;
-static UIColor *fourthColor = nil;
-static UIColor *fifthColor = nil;
-static UIColor *sixthColor = nil;
-</code></p>
-
-<p>Hint: I only typed one of those. There's a level of abstraction waiting to be unlocked in Objective-C to collapse statements like that into one line (or preferably into nothingness). But, unfortunately, it's just not there yet.</p>
-
-<p>I also end up writing a lot of debug statements. Introspection is unavailable at runtime and stack trace debugging, while vastly improved over where it used to be in Xcode 3, is still really unpleasant. Breakpoints and NSLog are the orders of the day in Objective-C, but it makes programming a very time-consuming process, where you spend a lot of effort verifying very little.</p>
-
-<p>Ultimately, instead of solving interesting problems in Objective-C, I seem to spend most of my time on boilerplate code, copied and pasted from other projects or the Internet. It's taxing, boring, and very, very tedious.</p>
-
-<h2>RubyMotion is Easy to Use</h2>
-
-<p>So! All the unpleasantness is out of the way. How, then, does RubyMotion solve all these problems? Why is it so, so cool?</p>
-
-<h3>RubyMotion Uses Rake</h3>
-
-<p><code>rake</code> is Ruby's <code>make</code> equivalent: it runs tasks on the commandline. By using a simple Rakefile, RubyMotion exposes an elegant and intuitive DSL for building your projects. Instead of layers of complicated menus, you have this:</p>
-
-<p>```ruby
-Motion::Project::App.setup do |app|
-  app.name = 'TestApp'
-  app.interface_orientations = [:portrait]
-  app.identifier = '.com.TestCompany.TestApp'
-  app.frameworks &lt;&lt; 'CoreAudio'
-  app.pods do</p>
-
-<pre><code>dependency 'AFNetworking'
-dependency 'SVProgressHUD'
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>Easy, elegant expression of the most important options in your application. Take that, build targets!</p>
-
-<h3>RubyMotion is Ruby</h3>
-
-<p>Gone are header files, property and method declarations, and lines of ugly boilerplate variable initializers. RubyMotion is Ruby; that means you declare variables and methods as you need them. A side effect of this (besides shorter, more readable files) is that a lot of long Objective-C code is trimmed really substantially. Check out this snippet from the sample projects showing how easy it is to give a tableView new cells:</p>
-
-<p><code>ruby
-cell = tableView.dequeueReusableCellWithIdentifier(CellID) || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:CellID)
-</code></p>
-
-<p>The corresponding Objective-C, of course, looks like this:</p>
-
-<p>```objective-c
-UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellID];</p>
-
-<p>if(cell == nil) {</p>
-
-<pre><code>cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyCellIdentifier];
-</code></pre>
-
-<p>}
-```</p>
-
-<p>I am admittedly biased: I think coding should be fun and easy, with a focus on doing interesting things. If you disagree with me then you probably won't like that RubyMotion is Ruby. The intersection of Objective-C and Ruby is handled really flawlessly. It revives the Smalltalk-style decorator syntax that Objective-C employs (with methods like <code>searchBar.setShowsCancelButton(false, animated:true)</code>) that Ruby 2.0 will be implementing. And it lets you do some totally awesome things. Check out this UIView I made:</p>
-
-<p>```ruby
-class LotsaLabels &lt; UIView
-  def initWithFrame(frame)</p>
-
-<pre><code>if super
-  offset = 0
-  [:label1, :label2, :label3, :label4].each do |t|
-    self.instance_variable_set("@#{t}_text".to_sym, UILabel.alloc.initWithFrame([[0, 10 + offset], [self.frame.size.width, 40]]))
-    self.instance_variable_set("@#{t}_label".to_sym, UILabel.alloc.initWithFrame([[0, 55 + offset], [self.frame.size.width, 14]]))
-
-    text = self.instance_variable_get("@#{t}_text".to_sym)
-    label = self.instance_variable_get("@#{t}_label".to_sym)
-
-    text.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
-    text.textColor = UIColor.redColor
-    label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:15)
-    label.textColor = UIColor.grayColor
-
-    text.text = label.text = t.to_s.capitalize
-    text.adjustsFontSizeToFitWidth = label.adjustsFontSizeToFitWidth = true
-    text.backgroundColor = label.backgroundColor = UIColor.clearColor
-    text.textAlignment = label.textAlignment = UITextAlignmentCenter
-
-    self.addSubview(text)
-    self.addSubview(label)
-    offset += 90
-  end
-end
-self
-</code></pre>
-
-<p>  end<br/>
-end
-```</p>
-
-<p>That would have taken forever and involved a lot of copying and pasting in Objective-C. As you can see, you can call any Objective-C methods from Ruby itself, because all Ruby classes are implemented on top of Objective-C classes -- with the traditional Ruby methods you've grown to know and love baked right on top. Of course, because Ruby is Ruby, there's significant room for improvement here. Why not a class to create these labels?</p>
-
-<p>```ruby
-class Label
-  attr_accessor :label</p>
-
-<p>  def initialize(text, frame)</p>
-
-<pre><code>@label = UILabel.alloc.initWithFrame(frame)
-@label.adjustsFontSizeToFitWidth = true
-@label.textAlignment = UITextAlignmentCenter
-@label.backgroundColor = UIColor.clearColor
-@label.text = text.to_s
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>class BigLabel &lt; Label
-  def initialize(text, frame)</p>
-
-<pre><code>super
-@label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
-@label.textColor = UIColor.blackColor
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>class LittleLabel &lt; Label
-  def initialize(text, frame)</p>
-
-<pre><code>super
-@label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
-@label.textColor = UIColor.grayColor
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>Or if you don't like classes, give a module a whirl instead:</p>
-
-<p>```ruby
-module Label
-  def new_label(text, frame)</p>
-
-<pre><code>label = UILabel.alloc.initWithFrame(frame)
-label.adjustsFontSizeToFitWidth = true
-label.textAlignment = UITextAlignmentCenter
-label.backgroundColor = UIColor.clearColor
-label.text = text.to_s
-label
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>class BigLabel
-  include Label
-  attr_accessor :label</p>
-
-<p>  def initialize(text, frame)</p>
-
-<pre><code>@label = new_label(text, frame)
-@label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
-@label.textColor = UIColor.blackColor
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>class LittleLabel
-  include Label
-  attr_accessor :label</p>
-
-<p>  def initialize(text, frame)</p>
-
-<pre><code>@label = new_label(text, frame)
-@label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
-@label.textColor = UIColor.grayColor
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>Okay, the module example was a little contrived, but you get the idea.</p>
-
-<p>This is the power of Ruby + Objective-C: you get Ruby's powerful and expressive enumerators, metaprogramming, and reflection, but Objective-C's APIs and libraries. It's like chocolate and peanut butter, they just go together so well.</p>
-
-<p>Oh, and finally, because it's Ruby, it considers testing a first class citizen. Every RubyMotion app ships with a spec file that lets you create tests for your iPhone application in a simple and elegant manner that will look familiar to anyone who's ever used RSpec:</p>
-
-<p>```ruby
-describe "Application 'TestApp'" do
-  before do</p>
-
-<pre><code>@app = UIApplication.sharedApplication
-</code></pre>
-
-<p>  end</p>
-
-<p>  it "has one window" do</p>
-
-<pre><code>@app.windows.size.should == 1
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<h3>RubyMotion Makes Debugging Easy</h3>
-
-<p>Whereas Xcode and Objective-C debugging is painful in the extreme, in RubyMotion it couldn't be easier. As soon as you compile and run a project, you enter a runtime loop for both debugging it and reflecting in it. From the simulator itself, you can select interface elements and arbitrarily change them from the commandline; by programatically referencing your application delegate, you can make your simulator call code without even pressing a button.</p>
-
-<p>I don't think I'm doing this feature justice by describing it. You should really go <a href="http://www.rubymotion.com/getting-started/">check out the video</a> to see it in action.</p>
-
-<p>Exceptions also give you sensible error messages, and even backtraces! I put a method in my app that doesn't exist. Check out the RubyMotion console output:</p>
-
-<p><code>``ruby
-2012-05-04 09:37:52.843 TestApp[54214:f803] *** Terminating app due to uncaught exception 'NoMethodError', reason: 'lotsa_labels.rb:51:in</code>block in initWithFrame:': undefined method `explode' for #&lt;LotsaLabels:0x6c385a0> (NoMethodError)</p>
-
-<pre><code>from lotsa_labels.rb:42:in `initWithFrame:'
-from test_view_controller.rb:14:in `loadView'
-from test_view_controller.rb:103:in `showLabels:'
-</code></pre>
-
-<p>```</p>
-
-<p>This isn't all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what's happening. As a rule you don't have to do that nearly as much, though -- or at least I haven't so far. Finally, there's no great way to get logging output from the application other than outputting directly to stdout. When I want to log stuff, I end up having lines like this:</p>
-
-<p><code>ruby
-  $stdout.puts "Received response: #{response}"
-</code></p>
-
-<p>Which just splats lines directly into the console. Not the most elegant solution, but it works, and that's what counts.</p>
-
-<h3>RubyMotion Isn't Perfect</h3>
-
-<p>As you've just gathered, RubyMotion has room for improvement. I know I'll miss tab completion from Xcode. Method names never seemed so long as when you have to type them. dequeueReusableCellWithIdentifier, ugh. Without tab completion, you do a lot of copying and pasting from the documentation when you find a method name you like, just to ensure you don't accidentally typo it.</p>
-
-<p>I've definitely run into errors with no backtrace at all -- just a straight simulator crash along with no output on the commandline. So there's still some ironing out around the whole process that needs to be done. And Cocoapods, for all its awesomeness, won't compile JSONKit for some reason. Or I'm doing something wrong, one of the two.</p>
-
-<p>These are minor implementation errors, though; the overall philosophy and integration is, well...</p>
-
-<h3>Better Than Objective-C</h3>
-
-<p>RubyMotion corrects a lot of the flaws in Objective-C and Xcode. It's easier to write and debug; it gives you Ruby's powerful programming idioms on top of Objective-C's extremely extensive libraries. It bakes in testing and provides an easy, quick way to set up and provision apps. Though it has a number of extremely minor downsides, overall I would unequivocally recommend checking out RubyMotion if you have any interest at all in either Ruby or iOS apps. You'll be glad you did.</p>
 ]]></content>
   </entry>
   
