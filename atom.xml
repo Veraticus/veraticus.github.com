@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-02-04T18:19:07-06:00</updated>
+  <updated>2013-02-20T22:57:24-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/"/>
+    <updated>2013-02-20T19:32:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey</id>
+    <content type="html"><![CDATA[<p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&#8217;s how to make it work.</p>
+
+<!-- more -->
+
+
+<h2>Huey v1.0.0</h2>
+
+<p>New in huey v1.0.0 are light groups: arbitrary collections of bulbs on which you can run commands simultaneously. Getting them to work is ridiculously simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Contains all bulbs that have &#39;Living Room&#39; in their name</span>
+</span><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">,</span> <span class="s1">&#39;Foyer&#39;</span><span class="p">)</span> <span class="c1"># All bulbs that have either &#39;Living Room&#39; or &#39;Foyer&#39; in their name</span>
+</span><span class='line'><span class="n">g</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># A group specifically containing bulbs 1 and 3</span>
+</span><span class='line'><span class="n">g</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;My Bulbs&#39;</span> <span class="c1"># Name your group to find it later</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once you have a group set up, you can act on all its bulbs simultaneously as you would on any individual bulb.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;My Bulbs&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">200</span>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">save</span> <span class="c1"># All changes you&#39;ve made are committed to all the bulbs in a group</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bri</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">ct</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># Set and save in one step</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, you probably want to do the same actions to groups over and over again: for example, dimming all your lights at night and brightening them in the morning. For that we have a shorthand called events:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">event</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Event</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;All Lights Off&#39;</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="p">{</span><span class="n">on</span><span class="p">:</span> <span class="kp">false</span><span class="p">})</span>
+</span><span class='line'><span class="n">event</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># All lights turn off</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>YAML Setup</h2>
+
+<p>Huey can read your groups and events from YAML configuration files. Here&#8217;s a sample from my setup:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># groups.yml</span>
+</span><span class='line'><span class="l-Scalar-Plain">Study</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Study</span><span class="nv"> </span><span class="s">Side&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Study</span><span class="nv"> </span><span class="s">Ceiling&quot;</span><span class="p-Indicator">]</span>
+</span><span class='line'><span class="l-Scalar-Plain">Bedroom</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Bedroom</span><span class="nv"> </span><span class="s">Left&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Bedroom</span><span class="nv"> </span><span class="s">Right&quot;</span><span class="p-Indicator">]</span>
+</span><span class='line'><span class="l-Scalar-Plain">Living Room</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Front&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Center&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Back&quot;</span><span class="p-Indicator">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># events.yml</span>
+</span><span class='line'><span class="l-Scalar-Plain">Wakeup</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">group</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Bedroom</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">actions</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="s">&quot;on&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">bri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">255</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">ct</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">200</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">Sunset</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">group</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Bedroom</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">actions</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="s">&quot;on&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">bri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">255</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">ct</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">350</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;groups.yml&#39;</span><span class="p">)</span> <span class="c1"># Import groups</span>
+</span><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Event</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;events.yml&#39;</span><span class="p">)</span> <span class="c1"># Import events</span>
+</span><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Wakeup&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># Run an event on a group</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&#8217;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&#8217;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
+
+<h2>Whenever</h2>
+
+<p>Finally, I have it all stitched together through whenever, because who likes reading crontabs? When you set up whenever, it creates a file called config/schedule.rb that it uses to read the crontab. I altered mine to include this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">job_type</span> <span class="ss">:event</span><span class="p">,</span> <span class="sx">%Q(cd /directory/to/huey_control &amp;&amp; ruby -e &quot;require &#39;huey&#39;; Huey::Group.import(&#39;groups.yml&#39;); Huey::Event.import(&#39;events.yml&#39;); Huey::Event.find(&#39;:task&#39;).execute(true)&quot;)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">every</span> <span class="ss">:weekday</span><span class="p">,</span> <span class="n">at</span><span class="p">:</span> <span class="s1">&#39;9:30AM&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">event</span> <span class="s2">&quot;Wakeup&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
+
+<p>That&#8217;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&#8217;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
+
+<p>But there&#8217;s a lot more you can do with huey if you&#8217;d like. Why not make an event that&#8217;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Reachability with RubyMotion]]></title>
@@ -2446,124 +2585,6 @@
 <p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application&#8217;s specific concerns.</p>
 
 <p>This ends the first part of my series on Rails concerns. While I don&#8217;t have anything else exciting to show off presently, the concern pattern is a powerful one that I&#8217;ve used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I&#8217;ll definitely continue talking about awesome Rails concerns.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns II: Taggable]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/"/>
-    <updated>2012-07-04T15:31:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable</id>
-    <content type="html"><![CDATA[<p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&#8217;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&#8217;re going to have to roll your own solution. That&#8217;s what I&#8217;m doing for GirlsGuideTo, and this is how I implemented it.</p>
-
-<!-- more -->
-
-
-<h2>The Tag Model</h2>
-
-<p>The tag model itself is fairly straightforward:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:taggings</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:addresses</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">Address</span>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:users</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">User</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Unfortunately, you can&#8217;t just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don&#8217;t work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can&#8217;t <code>SELECT * from taggables</code>, since there is no taggables table.</p>
-
-<p>This is frustrating, but easy enough to work around. You&#8217;ll have to specify every model that&#8217;s taggable in the <code>Tag</code> class. But since we&#8217;ll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you&#8217;re confident, you can define a taggables method yourself:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">taggables</span>
-</span><span class='line'>    <span class="o">[</span><span class="n">addresses</span> <span class="o">+</span> <span class="n">users</span><span class="o">].</span><span class="n">flatten</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you&#8217;ll want to display the different kinds of taggables in different places anyway.</p>
-
-<h2>The Join Model</h2>
-
-<p>Tag has-and-belongs-to-many taggables through a join model. That model is <code>Tagging</code>, and should look like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tagging</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:tag_id</span><span class="p">,</span> <span class="ss">:taggable_id</span><span class="p">,</span> <span class="ss">:taggable_type</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:tag</span>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ruby</p>
-
-<p>There&#8217;s nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won&#8217;t fill in the association correctly.</p>
-
-<h2>The Taggable Concern</h2>
-
-<p>Finally, we can get to the concern itself. This is how I&#8217;ve set it up:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Taggable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:taggable</span>
-</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:taggings</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">name</span><span class="o">.</span><span class="n">strip!</span>
-</span><span class='line'>    <span class="n">tag</span> <span class="o">=</span> <span class="no">Tag</span><span class="o">.</span><span class="n">find_or_create_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">taggings</span><span class="o">.</span><span class="n">find_or_create_by_tag_id</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tag_names</span>
-</span><span class='line'>    <span class="n">tags</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:name</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we&#8217;ll be including this concern in multiple ActiveRecord models &#8211; and those models will automatically <code>has_many</code> :taggings and :tags.</p>
-
-<p>And on those models we&#8217;ll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn&#8217;t exist before, it will automatically be created, and then it&#8217;ll be added to the model&#8217;s taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
-
-<p>Next time I discuss concerns, I&#8217;ll talk about an ActionController concern to improve your page&#8217;s SEO and Facebook Graph integration. It&#8217;ll be pretty awesome, so stay tuned!</p>
 ]]></content>
   </entry>
   
