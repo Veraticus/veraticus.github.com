@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-02-20T22:57:24-06:00</updated>
+  <updated>2013-02-22T12:31:41-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,159 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Existing Rails API Solutions Suck]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck/"/>
+    <updated>2013-02-22T11:00:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck</id>
+    <content type="html"><![CDATA[<p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&#8217;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&#8217;ve come to a startling and disheartening conclusion.</p>
+
+<p>They all suck.</p>
+
+<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
+
+<ol>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&#8217;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&#8217;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&#8217;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
+</ol>
+
+
+<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
+
+<!-- more -->
+
+
+<h2><a href="https://github.com/intridea/grape">grape</a></h2>
+
+<p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you&#8217;re doing and what you&#8217;re expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
+
+<p>Unfortunately that&#8217;s where the great stuff ends. For Rails applications &#8211; assuming you actually want to use grape with Rails &#8211; it is really an unpleasant solution, since it just doesn&#8217;t play nicely with Rails.</p>
+
+<p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don&#8217;t want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you&#8217;re on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
+
+<p>Second, and for those of you already gearing up to say &#8220;but grape isn&#8217;t FOR Rails&#8221;, you end up duplicating a lot of Rails&#8217; structure inside it anyway, even in small applications. If you don&#8217;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
+
+<p>Third, if you want to version your API, you get to copy and paste the entire thing. To prevent us doing this every time at Everest, I implemented a module inheritance system for the API versions, but frankly it feels hacky and was difficult to get grape to support properly.</p>
+
+<p>Fourth, its caching support is pathetic. You have to install a completely separate gem (<a href="https://github.com/artsy/garner">garner</a>) if you want any kind of caching at all. Do people who use grape not experience any sort of load? Do their APIs not engage in any sort of database querying? Why is this a tacked-on side project instead of a core feature?</p>
+
+<p>And of course it has no view support. If you want to reuse data representations, define a method in the base API and call it all over the place. It&#8217;s like a view, but more hidden!</p>
+
+<p>I assume some people must use grape for at least as complicated an app as I do. When I was Googling how to do versioning without copy pasting, I came across numerous slideshows from various Rails conferences discussing how great it is. None of them address any of these problems, so I&#8217;m curious how the really big players make grape work without these difficulties. (My suspicion is they don&#8217;t use grape.)</p>
+
+<h2><a href="https://github.com/fabrik42/acts_as_api">acts_as_api</a></h2>
+
+<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &#8211; that&#8217;s what views are for. You don&#8217;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&#8217;t.</p>
+
+<p>This gem leads to really horrible uses like this when you version an API:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:id</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:first_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:last_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:real_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:gender</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:with_timezone</span><span class="p">,</span> <span class="kp">extend</span><span class="p">:</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:timezone</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a versioned resource. You don&#8217;t want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
+
+<h2><a href="https://github.com/filtersquad/rocket_pants">rocket_pants</a></h2>
+
+<p>rocket_pants actually does quite a lot right (besides having a sweet name): it&#8217;s fairly DRY and it integrates with Rails pretty well.</p>
+
+<p>That said, versioning is still a tremendous pain in the butt. Routing allows you to at least select which controller your requests are sent to, but this quickly gets complicated:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">api</span> <span class="n">version</span><span class="p">:</span> <span class="mi">1</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="s1">&#39;test#item&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="n">version</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="s1">&#39;test#item2&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="n">version</span><span class="p">:</span> <span class="mi">2</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="s1">&#39;test#override&#39;</span> <span class="c1"># how does this interact with the line above?</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="n">version</span><span class="p">:</span> <span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="s1">&#39;test#item3&#39;</span> <span class="c1"># x now does something different for only versions 2 and 4</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Confusing!</p>
+
+<p>Why not have a simple fallback method where you define the highest version of your API, and the router checks to see which controllers exist in that version, moving back to an earlier version until it finds a defined controller? You could even have the router detect this on application load to prevent increased loading times. Then you don&#8217;t need any sort of fooling around with complicated routing rules. Instead you just define the basic structure of your API and your application correctly infers versions from it, and if you have specific overrides you can address them in the routing file.</p>
+
+<p>Wishing aside, rocket_pants also doesn&#8217;t use views, instead encouraging you to use a model&#8217;s <code>serializable_hash</code> method to instruct it how to convert the model to JSON. Let&#8217;s hope you don&#8217;t have more than one representation of your model.</p>
+
+<h2><a href="https://github.com/bploetz/versionist">versionist</a></h2>
+
+<p>versionist supports views correctly but it suffers from a tremendously overwhelming amount of copy/pasting. It you want to version your API, it copies not only the routes inside your routes.rb, but also:</p>
+
+<ul>
+<li>Your controllers and controller specs</li>
+<li>Your presenters and presenter specs</li>
+<li>Your helpers and helper specs</li>
+<li>Your docs</li>
+</ul>
+
+
+<p>To a new location. These are just copies: in all likelihood they&#8217;ll end up largely exactly the same as the previous version. It provides a Rails generator that does this automatically. I&#8217;m on the fence as to whether great support for poor design patterns is unironically helpful though.</p>
+
+<h2><a href="https://github.com/erichmenge/api-versions">api-versions</a></h2>
+
+<p>Though it&#8217;s practically unknown, in all my searching this is the gem that really got closest to what I was looking for. By default, it uses this heretofore unseen programming concept called &#8220;inheritance&#8221; to prevent code duplication from one version of your API to the next.</p>
+
+<p>Unfortunately, when you use its helpfully-provided Rails generator <code>api_versions:bump</code> it still creates a new controller for each of your old controllers. While they inherit code, which is nice, why do you have an empty controller just to provide inheritance to a previous version of the API? Still, this is definitely the least amount of copy/pasting we&#8217;ve seen up until this point, and I sincerely appreciate the author&#8217;s attempt to remain DRY in the very wet API landscape.</p>
+
+<h2>So what should I do if I&#8217;m making a Rails API?</h2>
+
+<p>Use <a href="https://github.com/rails/jbuilder">jbuilder</a> (or <a href="https://github.com/nesquena/rabl">rabl</a>) to create views. If you have a tremendous hatred of views, use <a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a> instead to achieve the same goal. Your controllers should be pretty much like regular Rails ActionControllers. Feel free to include an extremely low-touch library like <a href="https://github.com/bploetz/versionist">versionist</a> or <a href="https://github.com/erichmenge/api-versions">api-versions</a>. Put most of your controller code in modules and include it in the actual controllers to prevent copy and pasting everywhere for the first. For the latter, not much you can do. Suck it up and copy and paste in your routes for both. Unfortunately, that&#8217;s the best solution I can come up with.</p>
+
+<h2>Stop whining and do something about it!</h2>
+
+<p>You know what? I think I will.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>
@@ -2409,182 +2562,6 @@
 <p>That&#8217;s all there is to it! When you touch the &#8216;Tap to Share&#8217; button, you should see the ShareKit action sheet pop up with all of the functionality you&#8217;d expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
 
 <p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns III: Metatags]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags/"/>
-    <updated>2012-07-12T09:48:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/12/rails-concerns-iii-metatags</id>
-    <content type="html"><![CDATA[<p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and <a href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/">two</a> of my series on Rails concerns, I&#8217;m going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren&#8217;t already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook&#8217;s Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the <a href="https://github.com/kpumuk/meta-tags/">meta-tags</a> gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
-
-<!-- more -->
-
-
-<h2>Setup</h2>
-
-<p>Include the meta-tags gem in your Gemfile:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;meta-tags&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s1">&#39;meta_tags&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>While the gem itself hasn&#8217;t been updated for awhile, that doesn&#8217;t really matter; it still functions quite well for our purposes. Once it&#8217;s in the Gemfile, we&#8217;ll configure some sensible defaults in our application layout, <code>application.html.erb</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
-</span><span class='line'>  <span class="o">&lt;</span><span class="n">meta</span> <span class="n">charset</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="o">&gt;</span>
-</span><span class='line'>  <span class="o">&lt;</span><span class="sx">%= display_meta_tags :site =</span><span class="o">&gt;</span> <span class="s1">&#39;Your Site Name Here&#39;</span><span class="p">,</span> <span class="ss">:keywords</span> <span class="o">=&gt;</span> <span class="no">Metatags</span><span class="o">::</span><span class="no">KEYWORDS</span> <span class="sx">%&gt;</span>
-</span><span class='line'><span class="sx">  ...</span>
-</span><span class='line'><span class="sx">&lt;/head&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We&#8217;ll be defining that <code>CONSTANTS</code> constant shortly. This ensures that on each page the name of your site appears in the title, all by itself if you don&#8217;t specify anything else, and that keywords appear in the keywords <code>meta</code> tag, which robots like the Googlebot use when computing your page&#8217;s relevance.</p>
-
-<h2>The Concern</h2>
-
-<p>The meta-tags gem allows us to specify additional hashed options in either controllers or views: these options are concatenated with the defaults specified above to create attractive and meaningful metatags for each and every page. Since controllers tend to encapsulate models, I elected to make this a controller concern. (And forget doing this in views: replicating this code in each and every view is not my idea of a good time.) So our controller should, ideally, look somewhat like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:find_user</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Metatags</span>
-</span><span class='line'>  <span class="n">metatags</span> <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="ss">:summary</span><span class="p">,</span> <span class="ss">:short_tag</span> <span class="o">=&gt;</span> <span class="ss">:slug</span><span class="p">,</span> <span class="ss">:keywords</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:canonical</span> <span class="o">=&gt;</span> <span class="ss">:user_url</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">find_user</span>
-</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We specify with a hash how the metatags should be constructed: the keys of the hash are the names of each metatag we intend to use, while the values are the methods that need to be executed on the controller&#8217;s object in order to get the information for that tag. In other words, if we have an object called <code>@user</code>, then we want the title of the page to include <code>@user.name</code> &#8211; and that&#8217;s represented by a hash that looks like <code>:title =&gt; :name</code>. However, this won&#8217;t work for every key and value. For example, the <code>:canonical</code> key should indicate how to find the canonical URL of this resource, so we&#8217;ll need a special exception for that&#8230; and the Facebook Open Graph name for <code>:canonical</code> is <code>:url</code>, so we&#8217;ll need to switch it when we generate the Facebook tags.</p>
-
-<p>This, then, is the actual module itself:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Metatags</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="no">OG_TAGS</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:title</span><span class="p">,</span> <span class="ss">:type</span><span class="p">,</span> <span class="ss">:image</span><span class="p">,</span> <span class="ss">:url</span><span class="p">,</span> <span class="ss">:description</span><span class="o">]</span>
-</span><span class='line'>  <span class="no">KEYWORDS</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;here&#39;</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">append_before_filter</span> <span class="ss">:set_metatags</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">metatags</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
-</span><span class='line'>      <span class="vi">@hash</span> <span class="o">=</span> <span class="nb">hash</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">set_metatags</span>
-</span><span class='line'>    <span class="n">object</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">underscore</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">singularize</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">hash</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="ss">:@hash</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="n">object</span>
-</span><span class='line'>      <span class="n">new_hash</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:open_graph</span> <span class="o">=&gt;</span> <span class="p">{}}</span>
-</span><span class='line'>      <span class="nb">hash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tag</span><span class="p">,</span> <span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="n">object</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span> <span class="k">if</span> <span class="n">object</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:keywords</span>
-</span><span class='line'>          <span class="n">value</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="no">KEYWORDS</span>
-</span><span class='line'>        <span class="k">elsif</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:canonical</span>
-</span><span class='line'>          <span class="n">value</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="n">object</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">new_hash</span><span class="o">[</span><span class="n">tag</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span>
-</span><span class='line'>        <span class="n">tag</span> <span class="o">=</span> <span class="ss">:url</span> <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="ss">:canonical</span>
-</span><span class='line'>        <span class="n">new_hash</span><span class="o">[</span><span class="ss">:open_graph</span><span class="o">][</span><span class="n">tag</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="no">OG_TAGS</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>      <span class="n">set_meta_tags</span> <span class="n">new_hash</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Obviously this concern is somewhat complicated: bear with me and I&#8217;ll explain it.</p>
-
-<p>At the top of the code, we define which OpenGraph tags we care about, as well as the default keywords for our application. When the module is included, it appends a <code>before_filter</code> to its controller that will try to set all the metatag information. However, it also creates a new class method on its included class, a side-effect of having a child module called <code>ClassMethods</code>: in this case, it provides included controllers with a method called <code>metatags</code> that accepts a hash of metatag names and method names, as I discussed above.</p>
-
-<p>Finally, we have a private method called <code>set_metatags</code> that performs the actual heavy lifting of the concern. It searches for an instance variable named after the controller itself: so if you have a <code>UsersController</code>, it tries to find an instance variable called <code>@user</code>. If that object exists, it tries to populate a new hash with the result of sending it each hash value.</p>
-
-<p>We have two special exceptions we&#8217;re concerned with. First, we don&#8217;t want to replace the existing site keywords &#8211; we only want to add to them. So if the tag is <code>:keywords</code> we add the keywords in <code>KEYWORDS</code> to whichever ones we passed to <code>meta_tags</code>. Second, if the tag is <code>:canonical</code>, we do something a little special. We assume the key is a Rails named route that will accept one argument, the controller&#8217;s object, to generate a correct canonical URL.</p>
-
-<p>Underneath that, we switch the name of the <code>:canonical</code> tag to <code>:url</code> so that the Facebook Open Graph tags are set up correctly. With that you&#8217;re all done. Each controller will automatically try to query its object as you specified and set metatag information for each view based on the results of those queries.</p>
-
-<h2>Caveats</h2>
-
-<p>Because the metatag creation happens in a <code>before_filter</code>, the ordering of your filters becomes crucially important. If you have a <code>before_filter</code> that finds your controller&#8217;s primary object like my controller sample above, it&#8217;s vital that you place the <code>before_filter</code> above the concern&#8217;s <code>include</code>, or, if you&#8217;d prefer, use <code>prepend_before_filter</code> instead of <code>before_filter</code>. Otherwise the metatag concern will place its <code>before_filter</code> ahead of the one that finds your object, your object will be nil when <code>set_metatags</code> runs, and the metatag information will never display correctly on the page.</p>
-
-<p>Though complicated, I think this example best demonstrates the power and portability of concerns. With one simple method invocation in your controller, you generate an immense wealth of SEO and Open Graph information: and the best part is, you only had to write the code to do this once. Further customizability can easily be achieved with additions to the module to better fit your application&#8217;s specific concerns.</p>
-
-<p>This ends the first part of my series on Rails concerns. While I don&#8217;t have anything else exciting to show off presently, the concern pattern is a powerful one that I&#8217;ve used a lot in the past and that I intend to use a lot in the future. Thus, when I come up with something else cool and interesting, I&#8217;ll definitely continue talking about awesome Rails concerns.</p>
 ]]></content>
   </entry>
   
