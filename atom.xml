@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-02-22T12:31:41-06:00</updated>
+  <updated>2013-03-19T15:43:48-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Applying to 37Signals (But Why You Should)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/"/>
+    <updated>2013-03-19T13:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should</id>
+    <content type="html"><![CDATA[<p>In case you haven&#8217;t heard&#8230;</p>
+
+<p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
+
+<p>Yes, it&#8217;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &#8211; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&#8217;re into Rails, you&#8217;d have to be stupid to not at least consider such an amazing opportunity.</p>
+
+<p>So I did, and because I&#8217;m a programmer I carefully enumerated my thoughts. If you&#8217;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &#8211; either way, you&#8217;ll have an opinion!</p>
+
+<!-- more -->
+
+
+<h2>Why You Should Apply</h2>
+
+<ol>
+<li><h3>They&#8217;ve literally written books about how great it is to work there.</h3>
+
+<p>If you haven&#8217;t read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won&#8217;t find stupid meetings, outside investors, or anyone burning the midnight oil here. You&#8217;ll find work. Great, meaningful, empowering work. When you get right down to it, isn&#8217;t that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They&#8217;re committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
+<li><h3><a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">The Man Himself</a>.</h3>
+
+<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&#8217;ve been lobbying so hard for them to make. He&#8217;s the inventor of Rails, he&#8217;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&#8217;s not to like? I imagine that, if you announced to a room of programmers, &#8220;I work with DHH,&#8221; there would be a brief hush and then everyone would be talking over each other. One would say, &#8220;That man is a crazy person!&#8221; And another, &#8220;He&#8217;s the greatest programmer to ever draw breath!&#8221; There&#8217;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
+<li><h3>Fame &amp; fortune await.</h3>
+
+<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&#8217;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&#8217;ll talk to will know where you work. Your title and position will be meaningful &#8211; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&#8217;re a 37signals alum (unless you intend to be a lifer), having &#8220;Programmer at 37signals&#8221; on your resume will look even more stellar than all those follower numbers.</p></li>
+<li><h3>Work with the best &#8211; and be the best.</h3>
+
+<p>37signals&#8217; programming team is the crème de la crème of the Rails world. You&#8217;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &#8211; doesn&#8217;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&#8217;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
+</ol>
+
+
+<h2>Why You Shouldn&#8217;t</h2>
+
+<ol>
+<li><h3>You&#8217;re not the best.</h3>
+
+<p>But in a team of greats, even being great is not enough &#8211; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&#8217;ll be just another programmer. For some, the knowledge that they&#8217;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&#8217;t yet have the fame and reach of 37signals. It&#8217;s up to you to find them!</p></li>
+<li><h3>While it&#8217;s a great company, it&#8217;s still a company.</h3>
+
+<p>I love startups. In a startup I&#8217;m not just a programmer: I do lots and lots of work with computers, it&#8217;s true, and most of that is programming. But I&#8217;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&#8217;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&#8217;s not an easy question to answer, but I would bet not a whole lot &#8211; or, at least, less than you would somewhere else.</p></li>
+<li><h3>Go do it yourself.</h3>
+
+<p>While 37signals is a great company, there&#8217;s nothing inherently special about it. They make CRM software, and while that&#8217;s an interesting problem space, there&#8217;s tons of fascinating questions to answer out there &#8211; questions that can only be answered through excellent software! The point of Rework is that there&#8217;s no real magic in 37signals that people who are smart and dedicated can&#8217;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&#8217;d be joining his company, but ultimately, if you&#8217;re so great, why aren&#8217;t you out there making a name of your own, rather than riding on someone else&#8217;s coattails? Even if they&#8217;re his.</p></li>
+<li><h3>Fame &amp; fortune await!</h3>
+
+<p>If you&#8217;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&#8217;re dramatically out of line with what the market pays. And while they&#8217;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&#8217;t join stars that have already risen. Do you really want fame and fortune? Then you don&#8217;t want to join 37signals. They&#8217;ve already arrived there, and while there&#8217;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&#8230; regardless of how awesome they are.</p></li>
+</ol>
+
+
+<h2>In The End</h2>
+
+<p>At the point I&#8217;m at in my career, 37signals &#8211; while incredibly appealing &#8211; isn&#8217;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&#8217;t picked this up already, they&#8217;re my programming heroes: and they should be yours too, because they care about everything that&#8217;s important in this industry. So if you&#8217;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
+
+<p>If not, I look forward to seeing what you create in the future, because I bet it&#8217;ll be stellar.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Existing Rails API Solutions Suck]]></title>
@@ -2336,232 +2396,6 @@
 <p>Let&#8217;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
 
 <p>Next time, we&#8217;ll learn how to control flow through our Ruby programs, and we&#8217;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/"/>
-    <updated>2012-07-18T19:38:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion</id>
-    <content type="html"><![CDATA[<p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
-
-<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&#8217;ve done this in a better way &#8211; by extracting the changes out into a new Cocoapod spec repository &#8211; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
-
-<!-- more -->
-
-
-<h2>1. Set up the Rakefile</h2>
-
-<p>First, you need to add the ShareKit sharerers you want into your Rakefile.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-cocoapods&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Facebook&#39;</span>
-</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Twitter&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I couldn&#8217;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&#8217;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &#8211; and the rest of this walkthrough &#8211; I&#8217;ll assume the only sharers you&#8217;re using will be Facebook and Twitter.</p>
-
-<h2>2. Create a ShareKit Configuration File</h2>
-
-<p>I put mine in <code>app/extensions/sharekit_configuration.rb</code>, and it looks like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SharekitConfiguration</span> <span class="o">&lt;</span> <span class="no">DefaultSHKConfigurator</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">appName</span>
-</span><span class='line'>    <span class="s1">&#39;YourAppName&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">appURL</span>
-</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">facebookAppId</span>
-</span><span class='line'>    <span class="s1">&#39;1234567890&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterConsumerKey</span>
-</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterSecret</span>
-</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterCallbackUrl</span>
-</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After you create the file, you need to load it in your <code>app_delegate.rb</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="no">SHKConfiguration</span><span class="o">.</span><span class="n">sharedInstanceWithConfigurator</span><span class="p">(</span><span class="no">SharekitConfiguration</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">init</span><span class="p">)</span>
-</span><span class='line'>    <span class="no">SHK</span><span class="o">.</span><span class="n">flushOfflineQueue</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That <code>SHK.flushOfflineQueue</code> will try to send stored shared content, if there is any, so make sure to include it.</p>
-
-<h2>3. Alter your Cocoapod Sources</h2>
-
-<p>This is the ugly hack. The Cocoapod version of the Facebook iOS SDK is not the correct one; the ShareKit people provide their own fork that includes the functionality you need. (If you don&#8217;t use it, the Facebook login won&#8217;t work at all.) But also the version of ShareKit is old and the Facebook sharing functionality appears to be broken in it anyway, so you might as well update that to the most recent version as well.</p>
-
-<p>All Cocoapod spec information is stored in <code>~/.cocoapods/master</code>. The first file we&#8217;ll change is the Facebook iOS SDK pod spec. It&#8217;s located at <code>~/.cocoapods/master/Facebook-iOS-SDK/1.2/Facebook-iOS-SDK.podspec</code>, and you want to change the line of it that defines the source to look like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;git://github.com/ShareKit/facebook-ios-sdk.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;397c0b62b116a9680035e87a07ab936e1c5dfce6&#39;</span> <span class="p">}</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This points to the most recent commit of the ShareKit Facebook iOS SDK fork. And similarly, we should update the ShareKit pod as well, which is located at <code>~/.cocoapods/master/ShareKit/2.0/ShareKit.podspec</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span>  <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ShareKit/ShareKit.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;a249839dde09e326b1806e22ab3ddb77d733fce9&#39;</span> <span class="p">}</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>4. Manually Copy Resources</h2>
-
-<p>ShareKit expects that its bundle and plist will be present in the resources directory, and you&#8217;ll have to manually move them there for it to work.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp vendor/Pods/ShareKit/Classes/ShareKit/Core/SHKSharers.plist resources/
-</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/
-</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/ShareKit.bundle/
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>For some inexplicable reason ShareKit seems to want the bundle both in the resources directory and as a subdirectory in its own bundle. I have no idea why this is but I couldn&#8217;t get ShareKit working without this step.</p>
-
-<h2>5. Hook up the Share Action</h2>
-
-<p>This is the simplest, most straightforward step. In your view:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="vi">@share</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeCustom</span><span class="p">)</span>
-</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Tap to Share&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateNormal</span><span class="p">)</span>
-</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
-</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">action</span><span class="ss">:&#39;share&#39;</span><span class="p">,</span> <span class="n">forControlEvents</span><span class="ss">:UIControlEventTouchUpInside</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@share</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And in your controller:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">share</span>
-</span><span class='line'>  <span class="n">item</span> <span class="o">=</span> <span class="no">SHKItem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;This is the text you&#39;ll be sharing!&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">actionSheet</span> <span class="o">=</span> <span class="no">SHKActionSheet</span><span class="o">.</span><span class="n">actionSheetForItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="no">SHK</span><span class="o">.</span><span class="n">setRootViewController</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">actionSheet</span><span class="o">.</span><span class="n">showInView</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That&#8217;s all there is to it! When you touch the &#8216;Tap to Share&#8217; button, you should see the ShareKit action sheet pop up with all of the functionality you&#8217;d expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
-
-<p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
 ]]></content>
   </entry>
   
