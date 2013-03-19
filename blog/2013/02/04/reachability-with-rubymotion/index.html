@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Reachability with RubyMotion - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation">
+    <div id='navigation'>
+      <ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:joshsymonds.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+
+    </div>
+  </nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Reachability With RubyMotion</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-04T17:55:00-06:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on my blog as well. In addition to detecting network reachability, this code suspends the operation queue when the target host is unreachable, allowing you to continue appending requests and ensuring that they will be delivered in the order they were queued.</p>
+
+<p>There might be a more efficient way to do something similar, but this works for me.</p>
+
+<!-- more -->
+
+
+<h2>Rakefile</h2>
+
+<p>Add the really awesome <a href="https://github.com/tonymillion/Reachability">Reachability</a> Pod to your project.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;Reachability&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>AFNetworking AFHTTPClient Subclass</h2>
+
+<p>I also use the super convenient AFNetworking library to quickly and easily do REST-compliant requests to my servers. This is the code I stick in my AFHTTPClient:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ServerClient</span> <span class="o">&lt;</span> <span class="no">AFHTTPClient</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Singleton!</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">instance</span>
+</span><span class='line'>    <span class="vc">@@instance</span> <span class="o">||=</span> <span class="kp">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">hostname</span>
+</span><span class='line'>    <span class="s1">&#39;http://yourhosthere.com&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">setupReachability</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">maxConcurrentOperationCount</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="vi">@reachability</span> <span class="o">=</span> <span class="no">Reachability</span><span class="o">.</span><span class="n">reachabilityWithHostname</span><span class="p">(</span><span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@reachability</span><span class="o">.</span><span class="n">reachableBlock</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">reachable</span><span class="o">|</span> <span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kp">false</span><span class="p">}</span>
+</span><span class='line'>    <span class="vi">@reachability</span><span class="o">.</span><span class="n">unreachableBlock</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">reachable</span><span class="o">|</span> <span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">operationQueue</span><span class="o">.</span><span class="n">suspended</span> <span class="o">=</span> <span class="kp">true</span><span class="p">}</span>
+</span><span class='line'>    <span class="vi">@reachability</span><span class="o">.</span><span class="n">startNotifier</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>app_delegate.rb</h2>
+
+<p>Finally, call the setupReachability method in your app delegate and you&#8217;re done:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>    <span class="no">ServerClient</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">setupReachability</span>
+</span><span class='line'>    <span class="no">AFNetworkActivityIndicatorManager</span><span class="o">.</span><span class="n">sharedManager</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-04T17:55:00-06:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rubymotion/'>rubymotion</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/22/chef-cookbooks-for-rails/" title="Previous Post: Chef Cookbooks for Rails">&laquo; Chef Cookbooks for Rails</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/" title="Next Post: Home Automation With Phillips Hue &amp; Huey">Home Automation With Phillips Hue &amp; Huey &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>. RubyMotion and Rails expert, devops guru and server wrangler. I write Ruby, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">Home Automation With Phillips Hue &amp; Huey</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/04/reachability-with-rubymotion/">Reachability with RubyMotion</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("Veraticus", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
+  
+</section>
+
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/veraticus@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <div id='footer'>
+      <p>
+  Copyright &copy; 2013 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+
+    </div>
+  </footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/';
+        var disqus_url = 'http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

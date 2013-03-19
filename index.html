@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I pushed the first version of Huey to RubyGems (calling it 0.1.0). It&#8217;s in a really good state right now, actually &#8211; in addition to a &hellip;">
+  <meta name="description" content="In the past two months, since joining Everest, I&#8217;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +95,272 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-22T11:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&#8217;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&#8217;ve come to a startling and disheartening conclusion.</p>
+
+<p>They all suck.</p>
+
+<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
+
+<ol>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&#8217;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&#8217;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&#8217;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
+</ol>
+
+
+<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/22/existing-rails-api-solutions-suck/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">Home Automation With Phillips Hue &amp; Huey</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T19:32:00-06:00" pubdate data-updated="true">Feb 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&#8217;s how to make it work.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/04/reachability-with-rubymotion/">Reachability With RubyMotion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-04T17:55:00-06:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on my blog as well. In addition to detecting network reachability, this code suspends the operation queue when the target host is unreachable, allowing you to continue appending requests and ensuring that they will be delivered in the order they were queued.</p>
+
+<p>There might be a more efficient way to do something similar, but this works for me.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/04/reachability-with-rubymotion/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-22T12:36:00-06:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile trying to find other people&#8217;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I&#8217;ll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/22/chef-cookbooks-for-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &#8211; and surprising even myself &#8211; I ended up choosing Chef as our solution. Here&#8217;s why.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/27/breaking-up-with-girlsguideto/">Breaking Up With GirlsGuideTo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-27T19:40:00-06:00" pubdate data-updated="true">Dec 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&#8217;s never easy to decide to move on, particularly when you&#8217;re a cofounder. It definitely feels less like a business shakeup and more like a real breakup.</p>
+
+<p>But I must announce that my time at GirlsGuideTo has officially ended.</p>
+
+<p>I&#8217;m proud of the work I&#8217;ve done for GirlsGuideTo. I took a <a href="http://old.girlsguideto.com/home">decrepit, slow PHP Drupal installation</a> and turned it into a <a href="http://girlsguideto.com/">speedy, modernized Rails application</a>. The new GirlsGuideTo uses some incredibly modern technologies to be fast, while still being maintainable and consistent. The pages load near-instantly thanks to <a href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">head.js and Turbolinks</a>, and the Rails code is well-separated and highly tested thanks to some awesome concerns and really nifty Rack middleware.</p>
+
+<p>It also features a really kickass design from my friend <a href="https://twitter.com/LukesBeard">@LukesBeard</a>, so it also looks great in addition to feeling great.</p>
+
+<p>Though I&#8217;m moving to greener pastures, I&#8217;m sure GirlsGuideTo has a bright future ahead of them. As for me, I&#8217;m doing some work for <a href="http://everest.com/">Everest</a> &#8211; they&#8217;re really awesome people that need their backend scaled right into infinity, and I think I&#8217;m the guy to do it for them. In fact, if you download the <a href="https://itunes.apple.com/us/app/everest-live-your-dreams-achieve/id581016826?mt=8">super cool free app</a> or have downloaded it at launch, you&#8217;ve already touched some of my code! The best part about onboarding quickly is having code live in production almost immediately.</p>
+
+<p>So keep on watching this spot for more of the same that you&#8217;ve come to expect &#8211; adrenaline-filled posts on the exciting world of server scalability and optimization.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -270,269 +536,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
-
-<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&#8217;s no need for STI here &#8211; there&#8217;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&#8217;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&#8217;re caching under. You&#8217;re out of luck if you want to change it dynamically.</p>
-
-<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable With Elasticsearch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-25T12:50:00-05:00" pubdate data-updated="true">Oct 25<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
-
-<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-22T14:27:00-05:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&#8217;re looking for something? Not me, that&#8217;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
-
-<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
-
-<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins With Rack Middleware</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true">Oct 10<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It&#8217;s not uncommon to have login-required forms accessible to users who aren&#8217;t logged in &#8211; for example, maybe you&#8217;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &#8220;post&#8221; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&#8217;s not logged in presses the button? In most Rails applications, they&#8217;d be logged in, redirected back to the page they were referred from, and they&#8217;d have to click the thumbs-up again.</p>
-
-<p>That sort of sucks. They already clicked it once. Why can&#8217;t we remember that?</p>
-
-<p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-31T20:03:00-05:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Today, I&#8217;d like to announce the official release of my first RubyMotion app &#8211; <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Kinotify</a>! Kinotify is a simple app with a lofty goal: to notify you of the release of upcoming movies, either in theaters or on DVD. You can search for movies &#8211; in case you have something you really want to be notified of in the future, say a rerelease of Dirty Dancing or the future release of Avatar II &#8211; or just see all upcoming releases. Notifications you set will arrive at 2PM local time on your phone, and you can set the app to remind you of a release a month, week, three days, and/or one day in advance.</p>
-
-<p>The UI, icon, and website were all designed by my good friend and super-talented dude <a href="https://twitter.com/lukesbeard">Luke Beard</a>, so they all look totally awesome. And on the flipside, the Rails server and RubyMotion app were all done by yours truly&#8230; so any faults (and I&#8217;m sure there are some I haven&#8217;t found) are mine and mine alone.</p>
-
-<p>It was a long road to actually releasing this app. I started designing Kinotify with a good friend of mine (who had the original idea and inspiration for the application) way back in March, so it&#8217;s been months of labor, testing, asset acquisition, releasing and refining and coding. But I think the results speak for themselves: Kinotify is a pretty awesome application, and even better I think it&#8217;s a great example of what RubyMotion is capable of. It uses remote notifications, core data, Twitter/Facebook sharing, networking and reachability&#8230; and thanks to RubyMotion it was all pretty painless to get it working together.</p>
-
-<p>This week I&#8217;ll make another blog post describing what took so long, where my time and energy were spent, and the general process of releasing a RubyMotion app on the iTunes store. But I just got the approval email from Apple so I wanted to unleash Kinotify on the world officially. So what are you waiting for? It&#8217;s only 99 cents! <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Go get Kinotify already!</a></p>
-
-<p>And if you have any problems or want new features, the best way to contact me is on <a href="https://twitter.com/Veraticus">Twitter</a>. Thanks!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -545,30 +548,30 @@
   
     <section>
   <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>, CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>. RubyMotion and Rails expert, devops guru and server wrangler. I write Ruby, maintain servers, and wear a lot of different hats.</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/12/21/huey-gem-release/">Huey Gem Release</a>
+        <a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">Making your Web Pages Ridiculously Fast (Without Breaking Them)</a>
+        <a href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">Home Automation With Phillips Hue &amp; Huey</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/12/12/what-i-want-for-christmas/">What I Want for Christmas</a>
+        <a href="/blog/2013/02/04/reachability-with-rubymotion/">Reachability with RubyMotion</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">Huey, for Controlling Phillips Hue Lightbulbs</a>
+        <a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a>
+        <a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a>
       </li>
     
   </ul>
@@ -612,7 +615,7 @@
   <footer role="contentinfo">
     <div id='footer'>
       <p>
-  Copyright &copy; 2012 - Josh Symonds -
+  Copyright &copy; 2013 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

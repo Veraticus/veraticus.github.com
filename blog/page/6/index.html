@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&# &hellip;">
+  <meta name="description" content="I really like answering questions on Stack Overflow &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,6 +101,294 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/03/04/dont-mess-with-primary-keys/">Don&#8217;t Mess With Primary Keys</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T19:11:00-06:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &#8211; it&#8217;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
+
+<p>Recently I&#8217;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &#8220;how do I mess with the primary key column?&#8221;</p>
+
+<p>The answer is always, invariably, the same: don&#8217;t.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/04/dont-mess-with-primary-keys/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Working Around DynamoDB&#8217;s Limitations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been giving a lot of thought recently to working around DynamoDB&#8217;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&#8217;ll talk a little about overcoming the indexing problem, since I&#8217;m still noodling around the transaction issue.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/01/working-around-dynamodbs-limitations/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting Up Unicorn in a Production Environment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-27T10:20:00-06:00" pubdate data-updated="true">Feb 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
+
+<p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/23/why-i-like-rubber/">Why I Like Rubber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When I was analyzing tools to deploy applications into Amazon&#8217;s elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
+
+<p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&#8217;s super easy to start a server with nothing more than:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:create <span class="nv">ALIAS</span><span class="o">=</span>fluttershy <span class="nv">ROLES</span><span class="o">=</span>unicorn
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And bootstrap it with all the software needed for that role with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:bootstrap <span class="nv">FILTER</span><span class="o">=</span>fluttershy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, looking at command line magic doesn&#8217;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
+
+<p>It&#8217;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&#8217;m sure. The good part &#8211; for me at least &#8211; is how close it is to the servers and how well it ties in with Capistrano. There&#8217;s no magic going on and there&#8217;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&#8230; but if you know what you&#8217;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
+
+<p>rubber isn&#8217;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&#8217;s deployed on a per-application basis, it can&#8217;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
+
+<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
+
+<p>But it will soon! The TODO list is particularly exciting:</p>
+
+<ul>
+<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
+<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
+<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
+<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
+<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
+</ul>
+
+
+<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/21/rapnd-redis-apn-daemon/">Rapnd: Redis APN Daemon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://github.com/Veraticus/rapnd">rapnd</a> is a gem I developed to create a persistent connection through which to pass messages to Apple&#8217;s Push Notification servers. It&#8217;s pretty neat and you should check it out.</p>
+
+<h2>Why another push notification gem?</h2>
+
+<p>The existing ones just didn&#8217;t do what I wanted. There were some that created persistent daemon connections&#8230; but they were only usable with one app, and we have two apps we want to send push notifications for. There were some with multiple app support, but they didn&#8217;t have daemons or they assumed the existence of ActiveRecord. And in my opinion using ActiveRecord to store notifications is pretty dumb.</p>
+
+<h2>Whoa! ActiveRecord is just fine, bro.</h2>
+
+<p>Yeah, I love ActiveRecord. But it&#8217;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&#8217;t care less about the content or whether or not it was actually delivered &#8211; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&#8217;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
+
+<h2>Why a daemon?</h2>
+
+<p>Well, Apple tells you to do it. But for a more important reason, Apple claims that constantly established and dropped connections to their servers will result in IP blacklisting. I&#8217;ve never actually seen this in practice, but&#8230; well&#8230; why chance it? rapnd uses one connection per daemon and tries to keep it open as long as possible.</p>
+
+<p>So yeah, it&#8217;s pretty cool. Go check out <a href="http://github.com/Veraticus/rapnd">the rapnd github page</a> to see the deets.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
     
     
@@ -154,30 +442,30 @@
   
     <section>
   <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>, CTO and co-founder of the fabulous <a href="http://girlsguideto.com">GirlsGuideTo</a>. I write Ruby on Rails, maintain servers, and wear a lot of different hats.</p>
+  <p>Creator of the amazing <a href="http://kinotify.com">Kinotify</a>. RubyMotion and Rails expert, devops guru and server wrangler. I write Ruby, maintain servers, and wear a lot of different hats.</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/12/21/huey-gem-release/">Huey Gem Release</a>
+        <a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">Making your Web Pages Ridiculously Fast (Without Breaking Them)</a>
+        <a href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">Home Automation With Phillips Hue &amp; Huey</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/12/12/what-i-want-for-christmas/">What I Want for Christmas</a>
+        <a href="/blog/2013/02/04/reachability-with-rubymotion/">Reachability with RubyMotion</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">Huey, for Controlling Phillips Hue Lightbulbs</a>
+        <a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a>
+        <a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a>
       </li>
     
   </ul>
@@ -221,7 +509,7 @@
   <footer role="contentinfo">
     <div id='footer'>
       <p>
-  Copyright &copy; 2012 - Josh Symonds -
+  Copyright &copy; 2013 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

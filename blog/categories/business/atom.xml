@@ -4,7 +4,7 @@
   <title><![CDATA[Category: business | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/business/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2012-12-21T14:54:11-06:00</updated>
+  <updated>2013-02-22T12:31:41-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Breaking Up With GirlsGuideTo]]></title>
+    <link href="http://joshsymonds.com/blog/2012/12/27/breaking-up-with-girlsguideto/"/>
+    <updated>2012-12-27T19:40:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/12/27/breaking-up-with-girlsguideto</id>
+    <content type="html"><![CDATA[<p>It's never easy to decide to move on, particularly when you're a cofounder. It definitely feels less like a business shakeup and more like a real breakup.</p>
+
+<p>But I must announce that my time at GirlsGuideTo has officially ended.</p>
+
+<p>I'm proud of the work I've done for GirlsGuideTo. I took a <a href="http://old.girlsguideto.com/home">decrepit, slow PHP Drupal installation</a> and turned it into a <a href="http://girlsguideto.com/">speedy, modernized Rails application</a>. The new GirlsGuideTo uses some incredibly modern technologies to be fast, while still being maintainable and consistent. The pages load near-instantly thanks to <a href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">head.js and Turbolinks</a>, and the Rails code is well-separated and highly tested thanks to some awesome concerns and really nifty Rack middleware.</p>
+
+<p>It also features a really kickass design from my friend <a href="https://twitter.com/LukesBeard">@LukesBeard</a>, so it also looks great in addition to feeling great.</p>
+
+<p>Though I'm moving to greener pastures, I'm sure GirlsGuideTo has a bright future ahead of them. As for me, I'm doing some work for <a href="http://everest.com/">Everest</a> -- they're really awesome people that need their backend scaled right into infinity, and I think I'm the guy to do it for them. In fact, if you download the <a href="https://itunes.apple.com/us/app/everest-live-your-dreams-achieve/id581016826?mt=8">super cool free app</a> or have downloaded it at launch, you've already touched some of my code! The best part about onboarding quickly is having code live in production almost immediately.</p>
+
+<p>So keep on watching this spot for more of the same that you've come to expect -- adrenaline-filled posts on the exciting world of server scalability and optimization.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How Not to Apply for a Job]]></title>
