@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-03-19T15:46:07-05:00</updated>
+  <updated>2013-04-18T13:23:41-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,225 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
+    <updated>2013-04-17T18:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers -- but as opposed to most price breakdowns I've read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I'm assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+
+<!-- more -->
+
+
+<h2>Comparisons</h2>
+
+<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren't that complicated. We'll go for a medium database instance and aggressively cache as much as possible, thus we'll also need to provide memcached room somewhere.</p>
+
+<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I'll include the hours as I would estimate them personally, but for other people it might take longer or shorter -- and the price could go up if there's a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+
+<p>So let's get down to the details!</p>
+
+<h3>Amazon Web Services</h3>
+
+<table>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$277.00</td>
+    <td>$30.74</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
+    </td>
+    <td>$500.00</td>
+    <td>$40.26</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      5 hours maintenance
+    </td>
+    <td>$1500.00</td>
+    <td>$750.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$2277.00</th>
+    <th>$821.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$12129.00</th>
+  </tr>
+</table>
+
+
+<p>No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I've had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don't need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
+
+<h3>RackSpace</h3>
+
+<table>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium managed cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$262.80</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$321.20</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      2 hours maintenance
+    </td>
+    <td>$750.00</td>
+    <td>$300.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$750.00</th>
+    <th>$884.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$11358.00</th>
+  </tr>
+</table>
+
+
+<p>RackSpace's managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they'll keep services running and your servers themselves operational) and that's reflected in a lowered monthly devops cost. They don't do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won't have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
+
+<h3>BlueBox</h3>
+
+<table>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      0 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$0.00</td>
+    <td>$0.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$0.00</th>
+    <th>$770.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$9240.00</th>
+  </tr>
+</table>
+
+
+<p>BlueBox's claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you'd otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox's product is easily the most expensive. You're paying for their expertise much more than their hardware.</p>
+
+<h3>Heroku</h3>
+
+<table>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>4 dynos</h4>
+      12 unicorn workers<br/>
+    </td>
+    <td>$0.00</td>
+    <td>$143.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>memcached addon (500 MB)</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$40.00</td>
+  </tr>
+  <tr>
+    <td><h4>Fugu database instance</h4></td>
+    <td>$0.00</td>
+    <td>$400.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      2 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$300.00</td>
+    <td>$0.00</td>
+  </tr>
+    <tr class='highlighted'>
+    <th>Total</th>
+    <th>$300.00</th>
+    <th>$583.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$7296.00</th>
+  </tr>
+</table>
+
+
+<p>I'm always somewhat mystified by Heroku's pricing -- their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku's internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+
+<h2>Conclusions</h2>
+
+<p>I don't think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they're reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why I'm Not Applying to 37Signals (But Why You Should)]]></title>
@@ -377,281 +596,6 @@ end
 <p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
 
 <p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns V: Searchable with Elasticsearch]]></title>
-    <link href="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/"/>
-    <updated>2012-10-25T12:50:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch</id>
-    <content type="html"><![CDATA[<p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
-
-<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch's <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
-
-<!-- more -->
-
-
-<h2>The Setup</h2>
-
-<p>I have multiple models that are searchable, all of which are searchable in somewhat similar ways. For example, users need left-handed ngram indexing for their names (for autocompletion), but also full searching on the same field; similarly, the titles of content work almost exactly the same way. The only difference between the two was the weights they should use, so I set them up similarly in tire:</p>
-
-<p>```ruby
-class User</p>
-
-<p>  settings ElasticSearchAnalysis do</p>
-
-<pre><code>mapping do
-  indexes :name, type: 'multi_field', fields: {
-    name: {type: 'string', analyzer: 'full', boost: 3},
-    partial: {type: 'string', search_analyzer: 'full', index_analyzer: 'partial'}
-  }
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p><code>ElasticSearchAnalysis</code> is a constant that contains the settings for the partial and full analyzers referenced in the mappings. Of course, I index more fields for content, but ultimately I was using the searchers in the two models in a very similar way: a boolean should of all the different mappings conjoined together. As I was working on the code for the two different models, it was looking more and more similar... and then when I added in searching to tags and it was just about the same thing, I figured it was time to come up with a concern. I elected to call it <code>searchable</code> and wanted it to look something like this:</p>
-
-<p>```ruby
-class User
-  include Searchable</p>
-
-<p>  settings ElasticSearchAnalysis do</p>
-
-<pre><code># elasticsearch settings here
-</code></pre>
-
-<p>  end</p>
-
-<p>  searchable :name, 'name.partial'
-end
-```</p>
-
-<p>Where I could simply list all the fields I wanted to search.</p>
-
-<h2>The Module</h2>
-
-<p>This is the module I came up with to express this.</p>
-
-<p>```ruby
-module Searchable
-  extend ActiveSupport::Concern</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>def searchable(fields)
-  @search_fields = fields
-end
-
-def search(term, options = {})
-  searcher(term, :text, options)
-end
-
-private
-
-def searcher(term, type, options = {}, field_options = {})
-  fields = Array(@search_fields)
-
-  self.tire.search(options.merge(load: true)) do
-    query do
-      boolean do
-        fields.each do |field|
-          should {send(type, field, term, field_options)}
-        end
-      end
-    end
-  end.results
-
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>If you've been following my series on concerns, this shouldn't be very surprising stuff. When you call searchable, the fields are added to an instance variable: then, when you call search on the model, we concatenate all the fields together and boolean search across on each of them. So once this is all set up, you'd use it like this:</p>
-
-<p><code>ruby
-User.search('Josh Symonds')
-</code></p>
-
-<p>Which will generate a tire query like this:</p>
-
-<p>```ruby
-User.tire.search(load: true) do
-  query do</p>
-
-<pre><code>boolean do
-  should text('name', 'Josh Symonds')
-  should text('name.partial', 'Josh Symonds')
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<h2>Extending to More Like This</h2>
-
-<p>Of course, that <code>searcher</code> private method is just begging for another use. Why abstract it out so cleverly and not do something with it? Let's use elasticsearch's <a href="http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query.html">more like this query</a> so we can quickly find objects like each other (to display in an attractive sidebar, for example). <strong>For this to work, in addition to having tire in your Gemfile, you'll also need tire-contrib</strong>. So make sure you have it there or else this will explode.</p>
-
-<p>```ruby
-module Searchable
-  extend ActiveSupport::Concern</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>...
-
-def more_like(term, options = {})
-  searcher(term, :more_like_this_field, options, {min_term_freq: 1, min_doc_freq: 2})
-end
-
-...
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>Now you can say <code>User.more_like('Josh Symonds')</code> and it'll find all documents with a more_like_this query for my name. Clever!</p>
-
-<h2>Searching Across Multiple Models</h2>
-
-<p>If you have a single search field on your site (like in the top navbar), most likely you'll want to search across multiple models with it: the user could be searching for a person, or a piece of content, or a tag. There's no easy way to know for sure what it is they want, so we should search across all of the fields and order the results by their relevance. Though this sounds complicated, with this concern, this is actually surprisingly easy.</p>
-
-<p>```ruby
-module Searchable
-  extend ActiveSupport::Concern</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>def searchable(fields)
-  @search_fields = fields
-  Searchable.loaded_classes[self.to_s] = fields
-end
-
-...
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.loaded_classes</p>
-
-<pre><code>@loaded_classes ||= {}
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.search(term, options = {})</p>
-
-<pre><code>Tire.search(Searchable.loaded_classes.keys.collect {|k| k.downcase.pluralize}.reverse, options.merge(load: true)) do
-  query do
-    boolean do
-      Searchable.loaded_classes.values.flatten.uniq.each do |field|
-        should {text field, term}
-      end
-    end
-  end
-end.results
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p>We changed the <code>searchable</code> method slightly. Now, in addition to adding to an instance variable, it adds to a hash that the module itself keeps track of: this hash contains all the models as keys, and all their fields as values. Then, when we use it, it constructs a search across all those models' indexes for all the fields those models should be searching. To give a concrete example, let's say we use <code>Searchable.search('Josh Symonds')</code> and we have indexes on content titles and user names. This is what the resulting tire query will look like:</p>
-
-<p>```ruby
-Tire.search(['users', 'contents'], {load: true}) do
-  query do</p>
-
-<pre><code>boolean do
-  should text('name', 'Josh Symonds')
-  should text('name.partial', 'Josh Symonds')
-  should text('title', 'Josh Symonds')
-  should text('title.partial', 'Josh Symonds')
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>If you have some models that should be more relevant (like an exact tag match should be the most relevant result), give those mappings an appropriate boost inside the tire mappings for the model. Also keep in mind this will return an array of potentially very different objects: users and contents, in this case. You should either make sure they're all duck-typed correctly together, or check their type before acting on them. Finally, this will only work in development if you load each model before calling <code>Searchable.search</code>. Just entering the constant name of the model should be enough, but if you don't, then the module won't know to search with that model. Such is the danger of lazy loading in development.</p>
-
-<h2>The Final Module</h2>
-
-<p>For your reference, this is the final module with all code included.</p>
-
-<p>```ruby
-module Searchable
-  extend ActiveSupport::Concern</p>
-
-<p>  module ClassMethods</p>
-
-<pre><code>def searchable(fields)
-  @search_fields = fields
-  Searchable.loaded_classes[self.to_s] = fields
-end
-
-def search(term, options = {})
-  searcher(term, :text, options)
-end
-
-def more_like(term, options = {})
-  searcher(term, :more_like_this_field, options, {min_term_freq: 1, min_doc_freq: 2})
-end
-
-private
-
-def searcher(term, type, options = {}, field_options = {})
-  fields = Array(@search_fields)
-
-  self.tire.search(options.merge(load: true)) do
-    query do
-      boolean do
-        fields.each do |field|
-          should {send(type, field, term, field_options)}
-        end
-      end
-    end
-  end.results
-
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.loaded_classes</p>
-
-<pre><code>@loaded_classes ||= {}
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.search(term, options = {})</p>
-
-<pre><code>Tire.search(Searchable.loaded_classes.keys.collect {|k| k.downcase.pluralize}.reverse, options.merge(load: true)) do
-  query do
-    boolean do
-      Searchable.loaded_classes.values.flatten.uniq.each do |field|
-        should {text field, term}
-      end
-    end
-  end
-end.results
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
 ]]></content>
   </entry>
   
