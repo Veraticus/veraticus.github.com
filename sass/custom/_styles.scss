@@ -85,7 +85,19 @@ body {max-width: 10000px;
             }
           }
         }
-      .entry-content {margin-top: 10px;}
+
+      .entry-content {margin-top: 10px;
+        table { width: 100%; margin: 10px 0; border-collapse: collapse;
+          tr { border-bottom: 1px dotted $title-color; }
+          tr:first-of-type, tr.highlighted { background: image-url('noise.png') $nav-bg; border-bottom: 1px solid $title-color; border-top: 1px solid $title-color; }
+          td, th {text-align: center;}
+          td:first-of-type, th:first-of-type {text-align: left;}
+          th { color: $title-color; font-size: 1.1em; padding: 5px; font-weight: bold; font-family: $heading-font-family;}
+          td { padding: 5px;
+            h4 { margin: 0 5px 0 0;}
+          }
+        }
+      }
     }
   }
 
