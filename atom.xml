@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-04-18T13:23:41-05:00</updated>
+  <updated>2013-04-19T10:31:32-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -89,7 +89,7 @@
   </tr>
   <tr>
     <td>
-      <h4>1 medium managed cloud instance</h4>
+      <h4>1 4GB managed cloud instance</h4>
       6 unicorn workers<br/>
       1 nginx reverse proxy<br/>
       memcached
@@ -99,7 +99,7 @@
   </tr>
   <tr>
     <td>
-      <h4>1 medium cloud database instance</h4>
+      <h4>1 4GB cloud database instance</h4>
     </td>
     <td>$0.00</td>
     <td>$321.20</td>
