@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-04-19T10:31:32-05:00</updated>
+  <updated>2013-04-23T14:06:18-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -33,7 +33,7 @@
 
 <h3>Amazon Web Services</h3>
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
@@ -81,7 +81,7 @@
 
 <h3>RackSpace</h3>
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
@@ -129,7 +129,7 @@
 
 <h3>BlueBox</h3>
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
@@ -177,7 +177,7 @@
 
 <h3>Heroku</h3>
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
