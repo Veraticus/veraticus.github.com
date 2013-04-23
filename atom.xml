@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-02-22T12:31:41-06:00</updated>
+  <updated>2013-04-23T14:17:01-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,326 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Perils of Overengineering]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering/"/>
+    <updated>2013-04-23T13:19:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering</id>
+    <content type="html"><![CDATA[<p>Overengineering is a special subset of the generalized problem of &#8220;making bad choices.&#8221; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&#8217;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
+
+<!-- more -->
+
+
+<h2>Don&#8217;t Overthink It</h2>
+
+<p>Does your app really need Meteor? I&#8217;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&#8217;t super awesome or that people shouldn&#8217;t know it &#8211; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
+
+<p>Chances are the answer is &#8220;no.&#8221; You&#8217;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
+
+<p>This goes for any technology. Coco Chanel infamously stated, &#8220;Before you leave the house, look in the mirror and take one thing off.&#8221; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&#8217;re included? Did you make the best choices? If you&#8217;re not sure, do some research. It&#8217;ll save you a boatload of trouble down the river.</p>
+
+<h2>Respect The Majority</h2>
+
+<p>Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$d</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="ss">:a</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It takes half a millisecond &#8211; before caches have been warmed. It&#8217;s schemaless and uses join tables for every column. You&#8217;re the happiest programmer on the planet.</p>
+
+<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&#8217;t know how it works, and no, tests don&#8217;t reasonably define expectations or replace documentation. Even documentation won&#8217;t save them from the bugs hiding in your custom solution &#8211; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
+
+<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&#8217;ll save everyone involved a lot of time and trouble. No, you won&#8217;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&#8217;ll never have to hand off.</p>
+
+<h2>New IS Cool</h2>
+
+<p>I know why it&#8217;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&#8217;ve been waiting for? But remember to keep your audience in mind. If you&#8217;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&#8217;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
+
+<p>Your time to shine &#8211; your opportunity to cut yourself on the bleeding edge &#8211; is with your own private projects. And if you&#8217;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&#8230; and without falling into one of the pitfalls of overengineering.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
+    <updated>2013-04-17T18:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &#8211; but as opposed to most price breakdowns I&#8217;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&#8217;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+
+<!-- more -->
+
+
+<h2>Comparisons</h2>
+
+<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&#8217;t that complicated. We&#8217;ll go for a medium database instance and aggressively cache as much as possible, thus we&#8217;ll also need to provide memcached room somewhere.</p>
+
+<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&#8217;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &#8211; and the price could go up if there&#8217;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+
+<p>So let&#8217;s get down to the details!</p>
+
+<h3>Amazon Web Services</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$277.00</td>
+    <td>$30.74</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
+    </td>
+    <td>$500.00</td>
+    <td>$40.26</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      5 hours maintenance
+    </td>
+    <td>$1500.00</td>
+    <td>$750.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$2277.00</th>
+    <th>$821.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$12129.00</th>
+  </tr>
+</table>
+
+
+<p>No surprises here: if you&#8217;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&#8217;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&#8217;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
+
+<h3>RackSpace</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB managed cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$262.80</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$321.20</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      2 hours maintenance
+    </td>
+    <td>$750.00</td>
+    <td>$300.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$750.00</th>
+    <th>$884.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$11358.00</th>
+  </tr>
+</table>
+
+
+<p>RackSpace&#8217;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&#8217;ll keep services running and your servers themselves operational) and that&#8217;s reflected in a lowered monthly devops cost. They don&#8217;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&#8217;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
+
+<h3>BlueBox</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      0 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$0.00</td>
+    <td>$0.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$0.00</th>
+    <th>$770.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$9240.00</th>
+  </tr>
+</table>
+
+
+<p>BlueBox&#8217;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&#8217;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&#8217;s product is easily the most expensive. You&#8217;re paying for their expertise much more than their hardware.</p>
+
+<h3>Heroku</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>4 dynos</h4>
+      12 unicorn workers<br/>
+    </td>
+    <td>$0.00</td>
+    <td>$143.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>memcached addon (500 MB)</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$40.00</td>
+  </tr>
+  <tr>
+    <td><h4>Fugu database instance</h4></td>
+    <td>$0.00</td>
+    <td>$400.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      2 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$300.00</td>
+    <td>$0.00</td>
+  </tr>
+    <tr class='highlighted'>
+    <th>Total</th>
+    <th>$300.00</th>
+    <th>$583.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$7296.00</th>
+  </tr>
+</table>
+
+
+<p>I&#8217;m always somewhat mystified by Heroku&#8217;s pricing &#8211; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&#8217;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+
+<h2>Conclusions</h2>
+
+<p>I don&#8217;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&#8217;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Applying to 37Signals (But Why You Should)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/"/>
+    <updated>2013-03-19T13:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should</id>
+    <content type="html"><![CDATA[<p>In case you haven&#8217;t heard&#8230;</p>
+
+<p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
+
+<p>Yes, it&#8217;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &#8211; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&#8217;re into Rails, you&#8217;d have to be stupid to not at least consider such an amazing opportunity.</p>
+
+<p>So I did, and because I&#8217;m a programmer I carefully enumerated my thoughts. If you&#8217;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &#8211; either way, you&#8217;ll have an opinion!</p>
+
+<!-- more -->
+
+
+<h2>Why You Should Apply</h2>
+
+<ol>
+<li><h3>They&#8217;ve literally written books about how great it is to work there.</h3>
+
+<p>If you haven&#8217;t read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won&#8217;t find stupid meetings, outside investors, or anyone burning the midnight oil here. You&#8217;ll find work. Great, meaningful, empowering work. When you get right down to it, isn&#8217;t that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They&#8217;re committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
+<li><h3><a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">The Man Himself</a>.</h3>
+
+<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&#8217;ve been lobbying so hard for them to make. He&#8217;s the inventor of Rails, he&#8217;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&#8217;s not to like? I imagine that, if you announced to a room of programmers, &#8220;I work with DHH,&#8221; there would be a brief hush and then everyone would be talking over each other. One would say, &#8220;That man is a crazy person!&#8221; And another, &#8220;He&#8217;s the greatest programmer to ever draw breath!&#8221; There&#8217;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
+<li><h3>Fame &amp; fortune await.</h3>
+
+<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&#8217;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&#8217;ll talk to will know where you work. Your title and position will be meaningful &#8211; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&#8217;re a 37signals alum (unless you intend to be a lifer), having &#8220;Programmer at 37signals&#8221; on your resume will look even more stellar than all those follower numbers.</p></li>
+<li><h3>Work with the best &#8211; and be the best.</h3>
+
+<p>37signals&#8217; programming team is the crème de la crème of the Rails world. You&#8217;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &#8211; doesn&#8217;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&#8217;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
+</ol>
+
+
+<h2>Why You Shouldn&#8217;t</h2>
+
+<ol>
+<li><h3>You&#8217;re not the best.</h3>
+
+<p>But in a team of greats, even being great is not enough &#8211; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&#8217;ll be just another programmer. For some, the knowledge that they&#8217;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&#8217;t yet have the fame and reach of 37signals. It&#8217;s up to you to find them!</p></li>
+<li><h3>While it&#8217;s a great company, it&#8217;s still a company.</h3>
+
+<p>I love startups. In a startup I&#8217;m not just a programmer: I do lots and lots of work with computers, it&#8217;s true, and most of that is programming. But I&#8217;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&#8217;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&#8217;s not an easy question to answer, but I would bet not a whole lot &#8211; or, at least, less than you would somewhere else.</p></li>
+<li><h3>Go do it yourself.</h3>
+
+<p>While 37signals is a great company, there&#8217;s nothing inherently special about it. They make CRM software, and while that&#8217;s an interesting problem space, there&#8217;s tons of fascinating questions to answer out there &#8211; questions that can only be answered through excellent software! The point of Rework is that there&#8217;s no real magic in 37signals that people who are smart and dedicated can&#8217;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&#8217;d be joining his company, but ultimately, if you&#8217;re so great, why aren&#8217;t you out there making a name of your own, rather than riding on someone else&#8217;s coattails? Even if they&#8217;re his.</p></li>
+<li><h3>Fame &amp; fortune await!</h3>
+
+<p>If you&#8217;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&#8217;re dramatically out of line with what the market pays. And while they&#8217;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&#8217;t join stars that have already risen. Do you really want fame and fortune? Then you don&#8217;t want to join 37signals. They&#8217;ve already arrived there, and while there&#8217;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&#8230; regardless of how awesome they are.</p></li>
+</ol>
+
+
+<h2>In The End</h2>
+
+<p>At the point I&#8217;m at in my career, 37signals &#8211; while incredibly appealing &#8211; isn&#8217;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&#8217;t picked this up already, they&#8217;re my programming heroes: and they should be yours too, because they care about everything that&#8217;s important in this industry. So if you&#8217;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
+
+<p>If not, I look forward to seeing what you create in the future, because I bet it&#8217;ll be stellar.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Existing Rails API Solutions Suck]]></title>
@@ -2054,514 +2374,6 @@
 <h3>Next Time</h3>
 
 <p>In our next and last class, we&#8217;ll learn more about flow control using Ruby&#8217;s powerful and expressive enumerators. We&#8217;ll learn about classes, how to write our own classes and methods, and write a couple exciting and awesome programs.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Error Pages, Corrected]]></title>
-    <link href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/"/>
-    <updated>2012-08-13T14:32:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected</id>
-    <content type="html"><![CDATA[<p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&#8217;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&#8217;t then my post on dynamic error pages won&#8217;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
-
-<!-- more -->
-
-
-<h2>The Problem</h2>
-
-<p>Summarized elegantly <a href="https://github.com/rails/rails/issues/671">here</a>:</p>
-
-<blockquote><p>In Rails 2.3.x, one is able to stick this in ApplicationController to present the user with a custom 404 screen:</p>
-
-<p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
-
-<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController &#8211; the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
-
-<p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it&#8217;s raised in Rack, not the application itself.</p>
-
-<h2>The Solution</h2>
-
-<p>Requires a couple changes on our parts. First, let&#8217;s change our application_controller.rb:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_500</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">AbstractController</span><span class="o">::</span><span class="no">ActionNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span> <span class="c1"># To prevent Rails 3.2.8 deprecation warnings</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So far, just as usual. Now we define the actual actions:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
-</span><span class='line'>    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="n">exception</span>
-</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
-</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">else</span>
-</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;No route matches [</span><span class="si">#{</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;PATH_INFO&#39;</span><span class="o">].</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">render</span> <span class="n">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="n">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="vi">@status</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Since we&#8217;re going to be exposing <code>render_404</code> as an action, now, we have to make parameters into it optional: but we know that if <code>render_exception</code> doesn&#8217;t receive an exception, it actually got a 404.</p>
-
-<p>Finally, we need to add a globbed, wildcard route at the conclusion of our routes.rb. But if we just add one in, then engines and Gems that also rely on wildcard routes will fail. The solution is to do this through our application.rb, like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">MyApplication</span>
-</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 404 catcher</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">after_initialize</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">append</span><span class="p">{</span> <span class="n">match</span> <span class="s1">&#39;*a&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;application#render_404&#39;</span> <span class="p">}</span> <span class="k">unless</span> <span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now it won&#8217;t punch any Gem or engine routes, but will still redirect 404s correctly to our render_404 action.</p>
-
-<p>Thanks to <a href="http://twitter.com/alain_meier">@alan_meier</a> for bringing this problem to my attention, and I hope this correction helps some people out!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introduction to Programming II]]></title>
-    <link href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/"/>
-    <updated>2012-08-05T17:48:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii</id>
-    <content type="html"><![CDATA[<p>It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&#8217;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
-
-<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &#8211; I&#8217;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&#8217;s browser.</p>
-
-<!-- more -->
-
-
-<h2>Digging Deeper into Ruby</h2>
-
-<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &#8211; integers, strings, and floats &#8211; and we also learned what methods are and how they can be used to manipulate those objects. Today we&#8217;ll start by learning about variables, a key concept in computer programming. Afterwards, we&#8217;ll use variables to understand more about Ruby&#8217;s basic objects, and then we&#8217;ll discover how we can create and manipulate entirely new classes of objects.</p>
-
-<h3>Variables</h3>
-
-<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you&#8217;ll need to reference the same piece of data over and over again. Maybe you have a string that&#8217;s particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
-
-<p>In Ruby, variable names are all lower-case, and they can&#8217;t contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you&#8217;ll see its value: so when you type <code>mary</code>, you&#8217;ll see <code>"little lamb"</code>.</p>
-
-<p>Let&#8217;s do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
-
-<ol>
-<li><p>Try <code>mary = 'little lamb'</code>. Now, type <code>mary</code>. It has the value of <code>'little lamb'</code>. This is how you assign variables.</p></li>
-<li><p>Let&#8217;s put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you&#8217;re actually using that string. So when you type <code>mary + 'chop'</code>, you&#8217;re actually saying <code>'little lamb' + 'chop'</code>.</p></li>
-<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>&#8217; previously, <code>mary</code>&#8217;s value hasn&#8217;t changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
-<li><p>Try <code>mary = mary + 'chop'</code>. Now the variable <code>mary</code> is going to be <code>'little lambchop'</code>, because we assigned it again.</p></li>
-<li><p>Try <code>dinner = mary</code>. The variable <code>dinner</code> now has the same value as the variable <code>mary</code>, which is to say, <code>'little lambchop'</code>.</p></li>
-<li><p>Let&#8217;s change what we&#8217;re having for dinner. Try <code>dinner = 'big lambchop'</code>. We&#8217;ve changed the value of <code>dinner</code>: what do you think&#8217;s happened to the value of <code>mary</code>?</p></li>
-<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn&#8217;t changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn&#8217;t affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
-<li><p>Let&#8217;s use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
-<li><p>Finally, let&#8217;s change our number. Try <code>number = number * 3</code>.</p></li>
-</ol>
-
-
-<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It&#8217;s so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
-
-<p>Let&#8217;s explore variable reassignment in an <strong>exercise</strong>.</p>
-
-<ol>
-<li><p>Try <code>mary = 'little lamb'</code>. Now, try <code>mary += 'chop'</code>. This is exactly equivalent to <code>mary = mary + 'chop'</code>.</p></li>
-<li><p>Try <code>number = 3</code>. Now, try <code>number *= 4</code>. This is exactly equivalent to <code>number = number * 4</code>.</p></li>
-</ol>
-
-
-<p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
-
-<p>Now that we understand variables, the rest of Ruby&#8217;s world opens up before us. The basic types we discussed &#8211; integers, strings, floats, and variables &#8211; form the foundation for the Ruby programming language. Now that we&#8217;ve learned about them, we can learn about some exciting new objects&#8230; and then eventually how to create new kinds of objects of our very own!</p>
-
-<h3>Organizing Data</h3>
-
-<p>We know now how we would put in numbers and letters in a Ruby program. But what if you want to organize them? Say you wanted to create a list of names, or perhaps you needed a dictionary of words. What would be the best way to do that?</p>
-
-<p>That&#8217;s what we&#8217;ll discover now.</p>
-
-<h3>Arrays</h3>
-
-<p>Arrays are lists of objects. They look like this:</p>
-
-<p><code>["This", "is", 'an', 'array', 123]</code></p>
-
-<p>The brackets around the array are telling you what it is &#8211; an array. The elements of the array are separated by commas. This array has five elements &#8211; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&#8217;s as big as you need.</p>
-
-<p>Let&#8217;s try some <strong>exercises</strong> to understand how to use arrays.</p>
-
-<ol>
-<li><p>Let&#8217;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
-<li><p>Let&#8217;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
-<li><p>Being friendless sucks. Let&#8217;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &#8216;tom&#8217;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &#8211; without the parenthesis or the dot &#8211; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
-<li><p>Let&#8217;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &#8211; the object to be inserted into the array &#8211; and push it onto the very end.</p></li>
-<li><p>When you count an array&#8217;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&#8217;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
-<li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
-<li><p>This is all well and good, but let&#8217;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&#8217;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
-</ol>
-
-
-<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &#8211; that is, the first element is always the first, the last element is always the last &#8211; you can encode a lot of information in them and be confident of accessing it later.</p>
-
-<h3>Hashes</h3>
-
-<p>A hash is like a dictionary. In a dictionary, you look up a word &#8211; say, &#8216;zebra&#8217; &#8211; and read a definition (&#8216;a big white and black striped horse-like animal&#8217;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &#8216;zebra&#8217; in a dictionary: it&#8217;s what you use to look up information in a hash. Values are the definitions: they&#8217;re what you get back when you look up a word.</p>
-
-<p>Hashes look like this:</p>
-
-<p><code>{'mary' =&gt; 'little lamb', 'freddy' =&gt; 1, 'zebra' =&gt; 'a big white and black striped horse-like animal', 1 =&gt; 3}</code></p>
-
-<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They&#8217;re very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first&#8230; but inside a hash, there&#8217;s no guarantee that the element we just added will be the last. Let&#8217;s try some <strong>exercises</strong> to explore this exciting new data structure.</p>
-
-<ol>
-<li><p>First, let&#8217;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&#8217;d have made a blank hash; instead we&#8217;re starting it with an entry.</p></li>
-<li><p>Let&#8217;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
-<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &#8211; &#8216;peacock&#8217; &#8211; to a new value &#8211; &#8216;beautiful&#8217;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
-<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &#8211; so the keys and values might not appear in the same positions you&#8217;d expect.</p></li>
-<li><p>Keys have to be unique in a hash &#8211; if you assign a value to a key that already exists, it will replace that key&#8217;s existing value. Let&#8217;s change the value of &#8216;zebra&#8217;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &#8216;zebra&#8217; is &#8216;striped&#8217;, instead of &#8216;animal&#8217;.</p></li>
-<li><p>Finally, data structures can contain other data structures. Let&#8217;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
-</ol>
-
-
-<p>Hashes are a great format for storing information in a way that we want to quickly look up later. Whereas arrays are for lists of things, hashes are very much like dictionaries.</p>
-
-<p>We&#8217;ll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It&#8217;s time to use what we&#8217;ve learned to create our very first program.</p>
-
-<h3>Our First Program</h3>
-
-<p>We now know enough to write our very first program in Ruby! We need two methods we haven&#8217;t discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let&#8217;s use those methods to create a program that automatically tabulates points for us.</p>
-
-<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&#8217;t really covered yet. When you write code in there, and press the &#8216;play&#8217; button in the upper right, the code will be executed and you&#8217;ll see the result on the right-hand side. Let&#8217;s try entering this in to the text editor half of repl.it:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">scores</span> <span class="o">||=</span> <span class="p">{}</span>
-</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Who just scored points?&#39;</span>
-</span><span class='line'><span class="nb">name</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
-</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;How many more points did they get?&#39;</span>
-</span><span class='line'><span class="n">points</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">scores</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">points</span>
-</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;The current standings are: &#39;</span> <span class="o">+</span> <span class="n">scores</span><span class="o">.</span><span class="n">inspect</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Let&#8217;s dissect this progrma line-by-line to understand what&#8217;s happening here.</p>
-
-<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn&#8217;t already been assigned: we&#8217;ll cover how it works more in the next lesson.</p>
-
-<p>In the second line, we ask the user who scored points.</p>
-
-<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &#8211; but that return isn&#8217;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
-
-<p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
-
-<p>The seventh line performs hash assignment, like we just learned: the score is inserted into the hash so that we can keep track of it.</p>
-
-<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that&#8217;s easily understandable to humans.</p>
-
-<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we&#8217;ll discover how to have the program automatically loop so that we don&#8217;t have to keep running it manually.</p>
-
-<h3>Your First Program</h3>
-
-<p>Now that we know a little about Ruby, it&#8217;s time for you to make your very first program all on your own!</p>
-
-<p>Let&#8217;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
-
-<p>Next time, we&#8217;ll learn how to control flow through our Ruby programs, and we&#8217;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
-    <link href="http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/"/>
-    <updated>2012-07-18T19:38:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion</id>
-    <content type="html"><![CDATA[<p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
-
-<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&#8217;ve done this in a better way &#8211; by extracting the changes out into a new Cocoapod spec repository &#8211; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
-
-<!-- more -->
-
-
-<h2>1. Set up the Rakefile</h2>
-
-<p>First, you need to add the ShareKit sharerers you want into your Rakefile.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-cocoapods&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Facebook&#39;</span>
-</span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Twitter&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I couldn&#8217;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&#8217;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &#8211; and the rest of this walkthrough &#8211; I&#8217;ll assume the only sharers you&#8217;re using will be Facebook and Twitter.</p>
-
-<h2>2. Create a ShareKit Configuration File</h2>
-
-<p>I put mine in <code>app/extensions/sharekit_configuration.rb</code>, and it looks like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SharekitConfiguration</span> <span class="o">&lt;</span> <span class="no">DefaultSHKConfigurator</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">appName</span>
-</span><span class='line'>    <span class="s1">&#39;YourAppName&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">appURL</span>
-</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">facebookAppId</span>
-</span><span class='line'>    <span class="s1">&#39;1234567890&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterConsumerKey</span>
-</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterSecret</span>
-</span><span class='line'>    <span class="s1">&#39;abcedfgh1234567890&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">twitterCallbackUrl</span>
-</span><span class='line'>    <span class="s1">&#39;http://yourappurl.com&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After you create the file, you need to load it in your <code>app_delegate.rb</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="no">SHKConfiguration</span><span class="o">.</span><span class="n">sharedInstanceWithConfigurator</span><span class="p">(</span><span class="no">SharekitConfiguration</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">init</span><span class="p">)</span>
-</span><span class='line'>    <span class="no">SHK</span><span class="o">.</span><span class="n">flushOfflineQueue</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That <code>SHK.flushOfflineQueue</code> will try to send stored shared content, if there is any, so make sure to include it.</p>
-
-<h2>3. Alter your Cocoapod Sources</h2>
-
-<p>This is the ugly hack. The Cocoapod version of the Facebook iOS SDK is not the correct one; the ShareKit people provide their own fork that includes the functionality you need. (If you don&#8217;t use it, the Facebook login won&#8217;t work at all.) But also the version of ShareKit is old and the Facebook sharing functionality appears to be broken in it anyway, so you might as well update that to the most recent version as well.</p>
-
-<p>All Cocoapod spec information is stored in <code>~/.cocoapods/master</code>. The first file we&#8217;ll change is the Facebook iOS SDK pod spec. It&#8217;s located at <code>~/.cocoapods/master/Facebook-iOS-SDK/1.2/Facebook-iOS-SDK.podspec</code>, and you want to change the line of it that defines the source to look like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;git://github.com/ShareKit/facebook-ios-sdk.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;397c0b62b116a9680035e87a07ab936e1c5dfce6&#39;</span> <span class="p">}</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This points to the most recent commit of the ShareKit Facebook iOS SDK fork. And similarly, we should update the ShareKit pod as well, which is located at <code>~/.cocoapods/master/ShareKit/2.0/ShareKit.podspec</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span>  <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ShareKit/ShareKit.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;a249839dde09e326b1806e22ab3ddb77d733fce9&#39;</span> <span class="p">}</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>4. Manually Copy Resources</h2>
-
-<p>ShareKit expects that its bundle and plist will be present in the resources directory, and you&#8217;ll have to manually move them there for it to work.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp vendor/Pods/ShareKit/Classes/ShareKit/Core/SHKSharers.plist resources/
-</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/
-</span><span class='line'>cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/ShareKit.bundle/
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>For some inexplicable reason ShareKit seems to want the bundle both in the resources directory and as a subdirectory in its own bundle. I have no idea why this is but I couldn&#8217;t get ShareKit working without this step.</p>
-
-<h2>5. Hook up the Share Action</h2>
-
-<p>This is the simplest, most straightforward step. In your view:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="vi">@share</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeCustom</span><span class="p">)</span>
-</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Tap to Share&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateNormal</span><span class="p">)</span>
-</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
-</span><span class='line'>  <span class="vi">@share</span><span class="o">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">action</span><span class="ss">:&#39;share&#39;</span><span class="p">,</span> <span class="n">forControlEvents</span><span class="ss">:UIControlEventTouchUpInside</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@share</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And in your controller:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">share</span>
-</span><span class='line'>  <span class="n">item</span> <span class="o">=</span> <span class="no">SHKItem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;This is the text you&#39;ll be sharing!&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">actionSheet</span> <span class="o">=</span> <span class="no">SHKActionSheet</span><span class="o">.</span><span class="n">actionSheetForItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="no">SHK</span><span class="o">.</span><span class="n">setRootViewController</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">actionSheet</span><span class="o">.</span><span class="n">showInView</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That&#8217;s all there is to it! When you touch the &#8216;Tap to Share&#8217; button, you should see the ShareKit action sheet pop up with all of the functionality you&#8217;d expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
-
-<p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
 ]]></content>
   </entry>
   

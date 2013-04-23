@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Following parts one and two of my series on Rails concerns, I&#8217;m going to finish up with an extremely useful controller concern: automatically &hellip;">
+  <meta name="description" content="Earlier today @alan_meier pointed out that in certain circumstances, my post on dynamic error pages leads to unexpected results: namely, though most &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,13 +18,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/page/3/">
+  <link rel="canonical" href="http://joshsymonds.com/blog/page/3">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
@@ -68,33 +69,157 @@
 </hgroup>
 
 </header>
-  <nav role="navigation">
-    <div id='navigation'>
-      <ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:joshsymonds.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
   <li><a href="/resume/">Resume</a></li>
 </ul>
 
-
-    </div>
-  </nav>
+</div></nav>
   <div id="main">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&#8217;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&#8217;t then my post on dynamic error pages won&#8217;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/dynamic-error-pages-corrected/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T17:48:00-05:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&#8217;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &#8211; I&#8217;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&#8217;s browser.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/05/introduction-to-programming-ii/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit With RubyMotion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-18T19:38:00-05:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
+
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&#8217;ve done this in a better way &#8211; by extracting the changes out into a new Cocoapod spec repository &#8211; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -393,129 +518,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/31/moving-on/">Moving On</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-31T16:49:00-05:00" pubdate data-updated="true">May 31<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I try to keep to a schedule of a post every three days, and I&#8217;ve definitely not been keeping on top of that &#8211; I haven&#8217;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&#8217;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/31/moving-on/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/22/dynamic-routing-with-rails/">Dynamic Routing With Rails</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-22T23:08:00-05:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I love Rails&#8217; routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we&#8217;re ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/22/dynamic-routing-with-rails/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/">Quick &amp; Easy User Preferences in Rails</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-16T18:11:00-05:00" pubdate data-updated="true">May 16<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn&#8217;t like what was presently out there. I don&#8217;t really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code&#8217;s for you.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -537,6 +539,18 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/23/the-perils-of-overengineering/">The Perils of Overengineering</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/">Pricing Popular Hosting Options (With Devops Time)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/">Why I&#8217;m Not Applying to 37Signals (But Why You Should)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a>
       </li>
     
@@ -544,49 +558,37 @@
         <a href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">Home Automation With Phillips Hue &amp; Huey</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/02/04/reachability-with-rubymotion/">Reachability with RubyMotion</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a>
-      </li>
-    
   </ul>
 </section>
-
 
 <section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
     <li class="loading">Status updating&#8230;</li>
   </ul>
+  
+  <a href="https://github.com/Veraticus">@Veraticus</a> on GitHub
+  
   <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("Veraticus", 4, false);
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'Veraticus',
+            count: 13,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
     });
   </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/Veraticus" class="twitter-follow-button" data-show-count="false">Follow @Veraticus</a>
-  
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
-
-
-
-<section class="googleplus googleplus-hidden">
-  <h1>
-    <a href="https://plus.google.com/veraticus@gmail.com?rel=author">
-      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
-      Google+
-    </a>
-  </h1>
-</section>
-
 
 
   
@@ -594,16 +596,14 @@
 
     </div>
   </div>
-  <footer role="contentinfo">
-    <div id='footer'>
-      <p>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
   Copyright &copy; 2013 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-
-    </div>
-  </footer>
+</div>
+</footer>
   
 
 <script type="text/javascript">
@@ -625,7 +625,7 @@
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
+  js = d.createElement(s); js.id = id; js.async = true;
   js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>

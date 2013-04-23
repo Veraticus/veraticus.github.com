@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-02-22T12:31:41-06:00</updated>
+  <updated>2013-04-23T14:17:01-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,225 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
+    <updated>2013-04-17T18:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers -- but as opposed to most price breakdowns I've read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I'm assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+
+<!-- more -->
+
+
+<h2>Comparisons</h2>
+
+<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren't that complicated. We'll go for a medium database instance and aggressively cache as much as possible, thus we'll also need to provide memcached room somewhere.</p>
+
+<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I'll include the hours as I would estimate them personally, but for other people it might take longer or shorter -- and the price could go up if there's a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+
+<p>So let's get down to the details!</p>
+
+<h3>Amazon Web Services</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$277.00</td>
+    <td>$30.74</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
+    </td>
+    <td>$500.00</td>
+    <td>$40.26</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      5 hours maintenance
+    </td>
+    <td>$1500.00</td>
+    <td>$750.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$2277.00</th>
+    <th>$821.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$12129.00</th>
+  </tr>
+</table>
+
+
+<p>No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I've had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don't need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
+
+<h3>RackSpace</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB managed cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$262.80</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$321.20</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      2 hours maintenance
+    </td>
+    <td>$750.00</td>
+    <td>$300.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$750.00</th>
+    <th>$884.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$11358.00</th>
+  </tr>
+</table>
+
+
+<p>RackSpace's managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they'll keep services running and your servers themselves operational) and that's reflected in a lowered monthly devops cost. They don't do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won't have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
+
+<h3>BlueBox</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      0 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$0.00</td>
+    <td>$0.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$0.00</th>
+    <th>$770.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$9240.00</th>
+  </tr>
+</table>
+
+
+<p>BlueBox's claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you'd otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox's product is easily the most expensive. You're paying for their expertise much more than their hardware.</p>
+
+<h3>Heroku</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>4 dynos</h4>
+      12 unicorn workers<br/>
+    </td>
+    <td>$0.00</td>
+    <td>$143.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>memcached addon (500 MB)</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$40.00</td>
+  </tr>
+  <tr>
+    <td><h4>Fugu database instance</h4></td>
+    <td>$0.00</td>
+    <td>$400.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      2 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$300.00</td>
+    <td>$0.00</td>
+  </tr>
+    <tr class='highlighted'>
+    <th>Total</th>
+    <th>$300.00</th>
+    <th>$583.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$7296.00</th>
+  </tr>
+</table>
+
+
+<p>I'm always somewhat mystified by Heroku's pricing -- their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku's internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+
+<h2>Conclusions</h2>
+
+<p>I don't think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they're reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why I Chose Chef Over Rubber]]></title>
@@ -292,78 +511,6 @@ end
 <p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
 
 <p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How I Scaled Hipstamatic]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/"/>
-    <updated>2012-04-06T10:58:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic</id>
-    <content type="html"><![CDATA[<p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I've been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don't have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
-
-<p>Now, take a look at our average response time over the last month.</p>
-
-<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
-
-<p>Considering the web of external services Hipstamatic depends on for much of its operation, I'm proud of our 115ms average response time. Proud but not satisfied -- hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There's no reason we can't achieve 50-70ms response times with better caching and slimmer applications.</p>
-
-<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That's an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
-
-<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic's web site and web services fast. (Or, at the very least, a lot faster.)</p>
-
-<!-- more -->
-
-
-<h2>Cache <em>Everything</em></h2>
-
-<p>This is easily the most important, most crucial rule to making your applications fast. You'd be surprised what you can cache, and how much time caching will save. Memcached access times are ridiculously fast, faster even than the fastest database query. Stick everything in your cache. Everything. <em>Everything</em>.</p>
-
-<p><img src="http://f.cl.ly/items/3f0J2M0H3o3h0w1X1i3m/cache-all-the-things.jpg" alt="Cache all the things" /></p>
-
-<p>This is such an important rule I even gave you an annoying memegenerator image of it. Yes, people, it's memegenerator important.</p>
-
-<p>You really can't go overboard enough when it comes to caching. Make resque jobs whose only purpose is to warm your caches. Use <a href="http://api.rubyonrails.org/classes/ActionController/Caching/Sweeping.html">cache sweepers</a> to sensibly and programmatically expire caches. Almost 90% of our application traffic returns the same (or very similar) JSON and HTML. By caching those responses, we save massive amounts of time, and more importantly, boatloads of money (due to lessened server load).</p>
-
-<h2>Choose Your Tools Wisely</h2>
-
-<p>Choose software that is frequently updated and widely used in the community. Choose software that is robust: by that I mean resistant to failure, and that has survived years of use in live, highly available environments. And finally and most importantly, choose software that is fast. Very, very fast.</p>
-
-<p>Two years ago, we switched from a single, shared instance on A Small Orange to Amazon's Elastic Cloud, allowing us to scale each of our components as necessary and independently from each other. Speed gains were noticeable immediately, but even better was the fact that there was a whole bunch of excellent software easily available to help us manage and scale our cloud presence. (See my earlier post <a href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">on Rubber</a>).</p>
-
-<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don't want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive -- the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
-
-<p>Take the time and do the research. There's a best tool for you waiting out there -- finding it will make your life a thousand times easier.</p>
-
-<h2>Less is More</h2>
-
-<p>For a long time, incoming requests to the app were load balanced through <a href="http://haproxy.1wt.eu/">HAProxy</a> before reaching a Passenger instance. HAProxy is an amazing piece of software; it's extremely fast and gives you an awesome drill-down into incoming requests and your server status.</p>
-
-<p>It also added 10 milliseconds to our response times on average.</p>
-
-<p>If a piece of your stack isn't mission critical (and HAProxy, for us, was just a nice piece of software and not mission critical) then you should remove it. Amazing graphics and interesting metrics are less important than your response time. Examine your stack carefully, with a very critical eye, and whatever isn't absolutely necessary I would strongly recommend cutting out entirely.</p>
-
-<p>What I found helpful to do was draw a quick flow chart of how a request is actually serviced. Nothing that you intend to present to your boss; just a small approximation of your stack. Each step on that chain adds time to that request returning a response. If it adds time to the request turnaround, it needs to be adding something important to that response. Otherwise, it needs to go.</p>
-
-<h2>Achieve Balance</h2>
-
-<p>When we were extensively using <a href="http://redis.io/">redis</a> as a semi-persistent datastore, I constantly experienced bottlenecks for redis connections. But you can encounter this problem anywhere in your server setup: I also had to deal with MySQL bottlenecks and, in one extremely memorable instance, Unicorn queue bottlenecks. These are all issues with load balancing inside the stack.</p>
-
-<p>There's never a part of your stack that is immune to load balancing problems. Once you correctly scale one part, another component that performed adequately will suddenly start chugging under unexpected load or new use conditions. And, unfortunately, pre-optimization can backfire; sometimes you'll target the wrong part of your stack for optimizations, and other times you'll scale something that won't experience a bottleneck at all.</p>
-
-<p>I recommend against trying to pre-scale unless you're sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act -- you can guess to a limited extent where you'll tip after the next step, but you can never be sure until you actually take it. That's why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
-
-<p>Formal plans generally aren't required, but know what steps you'd take if something started to fail. Even ten seconds of idle thought can save you agonizing minutes of unavailability.</p>
-
-<h2>Use 75% of Every Server</h2>
-
-<p>This rule applies doubly to servers on EC2. Instances that reach 100% memory or CPU utilization are instances that are very difficult to fix (and are much more prone to crashing in a shared environment). You can't SSH into them because they take forever to respond; you can't reboot them because they don't respond to Amazon's control plane. They are about to become horrible zombies in your setup, taking up space but refusing to die, and you'll have to route around them to keep your uptime intact.</p>
-
-<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me -- not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
-
-<p>If you're using less than 75%, then you can likely combine services together and remove servers. And if you're using more... well, I have <a href="http://www.pagerduty.com/">PagerDuty</a> configured to call me if at any time a server reaches 85% resource usage, and those are calls I take very seriously.</p>
-
-<p>I'm sure I'll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas -- for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
 ]]></content>
   </entry>
   
