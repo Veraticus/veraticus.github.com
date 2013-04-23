@@ -10,7 +10,7 @@ Overengineering is a special subset of the generalized problem of "making bad ch
 <!-- more -->
 
 ## Don't Overthink It
-Does your app really need Meteor? I'm not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn't super awesome or that people shouldn't know it -- some of the most successful applications on the Internet use it and frameworks like it. But does **your current project** need it?
+Does your app really need Meteor? I'm not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn't super awesome or that people shouldn't know it -- some of the most successful applications on the Internet use it and frameworks like it. But does __your current project__ need it?
 
 Chances are the answer is "no." You'll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.
 
@@ -27,7 +27,17 @@ It takes half a millisecond -- before caches have been warmed. It's schemaless a
 
 And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don't know how it works, and no, tests don't reasonably define expectations or replace documentation. Even documentation won't save them from the bugs hiding in your custom solution -- and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.
 
-So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You'll save everyone involved a lot of time and trouble. No, you won't be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you'll never have to hand off.
+So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You'll save everyone involved a lot of money and trouble. No, you won't be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you'll never have to hand off.
+
+## Less is Best
+
+To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, "A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away." And again, what he applied to design, I apply to code. The best way to fix overengineering -- both cases -- is to ruthlessly cull what you've got. 
+
+Success, for code, isn't bigger and better. It's smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you'll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?
+
+The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn't need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.
+
+Don't be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won't be used that way anyway, and then you'll look like a genius (in addition to actually being one for following sound advice).
 
 ## New IS Cool
 
