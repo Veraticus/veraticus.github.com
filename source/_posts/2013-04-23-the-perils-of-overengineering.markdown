@@ -1,0 +1,36 @@
+---
+layout: post
+title: "The Perils of Overengineering"
+date: 2013-04-23 13:19
+comments: true
+categories: [business, coding]
+---
+Overengineering is a special subset of the generalized problem of "making bad choices." Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I'm going to quantify and identify them so that you and your friends can avoid the perils of overengineering.
+
+<!-- more -->
+
+## Don't Overthink It
+Does your app really need Meteor? I'm not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn't super awesome or that people shouldn't know it -- some of the most successful applications on the Internet use it and frameworks like it. But does **your current project** need it?
+
+Chances are the answer is "no." You'll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.
+
+This goes for any technology. Coco Chanel infamously stated, "Before you leave the house, look in the mirror and take one thing off." What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you're included? Did you make the best choices? If you're not sure, do some research. It'll save you a boatload of trouble down the river.
+
+## Respect The Majority
+Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:
+
+```ruby
+  $d.u.f(:a)
+```
+
+It takes half a millisecond -- before caches have been warmed. It's schemaless and uses join tables for every column. You're the happiest programmer on the planet.
+
+And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don't know how it works, and no, tests don't reasonably define expectations or replace documentation. Even documentation won't save them from the bugs hiding in your custom solution -- and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.
+
+So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You'll save everyone involved a lot of time and trouble. No, you won't be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you'll never have to hand off.
+
+## New IS Cool
+
+I know why it's tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you've been waiting for? But remember to keep your audience in mind. If you're coding for a client (and if you have a full-time job, your client is your employer) you need to make code that's first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.
+
+Your time to shine -- your opportunity to cut yourself on the bleeding edge -- is with your own private projects. And if you're lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success... and without falling into one of the pitfalls of overengineering.

@@ -22,6 +22,10 @@ body {max-width: 10000px;
       h1 {
         font-weight: bold;
       }
+      @media only screen and (max-width: 768px) {
+        margin: 0;
+        padding: 5px 10px;
+      }
     }
     .arrow_box:after, .arrow_box:before {
       right: 100%;
@@ -31,6 +35,9 @@ body {max-width: 10000px;
       width: 0;
       position: absolute;
       pointer-events: none;
+      @media only screen and (max-width: 768px) {
+        display: none;
+      }
     }
 
     .arrow_box:after {
@@ -87,7 +94,7 @@ body {max-width: 10000px;
         }
 
       .entry-content {margin-top: 10px;
-        table { width: 100%; margin: 10px 0; border-collapse: collapse;
+        table.numbers { width: 100%; margin: 10px 0; border-collapse: collapse;
           tr { border-bottom: 1px dotted $title-color; }
           tr:first-of-type, tr.highlighted { background: image-url('noise.png') $nav-bg; border-bottom: 1px solid $title-color; border-top: 1px solid $title-color; }
           td, th {text-align: center;}

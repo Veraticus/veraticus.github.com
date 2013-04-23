@@ -19,7 +19,7 @@ So let's get down to the details!
 
 ### Amazon Web Services
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
@@ -66,7 +66,7 @@ No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most
 
 ### RackSpace
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
@@ -74,7 +74,7 @@ No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most
   </tr>
   <tr>
     <td>
-      <h4>1 medium managed cloud instance</h4>
+      <h4>1 4GB managed cloud instance</h4>
       6 unicorn workers<br/>
       1 nginx reverse proxy<br/>
       memcached
@@ -84,7 +84,7 @@ No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most
   </tr>
   <tr>
     <td>
-      <h4>1 medium cloud database instance</h4>
+      <h4>1 4GB cloud database instance</h4>
     </td>
     <td>$0.00</td>
     <td>$321.20</td>
@@ -113,7 +113,7 @@ RackSpace's managed cloud offerings are more expensive than AWS, but the theory 
 
 ### BlueBox
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
@@ -160,7 +160,7 @@ BlueBox's claim to fame is that they perform server, application, and database s
 
 ### Heroku
 
-<table>
+<table class='numbers'>
   <tr>
     <th style='width: 72%;'>Service</th>
     <th>Setup</th>
