@@ -10,7 +10,12 @@ html {background-color: $background;}
 body {max-width: 10000px;
 
   header {background: transparent; @include centered;
-    #avatar {position: absolute; top: -30px; z-index: -1; left: -150px;}
+    #avatar {
+      position: absolute; top: -30px; z-index: -1; left: -150px;
+      @media only screen and (max-width: 768px) {
+        display: none;
+      }
+    }
     .arrow_box {
       position: relative;
       background: image-url('noise.png') $cream;
