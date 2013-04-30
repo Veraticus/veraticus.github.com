@@ -4,7 +4,7 @@
   <title><![CDATA[Category: business | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/business/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-04-23T16:15:08-05:00</updated>
+  <updated>2013-04-30T05:20:23-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,109 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why Your Startup Is Failing (And How To Fix It)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/"/>
+    <updated>2013-04-30T02:49:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it</id>
+    <content type="html"><![CDATA[<p>The title of this post might be somewhat misleading: it's probably pretty obvious to you why your startup is failing. The same reason any business fails -- you're spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can't stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, "When will I see a return on my investment?" and "How can you possibly be spending so much of my money without making any in return?"</p>
+
+<p>Shortly afterwards they stop giving you money and then you know it isn't long until the end.</p>
+
+<p>Maybe you're there right now, or staring down the barrel of that gun. I've seen it before; I know what it looks like. You're not alone. If you haven't gone off the cliff yet, it's not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you'll be making one of those "What I Learned As An Ex-CEO" Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you're failing at all. Afterwards, we can move on to fixing it.</p>
+
+<!-- more -->
+
+
+<h1>Why You're Failing</h1>
+
+<p>Keep in mind the bottom line here: ultimately you're failing because you're spending more money than you make. Discovering the reason behind this is the most important part of understanding how to correct it. Here, then, are the reasons your startup is failing.</p>
+
+<h2>4. You Hired the Wrong People</h2>
+
+<p>This is an especially easy pitfall for people to fall into. Back when you started your company, you were all excited about your vision, and unfortunately the brightness of said vision blinded you into hiring your old college roommate, or Cousin Mickey, or your sister's wedding photographer. They're really nice people, positive attitude, always on time... but they just aren't great.</p>
+
+<p>The Wrong People can fall anywhere on the "not great" spectrum. Some add literally nothing to your company -- their most important skill is having a thousand Twitter followers. Others ostensibly have skills, but they're bad at them. These people are even worse than their do-nothing colleagues, since you'll be spending time correcting their screw-ups in addition to doing your own work.</p>
+
+<p>If you want your startup to be a success, you don't have time to teach anyone the ropes or take on charity cases. You need stellar performers in every position you're hiring for, and that goes double for engineers, since, as a tech startup, they're the ones in the trenches making your product. Anyone in your company that isn't out-and-out amazing is a waste of your money.</p>
+
+<p>If you're not knowledgeable enough to judge whether or not you hired the wrong people, you need to immediately hire someone who can competently make that assessment and include them in your decision-making processes.</p>
+
+<h2>3. You Have Too Many Warm Bodies</h2>
+
+<p>Your startup has four C-level executives, two managers, and two engineers. What's wrong with this picture?</p>
+
+<p>That's a gimmie, obviously, but you might be surprised how often situations like this occur. (Or if you're as bitter and jaded as I am, you won't be surprised at all.) There are only two kinds of people you need in your startup: people who make your product -- usually your engineers and designers -- and people who sell it. Or, instead of selling it, people responsible for figuring out how to make it profitable, like advertising experts or investment gurus. Everyone else is extraneous.</p>
+
+<p>You don't need managers if you've hired competent engineers. You probably don't need half of your C-level team either. Yes, they're busy all the time and claim their work is integral to the proper functioning of your company. But you wouldn't be staring into the inky abyss of bankruptcy if that were true.</p>
+
+<p>People are truly amazing at generating work for themselves. It's not a testament to the importance of their job, it's a sad reflection on the nature of human existence. Everyone wants to feel important and special, even if they're not really bringing anything to the party. Don't let people waste your rapidly-dwindling money doing this.</p>
+
+<h2>2. You're Wasting Your Time</h2>
+
+<p>There's a lot of ways you can be doing this. Here's a quick list:</p>
+
+<ul>
+<li><strong>Meetings</strong>: You should go into every meeting knowing exactly what that meeting is intended to accomplish. When it's accomplished, the meeting is over. Meetings that don't have a clear agenda do not deserve to occur.</li>
+<li><strong>Process</strong>: Making your product must be fun and easy for your engineers (if they're good engineers, the fun part will come naturally -- supplying the easy is up to you). If it becomes tiresome and unpleasant because of a ridiculous process then you're wasting time.</li>
+<li><strong>Priorities</strong>: Bugs that affect only one customer should be prioritized below bugs affecting fifty customers. Features that no one wants should be slated behind those that customers are clamoring for.</li>
+</ul>
+
+
+<p>Ultimately, if you're not doing something directly applicable to building your application, ensuring its continued success, or selling it, you're wasting your time. Be ruthless here. If you need to constantly remind yourself why what you're doing is valuable... chances are it probably isn't.</p>
+
+<h2>1. No One Wants Your Product</h2>
+
+<p>The only way for you to make money is to sell something (or give it away and sell something related). If the people aren't buying, then you aren't making money, and, well, here you are.</p>
+
+<p>Don't delude yourself by thinking you don't want users yet. That's like saying you don't want money yet. You want money right now, and you want users right now. You want everyone in the world to be clamoring to use your product, and damn the consequences. It might melt your servers into tiny puddles of liquid metal or bring your system to a screeching halt, but who the fuck cares? You can fix those problems. You need users and you need them immediately.</p>
+
+<p>If your initial bunch of users love what you're doing, they'll recommend it to their friends. That's how you get those clamoring masses beating down your door. If people aren't recommending your product to their networks, there's a reason. Find out what it is and fix it. (Hint: it's because of the same issues you run into when you give a tech demo.)</p>
+
+<p>Getting into TechCrunch doesn't count as people wanting your product. Your customers don't read TechCrunch.</p>
+
+<h1>How To Fix It</h1>
+
+<p>Ultimately, your investors don't care about your clever ideas, neat slideshows, your team or even your tech. They care about making money. Why? Because investors are pragmatists. They know that if they bet a million dollars on twenty startups, they'll lose nineteen million dollars on nineteen failures -- and make a hundred million dollars on one success.</p>
+
+<p>You want to be a pragmatist as well. If you make them money, you'll make money for yourself as well. The way to fix your problems, then, is to reduce costs and raise profits. Easy to say, right? Well, here's the specifics.</p>
+
+<h2>3. BRING ME THE AXE</h2>
+
+<p><img src="http://i.qkme.me/3ox4qa.jpg" alt="TINA! BRING ME THE AXE!!" /></p>
+
+<p>It's time to start firing your employees.</p>
+
+<p>This isn't easy. Most of these people have probably become your friends. Perhaps some of them started as your bosom-buddies. Well, too bad. Maybe you can hire them again later when you're more profitable. But if you don't start trimming now, then in a few months you'll be cutting all of them.</p>
+
+<p>First, get rid of all the people that aren't truly, stunningly great at their jobs, whatever their job is. If that's not enough, next flatten your corporate structure. This usually involves firing middle-management. And finally, start getting rid of C-level executives.</p>
+
+<p>Grab your org chart right now and stare at it. For every box on that piece of paper, ask yourself, "Does this person make my company money?" If the answer is no, then you know what to do.</p>
+
+<h2>2. Cultivate Elitism</h2>
+
+<p>People should speak of your company and its hiring practices in hushed, awed tones. You want to be the startup that's snatching up all the great talent -- making the best people in the industry offers that they just can't refuse. People talk about 10X engineers, and you want to be entirely composed of those, but not just for engineers: for everything! Get amazing designers, fantastic QA people, the best of the best. If you want to turn your venture around, this is where you should blow your remaining money.</p>
+
+<p>Once that's done, for God's sake, get out of their way. You hired these amazing people to be dynamic forces of change and save your company -- let them do it! Managing great people is hard: you want to pave the road in front of them almost without them realizing you've done it. Smooth the way, ease the process, and I guarantee that the results will astound you.</p>
+
+<p>You never want to hire anyone that doesn't elicit respect from the other employees of your company. Foster this culture of elitism. Oh, and don't hire until it becomes literally painful that you're short a person. Even then be very very picky. The wrong skills or a bad attitude can send you right back to the "firing" step of this process again, and you don't want to do that more than once.</p>
+
+<h2>1. Double Down on What Makes You Money</h2>
+
+<p>Whatever your value proposition is, you need to clarify it and refocus your entire company around achieving it. At this point, there's been enough pivoting and more than enough money spent trying to find the money in your initial idea. If there isn't any, then it's time to pack up and go home -- but if there is, it's time to pursue it doggedly and relentlessly.</p>
+
+<p>If a VC offered you a million dollars, no strings attached, this very day, you should refuse. Why? Because you should have been either marginally profitable or marginally popular on your <strong>PREVIOUS</strong> million dollars. If you've burnt through all that money and there's still not hordes of people beating down your doors, it is time to do some soul-searching.</p>
+
+<p>Why don't more people find my app popular? Why aren't they spending their money on me? These aren't academic questions to be answered at your leisure: these thoughts should be the burning cores of your very being. If you're in the unenviable position of being a failing startup, you must do everything in your power to answer these two questions. Do so and then double down on what you discover. It's your only prayer.</p>
+
+<h1>Afterwards</h1>
+
+<p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist -- your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn't change its fate. The only measure of a company's success is whether or not it makes money. The rest is just icing on the cake.</p>
+
+<p>Can your company do that? Despite my tone, I believe it can. You've poured your heart and soul into it and you've done so because you believe you're working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn't enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Perils of Overengineering]]></title>
@@ -196,36 +299,6 @@
 <p>And, honestly, that's all that matters to any prospective employer from their applicants. If you really want to be hired, then you'll have to show that you respect the time and energy they've invested in conducting a search for someone like you. Write plainly and to impress -- cram your cover letter with customized material, responding directly to the job posting. Include links early and often to your online presence. And fill your letter with proof after repeated proof that you are the ideal match they've been searching for.</p>
 
 <p>Do all that, and you'll get a response to each and every one of your applications. And, hopefully, most of those responses will be positive.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Moving On]]></title>
-    <link href="http://joshsymonds.com/blog/2012/05/31/moving-on/"/>
-    <updated>2012-05-31T16:49:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/05/31/moving-on</id>
-    <content type="html"><![CDATA[<p>I try to keep to a schedule of a post every three days, and I've definitely not been keeping on top of that -- I haven't posted for almost a week and a half now. I apologize for the lack of content; in my defense, I've been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
-
-<!-- more -->
-
-
-<h2>Leaving Hipstamatic</h2>
-
-<p>I'm leaving my position as web director of Synthetic. I love the company and the product -- I think Hipstamatic has a bright future ahead of it, and it is, in my opinion, easily the best photography app on the market. But my professional growth there had stalled. I was having lots of fun juggling servers, code, customer service, database administration, and, well, everything else technical. Yet I was hungry for more: specifically, opportunities to execute and pursue my own technical vision as a valued partner, not just a valued employee. I wanted to be a decision maker.</p>
-
-<p>Synthetic has always been a company driven by design. You can see it in any of their <a href="http://makebeautiful.hipstamatic.com/">amazing</a> <a href="http://gear.hipstamatic.com">sites</a> (featuring stellar HTML, CSS, and JS by the incomparable <a href="http://lukesbeard.com/">@LukesBeard</a>), and even the design of the Hipstamatic itself, which is retro and cool and usable all at once. But for an ambitious technical guy, direction through design didn't leave a lot of opportunity for personal growth. I knew if I wanted to let my voice be heard, I'd have to go somewhere else to do it.</p>
-
-<h2>Joining GirlsGuideTo</h2>
-
-<p>So what's next for Josh Symonds?</p>
-
-<p>I accepted an offer from <a href="http://girlsguideto.com">GirlsGuideTo</a>, an insanely fabulous website for women, to be their CTO and co-founder. Having recently secured a round of seed financing, GirlsGuideTo is positioned really excellently. They have a huge userbase and are poised to really take over their market; their only stumbling block is some really old software and a somewhat dated design. Those are problems I can fix! Within the next month, I intend to give the site a complete graphical and technical overhaul. Under my technical direction (and CEO Brette Borow's product management), GirlsGuideTo will grow to be an even more amazing site -- the premiere destination for women to get advice, read awesome articles, and connect with one another.</p>
-
-<p>Within the next couple weeks, I also intend to release my first RubyMotion application to the iTunes App Store. Featuring some excellent designs by the aforementioned <a href="http://lukesbeard.com/">@LukesBeard</a> and some pretty nifty code by yours truly, it represents the culmination of nearly a month spent working during almost all my free time. I think it's pretty cool, and I'll be spending some time discussing its technical infrastructure and how I used RubyMotion to make it happen.</p>
-
-<p>Finally, what does all this mean for my blog? Well, I'll still post awesome code and go on and on about how much I love Ruby. But I'll also be talking about the trials and tribulations of a newly-minted CTO at a new startup; finding talent, putting it to use, and in general conquering the world one step at a time. And I promise to get back on my regular, three-day schedule while I do it.</p>
-
-<p>So stick around and keep reading; this blog will only get more interesting!</p>
 ]]></content>
   </entry>
   

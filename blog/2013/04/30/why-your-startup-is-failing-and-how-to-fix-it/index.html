@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Why Your Startup Is Failing (And How To Fix It) - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="The title of this post might be somewhat misleading: it&#8217;s probably pretty obvious to you why your startup is failing. The same reason any &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Why Your Startup Is Failing (and How to Fix It)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-30T02:49:00-05:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The title of this post might be somewhat misleading: it&#8217;s probably pretty obvious to you why your startup is failing. The same reason any business fails &#8211; you&#8217;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&#8217;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &#8220;When will I see a return on my investment?&#8221; and &#8220;How can you possibly be spending so much of my money without making any in return?&#8221;</p>
+
+<p>Shortly afterwards they stop giving you money and then you know it isn&#8217;t long until the end.</p>
+
+<p>Maybe you&#8217;re there right now, or staring down the barrel of that gun. I&#8217;ve seen it before; I know what it looks like. You&#8217;re not alone. If you haven&#8217;t gone off the cliff yet, it&#8217;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&#8217;ll be making one of those &#8220;What I Learned As An Ex-CEO&#8221; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&#8217;re failing at all. Afterwards, we can move on to fixing it.</p>
+
+<!-- more -->
+
+
+<h1>Why You&#8217;re Failing</h1>
+
+<p>Keep in mind the bottom line here: ultimately you&#8217;re failing because you&#8217;re spending more money than you make. Discovering the reason behind this is the most important part of understanding how to correct it. Here, then, are the reasons your startup is failing.</p>
+
+<h2>4. You Hired the Wrong People</h2>
+
+<p>This is an especially easy pitfall for people to fall into. Back when you started your company, you were all excited about your vision, and unfortunately the brightness of said vision blinded you into hiring your old college roommate, or Cousin Mickey, or your sister&#8217;s wedding photographer. They&#8217;re really nice people, positive attitude, always on time&#8230; but they just aren&#8217;t great.</p>
+
+<p>The Wrong People can fall anywhere on the &#8220;not great&#8221; spectrum. Some add literally nothing to your company &#8211; their most important skill is having a thousand Twitter followers. Others ostensibly have skills, but they&#8217;re bad at them. These people are even worse than their do-nothing colleagues, since you&#8217;ll be spending time correcting their screw-ups in addition to doing your own work.</p>
+
+<p>If you want your startup to be a success, you don&#8217;t have time to teach anyone the ropes or take on charity cases. You need stellar performers in every position you&#8217;re hiring for, and that goes double for engineers, since, as a tech startup, they&#8217;re the ones in the trenches making your product. Anyone in your company that isn&#8217;t out-and-out amazing is a waste of your money.</p>
+
+<p>If you&#8217;re not knowledgeable enough to judge whether or not you hired the wrong people, you need to immediately hire someone who can competently make that assessment and include them in your decision-making processes.</p>
+
+<h2>3. You Have Too Many Warm Bodies</h2>
+
+<p>Your startup has four C-level executives, two managers, and two engineers. What&#8217;s wrong with this picture?</p>
+
+<p>That&#8217;s a gimmie, obviously, but you might be surprised how often situations like this occur. (Or if you&#8217;re as bitter and jaded as I am, you won&#8217;t be surprised at all.) There are only two kinds of people you need in your startup: people who make your product &#8211; usually your engineers and designers &#8211; and people who sell it. Or, instead of selling it, people responsible for figuring out how to make it profitable, like advertising experts or investment gurus. Everyone else is extraneous.</p>
+
+<p>You don&#8217;t need managers if you&#8217;ve hired competent engineers. You probably don&#8217;t need half of your C-level team either. Yes, they&#8217;re busy all the time and claim their work is integral to the proper functioning of your company. But you wouldn&#8217;t be staring into the inky abyss of bankruptcy if that were true.</p>
+
+<p>People are truly amazing at generating work for themselves. It&#8217;s not a testament to the importance of their job, it&#8217;s a sad reflection on the nature of human existence. Everyone wants to feel important and special, even if they&#8217;re not really bringing anything to the party. Don&#8217;t let people waste your rapidly-dwindling money doing this.</p>
+
+<h2>2. You&#8217;re Wasting Your Time</h2>
+
+<p>There&#8217;s a lot of ways you can be doing this. Here&#8217;s a quick list:</p>
+
+<ul>
+<li><strong>Meetings</strong>: You should go into every meeting knowing exactly what that meeting is intended to accomplish. When it&#8217;s accomplished, the meeting is over. Meetings that don&#8217;t have a clear agenda do not deserve to occur.</li>
+<li><strong>Process</strong>: Making your product must be fun and easy for your engineers (if they&#8217;re good engineers, the fun part will come naturally &#8211; supplying the easy is up to you). If it becomes tiresome and unpleasant because of a ridiculous process then you&#8217;re wasting time.</li>
+<li><strong>Priorities</strong>: Bugs that affect only one customer should be prioritized below bugs affecting fifty customers. Features that no one wants should be slated behind those that customers are clamoring for.</li>
+</ul>
+
+
+<p>Ultimately, if you&#8217;re not doing something directly applicable to building your application, ensuring its continued success, or selling it, you&#8217;re wasting your time. Be ruthless here. If you need to constantly remind yourself why what you&#8217;re doing is valuable&#8230; chances are it probably isn&#8217;t.</p>
+
+<h2>1. No One Wants Your Product</h2>
+
+<p>The only way for you to make money is to sell something (or give it away and sell something related). If the people aren&#8217;t buying, then you aren&#8217;t making money, and, well, here you are.</p>
+
+<p>Don&#8217;t delude yourself by thinking you don&#8217;t want users yet. That&#8217;s like saying you don&#8217;t want money yet. You want money right now, and you want users right now. You want everyone in the world to be clamoring to use your product, and damn the consequences. It might melt your servers into tiny puddles of liquid metal or bring your system to a screeching halt, but who the fuck cares? You can fix those problems. You need users and you need them immediately.</p>
+
+<p>If your initial bunch of users love what you&#8217;re doing, they&#8217;ll recommend it to their friends. That&#8217;s how you get those clamoring masses beating down your door. If people aren&#8217;t recommending your product to their networks, there&#8217;s a reason. Find out what it is and fix it. (Hint: it&#8217;s because of the same issues you run into when you give a tech demo.)</p>
+
+<p>Getting into TechCrunch doesn&#8217;t count as people wanting your product. Your customers don&#8217;t read TechCrunch.</p>
+
+<h1>How To Fix It</h1>
+
+<p>Ultimately, your investors don&#8217;t care about your clever ideas, neat slideshows, your team or even your tech. They care about making money. Why? Because investors are pragmatists. They know that if they bet a million dollars on twenty startups, they&#8217;ll lose nineteen million dollars on nineteen failures &#8211; and make a hundred million dollars on one success.</p>
+
+<p>You want to be a pragmatist as well. If you make them money, you&#8217;ll make money for yourself as well. The way to fix your problems, then, is to reduce costs and raise profits. Easy to say, right? Well, here&#8217;s the specifics.</p>
+
+<h2>3. BRING ME THE AXE</h2>
+
+<p><img src="http://i.qkme.me/3ox4qa.jpg" alt="TINA! BRING ME THE AXE!!" /></p>
+
+<p>It&#8217;s time to start firing your employees.</p>
+
+<p>This isn&#8217;t easy. Most of these people have probably become your friends. Perhaps some of them started as your bosom-buddies. Well, too bad. Maybe you can hire them again later when you&#8217;re more profitable. But if you don&#8217;t start trimming now, then in a few months you&#8217;ll be cutting all of them.</p>
+
+<p>First, get rid of all the people that aren&#8217;t truly, stunningly great at their jobs, whatever their job is. If that&#8217;s not enough, next flatten your corporate structure. This usually involves firing middle-management. And finally, start getting rid of C-level executives.</p>
+
+<p>Grab your org chart right now and stare at it. For every box on that piece of paper, ask yourself, &#8220;Does this person make my company money?&#8221; If the answer is no, then you know what to do.</p>
+
+<h2>2. Cultivate Elitism</h2>
+
+<p>People should speak of your company and its hiring practices in hushed, awed tones. You want to be the startup that&#8217;s snatching up all the great talent &#8211; making the best people in the industry offers that they just can&#8217;t refuse. People talk about 10X engineers, and you want to be entirely composed of those, but not just for engineers: for everything! Get amazing designers, fantastic QA people, the best of the best. If you want to turn your venture around, this is where you should blow your remaining money.</p>
+
+<p>Once that&#8217;s done, for God&#8217;s sake, get out of their way. You hired these amazing people to be dynamic forces of change and save your company &#8211; let them do it! Managing great people is hard: you want to pave the road in front of them almost without them realizing you&#8217;ve done it. Smooth the way, ease the process, and I guarantee that the results will astound you.</p>
+
+<p>You never want to hire anyone that doesn&#8217;t elicit respect from the other employees of your company. Foster this culture of elitism. Oh, and don&#8217;t hire until it becomes literally painful that you&#8217;re short a person. Even then be very very picky. The wrong skills or a bad attitude can send you right back to the &#8220;firing&#8221; step of this process again, and you don&#8217;t want to do that more than once.</p>
+
+<h2>1. Double Down on What Makes You Money</h2>
+
+<p>Whatever your value proposition is, you need to clarify it and refocus your entire company around achieving it. At this point, there&#8217;s been enough pivoting and more than enough money spent trying to find the money in your initial idea. If there isn&#8217;t any, then it&#8217;s time to pack up and go home &#8211; but if there is, it&#8217;s time to pursue it doggedly and relentlessly.</p>
+
+<p>If a VC offered you a million dollars, no strings attached, this very day, you should refuse. Why? Because you should have been either marginally profitable or marginally popular on your <strong>PREVIOUS</strong> million dollars. If you&#8217;ve burnt through all that money and there&#8217;s still not hordes of people beating down your doors, it is time to do some soul-searching.</p>
+
+<p>Why don&#8217;t more people find my app popular? Why aren&#8217;t they spending their money on me? These aren&#8217;t academic questions to be answered at your leisure: these thoughts should be the burning cores of your very being. If you&#8217;re in the unenviable position of being a failing startup, you must do everything in your power to answer these two questions. Do so and then double down on what you discover. It&#8217;s your only prayer.</p>
+
+<h1>Afterwards</h1>
+
+<p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist &#8211; your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn&#8217;t change its fate. The only measure of a company&#8217;s success is whether or not it makes money. The rest is just icing on the cake.</p>
+
+<p>Can your company do that? Despite my tone, I believe it can. You&#8217;ve poured your heart and soul into it and you&#8217;ve done so because you believe you&#8217;re working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn&#8217;t enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-30T02:49:00-05:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/business/'>business</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/23/the-perils-of-overengineering/" title="Previous Post: The Perils of Overengineering">&laquo; The Perils of Overengineering</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">Why Your Startup Is Failing (And How To Fix It)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/23/the-perils-of-overengineering/">The Perils of Overengineering</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/">Pricing Popular Hosting Options (With Devops Time)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/">Why I'm Not Applying to 37Signals (But Why You Should)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/Veraticus">@Veraticus</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'Veraticus',
+            count: 13,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2013 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joshsymonds';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/';
+        var disqus_url = 'http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
