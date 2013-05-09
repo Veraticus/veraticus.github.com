@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gems | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-05-09T11:26:42-05:00</updated>
+  <updated>2013-05-09T11:29:30-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,7 +18,7 @@
     <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
     <updated>2013-05-09T11:18:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
-    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue's own bridge discovery protocol. This is both faster and more extensible: now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so.</p>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue's own bridge discovery protocol. This is both faster and more extensible -- now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
 
 <p><code>ruby
 Huey.configure do |config|
@@ -26,9 +26,9 @@ Huey.configure do |config|
 end
 </code></p>
 
-<p>With some clever port forwarding on your router, Huey is now usable on servers outside your local network.</p>
+<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
 
-<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discover API returns bad IPs or something similar. Let me know if you run into any problems with it!</p>
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
 ]]></content>
   </entry>
   
