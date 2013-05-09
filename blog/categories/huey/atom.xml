@@ -4,7 +4,7 @@
   <title><![CDATA[Category: huey | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/huey/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-04-30T05:20:23-05:00</updated>
+  <updated>2013-05-09T11:26:42-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Huey 2.0.0]]></title>
+    <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
+    <updated>2013-05-09T11:18:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue's own bridge discovery protocol. This is both faster and more extensible: now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so.</p>
+
+<p><code>ruby
+Huey.configure do |config|
+  config.hue_ip = '123.456.789.012'
+end
+</code></p>
+
+<p>With some clever port forwarding on your router, Huey is now usable on servers outside your local network.</p>
+
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discover API returns bad IPs or something similar. Let me know if you run into any problems with it!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>

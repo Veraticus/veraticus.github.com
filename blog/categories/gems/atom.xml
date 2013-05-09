@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gems | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-04-30T05:20:23-05:00</updated>
+  <updated>2013-05-09T11:26:42-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Huey 2.0.0]]></title>
+    <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
+    <updated>2013-05-09T11:18:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue's own bridge discovery protocol. This is both faster and more extensible: now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so.</p>
+
+<p><code>ruby
+Huey.configure do |config|
+  config.hue_ip = '123.456.789.012'
+end
+</code></p>
+
+<p>With some clever port forwarding on your router, Huey is now usable on servers outside your local network.</p>
+
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discover API returns bad IPs or something similar. Let me know if you run into any problems with it!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>
@@ -239,112 +258,6 @@ Address.find(1, :consistent =&gt; true)
 <p>So I'm not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
 
 <p>Unless I hear compelling arguments otherwise, I'll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I'm working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Middleman for Non-Techies]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies/"/>
-    <updated>2012-04-21T11:56:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/21/middleman-for-non-techies</id>
-    <content type="html"><![CDATA[<p>I didn't make a post on the 18th because I've been in San Francisco at <a href="http://www.refinery29.com/hipstamatic-office-pictures">the Hipstamatic offices</a>, which are totally awesome. The work I've been doing here has taken up all of my time, so I didn't even get the chance to start writing a post until today. While I was here, I met <a href="http://lukesbeard.com/">Luke Beard</a>, a super talented designer who's been touching up a lot of our sites. For example, the excellent <a href="http://disposable.hipstamatic.com/">disposable.hipstamatic.com</a> site is all his handiwork. I wanted to streamline his development process, so that he could deploy his work without feeling blocked by my (usually extremely full) schedule.</p>
-
-<p>We're going to use <a href="https://github.com/middleman/middleman">Middleman</a> to achieve this, in addition to some other nice effects: automatic minification of JS and CSS and smushing of images. Middleman is essentially intended for developers, though; it requires commandline tools that can be fairly intimidating to those who've never really bothered popping open the console before. So here's some small tweaks I made to our HTML projects to make the whole process easier on Luke and any future designers we hire.</p>
-
-<!-- more -->
-
-
-<h2>Use Middleman 3</h2>
-
-<p>Luke doesn't use CoffeeScript or Sass (yet), so the CSS files he creates are just pure CSS. In Middleman 2, .css files aren't automatically minified unless they're run through a secondary processor, like Scss or Compass. This was extremely frustrating to figure out, but is happily really easy to fix. Use Middleman 3. Middleman 3 is in beta and you can install it like so:</p>
-
-<p><code>bash
-gem install middleman --pre
-</code></p>
-
-<p>The Middleman 3 beta has a number of <a href="http://awardwinningfjords.com/2012/01/03/middleman-3-beta.html">other cool features</a> that are worth checking out. In my limited experience using it, there aren't any major syntax changes; my Middleman 2 projects converted without a single hitch.</p>
-
-<h2>Circumvent the Console</h2>
-
-<p>Once people figure out git, they universally love it. Most of our non-technical people who've been introduced to it use <a href="http://mac.github.com/">Github for Mac</a>, though, because honestly the console commands are kind of arcane. Half way through an explanation of the syntax of <code>git add</code>, I realized I was really barking up the wrong tree. So I didn't want to force people to open a console window, cd into the Middleman directory, and start up a server. As simple as that sounds, I knew it would be an enormous point of failure.</p>
-
-<p>So I made a quick little script I inserted into the Middleman project directories.</p>
-
-<p>```ruby</p>
-
-<h1>!/usr/bin/env ruby</h1>
-
-<p>Kernel.exec("cd #{File.dirname(<strong>FILE</strong>)} &amp;&amp; middleman")
-```</p>
-
-<p>I called it <code>start</code>. Chmod it 0755, and then when the designer checks out the repository, they can just double-click on <code>start</code> to automatically boot up the middleman console.</p>
-
-<h2>Deploy with Hubot</h2>
-
-<p>Of course, we also wanted to make it easy to deploy. My deploy script is stolen entirely from a <a href="https://gist.github.com/1902178">gist</a>:</p>
-
-<p>```ruby
-SSH_USER = 'root'
-SSH_HOST = 'www.example.com'
-SSH_DIR  = '/var/www/html/www.example.com'</p>
-
-<p>desc "Build the website from source"
-task :build do
-  puts "## Building website"
-  status = system("middleman build --clean")
-  puts status ? "OK" : "FAILED"
-end</p>
-
-<p>desc "Run the preview server at http://localhost:4567"
-task :preview do
-  system("middleman server")
-end</p>
-
-<p>desc "Deploy website via rsync"
-task :deploy do
-  puts "## Deploying website via rsync to #{SSH_HOST}"
-  status = system("rsync -avze 'ssh' --delete build/ #{SSH_USER}@#{SSH_HOST}:#{SSH_DIR}")
-  puts status ? "OK" : "FAILED"
-end</p>
-
-<p>desc "Build and deploy website"
-task :gen_deploy => [:build, :deploy] do
-end
-```</p>
-
-<p>Actually executing this script requires the console, and see the point I made just above for how I feel about that. Instead, we decided that our resident <a href="http://hubot.github.com/">hubot</a> (named Hipstabot of course) should be the one to deploy the actual code. We already use him to deploy our Rails site, and typing commands in a Campfire chatroom is a lot easier and more sensible than typing commands into the commandline. This is a sanitized version of the CoffeeScript I wrote to allow Hipstabot to deploy static sites:</p>
-
-<p>```coffeescript
-module.exports = (robot) ->
-  robot.respond /deploy site (\w*)/i, (msg) -></p>
-
-<pre><code>util = require('util')
-exec = require('child_process').exec
-
-site = msg.match[1]
-
-msg.send "[#{site}/deploy] Initiating deploy"
-exec "cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot git pull", (error, stdout, stderr) -&gt;
-  if error != null
-    msg.send "Fatal error pulling repository:"
-    msg.send chomp stderr
-  else
-    msg.send "[#{site}/deploy] Building &amp; deploying site"
-    exec "cd /home/hipstabot/workspace/#{site} &amp;&amp; sudo -u hipstabot rake gen_deploy", (error, stdout, stderr) -&gt;
-      if error != null
-        msg.send "Fatal error building site:"
-        msg.send chomp stderr
-      else
-        msg.send "[#{site}/deploy] Deploy complete"
-</code></pre>
-
-<p>chomp = (text) ->
-  text.replace(/(\n|\r)+$/, '')
-```</p>
-
-<p>All the sudoing is to ensure no weirdness happens with directories being owned by someone other than Hipstabot, which would prevent git from pulling correctly.</p>
-
-<p>Using this process, Luke can deploy sites quickly and easily, our customers get minified CSS and JS, and I'm not involved in any step of the process. Creating workflows like this -- that make what people do easier and better -- is one of the greatest joys of being a programmer, and I hope someone finds this post helpful in accomplishing something similar.</p>
 ]]></content>
   </entry>
   
