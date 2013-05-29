@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamoid: An ORM for Amazon's DynamoDB - Hi, I'm Josh Symonds</title>
+  <title>Gistify: a Mac App for Easy Gists - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Dynamoid is (another) gem I developed, but I think it&#8217;s a lot more exciting than rapnd! I started work on it over Christmas but didn&#8217;t &hellip;">
+  <meta name="description" content="Today I&#8217;m happy to announce the release of my very first Mac App: Gistify! Gistify rather simply delivers the content of your clipboard to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
@@ -96,7 +96,7 @@
   
   <header>
     
-      <h1 class="entry-title">Dynamoid: An ORM for Amazon's DynamoDB</h1>
+      <h1 class="entry-title">Gistify: A Mac App for Easy Gists</h1>
     
     
       <p class="meta">
@@ -112,29 +112,26 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2013-05-29T13:32:00-05:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&#8217;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&#8217;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
+<div class="entry-content"><p>Today I&#8217;m happy to announce the release of my very first Mac App: <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
 
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &#8211; it&#8217;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&#8217;t really do a whole lot of exciting stuff yet&#8230;</p>
+<p><a href="https://itunes.apple.com/us/app/gistify/id653231502"><img src="http://f.cl.ly/items/2w0L3S1A2y3H2d3S0c14/Gistify-icon-256.png" alt="Gistify" /></a></p>
 
-<p>But it will soon! The TODO list is particularly exciting:</p>
+<p>Gistify rather simply delivers the content of your clipboard to GitHub&#8217;s awesome <a href="https://gist.github.com/">Gist</a> service. You can select the default format for all gists and override it on a gist-by-gist basis, and the resulting URL is appended to your clipboard so you can paste it wherever you like.</p>
 
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&#8217;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&#8217;re used to with ActiveRecord, so that you can do User.where(:name => &#8216;Josh&#8217;) rather than User.find_by_name(&#8216;Josh&#8217;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
-</ul>
+<p>Simple? Yes indeed, but I desperately wanted it. I made this initial version rapidly to scratch an itch I had &#8211; and perplexingly there&#8217;s not an existing desktop app that seems to do this already. (There are competing apps that paste to other services, but for some reason none work properly that post to Gist.)</p>
 
+<p>In terms of future plans, I already have a new version submitted for approval to Apple! Version 1.1.0 will allow you to sign in to GitHub and create gists under your username: additionally you can toggle the visibility of gists to either public or secret. And in development is version 1.2.0, which will introduce all kinds of new mind-blowing awesomeness.</p>
 
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
+<p>So what are you waiting for? Get over to the Mac App store and buy <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
+
+<p>(Oh, and if you like the icon, it&#8217;s by the super amazing <a href="http://twitter.com/lukesbeard">Luke Beard</a>.)</p>
 </div>
 
 
@@ -157,12 +154,12 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2013-05-29T13:32:00-05:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/dynamodb/'>dynamodb</a>, <a class='category' href='/blog/categories/dynamoid/'>dynamoid</a>
+    <a class='category' href='/blog/categories/gistify/'>gistify</a>
   
 </span>
 
@@ -171,7 +168,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -184,10 +181,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/21/rapnd-redis-apn-daemon/" title="Previous Post: Rapnd: Redis APN Daemon">&laquo; Rapnd: Redis APN Daemon</a>
+        <a class="basic-alignment left" href="/blog/2013/05/09/huey-2-dot-0-0/" title="Previous Post: Huey 2.0.0">&laquo; Huey 2.0.0</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/02/23/why-i-like-rubber/" title="Next Post: Why I Like Rubber">Why I Like Rubber &raquo;</a>
       
     </p>
   </footer>
