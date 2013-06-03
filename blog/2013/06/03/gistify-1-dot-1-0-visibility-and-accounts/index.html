@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamic Cache Counters in Rails - Hi, I'm Josh Symonds</title>
+  <title>Gistify 1.1.0: Visibility &amp; Accounts - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails. The problem is best summed up in a use case. I have a &hellip;">
+  <meta name="description" content="Hot on the heels of my previous announcement, I&#8217;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
@@ -96,7 +96,7 @@
   
   <header>
     
-      <h1 class="entry-title">Dynamic Cache Counters in Rails</h1>
+      <h1 class="entry-title">Gistify 1.1.0: Visibility &amp; Accounts</h1>
     
     
       <p class="meta">
@@ -112,58 +112,18 @@
   
 
 
-<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+<time datetime="2013-06-03T18:44:00-05:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
+<div class="entry-content"><p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I&#8217;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago &#8211; man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
 
-<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&#8217;s no need for STI here &#8211; there&#8217;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&#8217;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&#8217;re caching under. You&#8217;re out of luck if you want to change it dynamically.</p>
+<p>Anyhow, <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>, the incredibly awesome Mac App that lets you gist quickly and easily, just got a whole lot better. Now you can sign in to your GitHub account to make gists, and set the visibility of your gists to either public or private Also the app screenshots are no longer quite so, well&#8230; drab, for lack of a better word.</p>
 
-<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
-
-<!-- more -->
-
-
-<p>The most ideal way to do this is to hook into the existing <a href="http://api.rubyonrails.org/classes/ActiveRecord/CounterCache.html">ActiveRecord CounterCache</a> module. Given that, the code is quite simple, really:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Vote</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:voteable</span><span class="p">,</span> <span class="n">polymorphic</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="n">touch</span><span class="p">:</span> <span class="kp">true</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">after_create</span> <span class="ss">:increment_counters</span>
-</span><span class='line'>  <span class="n">after_destroy</span> <span class="ss">:decrement_counters</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="o">[</span><span class="ss">:increment</span><span class="p">,</span> <span class="ss">:decrement</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counters&quot;</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">voteable_type</span><span class="o">.</span><span class="n">classify</span><span class="o">.</span><span class="n">constantize</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counter&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">votes_count&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">voteable_id</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object&#8217;s class after a vote is created or destroyed; note that I don&#8217;t intend to change the type of the vote, but if you do, you&#8217;ll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
-
-<p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
-
-<p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
+<p>If you haven&#8217;t downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I&#8217;m slightly biased, I&#8217;ve been using it all the time and I think it&#8217;s an incredibly handy tool &#8211; after all, that&#8217;s why I released it. But if you&#8217;re not convinced yet, or you&#8217;re just interested in giving it a shot without paying the $2, let me know and I&#8217;ll be happy to hook you up.</p>
 </div>
 
 
@@ -186,12 +146,12 @@
   
 
 
-<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+<time datetime="2013-06-03T18:44:00-05:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>rails</a>
+    <a class='category' href='/blog/categories/gistify/'>gistify</a>
   
 </span>
 
@@ -200,7 +160,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -213,10 +173,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/" title="Previous Post: Rails Concerns V: Searchable with Elasticsearch">&laquo; Rails Concerns V: Searchable with Elasticsearch</a>
+        <a class="basic-alignment left" href="/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/" title="Previous Post: Gistify: a Mac App for Easy Gists">&laquo; Gistify: a Mac App for Easy Gists</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/" title="Next Post: Huey, for Controlling Phillips Hue Lightbulbs">Huey, for Controlling Phillips Hue Lightbulbs &raquo;</a>
       
     </p>
   </footer>

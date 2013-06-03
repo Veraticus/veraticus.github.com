@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gistify | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gistify/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-05-29T15:18:38-05:00</updated>
+  <updated>2013-06-03T18:56:41-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gistify 1.1.0: Visibility &amp; Accounts]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/"/>
+    <updated>2013-06-03T18:44:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts</id>
+    <content type="html"><![CDATA[<p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I'm proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago -- man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
+
+<p>Anyhow, <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>, the incredibly awesome Mac App that lets you gist quickly and easily, just got a whole lot better. Now you can sign in to your GitHub account to make gists, and set the visibility of your gists to either public or private Also the app screenshots are no longer quite so, well... drab, for lack of a better word.</p>
+
+<p>If you haven't downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I'm slightly biased, I've been using it all the time and I think it's an incredibly handy tool -- after all, that's why I released it. But if you're not convinced yet, or you're just interested in giving it a shot without paying the $2, let me know and I'll be happy to hook you up.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Gistify: a Mac App for Easy Gists]]></title>

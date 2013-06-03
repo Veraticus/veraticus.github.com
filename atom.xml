@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-05-29T15:18:38-05:00</updated>
+  <updated>2013-06-03T18:56:41-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gistify 1.1.0: Visibility &amp; Accounts]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/"/>
+    <updated>2013-06-03T18:44:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts</id>
+    <content type="html"><![CDATA[<p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I&#8217;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago &#8211; man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
+
+<p>Anyhow, <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>, the incredibly awesome Mac App that lets you gist quickly and easily, just got a whole lot better. Now you can sign in to your GitHub account to make gists, and set the visibility of your gists to either public or private Also the app screenshots are no longer quite so, well&#8230; drab, for lack of a better word.</p>
+
+<p>If you haven&#8217;t downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I&#8217;m slightly biased, I&#8217;ve been using it all the time and I think it&#8217;s an incredibly handy tool &#8211; after all, that&#8217;s why I released it. But if you&#8217;re not convinced yet, or you&#8217;re just interested in giving it a shot without paying the $2, let me know and I&#8217;ll be happy to hook you up.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Gistify: a Mac App for Easy Gists]]></title>
@@ -1964,110 +1977,6 @@
 
 
 <p>Now we can reference our seed data quickly and cleanly, without having to resort constantly to finders.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Unobtrusive JavaScript Facebook-Style More Button]]></title>
-    <link href="http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/"/>
-    <updated>2012-10-14T21:20:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button</id>
-    <content type="html"><![CDATA[<p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
-
-<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
-
-<!-- more -->
-
-
-<h2>How to Use It</h2>
-
-<p>Before coding I sat down and tried to figure out how this beast would work.</p>
-
-<p>Because it was unobtrusive, it should work on standard links, replacing them with an AJAX-y alternative if they have appropriate attributes. I hit on a link that looked like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sx">%= link_to &#39;More...&#39;.html_safe, root_path(page: @page + 1),</span>
-</span><span class='line'><span class="sx">    class: &#39;next_page&#39;, &#39;data-selector&#39; =</span><span class="o">&gt;</span> <span class="s1">&#39;.articles .article&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s1">&#39;data-container&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;.articles&#39;</span><span class="o">%&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If the link has <code>data-selector</code> and <code>data-container</code> attributes, it&#8217;s supposed to be an AJAX more button. The selector tells the script what to look for in the new page; the container tells it where to append the newly found elements. With this use case in hand, I proceeded to coding.</p>
-
-<h2>The Code</h2>
-
-<p>I apologize in advance if there&#8217;s a cleaner way to do this. My CoffeeScript is pretty weak.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(event) -&gt;</span>
-</span><span class='line'>    <span class="nv">element = </span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
-</span><span class='line'>    <span class="nv">url = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;href&#39;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span> <span class="nx">unless</span> <span class="nx">url</span>
-</span><span class='line'>    <span class="nv">container = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-container&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="nv">selector = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-selector&#39;</span>
-</span><span class='line'>    <span class="nv">more = </span><span class="kc">true</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
-</span><span class='line'>      <span class="nv">url: </span><span class="nx">url</span>
-</span><span class='line'>      <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
-</span><span class='line'>        <span class="nv">elements = </span><span class="nx">$</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="nx">selector</span><span class="p">))</span>
-</span><span class='line'>        <span class="k">if</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
-</span><span class='line'>          <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;All content loaded&#39;</span><span class="p">)</span>
-</span><span class='line'>                 <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;done&#39;</span><span class="p">)</span>
-</span><span class='line'>                 <span class="p">.</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span>
-</span><span class='line'>          <span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">elements</span>
-</span><span class='line'>          <span class="nx">elements</span><span class="p">.</span><span class="nx">css</span> <span class="nv">opacity: </span><span class="mi">0</span>
-</span><span class='line'>          <span class="nx">elements</span><span class="p">.</span><span class="nx">imagesLoaded</span> <span class="nf">(event) -&gt;</span>
-</span><span class='line'>            <span class="nx">elements</span><span class="p">.</span><span class="nx">animate</span> <span class="nv">opacity: </span><span class="mi">1</span>
-</span><span class='line'>            <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)).</span>
-</span><span class='line'>                    <span class="nx">html</span><span class="p">(</span><span class="s">&#39;More &amp;raquo;&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="nx">container</span><span class="p">.</span><span class="nx">masonry</span> <span class="s">&#39;appended&#39;</span><span class="p">,</span> <span class="nx">elements</span><span class="p">,</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-masonry&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nv">beforeSend: </span><span class="o">-&gt;</span>
-</span><span class='line'>        <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;Loading more...&#39;</span><span class="p">)</span>
-</span><span class='line'>               <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;loading&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="kc">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we&#8217;re adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the &#8220;More&#8221; button again &#8211; or we disable the &#8220;More&#8221; button if we found no content.</p>
-
-<p>Overall pretty simple but I was satisfied with this solution. Oh, and there&#8217;s a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
 ]]></content>
   </entry>
   
