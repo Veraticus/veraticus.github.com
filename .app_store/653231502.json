@@ -1,0 +1,13 @@
+
+
+
+{
+ "resultCount":1,
+ "results": [
+{"kind":"mac-software", 
+"screenshotUrls":["http://a3.mzstatic.com/us/r1000/090/Purple/v4/e0/f3/a7/e0f3a7de-1f40-a40b-475d-4db21238177d/mzl.ehphhnkr.800x500-75.jpg", "http://a2.mzstatic.com/us/r1000/077/Purple2/v4/4b/4f/7b/4b4f7b5b-369d-e444-f3f0-84c795cea786/mzl.yqznotpc.800x500-75.jpg", "http://a4.mzstatic.com/us/r1000/080/Purple/v4/d4/1e/7e/d41e7ec8-c950-c2cb-5d72-0a16eb70b194/mzl.fwzsmgvc.800x500-75.jpg"], "artworkUrl60":"http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png", "artworkUrl512":"http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.512x512-75.png", "artistViewUrl":"https://itunes.apple.com/us/artist/josh-symonds/id551361089?mt=12&uo=4", "artistId":551361089, "artistName":"Josh Symonds", "price":1.99, "version":"1.1.0", 
+"description":"Gistify allows you to quickly paste your clipboard to GitHub's awesome Gist service, choosing whatever file format best suits your needs. The URL of the Gist you created is automatically added to your clipboard, so all you have to do is paste and start sharing!\n\n* Paste code directly to Gist, either with defaults or selecting options when you paste.\n* Sign in to your GitHub account to create gists with your username.\n* Set the visibility of your gists to either public or secret.", "currency":"USD", "genres":["Developer Tools", "Productivity"], "genreIds":["12002", "12014"], "releaseDate":"2013-05-29T06:10:45Z", "sellerName":"Joshua Symonds", "bundleId":"com.joshsymonds.gistify", "trackId":653231502, "trackName":"Gistify", "primaryGenreName":"Developer Tools", "primaryGenreId":12002, 
+"releaseNotes":"* Adding in ability to set visibility (public/secret) per gist\n* Allowing users to sign in and submit gists either anonymously or under their username", "formattedPrice":"$1.99", "wrapperType":"software", "trackCensoredName":"Gistify", "languageCodesISO2A":["EN"], "fileSizeBytes":"2394946", "sellerUrl":"http://gistifyapp.com/", "contentAdvisoryRating":"4+", "averageUserRatingForCurrentVersion":5.0, "userRatingCountForCurrentVersion":1, "artworkUrl100":"http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.512x512-75.png", "trackViewUrl":"https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4", "trackContentRating":"4+", "averageUserRating":5.0, "userRatingCount":1}]
+}
+
+
