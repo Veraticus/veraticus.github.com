@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-06-11T17:30:53-05:00</updated>
+  <updated>2013-06-26T16:07:23-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,76 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Using RubyMotion in Production]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/"/>
+    <updated>2013-06-26T12:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production</id>
+    <content type="html"><![CDATA[<p>I&#8217;m a big proponent of RubyMotion &#8211; a year and a month ago, I wrote an article titled &#8221;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&#8221; and despite its divisiveness I still stand behind the points I made. Recently I&#8217;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&#8217;t an appropriate choice for production applications.</p>
+
+<!-- more -->
+
+
+<p>Before I begin, I&#8217;d like to say that I still use RubyMotion frequently and have made production (and prototype) applications built in it. I still love it, have renewed my RubyMotion license, and will do so for the foreseeable future. I believe it is a more productive option for coding than Objective-C. But it has a number of critical issues, and I feel compelled to say that it is an inappropriate choice for those looking for a platform to produce, distribute, and develop iPhone or Mac apps intended for broad release.</p>
+
+<h2>RubyMotion&#8217;s ARC-equivalent is buggy</h2>
+
+<p>This is the main problem with RubyMotion, but it disguises a host of smaller issues with the RubyMotion project and community that&#8217;s grown up around it.</p>
+
+<p>RubyMotion, for those who don&#8217;t know, uses its own analog to Apple&#8217;s automatic reference counting to obviate the need for manual retention and release of objects. It usually works great. But unfortunately it sometimes prematurely releases objects (or possibly fails to retain them?), leading to hard-to-diagnose memory access errors. Most tragically, these errors occur randomly from a user&#8217;s perspective &#8211; sometimes the code will succeed (since the memory being referenced still contains the object the OS is expecting, despite being released) while other times it will fail (when the memory contains other data).</p>
+
+<p>This happens most frequently when using blocks and is easily reproducible with a very simple test case:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Test</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">test</span>
+</span><span class='line'>    <span class="n">foo</span> <span class="o">=</span> <span class="mi">42</span>
+</span><span class='line'>    <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="n">foo</span> <span class="o">+</span> <span class="mi">123</span> <span class="p">}</span> <span class="c1"># The local variable foo is released when the function ends</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="no">Test</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">call</span> <span class="c1"># Memory access error -- crashes sometimes, not all the time</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This example is straight from the RubyMotion bug tracker, where this issue is designated (RM-3)[http://hipbyte.myjetbrains.com/youtrack/issue/RM-3]. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare &#8211; and this same issue occurs on the new platform. I&#8217;m as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
+
+<p>Of course, there&#8217;s a workaround. Instance variables are retained by the class, so changing <code>foo</code> above to <code>@foo</code> will correct the crashing error &#8211; sometimes. I&#8217;ve used instance variables and have still experienced crashes in blocks and I&#8217;m frankly not sure if it&#8217;s due to this error or something else entirely.</p>
+
+<p>And that&#8217;s really the core issue: it&#8217;s difficult to determine which memory access errors are due to RM-3, which are the result of some other RubyMotion retain/release error, and which are caused by you screwing something up.</p>
+
+<h2>Why is this a problem?</h2>
+
+<p>Aside from the severity of this issue &#8211; randomly crashing code and memory access errors are, in my mind, emergencies to be corrected as soon as humanly possible &#8211; the way that the bug has been handled, both by the community and the RubyMotion team, is very concerning.</p>
+
+<p>The RubyMotion team is very small. Making a garbage collector that&#8217;s as stable and performant as Objective-C&#8217;s ARC (developed over years by many smart programmers) is a tall task indeed for a tiny group of people, regardless of their obvious brilliance. But more concerning than the time it&#8217;s taken to fix this error is the lack of communication and visibility regarding it. There&#8217;s been little said to the community about the severity of this issue, when a fix is expected, or how to properly diagnose and repair the problem until a release patches it.</p>
+
+<p>As developers, we use tools like RubyMotion not just for hobby projects, but to create real products that are used daily. We must be able to expect that critical flaws in our toolchains will be fixed promptly &#8211; otherwise it&#8217;s irresponsible of us to create our applications using them. And this isn&#8217;t the only old bug that hasn&#8217;t been discussed in awhile: the bug tracker is littered with issues of varying severity that are not scheduled for fixing and have no recent comments from the RubyMotion team.</p>
+
+<p>The RubyMotion community, meanwhile, is an amazing place full of overwhelmingly positive people&#8230; which I think works against us when trying to raise concerns with the framework itself. I really like RubyMotion and I think many in the community feel the same. Voicing serious problems is much less exciting for us than discussing new features or building awesome wrappers, so those who do point them out are largely ignored or dismissed as naysayers.</p>
+
+<p>Happily, this seems to be changing.</p>
+
+<h2>Why post about this now?</h2>
+
+<p>Because of <a href="https://groups.google.com/forum/#!topic/rubymotion/x6-9c__IHH0">this email thread</a> in the RubyMotion group. Summary: lots of people are experiencing memory-related issues that are a result of RM-3 or possibly some other difficult-to-identify problem with RubyMotion&#8217;s memory management, and they&#8217;re coming forward and talking about them. One post in the thread states:</p>
+
+<blockquote>I&#8217;m experiencing these memory-related types of crashes (like SIGSEGV and SIGBUS) with about 10-20% of users in production.</blockquote>
+
+
+<p>That&#8217;s a truly startling number if accurate. I haven&#8217;t bundled Crittercism (or another app performance analyzer) in production, but I&#8217;ve heard from people using my applications who have experienced random crashes that I can only assume are memory-related. And mine is admittedly an incredibly simple app &#8211; apps with more views and complicated networking code seem like they&#8217;d be leaving themselves open to even more potential memory-related errors. (Generally, it seems like the more asynchronous stuff you do, the more likely your code is to hit a released object.)</p>
+
+<p>While I&#8217;ve personally experienced these RubyMotion memory problems myself, I never thought they were part of a bigger problem: I don&#8217;t regularly go to meetups or watch the bug tracker, and was startled to discover that the issues were endemic to the community. People have been trying to raise visibility of these problems but so far there&#8217;s been little said about them outside of the issue tracker and a few isolated posts in the community group.</p>
+
+<p>While I think RubyMotion is a great project and I love using it, it&#8217;s inarguable that these memory-management issues are serious, fundamental flaws in the framework. They prevent the creation of stable, reliable code through no fault of the developer&#8217;s, leading to random crashes and poor user experience. Thus I cannot recommend anyone use RubyMotion for applications that users will touch until these issues are sorted out &#8211; which I hope they will be, and very soon.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Big Brother is Both Savvy and Incompetent]]></title>
@@ -1496,411 +1566,6 @@
 <p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
 
 <p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Concerns V: Searchable with Elasticsearch]]></title>
-    <link href="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/"/>
-    <updated>2012-10-25T12:50:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch</id>
-    <content type="html"><![CDATA[<p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
-
-<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
-
-<!-- more -->
-
-
-<h2>The Setup</h2>
-
-<p>I have multiple models that are searchable, all of which are searchable in somewhat similar ways. For example, users need left-handed ngram indexing for their names (for autocompletion), but also full searching on the same field; similarly, the titles of content work almost exactly the same way. The only difference between the two was the weights they should use, so I set them up similarly in tire:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">settings</span> <span class="no">ElasticSearchAnalysis</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">mapping</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">indexes</span> <span class="ss">:name</span><span class="p">,</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;multi_field&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nb">name</span><span class="p">:</span> <span class="p">{</span><span class="n">type</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="n">analyzer</span><span class="p">:</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">boost</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
-</span><span class='line'>        <span class="n">partial</span><span class="p">:</span> <span class="p">{</span><span class="n">type</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="n">search_analyzer</span><span class="p">:</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">index_analyzer</span><span class="p">:</span> <span class="s1">&#39;partial&#39;</span><span class="p">}</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>ElasticSearchAnalysis</code> is a constant that contains the settings for the partial and full analyzers referenced in the mappings. Of course, I index more fields for content, but ultimately I was using the searchers in the two models in a very similar way: a boolean should of all the different mappings conjoined together. As I was working on the code for the two different models, it was looking more and more similar&#8230; and then when I added in searching to tags and it was just about the same thing, I figured it was time to come up with a concern. I elected to call it <code>searchable</code> and wanted it to look something like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Searchable</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">settings</span> <span class="no">ElasticSearchAnalysis</span> <span class="k">do</span>
-</span><span class='line'>    <span class="c1"># elasticsearch settings here</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">searchable</span> <span class="ss">:name</span><span class="p">,</span> <span class="s1">&#39;name.partial&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Where I could simply list all the fields I wanted to search.</p>
-
-<h2>The Module</h2>
-
-<p>This is the module I came up with to express this.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">field_options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>      <span class="n">fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="vi">@search_fields</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">query</span> <span class="k">do</span>
-</span><span class='line'>          <span class="n">boolean</span> <span class="k">do</span>
-</span><span class='line'>            <span class="n">fields</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
-</span><span class='line'>              <span class="n">should</span> <span class="p">{</span><span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">field_options</span><span class="p">)}</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>          <span class="k">end</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>      <span class="k">end</span><span class="o">.</span><span class="n">results</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you&#8217;ve been following my series on concerns, this shouldn&#8217;t be very surprising stuff. When you call searchable, the fields are added to an instance variable: then, when you call search on the model, we concatenate all the fields together and boolean search across on each of them. So once this is all set up, you&#8217;d use it like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Which will generate a tire query like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">query</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">boolean</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Extending to More Like This</h2>
-
-<p>Of course, that <code>searcher</code> private method is just begging for another use. Why abstract it out so cleverly and not do something with it? Let&#8217;s use elasticsearch&#8217;s <a href="http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query.html">more like this query</a> so we can quickly find objects like each other (to display in an attractive sidebar, for example). <strong>For this to work, in addition to having tire in your Gemfile, you&#8217;ll also need tire-contrib</strong>. So make sure you have it there or else this will explode.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now you can say <code>User.more_like('Josh Symonds')</code> and it&#8217;ll find all documents with a more_like_this query for my name. Clever!</p>
-
-<h2>Searching Across Multiple Models</h2>
-
-<p>If you have a single search field on your site (like in the top navbar), most likely you&#8217;ll want to search across multiple models with it: the user could be searching for a person, or a piece of content, or a tag. There&#8217;s no easy way to know for sure what it is they want, so we should search across all of the fields and order the results by their relevance. Though this sounds complicated, with this concern, this is actually surprisingly easy.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
-</span><span class='line'>      <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span> <span class="o">=</span> <span class="n">fields</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">loaded_classes</span>
-</span><span class='line'>    <span class="vi">@loaded_classes</span> <span class="o">||=</span> <span class="p">{}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>    <span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">pluralize</span><span class="p">}</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">query</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">boolean</span> <span class="k">do</span>
-</span><span class='line'>          <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
-</span><span class='line'>            <span class="n">should</span> <span class="p">{</span><span class="n">text</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">}</span>
-</span><span class='line'>          <span class="k">end</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">results</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We changed the <code>searchable</code> method slightly. Now, in addition to adding to an instance variable, it adds to a hash that the module itself keeps track of: this hash contains all the models as keys, and all their fields as values. Then, when we use it, it constructs a search across all those models&#8217; indexes for all the fields those models should be searching. To give a concrete example, let&#8217;s say we use <code>Searchable.search('Josh Symonds')</code> and we have indexes on content titles and user names. This is what the resulting tire query will look like:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">})</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">query</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">boolean</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you have some models that should be more relevant (like an exact tag match should be the most relevant result), give those mappings an appropriate boost inside the tire mappings for the model. Also keep in mind this will return an array of potentially very different objects: users and contents, in this case. You should either make sure they&#8217;re all duck-typed correctly together, or check their type before acting on them. Finally, this will only work in development if you load each model before calling <code>Searchable.search</code>. Just entering the constant name of the model should be enough, but if you don&#8217;t, then the module won&#8217;t know to search with that model. Such is the danger of lazy loading in development.</p>
-
-<h2>The Final Module</h2>
-
-<p>For your reference, this is the final module with all code included.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
-</span><span class='line'>      <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span> <span class="o">=</span> <span class="n">fields</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">field_options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>      <span class="n">fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="vi">@search_fields</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">query</span> <span class="k">do</span>
-</span><span class='line'>          <span class="n">boolean</span> <span class="k">do</span>
-</span><span class='line'>            <span class="n">fields</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
-</span><span class='line'>              <span class="n">should</span> <span class="p">{</span><span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">field_options</span><span class="p">)}</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>          <span class="k">end</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>      <span class="k">end</span><span class="o">.</span><span class="n">results</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">loaded_classes</span>
-</span><span class='line'>    <span class="vi">@loaded_classes</span> <span class="o">||=</span> <span class="p">{}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-</span><span class='line'>    <span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">pluralize</span><span class="p">}</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">query</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">boolean</span> <span class="k">do</span>
-</span><span class='line'>          <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
-</span><span class='line'>            <span class="n">should</span> <span class="p">{</span><span class="n">text</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">}</span>
-</span><span class='line'>          <span class="k">end</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">results</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

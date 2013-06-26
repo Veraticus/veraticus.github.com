@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Why I'm Not Using RubyMotion in Production - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I&#8217;m a big proponent of RubyMotion &#8211; a year and a month ago, I wrote an article titled &#8221;Why RubyMotion is Better Than Objective-C&# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Why I'm Not Using RubyMotion in Production</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-26T12:11:00-05:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&#8217;m a big proponent of RubyMotion &#8211; a year and a month ago, I wrote an article titled &#8221;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&#8221; and despite its divisiveness I still stand behind the points I made. Recently I&#8217;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&#8217;t an appropriate choice for production applications.</p>
+
+<!-- more -->
+
+
+<p>Before I begin, I&#8217;d like to say that I still use RubyMotion frequently and have made production (and prototype) applications built in it. I still love it, have renewed my RubyMotion license, and will do so for the foreseeable future. I believe it is a more productive option for coding than Objective-C. But it has a number of critical issues, and I feel compelled to say that it is an inappropriate choice for those looking for a platform to produce, distribute, and develop iPhone or Mac apps intended for broad release.</p>
+
+<h2>RubyMotion&#8217;s ARC-equivalent is buggy</h2>
+
+<p>This is the main problem with RubyMotion, but it disguises a host of smaller issues with the RubyMotion project and community that&#8217;s grown up around it.</p>
+
+<p>RubyMotion, for those who don&#8217;t know, uses its own analog to Apple&#8217;s automatic reference counting to obviate the need for manual retention and release of objects. It usually works great. But unfortunately it sometimes prematurely releases objects (or possibly fails to retain them?), leading to hard-to-diagnose memory access errors. Most tragically, these errors occur randomly from a user&#8217;s perspective &#8211; sometimes the code will succeed (since the memory being referenced still contains the object the OS is expecting, despite being released) while other times it will fail (when the memory contains other data).</p>
+
+<p>This happens most frequently when using blocks and is easily reproducible with a very simple test case:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Test</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">test</span>
+</span><span class='line'>    <span class="n">foo</span> <span class="o">=</span> <span class="mi">42</span>
+</span><span class='line'>    <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="n">foo</span> <span class="o">+</span> <span class="mi">123</span> <span class="p">}</span> <span class="c1"># The local variable foo is released when the function ends</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="no">Test</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">call</span> <span class="c1"># Memory access error -- crashes sometimes, not all the time</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This example is straight from the RubyMotion bug tracker, where this issue is designated (RM-3)[http://hipbyte.myjetbrains.com/youtrack/issue/RM-3]. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare &#8211; and this same issue occurs on the new platform. I&#8217;m as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
+
+<p>Of course, there&#8217;s a workaround. Instance variables are retained by the class, so changing <code>foo</code> above to <code>@foo</code> will correct the crashing error &#8211; sometimes. I&#8217;ve used instance variables and have still experienced crashes in blocks and I&#8217;m frankly not sure if it&#8217;s due to this error or something else entirely.</p>
+
+<p>And that&#8217;s really the core issue: it&#8217;s difficult to determine which memory access errors are due to RM-3, which are the result of some other RubyMotion retain/release error, and which are caused by you screwing something up.</p>
+
+<h2>Why is this a problem?</h2>
+
+<p>Aside from the severity of this issue &#8211; randomly crashing code and memory access errors are, in my mind, emergencies to be corrected as soon as humanly possible &#8211; the way that the bug has been handled, both by the community and the RubyMotion team, is very concerning.</p>
+
+<p>The RubyMotion team is very small. Making a garbage collector that&#8217;s as stable and performant as Objective-C&#8217;s ARC (developed over years by many smart programmers) is a tall task indeed for a tiny group of people, regardless of their obvious brilliance. But more concerning than the time it&#8217;s taken to fix this error is the lack of communication and visibility regarding it. There&#8217;s been little said to the community about the severity of this issue, when a fix is expected, or how to properly diagnose and repair the problem until a release patches it.</p>
+
+<p>As developers, we use tools like RubyMotion not just for hobby projects, but to create real products that are used daily. We must be able to expect that critical flaws in our toolchains will be fixed promptly &#8211; otherwise it&#8217;s irresponsible of us to create our applications using them. And this isn&#8217;t the only old bug that hasn&#8217;t been discussed in awhile: the bug tracker is littered with issues of varying severity that are not scheduled for fixing and have no recent comments from the RubyMotion team.</p>
+
+<p>The RubyMotion community, meanwhile, is an amazing place full of overwhelmingly positive people&#8230; which I think works against us when trying to raise concerns with the framework itself. I really like RubyMotion and I think many in the community feel the same. Voicing serious problems is much less exciting for us than discussing new features or building awesome wrappers, so those who do point them out are largely ignored or dismissed as naysayers.</p>
+
+<p>Happily, this seems to be changing.</p>
+
+<h2>Why post about this now?</h2>
+
+<p>Because of <a href="https://groups.google.com/forum/#!topic/rubymotion/x6-9c__IHH0">this email thread</a> in the RubyMotion group. Summary: lots of people are experiencing memory-related issues that are a result of RM-3 or possibly some other difficult-to-identify problem with RubyMotion&#8217;s memory management, and they&#8217;re coming forward and talking about them. One post in the thread states:</p>
+
+<blockquote>I&#8217;m experiencing these memory-related types of crashes (like SIGSEGV and SIGBUS) with about 10-20% of users in production.</blockquote>
+
+
+<p>That&#8217;s a truly startling number if accurate. I haven&#8217;t bundled Crittercism (or another app performance analyzer) in production, but I&#8217;ve heard from people using my applications who have experienced random crashes that I can only assume are memory-related. And mine is admittedly an incredibly simple app &#8211; apps with more views and complicated networking code seem like they&#8217;d be leaving themselves open to even more potential memory-related errors. (Generally, it seems like the more asynchronous stuff you do, the more likely your code is to hit a released object.)</p>
+
+<p>While I&#8217;ve personally experienced these RubyMotion memory problems myself, I never thought they were part of a bigger problem: I don&#8217;t regularly go to meetups or watch the bug tracker, and was startled to discover that the issues were endemic to the community. People have been trying to raise visibility of these problems but so far there&#8217;s been little said about them outside of the issue tracker and a few isolated posts in the community group.</p>
+
+<p>While I think RubyMotion is a great project and I love using it, it&#8217;s inarguable that these memory-management issues are serious, fundamental flaws in the framework. They prevent the creation of stable, reliable code through no fault of the developer&#8217;s, leading to random crashes and poor user experience. Thus I cannot recommend anyone use RubyMotion for applications that users will touch until these issues are sorted out &#8211; which I hope they will be, and very soon.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-26T12:11:00-05:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rubymotion/'>rubymotion</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/" title="Previous Post: Big Brother is Both Savvy and Incompetent">&laquo; Big Brother is Both Savvy and Incompetent</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>My Apps</h1>
+  <p id='app-widget-com-joshsymonds-gistify'>
+  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
+  <span class='app-name'>
+    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
+  </span>
+</p>
+
+  <p id='app-widget-com-kinotify-kinotify'>
+  <img src='http://a431.phobos.apple.com/us/r1000/093/Purple/v4/84/d0/c7/84d0c7b5-94be-19a7-6059-ab3c32606216/Icon.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
+  <span class='app-name'>
+    <a class='com-kinotify-kinotify' href='https://itunes.apple.com/us/app/kinotify/id551361006?mt=8&uo=4' target='_blank'>Kinotify</a>
+  </span>
+</p>
+
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">Why I'm Not Using RubyMotion in Production</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/">Big Brother is Both Savvy and Incompetent</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/">Gistify 1.1.0: Visibility &amp; Accounts</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">Gistify: a Mac App for Easy Gists</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/09/huey-2-dot-0-0/">Huey 2.0.0</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2013 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
