@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubymotion | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-06-26T16:07:29-05:00</updated>
+  <updated>2013-06-26T16:11:43-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -46,7 +46,7 @@ end
 Test.new.test.call # Memory access error -- crashes sometimes, not all the time
 ```</p>
 
-<p>This example is straight from the RubyMotion bug tracker, where this issue is designated (RM-3)[http://hipbyte.myjetbrains.com/youtrack/issue/RM-3]. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare -- and this same issue occurs on the new platform. I'm as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
+<p>This example is straight from the RubyMotion bug tracker, where this issue is designated <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a>. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare -- and this same issue occurs on the new platform. I'm as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
 
 <p>Of course, there's a workaround. Instance variables are retained by the class, so changing <code>foo</code> above to <code>@foo</code> will correct the crashing error -- sometimes. I've used instance variables and have still experienced crashes in blocks and I'm frankly not sure if it's due to this error or something else entirely.</p>
 
