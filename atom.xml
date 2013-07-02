@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-06-26T16:11:43-05:00</updated>
+  <updated>2013-07-01T22:27:55-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Sidekiq + Houston: Persistent Apple Connection Pooling]]></title>
+    <link href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/"/>
+    <updated>2013-07-01T21:24:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling</id>
+    <content type="html"><![CDATA[<p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&#8217;s push notification service through a worker. I didn&#8217;t run into anything offhand, and also haven&#8217;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&#8217;s Push Notification service.</p>
+
+<!-- more -->
+
+
+<p>From Houston&#8217;s documentation, we can easily set up a persistent connection with code like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>  <span class="o">[</span>
+</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="o">[</span>
+</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'><span class="n">connection</span><span class="o">.</span><span class="n">open</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&#8217;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># above code</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I didn&#8217;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">connection</span><span class="o">.</span><span class="n">open</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">connection</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>      <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why I'm Not Using RubyMotion in Production]]></title>
@@ -1513,59 +1636,6 @@
 
 
 <p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I&#8217;ll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Cache Counters in Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/"/>
-    <updated>2012-10-29T17:55:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails</id>
-    <content type="html"><![CDATA[<p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
-
-<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&#8217;s no need for STI here &#8211; there&#8217;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&#8217;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&#8217;re caching under. You&#8217;re out of luck if you want to change it dynamically.</p>
-
-<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
-
-<!-- more -->
-
-
-<p>The most ideal way to do this is to hook into the existing <a href="http://api.rubyonrails.org/classes/ActiveRecord/CounterCache.html">ActiveRecord CounterCache</a> module. Given that, the code is quite simple, really:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Vote</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:voteable</span><span class="p">,</span> <span class="n">polymorphic</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="n">touch</span><span class="p">:</span> <span class="kp">true</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">after_create</span> <span class="ss">:increment_counters</span>
-</span><span class='line'>  <span class="n">after_destroy</span> <span class="ss">:decrement_counters</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="o">[</span><span class="ss">:increment</span><span class="p">,</span> <span class="ss">:decrement</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counters&quot;</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>      <span class="n">voteable_type</span><span class="o">.</span><span class="n">classify</span><span class="o">.</span><span class="n">constantize</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counter&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">votes_count&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">voteable_id</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object&#8217;s class after a vote is created or destroyed; note that I don&#8217;t intend to change the type of the vote, but if you do, you&#8217;ll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
-
-<p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
-
-<p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
 ]]></content>
   </entry>
   

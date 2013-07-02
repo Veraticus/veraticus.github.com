@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rails Concerns II: Taggable - Hi, I'm Josh Symonds</title>
+  <title>Sidekiq + Houston: Persistent Apple Connection Pooling - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="For the second part of my series on Rails concerns (following part one earlier this week), I&#8217;ll be dissecting a tagging system and how to make &hellip;">
+  <meta name="description" content="Having not updated rapnd in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
@@ -96,7 +96,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rails Concerns II: Taggable</h1>
+      <h1 class="entry-title">Sidekiq + Houston: Persistent Apple Connection Pooling</h1>
     
     
       <p class="meta">
@@ -112,21 +112,19 @@
   
 
 
-<time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
+<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&#8217;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&#8217;re going to have to roll your own solution. That&#8217;s what I&#8217;m doing for GirlsGuideTo, and this is how I implemented it.</p>
+<div class="entry-content"><p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&#8217;s push notification service through a worker. I didn&#8217;t run into anything offhand, and also haven&#8217;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&#8217;s Push Notification service.</p>
 
 <!-- more -->
 
 
-<h2>The Tag Model</h2>
-
-<p>The tag model itself is fairly straightforward:</p>
+<p>From Houston&#8217;s documentation, we can easily set up a persistent connection with code like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -134,56 +132,43 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:taggings</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:addresses</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">Address</span>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:users</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">User</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>  <span class="o">[</span>
+</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="o">[</span>
+</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">]</span>
 </span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'><span class="n">connection</span><span class="o">.</span><span class="n">open</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Unfortunately, you can&#8217;t just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don&#8217;t work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can&#8217;t <code>SELECT * from taggables</code>, since there is no taggables table.</p>
-
-<p>This is frustrating, but easy enough to work around. You&#8217;ll have to specify every model that&#8217;s taggable in the <code>Tag</code> class. But since we&#8217;ll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you&#8217;re confident, you can define a taggables method yourself:</p>
+<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&#8217;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">taggables</span>
-</span><span class='line'>    <span class="o">[</span><span class="n">addresses</span> <span class="o">+</span> <span class="n">users</span><span class="o">].</span><span class="n">flatten</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you&#8217;ll want to display the different kinds of taggables in different places anyway.</p>
-
-<h2>The Join Model</h2>
-
-<p>Tag has-and-belongs-to-many taggables through a join model. That model is <code>Tagging</code>, and should look like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tagging</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:tag_id</span><span class="p">,</span> <span class="ss">:taggable_id</span><span class="p">,</span> <span class="ss">:taggable_type</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:tag</span>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># above code</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ruby</p>
-
-<p>There&#8217;s nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won&#8217;t fill in the association correctly.</p>
-
-<h2>The Taggable Concern</h2>
-
-<p>Finally, we can get to the concern itself. This is how I&#8217;ve set it up:</p>
+<p>I didn&#8217;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -203,32 +188,52 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Taggable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:taggable</span>
-</span><span class='line'>    <span class="n">has_many</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:taggings</span>
+</span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">connection</span><span class="o">.</span><span class="n">open</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">connection</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">name</span><span class="o">.</span><span class="n">strip!</span>
-</span><span class='line'>    <span class="n">tag</span> <span class="o">=</span> <span class="no">Tag</span><span class="o">.</span><span class="n">find_or_create_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">taggings</span><span class="o">.</span><span class="n">find_or_create_by_tag_id</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>      <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tag_names</span>
-</span><span class='line'>    <span class="n">tags</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:name</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we&#8217;ll be including this concern in multiple ActiveRecord models &#8211; and those models will automatically <code>has_many</code> :taggings and :tags.</p>
-
-<p>And on those models we&#8217;ll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn&#8217;t exist before, it will automatically be created, and then it&#8217;ll be added to the model&#8217;s taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
-
-<p>Next time I discuss concerns, I&#8217;ll talk about an ActionController concern to improve your page&#8217;s SEO and Facebook Graph integration. It&#8217;ll be pretty awesome, so stay tuned!</p>
 </div>
 
 
@@ -251,12 +256,12 @@
   
 
 
-<time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
+<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>rails</a>
+    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
   
 </span>
 
@@ -265,7 +270,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -278,10 +283,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/" title="Previous Post: Rails Concerns I: Starting with Redcarpet">&laquo; Rails Concerns I: Starting with Redcarpet</a>
+        <a class="basic-alignment left" href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/" title="Previous Post: Why I'm Not Using RubyMotion in Production">&laquo; Why I'm Not Using RubyMotion in Production</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/07/12/rails-concerns-iii-metatags/" title="Next Post: Rails Concerns III: Metatags">Rails Concerns III: Metatags &raquo;</a>
       
     </p>
   </footer>
