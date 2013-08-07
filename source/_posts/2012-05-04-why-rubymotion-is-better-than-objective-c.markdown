@@ -110,7 +110,7 @@ class LotsaLabels < UIView
       [:label1, :label2, :label3, :label4].each do |t|
         self.instance_variable_set("@#{t}_text".to_sym, UILabel.alloc.initWithFrame([[0, 10 + offset], [self.frame.size.width, 40]]))
         self.instance_variable_set("@#{t}_label".to_sym, UILabel.alloc.initWithFrame([[0, 55 + offset], [self.frame.size.width, 14]]))
-        
+
         text = self.instance_variable_get("@#{t}_text".to_sym)
         label = self.instance_variable_get("@#{t}_label".to_sym)
 
@@ -118,19 +118,19 @@ class LotsaLabels < UIView
         text.textColor = UIColor.redColor
         label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:15)
         label.textColor = UIColor.grayColor
-        
+
         text.text = label.text = t.to_s.capitalize
         text.adjustsFontSizeToFitWidth = label.adjustsFontSizeToFitWidth = true
         text.backgroundColor = label.backgroundColor = UIColor.clearColor
         text.textAlignment = label.textAlignment = UITextAlignmentCenter
-        
+
         self.addSubview(text)
         self.addSubview(label)
         offset += 90
       end
     end
     self
-  end  
+  end
 end
 ```
 
@@ -139,7 +139,7 @@ That would have taken forever and involved a lot of copying and pasting in Objec
 ```ruby
 class Label
   attr_accessor :label
-  
+
   def initialize(text, frame)
     @label = UILabel.alloc.initWithFrame(frame)
     @label.adjustsFontSizeToFitWidth = true
@@ -183,7 +183,7 @@ end
 class BigLabel
   include Label
   attr_accessor :label
-  
+
   def initialize(text, frame)
     @label = new_label(text, frame)
     @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:40)
@@ -194,7 +194,7 @@ end
 class LittleLabel
   include Label
   attr_accessor :label
-  
+
   def initialize(text, frame)
     @label = new_label(text, frame)
     @label.font = UIFont.fontWithName('Arial Rounded MT Bold', size:20)
@@ -252,6 +252,6 @@ I've definitely run into errors with no backtrace at all -- just a straight simu
 
 These are minor implementation errors, though; the overall philosophy and integration is, well...
 
-### Better Than Objective-C 
+### Better Than Objective-C
 
 RubyMotion corrects a lot of the flaws in Objective-C and Xcode. It's easier to write and debug; it gives you Ruby's powerful programming idioms on top of Objective-C's extremely extensive libraries. It bakes in testing and provides an easy, quick way to set up and provision apps. Though it has a number of extremely minor downsides, overall I would unequivocally recommend checking out RubyMotion if you have any interest at all in either Ruby or iOS apps. You'll be glad you did.
