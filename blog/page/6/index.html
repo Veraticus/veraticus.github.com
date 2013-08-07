@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="The Rails application backing Hipstamatic is very, very large. It started over two years ago as a Rails 2.1 project, and has been continuously &hellip;">
+  <meta name="description" content="The Proper Refactoring proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/06/how-i-scaled-hipstamatic/">How I Scaled Hipstamatic</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-06T10:58:00-05:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I&#8217;ve been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don&#8217;t have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
+
+<p>Now, take a look at our average response time over the last month.</p>
+
+<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
+
+<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&#8217;m proud of our 115ms average response time. Proud but not satisfied &#8211; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&#8217;s no reason we can&#8217;t achieve 50-70ms response times with better caching and slimmer applications.</p>
+
+<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That&#8217;s an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
+
+<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic&#8217;s web site and web services fast. (Or, at the very least, a lot faster.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/04/06/how-i-scaled-hipstamatic/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -503,49 +554,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">Ruby 1.9 Awesomeness Part 1: SecureRandom</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-07T19:07:00-06:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ruby 1.9 includes a lot of neat stuff, and one of the coolest things is the SecureRandom module.</p>
-
-<p>SecureRandom presents a plethora of useful methods for creating random numbers and strings. You can <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> for a full list, but some of the more personally useful methods I&#8217;ve found are:</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -583,6 +591,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/07/rubymotion-update-one-month-later/">RubyMotion Update: One Month Later</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>
       </li>
     
@@ -596,10 +608,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/">Gistify 1.1.0: Visibility &amp; Accounts</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">Gistify: a Mac App for Easy Gists</a>
       </li>
     
   </ul>

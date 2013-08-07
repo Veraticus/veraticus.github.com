@@ -278,9 +278,9 @@
 </span><span class='line'>        <span class="n">text</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_text&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
 </span><span class='line'>        <span class="n">label</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">_label&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">redColor</span>
-</span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">15</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">15</span><span class="p">)</span>
 </span><span class='line'>        <span class="n">label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="n">text</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span>
@@ -343,7 +343,7 @@
 </span><span class='line'><span class="k">class</span> <span class="nc">BigLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
@@ -351,7 +351,7 @@
 </span><span class='line'><span class="k">class</span> <span class="nc">LittleLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="k">super</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
@@ -409,7 +409,7 @@
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
@@ -420,7 +420,7 @@
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
@@ -580,6 +580,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/07/rubymotion-update-one-month-later/">RubyMotion Update: One Month Later</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>
       </li>
     
@@ -593,10 +597,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/">Gistify 1.1.0: Visibility &amp; Accounts</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">Gistify: a Mac App for Easy Gists</a>
       </li>
     
   </ul>

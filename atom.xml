@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-07-01T22:27:55-05:00</updated>
+  <updated>2013-08-07T12:02:19-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyMotion Update: One Month Later]]></title>
+    <link href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/"/>
+    <updated>2013-08-07T10:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later</id>
+    <content type="html"><![CDATA[<p>My <a href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">last post on RubyMotion</a> generated quite a lot of interest, and I&#8217;ve been asked a few times for my opinion on the recent RubyMotion bugfixes (like correcting <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a> and <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-32">RM-32</a>). I thought it sensible to revisit this issue a month later to discuss the changes the HipByte team has been making and what they mean for the future of the RubyMotion project.</p>
+
+<!-- more -->
+
+
+<p>The issues Laurent prioritized have done much to restore my confidence in using RubyMotion for production applications (which I think is a great framework anyway, memory issues aside). Before starting new client work in it, I&#8217;m personally waiting a release or two longer to make sure that the fixes are indicative of a future pattern of prioritizing stability and memory management over exciting new hotness&#8230; Exciting new hotness is definitely great and probably lots of fun to make, but those of us making money on RubyMotion care more for platform stability than nifty new features. Or, at least, I do.</p>
+
+<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &#8211; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&#8217;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
+
+<blockquote>Every time I heard the phrase &#8220;well-known workaround&#8221; I interpret it as &#8220;tribal knowledge.&#8221;</blockquote>
+
+
+<p>And I think that applied very well to the workarounds available for the memory management issues. If you knew these issues existed and how to circumvent them, you were fine: but if you came into the framework with no foreknowledge and just coded regular Ruby, you were in for a nasty surprise. For RubyMotion to really attract the kind of success it deserves, surprises like that can&#8217;t exist. Either you should be able to code Ruby as you would in MRI, or the differences in RubyMotion syntax as compared to regular Ruby syntax must be made as clear as possible.</p>
+
+<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &#8220;we take performance and crashes very seriously&#8221; &#8211; a much-appreciated statement indeed.</p>
+
+<p>So is RubyMotion worth buying now? In my opinion, yes, very much. It&#8217;s much faster to build iOS apps in RubyMotion than Objective-C, so if you want to get a rapid prototype out or just don&#8217;t want to learn C and Objective-C, RubyMotion is a great investment. It&#8217;s also a great way to get acclimated with the iOS frameworks in a language that&#8217;s a lot kinder and gentler than Objective-C. And while I don&#8217;t feel confident saying &#8220;this is now production-solid&#8221; yet, I&#8217;m watching the project very closely and it&#8217;s definitely moving rapidly in the right direction.</p>
+
+<p>So what&#8217;s next? Well, I&#8217;d be lying if I said I weren&#8217;t super excited about the new <a href="http://blog.rubymotion.com/post/57465814533/create-an-asteroids-game-for-ios-in-15-minutes-with">RubyMotion JoyBox blog post</a>. I&#8217;ll personally be using RubyMotion to make an awesome game of some sort, because everyone loves games. I know that the RubyMotion team is incredibly dedicated to the framework, and I have the utmost confidence in their work as demonstrated by the performance improvements and bugfixes in versions 2.4 and 2.5. RubyMotion has a very bright future ahead of it; what it&#8217;s done up to this point is nothing short of amazing, and there&#8217;s every reason to believe that&#8217;s a trend HipByte will continue into the future.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sidekiq + Houston: Persistent Apple Connection Pooling]]></title>
@@ -141,7 +168,9 @@
     <link href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/"/>
     <updated>2013-06-26T12:11:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production</id>
-    <content type="html"><![CDATA[<p>I&#8217;m a big proponent of RubyMotion &#8211; a year and a month ago, I wrote an article titled &#8221;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&#8221; and despite its divisiveness I still stand behind the points I made. Recently I&#8217;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&#8217;t an appropriate choice for production applications.</p>
+    <content type="html"><![CDATA[<blockquote><p><strong>Based on recent bugfixes and refinements by the RubyMotion team, I&#8217;ve posted <a href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/">an update to this blog post</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>I&#8217;m a big proponent of RubyMotion &#8211; a year and a month ago, I wrote an article titled &#8221;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&#8221; and despite its divisiveness I still stand behind the points I made. Recently I&#8217;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&#8217;t an appropriate choice for production applications.</p>
 
 <!-- more -->
 
@@ -1575,67 +1604,6 @@
 <li><a href="http://www.thinkgeek.com/product/c3bd/">Darth Vader USB Stick</a></li>
 </ol>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Huey, for Controlling Phillips Hue Lightbulbs]]></title>
-    <link href="http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/"/>
-    <updated>2012-11-28T01:08:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs</id>
-    <content type="html"><![CDATA[<p>I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty <a href="http://meethue.com">Phillips Hue lightbulbs</a>. I decided to name it <a href="https://github.com/Veraticus/huey">Huey</a>, since I love nothing more than cute and silly names. I only spent a few hours tonight hacking it together, so I&#8217;m sure there&#8217;s a lot of room for improvement, but it works and does everything it&#8217;s supposed to and seems fairly fault tolerant; so I thought, why not announce it and fix problems when I wake up tomorrow?</p>
-
-<!-- more -->
-
-
-<p>Huey uses <a href="http://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol">SSDP</a> to discover the IP of the Hue hub the first time the code is run. I wish I could take credit for the EventMachine code that went into making this work correctly, but actually I largely cribbed it from Turboladen&#8217;s <a href="https://github.com/turboladen/upnp">upnp library</a>. I would&#8217;ve just included it as a Gem dependency but for some reason it&#8217;s not released as a Gem, which is pretty frustrating for situations like this.</p>
-
-<p>I chose a pretty boring UUID for Huey to use: <code>'0123456789abdcef0123456789abcdef'</code>. This works just fine, but if you want to change it Huey is ultra-configurable and you can do so either in a block or directly:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="c1"># or</span>
-</span><span class='line'>  <span class="no">Huey</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The first time you issue a request to the Hue hub, you&#8217;ll likely see an attractive error message like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">Huey</span><span class="o">::</span><span class="no">Errors</span><span class="o">::</span><span class="no">PressLinkButton</span><span class="p">:</span> <span class="s1">&#39;Press the link button and try your request again&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Unfortunately, the first time any request is sent, Hue needs to validate the new client by you actually walking over and touching the link button on the hub. But once you do that, you can just resend the request and it should work fine. Then you can use the whole gamut of the Hue API:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">all</span> <span class="c1"># Returns an array of your bulbs</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Finds the bulb with the ID of 1</span>
-</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Finds the bulb with the name &#39;Living Room&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">alert!</span> <span class="c1"># Flashes the bulb in question once, useful for checking connectivity</span>
-</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">false</span> <span class="c1"># Turn the bulb off</span>
-</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Dim the bulb a little bit</span>
-</span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">ct</span> <span class="o">=</span> <span class="mi">500</span> <span class="c1"># Change the bulb&#39;s color</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I&#8217;ll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
 ]]></content>
   </entry>
   
