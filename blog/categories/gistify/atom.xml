@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gistify | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gistify/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-08-07T12:02:26-05:00</updated>
+  <updated>2013-08-13T10:41:09-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gistify 1.2.0: Drag &amp; Drop Gisting]]></title>
+    <link href="http://joshsymonds.com/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/"/>
+    <updated>2013-08-13T10:23:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting</id>
+    <content type="html"><![CDATA[<p>Gistify just keeps getting better!</p>
+
+<p><a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify 1.2.0</a> is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an entire file onto the Gistify icon and a new gist will be created from your file. The format of the file will automatically be detected, and the resulting gist URL added to your clipboard just as usual. Amazing!</p>
+
+<p>In addition to that big new feature, 1.2.0 features a number of bug fixes and performance improvements: for example, now Gistify will properly start up if you check the "Open at Startup" box, and you can copy and paste in the GitHub username/password fields (for the 1Password or LastPass users out there). Just small quality of life improvements generally.</p>
+
+<p>Interested in giving Gistify a shot? Go <a href="https://itunes.apple.com/us/app/gistify/id653231502">download it</a> now! Or if you'd like to demo it without paying the $1.99, just let me know and I'd be happy to set you up with a review copy.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Gistify 1.1.0: Visibility &amp; Accounts]]></title>
