@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Gistify just keeps getting better! Gistify 1.2.0 is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an &hellip;">
+  <meta name="description" content="Recently I&#8217;ve been using sprinkle a lot in a large client project. Sprinkle is server provisioning software, akin to Chef except much lighter. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-14T16:03:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I&#8217;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&#8217;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&#8217;s biggest advantage is its pre-built recipes: it&#8217;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
+
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&#8217;ve used &#8211; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&#8217;s downsides too: primary among them is that it&#8217;s easy to repeat yourself if you&#8217;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/14/helper-methods-in-sprinkle/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -495,47 +538,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/23/the-perils-of-overengineering/">The Perils of Overengineering</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-23T13:19:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Overengineering is a special subset of the generalized problem of &#8220;making bad choices.&#8221; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&#8217;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/23/the-perils-of-overengineering/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -571,6 +573,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a>
       </li>
     
@@ -584,10 +590,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">Why I&#8217;m Not Using RubyMotion in Production</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/">Big Brother is Both Savvy and Incompetent</a>
       </li>
     
   </ul>

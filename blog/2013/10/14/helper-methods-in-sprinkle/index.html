@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Sidekiq + Houston: Persistent Apple Connection Pooling - Hi, I'm Josh Symonds</title>
+  <title>Helper Methods in Sprinkle - Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Having not updated rapnd in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple &hellip;">
+  <meta name="description" content="Recently I&#8217;ve been using sprinkle a lot in a large client project. Sprinkle is server provisioning software, akin to Chef except much lighter. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling">
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
@@ -96,7 +96,7 @@
   
   <header>
     
-      <h1 class="entry-title">Sidekiq + Houston: Persistent Apple Connection Pooling</h1>
+      <h1 class="entry-title">Helper Methods in Sprinkle</h1>
     
     
       <p class="meta">
@@ -112,19 +112,21 @@
   
 
 
-<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
+<time datetime="2013-10-14T16:03:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&#8217;s push notification service through a worker. I didn&#8217;t run into anything offhand, and also haven&#8217;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&#8217;s Push Notification service.</p>
+<div class="entry-content"><p>Recently I&#8217;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&#8217;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&#8217;s biggest advantage is its pre-built recipes: it&#8217;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
+
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&#8217;ve used &#8211; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&#8217;s downsides too: primary among them is that it&#8217;s easy to repeat yourself if you&#8217;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
 
 <!-- more -->
 
 
-<p>From Houston&#8217;s documentation, we can easily set up a persistent connection with code like this:</p>
+<p>Let&#8217;s say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -138,37 +140,22 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
-</span><span class='line'>  <span class="o">[</span>
-</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
-</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">]</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>  <span class="o">[</span>
-</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
-</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="o">]</span>
-</span><span class='line'><span class="k">end</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/config/helpers.rb</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'><span class="n">connection</span><span class="o">.</span><span class="n">open</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&#8217;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>  <span class="c1"># above code</span>
+</span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Helpers</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">templates</span>
+</span><span class='line'>      <span class="n">path</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../../&#39;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
+</span><span class='line'>      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">/templates&quot;</span> <span class="c1"># sprinkle/templates/</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I didn&#8217;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
+<p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can&#8217;t just do something like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -189,51 +176,72 @@
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/policies/base.rb</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
-</span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
-</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
-</span><span class='line'>      <span class="o">]</span>
-</span><span class='line'>    <span class="k">else</span>
-</span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
-</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
-</span><span class='line'>      <span class="o">]</span>
-</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="n">policy</span> <span class="ss">:base</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="ss">:web</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">requires</span> <span class="ss">:build_essential</span> <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span><span class="p">)</span>
+</span><span class='line'>                                             <span class="c1"># No method error for templates</span>
+</span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">connection</span><span class="o">.</span><span class="n">open</span>
+</span><span class='line'><span class="n">package</span> <span class="ss">:build_essential</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">file</span> <span class="s2">&quot;/etc/build_essential.txt&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">contents</span><span class="p">:</span> <span class="n">render</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span><span class="p">),</span> <span class="c1"># No method error for templates</span>
+</span><span class='line'>    <span class="ss">sudo</span><span class="p">:</span> <span class="kp">true</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">connection</span>
+</span><span class='line'>  <span class="n">verify</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">has_file</span> <span class="s2">&quot;/etc/build_essential.txt&quot;</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span> <span class="c1"># Contrived example since you&#39;d never really</span>
+</span><span class='line'>                                            <span class="c1"># just puts something here, but this also</span>
+</span><span class='line'>                                            <span class="c1"># throws a no method error</span>
 </span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
-</span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
-</span><span class='line'>      <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That&#8217;s easy enough to do. After you define your helper, do something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/config/helpers.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Sprinkle</span><span class="o">::</span><span class="no">Policy</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle::Package</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Package</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Verify</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
+
+<p>I&#8217;ll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
 </div>
 
 
@@ -256,12 +264,12 @@
   
 
 
-<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
+<time datetime="2013-10-14T16:03:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
   
 </span>
 
@@ -270,7 +278,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -283,10 +291,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/" title="Previous Post: Why I'm Not Using RubyMotion in Production">&laquo; Why I'm Not Using RubyMotion in Production</a>
+        <a class="basic-alignment left" href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/" title="Previous Post: Gistify 1.2.0: Drag &amp; Drop Gisting">&laquo; Gistify 1.2.0: Drag &amp; Drop Gisting</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/07/rubymotion-update-one-month-later/" title="Next Post: RubyMotion Update: One Month Later">RubyMotion Update: One Month Later &raquo;</a>
       
     </p>
   </footer>

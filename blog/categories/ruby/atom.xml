@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-08-13T10:41:09-05:00</updated>
+  <updated>2013-10-14T16:33:40-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Helper Methods in Sprinkle]]></title>
+    <link href="http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle/"/>
+    <updated>2013-10-14T16:03:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle</id>
+    <content type="html"><![CDATA[<p>Recently I've been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It's most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber's biggest advantage is its pre-built recipes: it's a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
+
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I've used -- on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano's downsides too: primary among them is that it's easy to repeat yourself if you're not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+
+<!-- more -->
+
+
+<p>Let's say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
+
+<p>```ruby</p>
+
+<h1>sprinkle/config/helpers.rb</h1>
+
+<p>module Sprinkle
+  module Helpers</p>
+
+<pre><code>def templates
+  path = File.expand_path('../../', __FILE__)
+  "#{path}/templates" # sprinkle/templates/
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can't just do something like this:</p>
+
+<p>```ruby</p>
+
+<h1>sprinkle/policies/base.rb</h1>
+
+<p>policy :base, roles: :web do
+  requires :build_essential if File.exists?("#{templates}/build_essential.txt")</p>
+
+<pre><code>                                         # No method error for templates
+</code></pre>
+
+<p>end</p>
+
+<p>package :build_essential do
+  file "/etc/build_essential.txt",</p>
+
+<pre><code>contents: render("#{templates}/build_essential.txt"), # No method error for templates
+sudo: true
+</code></pre>
+
+<p>  verify do</p>
+
+<pre><code>has_file "/etc/build_essential.txt"
+puts "#{templates}/build_essential.txt" # Contrived example since you'd never really
+                                        # just puts something here, but this also
+                                        # throws a no method error
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That's easy enough to do. After you define your helper, do something like this:</p>
+
+<p>```ruby</p>
+
+<h1>sprinkle/config/helpers.rb</h1>
+
+<p>class Sprinkle::Policy
+  include Sprinkle::Helpers
+end</p>
+
+<p>module Sprinkle::Package
+  class Package</p>
+
+<pre><code>include Sprinkle::Helpers
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>module Sprinkle
+  class Verify</p>
+
+<pre><code>include Sprinkle::Helpers
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
+
+<p>I'll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sidekiq + Houston: Persistent Apple Connection Pooling]]></title>
@@ -610,60 +709,6 @@ puts 'The current standings are: ' + scores.inspect
 <h3>Next Session</h3>
 
 <p>Now that we've covered the basics of Ruby, we'll put what we've learned into action. Using variables, we'll create our first Ruby programs, and finally make the computer work for us!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby in the Sandbox: SandRBox]]></title>
-    <link href="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/"/>
-    <updated>2012-03-31T11:19:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox</id>
-    <content type="html"><![CDATA[<p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They're always looking for people to teach new classes, so I figured I would teach an introduction to programming class -- an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner's language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it's super fun.</p>
-
-<p>Unfortunately, getting stuff installed on the computers at the cyber center is kind of a headache. Like most chronically underfunded but well-meaning institutions, there are about three levels of bureaucracy between you and getting anything done. And teaching Ruby without the aid of irb would be next to impossible. So what's a guy to do?</p>
-
-<p>Simple: <a href="http://sandrbox.herokuapp.com/">create irb online</a>.</p>
-
-<!-- more -->
-
-
-<p>Now, I hear what you're saying: "Josh, that already exists, and it's called <a href="http://tryruby.org/">tryruby.org</a>!" Unfortunately, I don't like tryruby all that much. I have nothing but respect for their mission, but the service itself is achingly slow and frequently it won't work at all. I don't know what they're running it on (the only code I could find on github was months old), but I figured I could whip up something better.</p>
-
-<p><a href="https://github.com/Veraticus/Sandrbox">Turns out I was right</a>. Sandrbox is a simple project that I'm actually pretty proud of; it makes use of some very edge-case metaprogramming concepts to create as secure an irb environment as I could whip up. In addition to removing dangerous methods on classes (and their metaclasses), it has some really nice syntactical sugar that makes it easy to understand where you are in a block. And when the execution of your secure code is done, it restores all the classes and methods that were missing while removing any new ones that were added, guaranteeing that your environment will be exactly the same as before you started executing code.</p>
-
-<p>This is obviously important if you intend to run that code on a server somewhere -- after all, you can't have someone doing something like:</p>
-
-<p><code>ruby
-`killall -9 thin` # bad
-Kernel.exec("rm -rf /") # worse
-</code></p>
-
-<p>These methods when executed in Sandrbox are instead gently sanitized:</p>
-
-<p><code>ruby
-Sandrbox.perform(['`killall -9 thin`']).output # =&gt; ["NameError: undefined local variable or method ``' for Kernel:Module"]
-Sandrbox.perform(['Kernel.exec("rm -rf /")']).output # =&gt; ["NameError: undefined local variable or method `exec' for Kernel:Module"]
-</code></p>
-
-<p>While still allowing you to retain the power and complexity of Ruby:</p>
-
-<p><code>ruby
-Sandrbox.perform(['class Foo', 'def test', '"Hi!"', 'end', 'end', 'Foo.new.test']).output # =&gt; [nil, '"Hi!"']
-</code></p>
-
-<p>Even cooler is that it automatically does some parsing for you, so that you know when code can be executed or the user is probably not done yet typing:</p>
-
-<p><code>ruby
-response = Sandrbox.perform(['class Foo', 'def test'])
-response.output # []
-response.complete? # false
-response.indent_level # 2
-response.indent_character # 'def'
-</code></p>
-
-<p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course -- it'll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can't destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can't say that it's totally secure yet, but it's a damn sight better than uncensored irb, and after a week or two of work I bet I'll be able to get it locked down pretty damn tight.</p>
-
-<p>But until then, go ahead and try to break it!</p>
 ]]></content>
   </entry>
   
