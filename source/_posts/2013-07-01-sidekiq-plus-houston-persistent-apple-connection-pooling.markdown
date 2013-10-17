@@ -5,6 +5,8 @@ date: 2013-07-01 21:24
 comments: true
 categories: [ruby, gems]
 ---
+> **I updated the code here based on my production experiences with it in a new post, [Sidekiq + Houston: Production Ready](http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/). Check it out after reading this article.**
+
 Having not updated [rapnd](http://github.com/Veraticus/rapnd) in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple's push notification service through a worker. I didn't run into anything offhand, and also haven't posted a helpful code snippet in awhile, so this is how I connected [Houston](https://github.com/nomad/houston) and [Sidekiq](https://github.com/mperham/sidekiq) to Apple's Push Notification service.
 
 <!-- more -->
