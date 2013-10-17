@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Huey 2.0.0 - Hi, I'm Josh Symonds</title>
+  <title>Hi, I'm Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Today I released Huey version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue &hellip;">
+  <meta name="description" content="Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0">
+  <link rel="canonical" href="http://joshsymonds.com/blog/page/8">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
@@ -91,12 +91,15 @@
 </div></nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Huey 2.0.0</h1>
+      <h1 class="entry-title"><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
     
     
       <p class="meta">
@@ -112,87 +115,39 @@
   
 
 
-<time datetime="2013-05-09T11:18:00-05:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&#8217;s own bridge discovery protocol. This is both faster and more extensible &#8211; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+  <div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&#8217;t be immediately solved through judicious Googling, so figured I&#8217;d make a quick post about it.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">hue_ip</span> <span class="o">=</span> <span class="s1">&#39;123.456.789.012&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<h2>Resource temporarily unavailable - Timeout reading from the socket</h2>
 
+<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &#8211; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
 
-<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
+<h2>unexpected token at &#8216;OK&#8217; (Resque::Helpers::DecodeException)</h2>
 
-<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
+<p>This one took a bit more tracking down to fix.</p>
+
+<p>The newest versions of resque (I&#8217;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &#8211; for example, returning &#8220;OK.&#8221; Upgrading your redis server handily fixes this problem.</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2013-05-09T11:18:00-05:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/huey/'>huey</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/" title="Previous Post: Why Your Startup Is Failing (And How To Fix It)">&laquo; Why Your Startup Is Failing (And How To Fix It)</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/" title="Next Post: Gistify: a Mac App for Easy Gists">Gistify: a Mac App for Easy Gists &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
+    <a class="next" href="/blog/page/7/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -251,7 +206,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

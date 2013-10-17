@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Recently I&#8217;ve been using sprinkle a lot in a large client project. Sprinkle is server provisioning software, akin to Chef except much lighter. &hellip;">
+  <meta name="description" content="Three months ago, I wrote Sidekiq + Houston: Persistent Apple Connection Pooling. The code I included there initially worked great but over time all &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-17T12:13:00-05:00" pubdate data-updated="true">Oct 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Three months ago, I wrote <a href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>. The code I included there initially worked great but over time all the APN connections I had established would break and not restart themselves appropriately. To correct this issue, I wrapped the APN connection itself in a class that was more resistant to failure. To help those who are using Sidekiq and Houston together in production, here&#8217;s the code I used to do so.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -248,7 +289,9 @@
   </header>
 
 
-  <div class="entry-content"><p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&#8217;s push notification service through a worker. I didn&#8217;t run into anything offhand, and also haven&#8217;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&#8217;s Push Notification service.</p>
+  <div class="entry-content"><blockquote><p><strong>I updated the code here based on my production experiences with it in a new post, <a href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&#8217;s push notification service through a worker. I didn&#8217;t run into anything offhand, and also haven&#8217;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&#8217;s Push Notification service.</p>
 
 </div>
   
@@ -493,51 +536,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">Why Your Startup Is Failing (and How to Fix It)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-30T02:49:00-05:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The title of this post might be somewhat misleading: it&#8217;s probably pretty obvious to you why your startup is failing. The same reason any business fails &#8211; you&#8217;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&#8217;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &#8220;When will I see a return on my investment?&#8221; and &#8220;How can you possibly be spending so much of my money without making any in return?&#8221;</p>
-
-<p>Shortly afterwards they stop giving you money and then you know it isn&#8217;t long until the end.</p>
-
-<p>Maybe you&#8217;re there right now, or staring down the barrel of that gun. I&#8217;ve seen it before; I know what it looks like. You&#8217;re not alone. If you haven&#8217;t gone off the cliff yet, it&#8217;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&#8217;ll be making one of those &#8220;What I Learned As An Ex-CEO&#8221; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&#8217;re failing at all. Afterwards, we can move on to fixing it.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -573,6 +571,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
       </li>
     
@@ -586,10 +588,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">Why I&#8217;m Not Using RubyMotion in Production</a>
       </li>
     
   </ul>
