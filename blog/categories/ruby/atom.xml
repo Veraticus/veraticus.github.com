@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-10-17T12:24:48-05:00</updated>
+  <updated>2013-10-17T12:26:48-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -103,7 +103,6 @@ end
 <pre><code>begin
   raise "Connection is closed" unless @connection.open?
   @connection.write(data)
-  @connection.close
 rescue Exception =&gt; e
   attempts ||= 0
   attempts += 1

@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-10-17T12:24:48-05:00</updated>
+  <updated>2013-10-17T12:26:48-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -126,7 +126,6 @@
 <span class='line-number'>40</span>
 <span class='line-number'>41</span>
 <span class='line-number'>42</span>
-<span class='line-number'>43</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># lib/apn_connection.rb</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">APNConnection</span>
 </span><span class='line'>
@@ -155,7 +154,6 @@
 </span><span class='line'>    <span class="k">begin</span>
 </span><span class='line'>      <span class="k">raise</span> <span class="s2">&quot;Connection is closed&quot;</span> <span class="k">unless</span> <span class="vi">@connection</span><span class="o">.</span><span class="n">open?</span>
 </span><span class='line'>      <span class="vi">@connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span class='line'>      <span class="vi">@connection</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>    <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">e</span>
 </span><span class='line'>      <span class="n">attempts</span> <span class="o">||=</span> <span class="mi">0</span>
 </span><span class='line'>      <span class="n">attempts</span> <span class="o">+=</span> <span class="mi">1</span>
