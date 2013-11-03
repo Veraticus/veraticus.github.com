@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="The title of this post might be somewhat misleading: it&#8217;s probably pretty obvious to you why your startup is failing. The same reason any &hellip;">
+  <meta name="description" content="Today I released Huey version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/09/huey-2-dot-0-0/">Huey 2.0.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T11:18:00-05:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&#8217;s own bridge discovery protocol. This is both faster and more extensible &#8211; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">hue_ip</span> <span class="o">=</span> <span class="s1">&#39;123.456.789.012&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
+
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -488,52 +537,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/27/breaking-up-with-girlsguideto/">Breaking Up With GirlsGuideTo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-27T19:40:00-06:00" pubdate data-updated="true">Dec 27<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It&#8217;s never easy to decide to move on, particularly when you&#8217;re a cofounder. It definitely feels less like a business shakeup and more like a real breakup.</p>
-
-<p>But I must announce that my time at GirlsGuideTo has officially ended.</p>
-
-<p>I&#8217;m proud of the work I&#8217;ve done for GirlsGuideTo. I took a <a href="http://old.girlsguideto.com/home">decrepit, slow PHP Drupal installation</a> and turned it into a <a href="http://girlsguideto.com/">speedy, modernized Rails application</a>. The new GirlsGuideTo uses some incredibly modern technologies to be fast, while still being maintainable and consistent. The pages load near-instantly thanks to <a href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">head.js and Turbolinks</a>, and the Rails code is well-separated and highly tested thanks to some awesome concerns and really nifty Rack middleware.</p>
-
-<p>It also features a really kickass design from my friend <a href="https://twitter.com/LukesBeard">@LukesBeard</a>, so it also looks great in addition to feeling great.</p>
-
-<p>Though I&#8217;m moving to greener pastures, I&#8217;m sure GirlsGuideTo has a bright future ahead of them. As for me, I&#8217;m doing some work for <a href="http://everest.com/">Everest</a> &#8211; they&#8217;re really awesome people that need their backend scaled right into infinity, and I think I&#8217;m the guy to do it for them. In fact, if you download the <a href="https://itunes.apple.com/us/app/everest-live-your-dreams-achieve/id581016826?mt=8">super cool free app</a> or have downloaded it at launch, you&#8217;ve already touched some of my code! The best part about onboarding quickly is having code live in production almost immediately.</p>
-
-<p>So keep on watching this spot for more of the same that you&#8217;ve come to expect &#8211; adrenaline-filled posts on the exciting world of server scalability and optimization.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -559,16 +562,13 @@
   </span>
 </p>
 
-  <p id='app-widget-com-kinotify-kinotify'>
-  <img src='http://a431.phobos.apple.com/us/r1000/093/Purple/v4/84/d0/c7/84d0c7b5-94be-19a7-6059-ab3c32606216/Icon.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-kinotify-kinotify' href='https://itunes.apple.com/us/app/kinotify/id551361006?mt=8&uo=4' target='_blank'>Kinotify</a>
-  </span>
-</p>
-
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
@@ -584,10 +584,6 @@
     
       <li class="post">
         <a href="/blog/2013/08/07/rubymotion-update-one-month-later/">RubyMotion Update: One Month Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>
       </li>
     
   </ul>

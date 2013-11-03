@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Three months ago, I wrote Sidekiq + Houston: Persistent Apple Connection Pooling. The code I included there initially worked great but over time all &hellip;">
+  <meta name="description" content="I&#8217;ve worked with a lot of programmers over the years &#8211; some of them super amazing, and some distinctly lackluster. As I&#8217;ve had the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-03T13:06:00-06:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve worked with a lot of programmers over the years &#8211; some of them super amazing, and some distinctly lackluster. As I&#8217;ve had the pleasure of working with some very skilled individuals recently, I spent some time thinking about what I admire in them. What makes a good programmer so good, and a bad programmer so bad? Or, to mangle English a little bit, what makes a good programmer good?</p>
+
+<p>Based on my experiences, being a great programmer has nothing to do with age, education, or how much money you make. It&#8217;s all in how you act and, more deeply, how you think. I&#8217;ve noticed a consistent set of habits in the programmers I admire. More than knowledge of their chosen language, deep understanding of data structures and algorithms, or even more than years of on-the-job experience &#8211; the way they communicate, the way they conduct themselves, and the way they approach programming speak volumes as to their amazing level of skill.</p>
+
+<p>Certainly there&#8217;s more to being a good programmer than anyone can enumerate, and I wouldn&#8217;t judge any programmer solely based on the presence (or lack) of these practices. But I do know wisdom when I see it, and when I see a programmer expressing these traits, I think, &#8220;This person really knows what they&#8217;re doing.&#8221;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/03/what-makes-a-good-programmer-good/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -487,55 +532,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/09/huey-2-dot-0-0/">Huey 2.0.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-09T11:18:00-05:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&#8217;s own bridge discovery protocol. This is both faster and more extensible &#8211; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">hue_ip</span> <span class="o">=</span> <span class="s1">&#39;123.456.789.012&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
-
-<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -559,16 +555,13 @@
   </span>
 </p>
 
-  <p id='app-widget-com-kinotify-kinotify'>
-  <img src='http://a431.phobos.apple.com/us/r1000/093/Purple/v4/84/d0/c7/84d0c7b5-94be-19a7-6059-ab3c32606216/Icon.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-kinotify-kinotify' href='https://itunes.apple.com/us/app/kinotify/id551361006?mt=8&uo=4' target='_blank'>Kinotify</a>
-  </span>
-</p>
-
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
@@ -584,10 +577,6 @@
     
       <li class="post">
         <a href="/blog/2013/08/07/rubymotion-update-one-month-later/">RubyMotion Update: One Month Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>
       </li>
     
   </ul>
