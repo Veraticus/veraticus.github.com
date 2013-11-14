@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-11-03T13:17:18-06:00</updated>
+  <updated>2013-11-14T10:37:17-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Don't Code Defensively]]></title>
+    <link href="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively/"/>
+    <updated>2013-11-14T10:30:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/11/14/dont-code-defensively</id>
+    <content type="html"><![CDATA[<p>As an engineer, we&#8217;re responsible for creating things that people care about deeply. Whether you&#8217;re programming something as important as a car&#8217;s operating system or as silly as an iPhone game, our code touches lives. It&#8217;s no wonder, then, that the people who interact with our products feel strongly about them &#8211; and possibly about us, as well.</p>
+
+<p>This can sometimes be a good thing. It&#8217;s always touching to receive a heartfelt letter of thanks and admiration from a customer. But much more commonly, you&#8217;ll hear complaints, demands, and anger.</p>
+
+<p>Under a deluge like that, it&#8217;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &#8211; if you&#8217;re willing to take credit for the good things you&#8217;ve done, you have to &#8220;take credit&#8221; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&#8217;s problems, but to shirk responsibility.</p>
+
+<p>That&#8217;s what I call coding defensively &#8211; an entirely separate subject from (defensive programming)[http://en.wikipedia.org/wiki/Defensive_programming]. Coding defensively mires you in your codebase. It&#8217;s hard to go forward because you don&#8217;t want more responsibility, and you can&#8217;t go back because it would be admitting error. And it&#8217;s a self-reinforcing cycle: once you start becoming defensive, it&#8217;s difficult to stop.</p>
+
+<p>I was a defensive coder too. I struggled to own the results of my actions: I would refuse to discuss solutions in a sensible, level-headed way. It took me a long time to change my approach, and as part of doing so I wrote a list of maxims summarizing how I wanted to think and act. When I feel myself slipping I go over them to refresh my resolve. I&#8217;m publishing them here in the hope that they&#8217;ll help someone else as much as they&#8217;ve helped me.</p>
+
+<!-- more -->
+
+
+<h2>No one gets it right all the time</h2>
+
+<p>First, you have to realize that people &#8211; even you &#8211; make mistakes. It&#8217;s not productive to pretend that it didn&#8217;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&#8217;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
+
+<p>I found that achnowledging my fault and being accepting of it removed a lot of the impetus to be defensive. I no longer felt as ashamed of what I&#8217;d done or that I had to spend time and energy making excuses. The &#8220;excuse&#8221; is that mistakes happen: what matters now isn&#8217;t that the mistake occurred, but how you&#8217;ll go about addressing it.</p>
+
+<p>Please don&#8217;t get me wrong &#8211; I&#8217;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&#8217;ll still happen, even if you&#8217;re very good. Since you can&#8217;t change whether or not you&#8217;ll make mistakes, you may as well change your attitude to them.</p>
+
+<h2>Be friendly</h2>
+
+<p>In the face of anger or blame, don&#8217;t turtle up! Instead, kill them with kindness.</p>
+
+<p>As I said way back at the beginning of this post, what we do naturally inspires passion in those around us. Frequently when people run into an engineering problem, this passion will turn to anger. By the time the problem has percolated to us the anger has found its target: the programmer responsible for creating the code in the first place.</p>
+
+<p>Friendliness reminds the people you&#8217;re interacting with that you&#8217;re just as dedicated to a solution as they are. Resist when they try to brand you as an antagonist. Their reaction is natural because they believe you made the problem: but in fact, you&#8217;re partners together in trying to solve it, and kindness reminds them of this fact.</p>
+
+<p>You&#8217;ll be surprised at the turnarounds you see in people&#8217;s attitudes when you&#8217;re unrelentingly friendly to them in return. And once the anger has dissipated, you can work towards a resolution.</p>
+
+<h2>Seriously consider solutions</h2>
+
+<p>Or, if you&#8217;re a Glengarry Glen Ross fan, &#8220;always be solving.&#8221;</p>
+
+<p>![http://f.cl.ly/items/2y3x25163d0L0J1A0s14/Image%202013.11.14%209%3A38%3A06%20AM.jpeg]</p>
+
+<p>Putting your existing solutions on a pedestal isn&#8217;t productive. There&#8217;s no inherent value to what you have other than that it works &#8211; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
+
+<p>Dismissing solutions out of hand &#8211; particularly if you don&#8217;t understand them or it seems like they&#8217;d be difficult to implement &#8211; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&#8217;t even know.</p>
+
+<p>If it&#8217;s still more or less perfect despite those flaws, then you have to go for it. Your responsibility is to do what&#8217;s right, not what&#8217;s easy.</p>
+
+<p>And guess what? Afterwards, you&#8217;ll probably feel way more comfortable implementing that solution again in the future, and professional growth is always pretty awesome&#8230; and leads to personal growth as well.</p>
+
+<h2>Your net effect is positive</h2>
+
+<p>Even in the face of overwhelming negativity or horrible problems, you have to remind yourself that your overall effect is a positive one. As humans, we spend an inordinate amount of time concentrating on negative experiences: in the past, perhaps, an embarrassing moment in high school that everyone but you has forgotten, and in your day-to-day job, the errors and problems you feel largely responsible for.</p>
+
+<p>It can be helpful to remind yourself of the good things you&#8217;ve done too, and that, in the balance, the good outweighs the bad. Doing so gives you the courage to hold your head high, and gives you the self-confidence to tackle your problems head on, instead of hiding from them.</p>
+
+<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &#8211; and the attitude you have towards action &#8211; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&#8217;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&#8217;re coding for them, not coding defensively.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What Makes a Good Programmer Good?]]></title>
@@ -1733,50 +1793,6 @@
 <h1>Security &amp; Safety</h1>
 
 <p>Before you deploy a server using any of these roles, make sure to keep security and safety in mind. A lot of these tools (like Graphite and Graylog2) allow web access and run servers with potential security vulnerabilities. Lock them behind Apache2 basic access, change your EC2 security group settings to allow only certain IP addresses access, and establish a VPN for your internal network. With logs, statistics, and other business-sensitive information, you can never be too security-conscious.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why I Chose Chef Over Rubber]]></title>
-    <link href="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/"/>
-    <updated>2013-01-18T14:34:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber</id>
-    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &#8211; and surprising even myself &#8211; I ended up choosing Chef as our solution. Here&#8217;s why.</p>
-
-<!-- more -->
-
-
-<h2>Collaboration</h2>
-
-<p>One of rubber&#8217;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&#8217;ll get a merge conflict in your server yaml file: you really don&#8217;t want to make a mistake resolving <em>that</em> merge conflict.</p>
-
-<p>By contrast, it&#8217;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&#8217;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&#8217;s actually going into the servers.</p>
-
-<p>Chef is just a better tool for teams of people.</p>
-
-<h2>Extensibility &amp; Community Support</h2>
-
-<p>For the tools that rubber provides in its stack &#8211; and it provides a lot &#8211; it&#8217;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&#8217;s no real extensibility, and while it&#8217;s easy enough to roll your own recipes, it&#8217;d definitely be ideal not to repeat work if you&#8217;re fairly confident someone else has already done it.</p>
-
-<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&#8217;re not precisely what you&#8217;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
-
-<p>We&#8217;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&#8217;ve been developing internally for us. It&#8217;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
-
-<h2>More Granularity</h2>
-
-<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&#8217;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
-
-<p>Similarly changing postfix configuration on a per-environment basis is a snap.</p>
-
-<h1>But Rubber is a Great Tool</h1>
-
-<p>Don&#8217;t get me wrong: I still really like rubber. It doesn&#8217;t fit for Everest&#8217;s use case, definitely &#8211; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
-
-<p>Why? It&#8217;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&#8217;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&#8217;ll go far, but trying to work against its defaults will be really painful.</p>
-
-<h2>Final Word on Chef vs. Puppet</h2>
-
-<p>Doesn&#8217;t matter, choose whichever you like more.</p>
 ]]></content>
   </entry>
   

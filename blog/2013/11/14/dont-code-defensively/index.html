@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Don't Code Defensively - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="As an engineer, we&#8217;re responsible for creating things that people care about deeply. Whether you&#8217;re programming something as important as &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number 
+    $(window).scroll(function(){ // scroll event  
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resume</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Don't Code Defensively</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-14T10:30:00-06:00" pubdate data-updated="true">Nov 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>As an engineer, we&#8217;re responsible for creating things that people care about deeply. Whether you&#8217;re programming something as important as a car&#8217;s operating system or as silly as an iPhone game, our code touches lives. It&#8217;s no wonder, then, that the people who interact with our products feel strongly about them &#8211; and possibly about us, as well.</p>
+
+<p>This can sometimes be a good thing. It&#8217;s always touching to receive a heartfelt letter of thanks and admiration from a customer. But much more commonly, you&#8217;ll hear complaints, demands, and anger.</p>
+
+<p>Under a deluge like that, it&#8217;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &#8211; if you&#8217;re willing to take credit for the good things you&#8217;ve done, you have to &#8220;take credit&#8221; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&#8217;s problems, but to shirk responsibility.</p>
+
+<p>That&#8217;s what I call coding defensively &#8211; an entirely separate subject from (defensive programming)[http://en.wikipedia.org/wiki/Defensive_programming]. Coding defensively mires you in your codebase. It&#8217;s hard to go forward because you don&#8217;t want more responsibility, and you can&#8217;t go back because it would be admitting error. And it&#8217;s a self-reinforcing cycle: once you start becoming defensive, it&#8217;s difficult to stop.</p>
+
+<p>I was a defensive coder too. I struggled to own the results of my actions: I would refuse to discuss solutions in a sensible, level-headed way. It took me a long time to change my approach, and as part of doing so I wrote a list of maxims summarizing how I wanted to think and act. When I feel myself slipping I go over them to refresh my resolve. I&#8217;m publishing them here in the hope that they&#8217;ll help someone else as much as they&#8217;ve helped me.</p>
+
+<!-- more -->
+
+
+<h2>No one gets it right all the time</h2>
+
+<p>First, you have to realize that people &#8211; even you &#8211; make mistakes. It&#8217;s not productive to pretend that it didn&#8217;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&#8217;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
+
+<p>I found that achnowledging my fault and being accepting of it removed a lot of the impetus to be defensive. I no longer felt as ashamed of what I&#8217;d done or that I had to spend time and energy making excuses. The &#8220;excuse&#8221; is that mistakes happen: what matters now isn&#8217;t that the mistake occurred, but how you&#8217;ll go about addressing it.</p>
+
+<p>Please don&#8217;t get me wrong &#8211; I&#8217;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&#8217;ll still happen, even if you&#8217;re very good. Since you can&#8217;t change whether or not you&#8217;ll make mistakes, you may as well change your attitude to them.</p>
+
+<h2>Be friendly</h2>
+
+<p>In the face of anger or blame, don&#8217;t turtle up! Instead, kill them with kindness.</p>
+
+<p>As I said way back at the beginning of this post, what we do naturally inspires passion in those around us. Frequently when people run into an engineering problem, this passion will turn to anger. By the time the problem has percolated to us the anger has found its target: the programmer responsible for creating the code in the first place.</p>
+
+<p>Friendliness reminds the people you&#8217;re interacting with that you&#8217;re just as dedicated to a solution as they are. Resist when they try to brand you as an antagonist. Their reaction is natural because they believe you made the problem: but in fact, you&#8217;re partners together in trying to solve it, and kindness reminds them of this fact.</p>
+
+<p>You&#8217;ll be surprised at the turnarounds you see in people&#8217;s attitudes when you&#8217;re unrelentingly friendly to them in return. And once the anger has dissipated, you can work towards a resolution.</p>
+
+<h2>Seriously consider solutions</h2>
+
+<p>Or, if you&#8217;re a Glengarry Glen Ross fan, &#8220;always be solving.&#8221;</p>
+
+<p>![http://f.cl.ly/items/2y3x25163d0L0J1A0s14/Image%202013.11.14%209%3A38%3A06%20AM.jpeg]</p>
+
+<p>Putting your existing solutions on a pedestal isn&#8217;t productive. There&#8217;s no inherent value to what you have other than that it works &#8211; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
+
+<p>Dismissing solutions out of hand &#8211; particularly if you don&#8217;t understand them or it seems like they&#8217;d be difficult to implement &#8211; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&#8217;t even know.</p>
+
+<p>If it&#8217;s still more or less perfect despite those flaws, then you have to go for it. Your responsibility is to do what&#8217;s right, not what&#8217;s easy.</p>
+
+<p>And guess what? Afterwards, you&#8217;ll probably feel way more comfortable implementing that solution again in the future, and professional growth is always pretty awesome&#8230; and leads to personal growth as well.</p>
+
+<h2>Your net effect is positive</h2>
+
+<p>Even in the face of overwhelming negativity or horrible problems, you have to remind yourself that your overall effect is a positive one. As humans, we spend an inordinate amount of time concentrating on negative experiences: in the past, perhaps, an embarrassing moment in high school that everyone but you has forgotten, and in your day-to-day job, the errors and problems you feel largely responsible for.</p>
+
+<p>It can be helpful to remind yourself of the good things you&#8217;ve done too, and that, in the balance, the good outweighs the bad. Doing so gives you the courage to hold your head high, and gives you the self-confidence to tackle your problems head on, instead of hiding from them.</p>
+
+<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &#8211; and the attitude you have towards action &#8211; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&#8217;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&#8217;re coding for them, not coding defensively.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-14T10:30:00-06:00" pubdate data-updated="true">Nov 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/programming/'>programming</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/03/what-makes-a-good-programmer-good/" title="Previous Post: What Makes a Good Programmer Good?">&laquo; What Makes a Good Programmer Good?</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
+  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
+</section>
+<section>
+  <h1>My Apps</h1>
+  <p id='app-widget-com-joshsymonds-gistify'>
+  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
+  <span class='app-name'>
+    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
+  </span>
+</p>
+
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2013 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
