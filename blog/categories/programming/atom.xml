@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-11-14T10:38:58-06:00</updated>
+  <updated>2013-11-14T22:51:52-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -24,7 +24,7 @@
 
 <p>Under a deluge like that, it's easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly -- if you're willing to take credit for the good things you've done, you have to "take credit" for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization's problems, but to shirk responsibility.</p>
 
-<p>That's what I call coding defensively -- an entirely separate subject from (defensive programming)[http://en.wikipedia.org/wiki/Defensive_programming]. Coding defensively mires you in your codebase. It's hard to go forward because you don't want more responsibility, and you can't go back because it would be admitting error. And it's a self-reinforcing cycle: once you start becoming defensive, it's difficult to stop.</p>
+<p>That's what I call coding defensively -- an entirely separate subject from <a href="http://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. Coding defensively mires you in your codebase. It's hard to go forward because you don't want more responsibility, and you can't go back because it would be admitting error. And it's a self-reinforcing cycle: once you start becoming defensive, it's difficult to stop.</p>
 
 <p>I was a defensive coder too. I struggled to own the results of my actions: I would refuse to discuss solutions in a sensible, level-headed way. It took me a long time to change my approach, and as part of doing so I wrote a list of maxims summarizing how I wanted to think and act. When I feel myself slipping I go over them to refresh my resolve. I'm publishing them here in the hope that they'll help someone else as much as they've helped me.</p>
 
