@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash &hellip;">
+  <meta name="description" content="I spent awhile trying to find other people&#8217;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-22T12:36:00-06:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile trying to find other people&#8217;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I&#8217;ll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/22/chef-cookbooks-for-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -486,49 +527,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
-
-<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -559,6 +557,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/14/dont-code-defensively/">Don&#8217;t Code Defensively</a>
       </li>
     
@@ -572,10 +574,6 @@
     
       <li class="post">
         <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a>
       </li>
     
   </ul>

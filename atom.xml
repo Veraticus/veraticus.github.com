@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2013-11-14T22:51:52-06:00</updated>
+  <updated>2013-12-26T11:04:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,147 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[cryptolalia, for creating Cicada 3301 ciphertext puzzles]]></title>
+    <link href="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/"/>
+    <updated>2013-12-26T10:31:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles</id>
+    <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &#8211; well, for some unknown goal &#8211; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&#8217;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
+
+<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
+
+<ul>
+<li><em>atbash inversion</em> - an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
+<li><em>Beale homophonic substitution</em> - for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
+<li><em>Caesar</em> - the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
+<li><em>Pollux</em> - translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
+<li><em>PNG Steganography</em> - encode your plaintext in an image, either in its comments or least-significant bits.</li>
+<li><em>Vigenere</em> - a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
+</ul>
+
+
+<p>You&#8217;ve probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!</p>
+
+<h2>Cryptolalia In Action</h2>
+
+<p>Taken from the <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> README:</p>
+
+<p><img src="http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png" alt="Rainbows" /></p>
+
+<p>The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:</p>
+
+<ol>
+<li>The plaintext (&#8220;secrets are fun&#8221;) was transformed with a Pollux Morse code cipher:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rainbow.png&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># true, see the file above</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Don&#8217;t believe me? You can decode it yourself, also using cryptolalia:</p>
+
+<ol>
+<li>Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Insert the numbers of the Beale homophonic substitution cipher back in:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>And finally, plug it right back into the Pollux cipher:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;secretsarefun&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Don't Code Defensively]]></title>
@@ -1613,186 +1754,6 @@
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Chef Cookbooks for Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails/"/>
-    <updated>2013-01-22T12:36:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails</id>
-    <content type="html"><![CDATA[<p>I spent awhile trying to find other people&#8217;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I&#8217;ll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
-
-<!-- more -->
-
-
-<h2>base</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run_list</span> <span class="sx">%W(</span>
-</span><span class='line'><span class="sx">  recipe[chef-client::delete_validation]</span>
-</span><span class='line'><span class="sx">  recipe[chef-client::config]</span>
-</span><span class='line'><span class="sx">  recipe[chef-client::service]</span>
-</span><span class='line'><span class="sx">  recipe[apt]</span>
-</span><span class='line'><span class="sx">  recipe[monit]</span>
-</span><span class='line'><span class="sx">  recipe[postfix]</span>
-</span><span class='line'><span class="sx">  recipe[openssh]</span>
-</span><span class='line'><span class="sx">  recipe[ntp]</span>
-</span><span class='line'><span class="sx">  recipe[vim]</span>
-</span><span class='line'><span class="sx">  recipe[build-essential]</span>
-</span><span class='line'><span class="sx">  recipe[user::data_bag]</span>
-</span><span class='line'><span class="sx">  recipe[logrotate]</span>
-</span><span class='line'><span class="sx">  recipe[ohai]</span>
-</span><span class='line'><span class="sx">  recipe[ruby_build]</span>
-</span><span class='line'><span class="sx">  recipe[rbenv::system]</span>
-</span><span class='line'><span class="sx">  recipe[sudo]</span>
-</span><span class='line'><span class="sx">  recipe[zsh]</span>
-</span><span class='line'><span class="sx">  recipe[oh-my-zsh]</span>
-</span><span class='line'><span class="sx">  recipe[collectd]</span>
-</span><span class='line'><span class="sx">  recipe[collectd::attribute_driven]</span>
-</span><span class='line'><span class="sx">  recipe[htop]</span>
-</span><span class='line'><span class="sx">  recipe[runit]</span>
-</span><span class='line'><span class="sx">  recipe[rsyslog::client]</span>
-</span><span class='line'><span class="sx">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is the run list I&#8217;m using as the base for all the servers. I don&#8217;t think there&#8217;s anything surprising here, but I do want to point out a few things:</p>
-
-<ul>
-<li><strong>openssh</strong> should be configured like this:</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">default_attributes</span> <span class="s1">&#39;openssh&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>      <span class="s1">&#39;permit_root_login&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;password_authentication&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;no&#39;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You don&#8217;t want to allow root logins or password logins. It is also probably worthwhile to delete any preexisting sudoer for your AMI image if one exists (like ubuntu for example), using&#8230;</p>
-
-<ul>
-<li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It&#8217;s really helpful.</p></li>
-<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &#8211; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&#8217;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
-<li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you&#8217;ll get confused.</p></li>
-</ul>
-
-
-<h2>statistics</h2>
-
-<p>I&#8217;m running Graylog2 and Graphite to compile logs and interesting statistics from our servers. This is the runlist that establishes the role dedicated to these two pieces of software, which I called <code>statistics</code>:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run_list</span> <span class="sx">%W(</span>
-</span><span class='line'><span class="sx">  recipe[ebs]</span>
-</span><span class='line'><span class="sx">  recipe[apache2]</span>
-</span><span class='line'><span class="sx">  recipe[statsd]</span>
-</span><span class='line'><span class="sx">  recipe[python]</span>
-</span><span class='line'><span class="sx">  recipe[graphite]</span>
-</span><span class='line'><span class="sx">  recipe[graylog2]</span>
-</span><span class='line'><span class="sx">  recipe[graylog2::apache2]</span>
-</span><span class='line'><span class="sx">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I use <a href="https://github.com/titanous/chef-ebs">this EBS cookbook</a> with this configuration:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">default_attributes</span> <span class="s1">&#39;ebs&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>    <span class="s1">&#39;volumes&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>      <span class="s1">&#39;/data&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>        <span class="s1">&#39;size&#39;</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;fstype&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;xfs&#39;</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This server saves and compiles enormous amounts of data, and in order to hold it all correctly I provision an external EBS drive to contain it. I&#8217;m actually not even sure 100 gigs is enough space but it seems good for now. elasticsearch, mongodb, and graphite are all set up to save their data to subdirectores in /data. While I could easily have made this a RAID array instead, persistence of this data is not super important to me right now: while it would suck to lose all our analytics information, given our traffic it would rebuild into something useful very quickly anyway.</p>
-
-<p>I would use nginx instead of Apache2, but for a server only accessible internally that will probably not see a lot of traffic, it was much easier and faster to just set up Apache2 and passenger than start unicorns for the Graphite and Graylog web interfaces.</p>
-
-<h2>app</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run_list</span> <span class="sx">%W(</span>
-</span><span class='line'><span class="sx">  recipe[imagemagick]</span>
-</span><span class='line'><span class="sx">  recipe[nginx]</span>
-</span><span class='line'><span class="sx">  recipe[unicorn]</span>
-</span><span class='line'><span class="sx">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Probably among the least surprising roles. The application servers use nginx and unicorn for blazingly fast speed. Make sure to add the nginx collectd plugin to this server for additional metrics and monitoring:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">default_attributes</span> <span class="s1">&#39;collectd&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>    <span class="s1">&#39;plugins&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>      <span class="s1">&#39;nginx&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don&#8217;t discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
-
-<h1>Security &amp; Safety</h1>
-
-<p>Before you deploy a server using any of these roles, make sure to keep security and safety in mind. A lot of these tools (like Graphite and Graylog2) allow web access and run servers with potential security vulnerabilities. Lock them behind Apache2 basic access, change your EC2 security group settings to allow only certain IP addresses access, and establish a VPN for your internal network. With logs, statistics, and other business-sensitive information, you can never be too security-conscious.</p>
 ]]></content>
   </entry>
   

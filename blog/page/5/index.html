@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been looking about two weeks now for a really fantastic designer for GirlsGuideTo &#8211; a designer that&#8217;s as fabulous as the site &hellip;">
+  <meta name="description" content="This post has been superseded by Dynamic Error Pages, Corrected. Check that out first. One of the coolest features of Rails 3.2 is tagged logging. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
+
+<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
+
+<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
+
+<p>Happily, you can do just this!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -469,49 +516,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/01/dynamoid-0-dot-4-0/">Dynamoid 0.4.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-01T00:04:00-05:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&#8217;t worked &#8211; they&#8217;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&#8217;s DynamoDB.</p>
-
-<p>What do I mean by that?</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/01/dynamoid-0-dot-4-0/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -542,6 +546,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/14/dont-code-defensively/">Don&#8217;t Code Defensively</a>
       </li>
     
@@ -555,10 +563,6 @@
     
       <li class="post">
         <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a>
       </li>
     
   </ul>

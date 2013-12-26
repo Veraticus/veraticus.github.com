@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It&#8217;s not uncommon to have login-required forms accessible to users who aren&#8217;t logged in &#8211; for example, maybe you&#8217;re trying to &hellip;">
+  <meta name="description" content="I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&#8217;t have JavaScript, they&#8217;d still see something sensible&#8230; but if they did, they&#8217;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&#8217;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn&#8217;t find anything, so I took a crack at creating it myself. This is the result.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -476,53 +519,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
-
-<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&#8217;s generally pretty awesome.</p>
-
-<p>But it&#8217;d be even awesomer if actual errors in your application referenced this UUID, wouldn&#8217;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &#8220;I encountered error 123xyz,&#8221; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
-
-<p>Happily, you can do just this!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -553,6 +549,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/14/dont-code-defensively/">Don&#8217;t Code Defensively</a>
       </li>
     
@@ -566,10 +566,6 @@
     
       <li class="post">
         <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a>
       </li>
     
   </ul>
