@@ -4,9 +4,11 @@ footer: true
 ---
 ## Experience
 ### Founder (2012 - Present) @ [Symonds & Son](http://symondsandson.com)
-* Evaluated institutional knowledge and corporate requirements to deliver infrastructure recommendations and cloud computing proposals to large corporations looking to modernize their server setups.
+* Deployed highly-monitored, highly-available cloud installations composed of dozens of servers to RackSpace, Amazon Web Services, and Digital Ocean.
+* Managed and developed specialized recipes to consistently provision and deploy numerous server-side software packages, including postgresql, elasticsearch, nginx, redis, and many others.
+* Evaluated institutional knowledge and corporate requirements to deliver infrastructure recommendations and cloud computing proposals to large corporations seeking to modernize their server setups.
 * Understood functional requirements, created acceptance tests, and delivered well-tested, rapidly developed Rails code to numerous clients.
-* Created customized Chef server installations in Amazon's EC2, integrated tightly with a Rails application and a continuous integration and deployment environment.
+* Created customized Chef server installations and cookbooks, integrated tightly with Rails application and a continuous integration and deployment environment.
 
 ### CTO & Cofounder (2012 - Present) @ [Kinotify](http://kinotify.com)
 * Used RubyMotion and Rails to develop a clean web API and beautiful iOS application, incorporating designs and requirements from user testers and the executive team to deliver a stellar combined product.
@@ -14,7 +16,7 @@ footer: true
 * Exposed metrics and conducted further user tests (with A/B frameworks) to create the stickiest app experience possible.
 
 ### CTO & Cofounder (2012 - 2013) @ [GirlsGuideTo](http://girlsguideto.com)
-* Created wireframes, designs, and from those documents, a scalable, efficient, widely-used website for GirlsGuideTo.
+* Created wireframes and designs, and from those documents, a scalable, efficient, widely-used website for GirlsGuideTo.
 * Migrated GirlsGuideTo from a legacy PHP Wordpress installation to a modern Rails application, preserving data integrity and creating a robust foundation for future development.
 * Met with investors and presented them with technology decisions, business logic, and growth plans as part of GirlsGuideTo's executive team.
 
