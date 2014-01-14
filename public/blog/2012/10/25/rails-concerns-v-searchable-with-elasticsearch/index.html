@@ -1,0 +1,614 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Concerns V: Searchable with Elasticsearch - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I use the wonderful elasticsearch for my searching needs. I described in previous posts how I use and test elasticsearch in general; but in my &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Concerns V: Searchable With Elasticsearch</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T12:50:00-05:00" pubdate data-updated="true">Oct 25<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
+
+<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&rsquo;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
+
+<!-- more -->
+
+
+<h2>The Setup</h2>
+
+<p>I have multiple models that are searchable, all of which are searchable in somewhat similar ways. For example, users need left-handed ngram indexing for their names (for autocompletion), but also full searching on the same field; similarly, the titles of content work almost exactly the same way. The only difference between the two was the weights they should use, so I set them up similarly in tire:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">settings</span> <span class="no">ElasticSearchAnalysis</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">mapping</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">indexes</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="s1">&#39;multi_field&#39;</span><span class="p">,</span> <span class="ss">fields</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nb">name</span><span class="p">:</span> <span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="ss">analyzer</span><span class="p">:</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="ss">boost</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+</span><span class='line'>        <span class="ss">partial</span><span class="p">:</span> <span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="n">search_analyzer</span><span class="p">:</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">index_analyzer</span><span class="p">:</span> <span class="s1">&#39;partial&#39;</span><span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>ElasticSearchAnalysis</code> is a constant that contains the settings for the partial and full analyzers referenced in the mappings. Of course, I index more fields for content, but ultimately I was using the searchers in the two models in a very similar way: a boolean should of all the different mappings conjoined together. As I was working on the code for the two different models, it was looking more and more similar&hellip; and then when I added in searching to tags and it was just about the same thing, I figured it was time to come up with a concern. I elected to call it <code>searchable</code> and wanted it to look something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Searchable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">settings</span> <span class="no">ElasticSearchAnalysis</span> <span class="k">do</span>
+</span><span class='line'>    <span class="c1"># elasticsearch settings here</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">searchable</span> <span class="ss">:name</span><span class="p">,</span> <span class="s1">&#39;name.partial&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Where I could simply list all the fields I wanted to search.</p>
+
+<h2>The Module</h2>
+
+<p>This is the module I came up with to express this.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">field_options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="vi">@search_fields</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>            <span class="n">fields</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>              <span class="n">should</span> <span class="p">{</span><span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">field_options</span><span class="p">)}</span>
+</span><span class='line'>            <span class="k">end</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you&rsquo;ve been following my series on concerns, this shouldn&rsquo;t be very surprising stuff. When you call searchable, the fields are added to an instance variable: then, when you call search on the model, we concatenate all the fields together and boolean search across on each of them. So once this is all set up, you&rsquo;d use it like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which will generate a tire query like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Extending to More Like This</h2>
+
+<p>Of course, that <code>searcher</code> private method is just begging for another use. Why abstract it out so cleverly and not do something with it? Let&rsquo;s use elasticsearch&rsquo;s <a href="http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query.html">more like this query</a> so we can quickly find objects like each other (to display in an attractive sidebar, for example). <strong>For this to work, in addition to having tire in your Gemfile, you&rsquo;ll also need tire-contrib</strong>. So make sure you have it there or else this will explode.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can say <code>User.more_like('Josh Symonds')</code> and it&rsquo;ll find all documents with a more_like_this query for my name. Clever!</p>
+
+<h2>Searching Across Multiple Models</h2>
+
+<p>If you have a single search field on your site (like in the top navbar), most likely you&rsquo;ll want to search across multiple models with it: the user could be searching for a person, or a piece of content, or a tag. There&rsquo;s no easy way to know for sure what it is they want, so we should search across all of the fields and order the results by their relevance. Though this sounds complicated, with this concern, this is actually surprisingly easy.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>      <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">loaded_classes</span>
+</span><span class='line'>    <span class="vi">@loaded_classes</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>    <span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">pluralize</span><span class="p">}</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>          <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>            <span class="n">should</span> <span class="p">{</span><span class="n">text</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">}</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We changed the <code>searchable</code> method slightly. Now, in addition to adding to an instance variable, it adds to a hash that the module itself keeps track of: this hash contains all the models as keys, and all their fields as values. Then, when we use it, it constructs a search across all those models&#8217; indexes for all the fields those models should be searching. To give a concrete example, let&rsquo;s say we use <code>Searchable.search('Josh Symonds')</code> and we have indexes on content titles and user names. This is what the resulting tire query will look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">})</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you have some models that should be more relevant (like an exact tag match should be the most relevant result), give those mappings an appropriate boost inside the tire mappings for the model. Also keep in mind this will return an array of potentially very different objects: users and contents, in this case. You should either make sure they&rsquo;re all duck-typed correctly together, or check their type before acting on them. Finally, this will only work in development if you load each model before calling <code>Searchable.search</code>. Just entering the constant name of the model should be enough, but if you don&rsquo;t, then the module won&rsquo;t know to search with that model. Such is the danger of lazy loading in development.</p>
+
+<h2>The Final Module</h2>
+
+<p>For your reference, this is the final module with all code included.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Searchable</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@search_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>      <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span> <span class="o">=</span> <span class="n">fields</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:text</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">field_options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>      <span class="n">fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="vi">@search_fields</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>            <span class="n">fields</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>              <span class="n">should</span> <span class="p">{</span><span class="nb">send</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">field_options</span><span class="p">)}</span>
+</span><span class='line'>            <span class="k">end</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">loaded_classes</span>
+</span><span class='line'>    <span class="vi">@loaded_classes</span> <span class="o">||=</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>    <span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">pluralize</span><span class="p">}</span><span class="o">.</span><span class="n">reverse</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">query</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">boolean</span> <span class="k">do</span>
+</span><span class='line'>          <span class="no">Searchable</span><span class="o">.</span><span class="n">loaded_classes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span>
+</span><span class='line'>            <span class="n">should</span> <span class="p">{</span><span class="n">text</span> <span class="n">field</span><span class="p">,</span> <span class="n">term</span><span class="p">}</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span><span class="o">.</span><span class="n">results</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/22/rails-concerns-iv-class-methodable/" title="Previous Post: Rails Concerns IV: Class Methodable">&laquo; Rails Concerns IV: Class Methodable</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/10/29/dynamic-cache-counters-in-rails/" title="Next Post: Dynamic Cache Counters in Rails">Dynamic Cache Counters in Rails &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

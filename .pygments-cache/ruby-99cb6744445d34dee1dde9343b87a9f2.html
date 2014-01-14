@@ -1,0 +1,12 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="kp">include</span> <span class="ss">Tire</span><span class="p">:</span><span class="ss">:Model</span><span class="o">::</span><span class="no">Search</span>
+  
+  <span class="n">mapping</span> <span class="k">do</span>
+    <span class="n">indexes</span> <span class="ss">:id</span>
+    <span class="n">indexes</span> <span class="ss">:lat_lng</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:geo_point</span>
+    <span class="n">indexes</span> <span class="ss">:account_id</span>
+    <span class="n">indexes</span> <span class="ss">:created_at</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:date</span>
+    <span class="n">indexes</span> <span class="ss">:tags</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

@@ -26,7 +26,7 @@ Taken from the [cryptolalia](https://github.com/Veraticus/cryptolalia) README:
 
 The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:
 
-1. The plaintext ("secrets are fun") was transformed with a Pollux Morse code cipher:
+The plaintext ("secrets are fun") was transformed with a Pollux Morse code cipher:
 ```ruby
 pollux = Cryptolalia::Cipher::Pollux.new
 pollux.plaintext = 'secrets are fun'
@@ -36,7 +36,7 @@ pollux.seperator = ['g', 'h', 'i']
 pollux.encode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
 ```
 
-2. The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
+The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
 ```ruby
 beale = Cryptolalia::Cipher::Beale.new
 beale.plaintext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
@@ -44,7 +44,7 @@ beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
 beale.encode! # "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
 ```
 
-3. The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
+The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
 ```ruby
 steg = Cryptolalia::Cipher::Steganography.new
 steg.plaintext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
@@ -56,7 +56,7 @@ steg.encode! # true, see the file above
 
 Don't believe me? You can decode it yourself, also using cryptolalia:
 
-1. Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:
+Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:
 ```ruby
 steg = Cryptolalia::Cipher::Steganography.new
 steg.file = 'rainbow.png'
@@ -64,7 +64,7 @@ steg.encoded_in = :lsb
 steg.decode! # A very very long string, starting with: "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
 ```
 
-2. Insert the numbers of the Beale homophonic substitution cipher back in:
+Insert the numbers of the Beale homophonic substitution cipher back in:
 ```ruby
 beale = Cryptolalia::Cipher::Beale.new
 beale.ciphertext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
@@ -72,7 +72,7 @@ beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
 beale.decode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
 ```
 
-3. And finally, plug it right back into the Pollux cipher:
+And finally, plug it right back into the Pollux cipher:
 ```ruby
 pollux = Cryptolalia::Cipher::Pollux.new
 pollux.ciphertext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"

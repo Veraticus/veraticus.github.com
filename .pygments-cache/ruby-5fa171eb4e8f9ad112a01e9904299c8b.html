@@ -1,0 +1,25 @@
+<div class="highlight"><pre><span class="nb">require</span> <span class="s2">&quot;fnordmetric&quot;</span>
+
+<span class="no">FnordMetric</span><span class="o">.</span><span class="n">namespace</span> <span class="ss">:analytics</span> <span class="k">do</span>
+  <span class="n">gauge</span> <span class="ss">:events_total</span><span class="p">,</span> 
+    <span class="ss">:tick</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span> 
+    <span class="ss">:progressive</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+    <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s2">&quot;Events (total)&quot;</span>
+
+
+  <span class="n">event</span><span class="p">(</span><span class="ss">:&quot;*&quot;</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">incr</span> <span class="ss">:events_tota</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">FnordMetric</span><span class="o">.</span><span class="n">server_configuration</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">:redis_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">,</span>
+  <span class="ss">:redis_prefix</span> <span class="o">=&gt;</span> <span class="s2">&quot;fnordmetric&quot;</span><span class="p">,</span>
+  <span class="ss">:inbound_stream</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1339&quot;</span><span class="o">]</span><span class="p">,</span>
+  <span class="ss">:start_worker</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+  <span class="ss">:print_stats</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="ss">:event_queue_ttl</span> <span class="o">=&gt;</span> <span class="mi">120</span><span class="p">,</span>
+  <span class="ss">:event_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span>
+  <span class="ss">:session_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span>
+<span class="p">}</span>
+</pre></div>

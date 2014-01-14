@@ -3,8 +3,6 @@
 
 @mixin centered {max-width: 1200px; margin: 0 auto; position: relative; display: block; height: auto; position: relative;}
 
-a:hover {color: red};
-
 html {background-color: $background;}
 
 body {max-width: 10000px;
@@ -76,7 +74,7 @@ body {max-width: 10000px;
   nav.sticky {position: fixed; top: 0; left: 0; z-index: 1; border-top: 0;}
 
   div#main {@include centered; margin-top: 80px; border: 4px solid $orange; @include border-radius(10px); @include box-shadow(#585858 1px 1px 4px);
-    div#content {@include border-top-left-radius(10px); @include border-bottom-left-radius(10px);}
+    div#content {@include border-radius(5px);}
     article {
         p {width: 100%;
           img {margin: 0 auto; display: block;}
@@ -84,16 +82,16 @@ body {max-width: 10000px;
         header {
           h1 {background: image-url('noise.png') $nav-bg; color: $title-color; @include box-shadow(#585858 1px 1px 4px); border-top: 1px solid darken($nav-bg, 10); border-right: 1px solid darken($nav-bg, 10); border-bottom: 1px solid darken($nav-bg, 10); position: relative; left: -80px; padding: 5px 30px 5px 80px; min-width: 100%;
             &:after {
-              content: ' ';  
-              position: absolute;  
-              width: 0;  
-              height: 0;  
-              left: 0px;  
-              top: 100%;  
+              content: ' ';
+              position: absolute;
+              width: 0;
+              height: 0;
+              left: 0px;
+              top: 100%;
               z-index: -1;
-              border-width: 5px 10px;  
-              border-style: solid;  
-              border-color: darken($nav-bg, 30) darken($nav-bg, 30) transparent transparent;  
+              border-width: 5px 10px;
+              border-style: solid;
+              border-color: darken($nav-bg, 30) darken($nav-bg, 30) transparent transparent;
             }
           }
         }
@@ -117,5 +115,55 @@ body {max-width: 10000px;
     div#footer {@include centered; color: $purple; padding-left: 110px; @include text-shadow(lighten($red, 10) 0 0 0);
       a {color: $purple;}
     }
+  }
+}
+
+.attribution {
+  clear: both;
+  margin: 30px auto;
+  width: 90%; padding: 10px;
+  border: 1px solid $nav-border;
+  background-color: lighten($nav-bg-back, 30);
+  @include box-shadow(#585858 1px 1px 4px);
+  @include text-shadow(lighten($red, 50) 1px 1px 0);
+  @include border-radius(5px);
+  @include clearfix;
+  p {
+    float: left; display: block; max-width: 530px; margin: 22px 10px 10px 10px;
+    @media only screen and (max-width: 480px) {
+      width: 95%; margin: 10px auto; clear: both;
+    }
+    @media only screen and (max-width: 768px) {
+      width: 95%; margin: 10px auto; clear: both;
+    }
+    a {text-decoration: underline;}
+  }
+  img {
+    background: transparent; border: 0; @include border-radius(5px); float: left; display: block;
+    @media only screen and (max-width: 480px) {
+      display: none;
+    }
+    @media only screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+  ul {
+    float: left; display: block; max-width: 260px;
+    list-style-type: none; margin: 0 0 0 20px; font-size: 0.8em;
+    @media only screen and (max-width: 480px) {
+      width: 95%; margin: 10px auto; clear: both; font-size: 1em;
+    }
+    @media only screen and (max-width: 768px) {
+      width: 95%; margin: 10px auto; clear: both; font-size: 1em;
+    }
+    li {
+      float: left; clear: both; margin-top: 8px; margin-bottom: 0;
+      i {margin-right: 5px;}
+    }
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover { color: lighten($violet, 30); @include text-shadow(light($violet, 10) 1px 1px 0); }
   }
 }

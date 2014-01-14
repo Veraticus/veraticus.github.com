@@ -1,0 +1,26 @@
+<div class="highlight"><pre><span class="n">run_list</span> <span class="sx">%W(</span>
+<span class="sx">  recipe[chef-client::delete_validation]</span>
+<span class="sx">  recipe[chef-client::config]</span>
+<span class="sx">  recipe[chef-client::service]</span>
+<span class="sx">  recipe[apt]</span>
+<span class="sx">  recipe[monit]</span>
+<span class="sx">  recipe[postfix]</span>
+<span class="sx">  recipe[openssh]</span>
+<span class="sx">  recipe[ntp]</span>
+<span class="sx">  recipe[vim]</span>
+<span class="sx">  recipe[build-essential]</span>
+<span class="sx">  recipe[user::data_bag]</span>
+<span class="sx">  recipe[logrotate]</span>
+<span class="sx">  recipe[ohai]</span>
+<span class="sx">  recipe[ruby_build]</span>
+<span class="sx">  recipe[rbenv::system]</span>
+<span class="sx">  recipe[sudo]</span>
+<span class="sx">  recipe[zsh]</span>
+<span class="sx">  recipe[oh-my-zsh]</span>
+<span class="sx">  recipe[collectd]</span>
+<span class="sx">  recipe[collectd::attribute_driven]</span>
+<span class="sx">  recipe[htop]</span>
+<span class="sx">  recipe[runit]</span>
+<span class="sx">  recipe[rsyslog::client]</span>
+<span class="sx">)</span>
+</pre></div>

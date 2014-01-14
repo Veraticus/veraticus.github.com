@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: rubymotion | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/rubymotion/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-01-14T16:52:51-06:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RubyMotion Update: One Month Later]]></title>
+    <link href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/"/>
+    <updated>2013-08-07T10:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later</id>
+    <content type="html"><![CDATA[<p>My <a href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">last post on RubyMotion</a> generated quite a lot of interest, and I&rsquo;ve been asked a few times for my opinion on the recent RubyMotion bugfixes (like correcting <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a> and <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-32">RM-32</a>). I thought it sensible to revisit this issue a month later to discuss the changes the HipByte team has been making and what they mean for the future of the RubyMotion project.</p>
+
+<!-- more -->
+
+
+<p>The issues Laurent prioritized have done much to restore my confidence in using RubyMotion for production applications (which I think is a great framework anyway, memory issues aside). Before starting new client work in it, I&rsquo;m personally waiting a release or two longer to make sure that the fixes are indicative of a future pattern of prioritizing stability and memory management over exciting new hotness&hellip; Exciting new hotness is definitely great and probably lots of fun to make, but those of us making money on RubyMotion care more for platform stability than nifty new features. Or, at least, I do.</p>
+
+<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &mdash; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&rsquo;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
+
+<blockquote>Every time I heard the phrase "well-known workaround" I interpret it as "tribal knowledge."</blockquote>
+
+
+<p>And I think that applied very well to the workarounds available for the memory management issues. If you knew these issues existed and how to circumvent them, you were fine: but if you came into the framework with no foreknowledge and just coded regular Ruby, you were in for a nasty surprise. For RubyMotion to really attract the kind of success it deserves, surprises like that can&rsquo;t exist. Either you should be able to code Ruby as you would in MRI, or the differences in RubyMotion syntax as compared to regular Ruby syntax must be made as clear as possible.</p>
+
+<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &ldquo;we take performance and crashes very seriously&rdquo; &mdash; a much-appreciated statement indeed.</p>
+
+<p>So is RubyMotion worth buying now? In my opinion, yes, very much. It&rsquo;s much faster to build iOS apps in RubyMotion than Objective-C, so if you want to get a rapid prototype out or just don&rsquo;t want to learn C and Objective-C, RubyMotion is a great investment. It&rsquo;s also a great way to get acclimated with the iOS frameworks in a language that&rsquo;s a lot kinder and gentler than Objective-C. And while I don&rsquo;t feel confident saying &ldquo;this is now production-solid&rdquo; yet, I&rsquo;m watching the project very closely and it&rsquo;s definitely moving rapidly in the right direction.</p>
+
+<p>So what&rsquo;s next? Well, I&rsquo;d be lying if I said I weren&rsquo;t super excited about the new <a href="http://blog.rubymotion.com/post/57465814533/create-an-asteroids-game-for-ios-in-15-minutes-with">RubyMotion JoyBox blog post</a>. I&rsquo;ll personally be using RubyMotion to make an awesome game of some sort, because everyone loves games. I know that the RubyMotion team is incredibly dedicated to the framework, and I have the utmost confidence in their work as demonstrated by the performance improvements and bugfixes in versions 2.4 and 2.5. RubyMotion has a very bright future ahead of it; what it&rsquo;s done up to this point is nothing short of amazing, and there&rsquo;s every reason to believe that&rsquo;s a trend HipByte will continue into the future.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Using RubyMotion in Production]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/"/>
+    <updated>2013-06-26T12:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production</id>
+    <content type="html"><![CDATA[<blockquote><p><strong>Based on recent bugfixes and refinements by the RubyMotion team, I&rsquo;ve posted <a href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/">an update to this blog post</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>I&rsquo;m a big proponent of RubyMotion &mdash; a year and a month ago, I wrote an article titled &ldquo;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&rdquo; and despite its divisiveness I still stand behind the points I made. Recently I&rsquo;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&rsquo;t an appropriate choice for production applications.</p>
+
+<!-- more -->
+
+
+<p>Before I begin, I&rsquo;d like to say that I still use RubyMotion frequently and have made production (and prototype) applications built in it. I still love it, have renewed my RubyMotion license, and will do so for the foreseeable future. I believe it is a more productive option for coding than Objective-C. But it has a number of critical issues, and I feel compelled to say that it is an inappropriate choice for those looking for a platform to produce, distribute, and develop iPhone or Mac apps intended for broad release.</p>
+
+<h2>RubyMotion&rsquo;s ARC-equivalent is buggy</h2>
+
+<p>This is the main problem with RubyMotion, but it disguises a host of smaller issues with the RubyMotion project and community that&rsquo;s grown up around it.</p>
+
+<p>RubyMotion, for those who don&rsquo;t know, uses its own analog to Apple&rsquo;s automatic reference counting to obviate the need for manual retention and release of objects. It usually works great. But unfortunately it sometimes prematurely releases objects (or possibly fails to retain them?), leading to hard-to-diagnose memory access errors. Most tragically, these errors occur randomly from a user&rsquo;s perspective &mdash; sometimes the code will succeed (since the memory being referenced still contains the object the OS is expecting, despite being released) while other times it will fail (when the memory contains other data).</p>
+
+<p>This happens most frequently when using blocks and is easily reproducible with a very simple test case:</p>
+
+<p>```ruby
+class Test
+  def test</p>
+
+<pre><code>foo = 42
+Proc.new { foo + 123 } # The local variable foo is released when the function ends
+</code></pre>
+
+<p>  end
+end
+Test.new.test.call # Memory access error &mdash; crashes sometimes, not all the time
+```</p>
+
+<p>This example is straight from the RubyMotion bug tracker, where this issue is designated <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a>. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare &mdash; and this same issue occurs on the new platform. I&rsquo;m as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
+
+<p>Of course, there&rsquo;s a workaround. Instance variables are retained by the class, so changing <code>foo</code> above to <code>@foo</code> will correct the crashing error &mdash; sometimes. I&rsquo;ve used instance variables and have still experienced crashes in blocks and I&rsquo;m frankly not sure if it&rsquo;s due to this error or something else entirely.</p>
+
+<p>And that&rsquo;s really the core issue: it&rsquo;s difficult to determine which memory access errors are due to RM-3, which are the result of some other RubyMotion retain/release error, and which are caused by you screwing something up.</p>
+
+<h2>Why is this a problem?</h2>
+
+<p>Aside from the severity of this issue &mdash; randomly crashing code and memory access errors are, in my mind, emergencies to be corrected as soon as humanly possible &mdash; the way that the bug has been handled, both by the community and the RubyMotion team, is very concerning.</p>
+
+<p>The RubyMotion team is very small. Making a garbage collector that&rsquo;s as stable and performant as Objective-C&rsquo;s ARC (developed over years by many smart programmers) is a tall task indeed for a tiny group of people, regardless of their obvious brilliance. But more concerning than the time it&rsquo;s taken to fix this error is the lack of communication and visibility regarding it. There&rsquo;s been little said to the community about the severity of this issue, when a fix is expected, or how to properly diagnose and repair the problem until a release patches it.</p>
+
+<p>As developers, we use tools like RubyMotion not just for hobby projects, but to create real products that are used daily. We must be able to expect that critical flaws in our toolchains will be fixed promptly &mdash; otherwise it&rsquo;s irresponsible of us to create our applications using them. And this isn&rsquo;t the only old bug that hasn&rsquo;t been discussed in awhile: the bug tracker is littered with issues of varying severity that are not scheduled for fixing and have no recent comments from the RubyMotion team.</p>
+
+<p>The RubyMotion community, meanwhile, is an amazing place full of overwhelmingly positive people&hellip; which I think works against us when trying to raise concerns with the framework itself. I really like RubyMotion and I think many in the community feel the same. Voicing serious problems is much less exciting for us than discussing new features or building awesome wrappers, so those who do point them out are largely ignored or dismissed as naysayers.</p>
+
+<p>Happily, this seems to be changing.</p>
+
+<h2>Why post about this now?</h2>
+
+<p>Because of <a href="https://groups.google.com/forum/#!topic/rubymotion/x6-9c__IHH0">this email thread</a> in the RubyMotion group. Summary: lots of people are experiencing memory-related issues that are a result of RM-3 or possibly some other difficult-to-identify problem with RubyMotion&rsquo;s memory management, and they&rsquo;re coming forward and talking about them. One post in the thread states:</p>
+
+<blockquote>I'm experiencing these memory-related types of crashes (like SIGSEGV and SIGBUS) with about 10-20% of users in production.</blockquote>
+
+
+<p>That&rsquo;s a truly startling number if accurate. I haven&rsquo;t bundled Crittercism (or another app performance analyzer) in production, but I&rsquo;ve heard from people using my applications who have experienced random crashes that I can only assume are memory-related. And mine is admittedly an incredibly simple app &mdash; apps with more views and complicated networking code seem like they&rsquo;d be leaving themselves open to even more potential memory-related errors. (Generally, it seems like the more asynchronous stuff you do, the more likely your code is to hit a released object.)</p>
+
+<p>While I&rsquo;ve personally experienced these RubyMotion memory problems myself, I never thought they were part of a bigger problem: I don&rsquo;t regularly go to meetups or watch the bug tracker, and was startled to discover that the issues were endemic to the community. People have been trying to raise visibility of these problems but so far there&rsquo;s been little said about them outside of the issue tracker and a few isolated posts in the community group.</p>
+
+<p>While I think RubyMotion is a great project and I love using it, it&rsquo;s inarguable that these memory-management issues are serious, fundamental flaws in the framework. They prevent the creation of stable, reliable code through no fault of the developer&rsquo;s, leading to random crashes and poor user experience. Thus I cannot recommend anyone use RubyMotion for applications that users will touch until these issues are sorted out &mdash; which I hope they will be, and very soon.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Reachability with RubyMotion]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion/"/>
+    <updated>2013-02-04T17:55:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/04/reachability-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on my blog as well. In addition to detecting network reachability, this code suspends the operation queue when the target host is unreachable, allowing you to continue appending requests and ensuring that they will be delivered in the order they were queued.</p>
+
+<p>There might be a more efficient way to do something similar, but this works for me.</p>
+
+<!-- more -->
+
+
+<h2>Rakefile</h2>
+
+<p>Add the really awesome <a href="https://github.com/tonymillion/Reachability">Reachability</a> Pod to your project.</p>
+
+<p>```ruby
+Motion::Project::App.setup do |app|
+&hellip;
+  app.pods do</p>
+
+<pre><code>pod 'Reachability'
+</code></pre>
+
+<p>  end
+&hellip;
+end
+```</p>
+
+<h2>AFNetworking AFHTTPClient Subclass</h2>
+
+<p>I also use the super convenient AFNetworking library to quickly and easily do REST-compliant requests to my servers. This is the code I stick in my AFHTTPClient:</p>
+
+<p>```ruby
+class ServerClient &lt; AFHTTPClient</p>
+
+<p>  # Singleton!
+  def self.instance</p>
+
+<pre><code>@@instance ||= new
+</code></pre>
+
+<p>  end</p>
+
+<p>  def hostname</p>
+
+<pre><code>'http://yourhosthere.com'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def setupReachability</p>
+
+<pre><code>self.operationQueue.maxConcurrentOperationCount = 1
+self.operationQueue.suspended = true
+
+@reachability = Reachability.reachabilityWithHostname(ServerClient.instance.hostname)
+@reachability.reachableBlock = lambda {|reachable| ServerClient.instance.operationQueue.suspended = false}
+@reachability.unreachableBlock = lambda {|reachable| ServerClient.instance.operationQueue.suspended = true}
+@reachability.startNotifier
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<h2>app_delegate.rb</h2>
+
+<p>Finally, call the setupReachability method in your app delegate and you&rsquo;re done:</p>
+
+<p>```ruby
+class AppDelegate</p>
+
+<p>  def application(application, didFinishLaunchingWithOptions:launchOptions)</p>
+
+<pre><code>...
+ServerClient.instance.setupReachability
+AFNetworkActivityIndicatorManager.sharedManager.enabled = true
+...
+</code></pre>
+
+<p>  end
+end
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Kinotify, a RubyMotion App]]></title>
+    <link href="http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app/"/>
+    <updated>2012-08-31T20:03:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/08/31/kinotify-a-rubymotion-app</id>
+    <content type="html"><![CDATA[<p>Today, I&rsquo;d like to announce the official release of my first RubyMotion app &mdash; <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Kinotify</a>! Kinotify is a simple app with a lofty goal: to notify you of the release of upcoming movies, either in theaters or on DVD. You can search for movies &mdash; in case you have something you really want to be notified of in the future, say a rerelease of Dirty Dancing or the future release of Avatar II &mdash; or just see all upcoming releases. Notifications you set will arrive at 2PM local time on your phone, and you can set the app to remind you of a release a month, week, three days, and/or one day in advance.</p>
+
+<p>The UI, icon, and website were all designed by my good friend and super-talented dude <a href="https://twitter.com/lukesbeard">Luke Beard</a>, so they all look totally awesome. And on the flipside, the Rails server and RubyMotion app were all done by yours truly&hellip; so any faults (and I&rsquo;m sure there are some I haven&rsquo;t found) are mine and mine alone.</p>
+
+<p>It was a long road to actually releasing this app. I started designing Kinotify with a good friend of mine (who had the original idea and inspiration for the application) way back in March, so it&rsquo;s been months of labor, testing, asset acquisition, releasing and refining and coding. But I think the results speak for themselves: Kinotify is a pretty awesome application, and even better I think it&rsquo;s a great example of what RubyMotion is capable of. It uses remote notifications, core data, Twitter/Facebook sharing, networking and reachability&hellip; and thanks to RubyMotion it was all pretty painless to get it working together.</p>
+
+<p>This week I&rsquo;ll make another blog post describing what took so long, where my time and energy were spent, and the general process of releasing a RubyMotion app on the iTunes store. But I just got the approval email from Apple so I wanted to unleash Kinotify on the world officially. So what are you waiting for? It&rsquo;s only 99 cents! <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Go get Kinotify already!</a></p>
+
+<p>And if you have any problems or want new features, the best way to contact me is on <a href="https://twitter.com/Veraticus">Twitter</a>. Thanks!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Installing ShareKit with RubyMotion]]></title>
+    <link href="http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion/"/>
+    <updated>2012-07-18T19:38:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2012/07/18/installing-sharekit-with-rubymotion</id>
+    <content type="html"><![CDATA[<p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
+
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&rsquo;ve done this in a better way &mdash; by extracting the changes out into a new Cocoapod spec repository &mdash; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+
+<!-- more -->
+
+
+<h2>1. Set up the Rakefile</h2>
+
+<p>First, you need to add the ShareKit sharerers you want into your Rakefile.</p>
+
+<p>```ruby
+$:.unshift(&ldquo;/Library/RubyMotion/lib&rdquo;)
+require &lsquo;motion/project&rsquo;
+require &lsquo;motion-cocoapods&rsquo;</p>
+
+<p>Motion::Project::App.setup do |app|
+  app.pods do</p>
+
+<pre><code>pod 'ShareKit/Facebook'
+pod 'ShareKit/Twitter'
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>I couldn&rsquo;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&rsquo;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &mdash; and the rest of this walkthrough &mdash; I&rsquo;ll assume the only sharers you&rsquo;re using will be Facebook and Twitter.</p>
+
+<h2>2. Create a ShareKit Configuration File</h2>
+
+<p>I put mine in <code>app/extensions/sharekit_configuration.rb</code>, and it looks like this:</p>
+
+<p>```ruby
+class SharekitConfiguration &lt; DefaultSHKConfigurator</p>
+
+<p>  def appName</p>
+
+<pre><code>'YourAppName'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def appURL</p>
+
+<pre><code>'http://yourappurl.com'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def facebookAppId</p>
+
+<pre><code>'1234567890'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def twitterConsumerKey</p>
+
+<pre><code>'abcedfgh1234567890'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def twitterSecret</p>
+
+<pre><code>'abcedfgh1234567890'
+</code></pre>
+
+<p>  end</p>
+
+<p>  def twitterCallbackUrl</p>
+
+<pre><code>'http://yourappurl.com'
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>After you create the file, you need to load it in your <code>app_delegate.rb</code>.</p>
+
+<p>```ruby
+  def application(application, didFinishLaunchingWithOptions:launchOptions)</p>
+
+<pre><code>...
+
+SHKConfiguration.sharedInstanceWithConfigurator(SharekitConfiguration.alloc.init)
+SHK.flushOfflineQueue
+
+...
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>That <code>SHK.flushOfflineQueue</code> will try to send stored shared content, if there is any, so make sure to include it.</p>
+
+<h2>3. Alter your Cocoapod Sources</h2>
+
+<p>This is the ugly hack. The Cocoapod version of the Facebook iOS SDK is not the correct one; the ShareKit people provide their own fork that includes the functionality you need. (If you don&rsquo;t use it, the Facebook login won&rsquo;t work at all.) But also the version of ShareKit is old and the Facebook sharing functionality appears to be broken in it anyway, so you might as well update that to the most recent version as well.</p>
+
+<p>All Cocoapod spec information is stored in <code>~/.cocoapods/master</code>. The first file we&rsquo;ll change is the Facebook iOS SDK pod spec. It&rsquo;s located at <code>~/.cocoapods/master/Facebook-iOS-SDK/1.2/Facebook-iOS-SDK.podspec</code>, and you want to change the line of it that defines the source to look like this:</p>
+
+<p><code>ruby
+Pod::Spec.new do |s|
+  ...
+  s.source   = { :git =&gt; 'git://github.com/ShareKit/facebook-ios-sdk.git', :commit =&gt; '397c0b62b116a9680035e87a07ab936e1c5dfce6' }
+  ...
+end
+</code></p>
+
+<p>This points to the most recent commit of the ShareKit Facebook iOS SDK fork. And similarly, we should update the ShareKit pod as well, which is located at <code>~/.cocoapods/master/ShareKit/2.0/ShareKit.podspec</code>.</p>
+
+<p><code>ruby
+Pod::Spec.new do |s|
+  ...
+  s.source   = { :git  =&gt; 'https://github.com/ShareKit/ShareKit.git', :commit =&gt; 'a249839dde09e326b1806e22ab3ddb77d733fce9' }
+  ...
+end
+</code></p>
+
+<h2>4. Manually Copy Resources</h2>
+
+<p>ShareKit expects that its bundle and plist will be present in the resources directory, and you&rsquo;ll have to manually move them there for it to work.</p>
+
+<p><code>bash
+cp vendor/Pods/ShareKit/Classes/ShareKit/Core/SHKSharers.plist resources/
+cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/
+cp -r vendor/Pods/ShareKit/Classes/ShareKit/ShareKit.bundle resources/ShareKit.bundle/
+</code></p>
+
+<p>For some inexplicable reason ShareKit seems to want the bundle both in the resources directory and as a subdirectory in its own bundle. I have no idea why this is but I couldn&rsquo;t get ShareKit working without this step.</p>
+
+<h2>5. Hook up the Share Action</h2>
+
+<p>This is the simplest, most straightforward step. In your view:</p>
+
+<p><code>ruby
+def initWithFrame(frame)
+  ...
+  @share = UIButton.buttonWithType(UIButtonTypeCustom)
+  @share.setTitle("Tap to Share", forState:UIControlStateNormal)
+  @share.frame = [[60, 300], [200, 30]]
+  @share.addTarget(controller, action:'share', forControlEvents:UIControlEventTouchUpInside)
+  self.addSubview(@share)
+  ...
+end
+</code></p>
+
+<p>And in your controller:</p>
+
+<p>```ruby
+def share
+  item = SHKItem.text(&ldquo;This is the text you&rsquo;ll be sharing!&rdquo;)
+  actionSheet = SHKActionSheet.actionSheetForItem(item)</p>
+
+<p>  SHK.setRootViewController(self)</p>
+
+<p>  actionSheet.showInView(self.view)
+end
+```</p>
+
+<p>That&rsquo;s all there is to it! When you touch the &lsquo;Tap to Share&rsquo; button, you should see the ShareKit action sheet pop up with all of the functionality you&rsquo;d expect ShareKit to have. Twitter and Facebook sharing are yours to leverage!</p>
+
+<p>As I said, this is sort of ugly, especially manually editing Cocoapod sources. But hopefully this guide will help someone else integrate ShareKit into their RubyMotion project quickly and easily. I sure wish I had known all this earlier this morning!</p>
+]]></content>
+  </entry>
+  
+</feed>

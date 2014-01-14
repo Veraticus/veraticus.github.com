@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Introduction to Programming I - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="This is a copy of the handout I&rsquo;ll be giving to students for my upcoming class at the Center on Halsted, creatively titled &ldquo;Introduction &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Introduction to Programming I</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-24T12:04:00-05:00" pubdate data-updated="true">Apr 24<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 8  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is a copy of the handout I&rsquo;ll be giving to students for my upcoming class at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>, creatively titled &ldquo;Introduction to Programming.&rdquo; It borrows structure rather liberally from Chris Pine&rsquo;s <a href="http://pine.fm/LearnToProgram">Learn to Program</a>, but the content is my own.</p>
+
+<!-- more -->
+
+
+<h2>Getting Started with Ruby</h2>
+
+<h3>Welcome to Programming</h3>
+
+<p>Computer programming is the skill that allows you to make computers do what you want. Computers are excellent at menial, repetitive tasks that require little oversight and no creativity: but you can also use them to make amazing websites, games, and applications. Whether it&rsquo;s a simple program to make your day-to-day life easier, or a complicated application that gives you full-time employment, computer programming is invaluable professionally and also rewarding personally. Even better, it&rsquo;s lots of fun!</p>
+
+<p>Many people are intimidated by the idea of learning computer programming &mdash; they&rsquo;re worried you need complicated math or lots of formal training to do well. Nothing could be further from the truth. Computer programming can be learned by anyone and is very much learning a new language. All you need to succeed at computer programming is familiarity with computers, a willingness to learn, and a computer to do the programming on.</p>
+
+<p>You&rsquo;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&rsquo;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &mdash; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
+
+<p>To learn Ruby, we&rsquo;ll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we&rsquo;ll go to repl.it and type in an example expression.</p>
+
+<ol>
+<li><p>Open up your web browser.</p></li>
+<li><p>In the address bar, type <code>repl.it</code>, and press enter.</p></li>
+<li><p>Select Ruby (beta). A new window opens; on the right half of the screen you should see some information and a command prompt, and on the left half a blank white space for typing.</p></li>
+<li><p>The right half of the screen is the Ruby console. Type <code>1 + 1</code> into it and press enter.</p></li>
+</ol>
+
+
+<p>The output of your command is returned to you immediately. Congratulations, you&rsquo;re a computer programmer!</p>
+
+<h3>Numbers</h3>
+
+<p>Computers are really excellent at math. In this <strong>exercise</strong>, we&rsquo;ll learn how to do math in Ruby.</p>
+
+<ol>
+<li><p>Try <code>2 * 3</code>. <code>*</code> is the multiplication operator.</p></li>
+<li><p>Try <code>9 / 3</code>. <code>/</code> is the division operator.</p></li>
+<li><p>Try <code>2+2</code>. You don&rsquo;t need spaces around the operator; in fact, Ruby doesn&rsquo;t care how many spaces appear in a statement.</p></li>
+<li><p>Try <code>-9 - 3</code>. By putting a minus in front of a number, it becomes negative.</p></li>
+<li><p>Try <code>9 / 0</code>. This is your first ever error message in Ruby. The kind of error appears before the colon (ZeroDivisionError, in this case); some helpful error text appears afterwards. Obviously, this error means you can&rsquo;t divide by zero.</p></li>
+<li><p>Try <code>5 / 2</code>. It might surprise you that the result is 2 instead of 2.5; what&rsquo;s going on here?</p></li>
+</ol>
+
+
+<p>In Ruby, there are two kinds of numbers. There are <strong>integers</strong> &mdash; that is, whole numbers, whether positive or negative &mdash; and there are <strong>floats</strong>. Floats (short for &ldquo;floating-point numbers&rdquo;) are numbers with any kind of decimal place, even if that decimal place is zero. <code>55.123</code>, <code>-231.4</code>, <code>0.001</code>, and <code>5.0</code> are all floats.</p>
+
+<p>Most of the time, you&rsquo;ll be using integers. This is because most people (and thus most programs) deal in whole things: you don&rsquo;t receive 4.3 emails, or view 1.8 webpages, or listen to 5.24 of a song. Floats are used when you&rsquo;re doing more complicated mathematics, for example graphics or physics.</p>
+
+<p>In this <strong>exercise</strong>, let&rsquo;s do some math on floats.</p>
+
+<ol>
+<li><p>Try <code>2.0 * 3.0</code>. Of course, the answer <code>6.0</code> is the same as the answer for integer math, <code>6</code>.</p></li>
+<li><p>Try <code>5.0 / 2.0</code>. Now that answer looks a lot more like what we&rsquo;d expect!</p></li>
+<li><p>Try <code>-9.0 + 8.0</code>. Everything you would expect to work in integers works fine on floats.</p></li>
+<li><p>Try <code>(598.0 / (92.0 - 90.0)) * 43.0 + 2.0</code>. Even complicated math is easy with computers!</p></li>
+</ol>
+
+
+<h3>Strings</h3>
+
+<p>Numbers are exciting, but people generally use words a lot more than they do numbers. We refer to letters, words, and sentences in Ruby as <strong>strings</strong>. Strings in Ruby are always encapsulated by either single or double-quotes. In this <strong>exercise</strong>, we&rsquo;ll write a few strings to see how they work.</p>
+
+<ol>
+<li><p>Try <code>'Hello.'</code>. Notice that when Ruby returns a string to us, it&rsquo;s always in double quotes, even if we typed it in single quotes.</p></li>
+<li><p>Try <code>"This is a big fancy string."</code>. Strings can be of any length and can contain any characters: spaces or punctuation included.</p></li>
+<li><p>Try <code>'2 is my favorite number'</code>. Numbers that are in strings are just more words.</p></li>
+<li><p>Try <code>'Well isn't this nice.'</code>. Oh no!</p></li>
+<li><p>Try <code>"She said, "This is foolish!""</code> What&rsquo;s happening?</p></li>
+</ol>
+
+
+<p>You&rsquo;ll get a syntax error for the last two statements above. In both cases, Ruby is expecting a single quote or double quote to end the string, but instead we&rsquo;re using one inside the actual string itself. Ruby is only a computer language. Unlike a human reading either of those sentences, it can&rsquo;t tell which quotation marks are part of the sentence and which are intended to start and end the string; instead it gives us a syntax error.</p>
+
+<p>Strings are fun to type, but they&rsquo;re even more fun to actually use! Let&rsquo;s do an <strong>exercise</strong> that shows us the power of strings.</p>
+
+<ol>
+<li><p>Try <code>'Hello' * 3</code>. Whoops, we probably wanted to put a space in there. Let&rsquo;s try it again with <code>'Hello ' * 3</code>. There, isn&rsquo;t that much better?</p></li>
+<li><p>Try <code>'Message in ' + 'a bottle.'</code> Again, space is important.</p></li>
+<li><p>Try <code>'12' * 3</code>. Is this different than what you&rsquo;d expect?</p></li>
+<li><p>Try <code>'12' + '12' + '12'</code>. How about that?</p></li>
+</ol>
+
+
+<p>The last two won&rsquo;t actually do math, like you might expect. Remember <code>'12'</code> is a string: <code>12</code> is an integer! So <code>'12'</code> is no different from <code>'sandwiches'</code> or <code>'love'</code> &mdash; it&rsquo;s a word to Ruby, not a number. If you try to use strings as numbers, Ruby won&rsquo;t understand what you mean. Here&rsquo;s a quick <strong>exercise</strong> to illustrate this point.</p>
+
+<ol>
+<li><p>Try <code>'14' + 14</code>.</p></li>
+<li><p>Try <code>3 * 'bacon'</code>.</p></li>
+</ol>
+
+
+<p>If you think about it, both of these errors make sense. What would it mean to add 14 to the word &ldquo;fourteen?&rdquo; How do you multiply three by bacon? Remember, computers can only do what you tell them. If you tell them to do things that don&rsquo;t make any sense, they&rsquo;ll return errors. Still, wouldn&rsquo;t it be nice to be able to add <code>'14'</code> to <code>14</code> and get 28, like we&rsquo;d expect?</p>
+
+<h3>Methods</h3>
+
+<p>What do <code>1</code>, <code>"Hello"</code>, and <code>'My favorite number is 3'</code> all have in common? In Ruby, they&rsquo;re all objects. Ruby objects are very similar to real-world objects. Objects in Ruby can do things, just like objects you interact with every day. A car can drive, a cat can meow, and a person can smile. Objects in Ruby can do things as well; and the things that they can do are called <strong>methods</strong>.</p>
+
+<p>In Ruby, you make an object perform a method with a period, and then the name of the method you want to call. So if you could use Ruby on your car, you would use <code>car.drive</code> to drive it, and if your cat wanted to meow, it would do <code>cat.meow</code>. Let&rsquo;s try a quick <strong>exercise</strong> to see how easy it is to use methods.</p>
+
+<ol>
+<li><p>Try <code>'Hello'.reverse</code>. reverse is a method for strings: it reverses the string for you. How helpful! In this example, &lsquo;Hello&rsquo; is the object. The period instructs Ruby that a method is coming up next, and reverse is the name of the method.</p></li>
+<li><p>Try <code>1.odd?</code>. Ruby tells you <code>true</code>, which obviously means that 1 is an odd number.</p></li>
+<li><p>Try <code>1.zero?</code>. One is not zero, so Ruby returns <code>false</code>.</p></li>
+<li><p>Try <code>'Sentence!'.length</code>. Length is a string method that returns how many characters are in that string.</p></li>
+<li><p>Try <code>'I want to yell this'.upcase</code>. Upcase transforms a string into all capitals.</p></li>
+</ol>
+
+
+<p>There are dozens of possible methods for strings and numbers. Learning Ruby is very much like learning a new language &mdash; while you will learn the grammar and the most commonly-used words in this class, you&rsquo;ll eventually want to grab a dictionary and look up more words yourself. Ruby&rsquo;s documentation contains a simple, complete, easy-to-read list of methods and is free online. There are instructions for finding it at the end of this handout.</p>
+
+<p>Ruby tries to be as sensible as possible. Methods are named to be unsurprising and predictable. For example, if you know about <code>upcase</code>, you can guess that there&rsquo;s a similar method called <code>downcase</code> that does exactly the opposite &mdash; that is, it would convert all letters into lowercase. And you&rsquo;d be right!</p>
+
+<p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
+
+<ol>
+<li><p>Try <code>1.+(1)</code>.</p></li>
+<li><p>Try <code>2.-(1)</code>.</p></li>
+<li><p>Try <code>"One".+("One")</code>.</p></li>
+</ol>
+
+
+<p>The plus method is special. You don&rsquo;t need a period before it, but on almost all other methods, you do. It also acts differently for strings and numbers. On strings, <code>+</code> concatenates strings together. But on numbers, it actually adds them.</p>
+
+<p>You might be wondering: what&rsquo;s with the parenthesis containing the 1 and &ldquo;one&rdquo;? That&rsquo;s an argument. An argument tells a method additional information it needs in order to perform its function. When you provide an argument (or arguments) to a method, you do so in a parenthesis after the method name itself. Let&rsquo;s do some quick <strong>exercises</strong> to see how methods accept arguments.</p>
+
+<ol>
+<li><p>Try <code>'hello'.delete('l')</code>. The argument to the <code>delete</code> method tells it which letter it should delete from the string.</p></li>
+<li><p>Try <code>'space'.center(20)</code>. The argument to the <code>center</code> method tells the string how many spaces it should be centered in.</p></li>
+<li><p>Try <code>'space'.center(20, '-')</code>. In Ruby, some methods accept more than one argument: each additional argument is separated with a comma. The second argument to <code>center</code> tells it what character to pad the string with. In this case, it gives us a lot of dashes.</p></li>
+</ol>
+
+
+<p>Unfortunately, not all methods are present on every object. Try this <strong>exercise</strong> to get a new, exciting Ruby error that you&rsquo;ll probably see a lot of: the <code>NoMethodError</code>.</p>
+
+<ol>
+<li><p>Try <code>1.reverse</code>. Whoops: <code>reverse</code> is a method for strings only.</p></li>
+<li><p>Try <code>"Hello".odd?</code> Drat. Looks like <code>odd?</code> is only for numbers.</p></li>
+<li><p>Try <code>"Hello".zero?</code> So is <code>zero?</code>.</p></li>
+</ol>
+
+
+<p>With the <code>NoMethodError</code>, Ruby is letting you know that a method you tried to call on an object didn&rsquo;t exist. You might have the wrong kind of object, or maybe you mistyped the method name. Whatever the case, this is Ruby&rsquo;s nice way of telling you that you messed up somewhere.</p>
+
+<h3>Conversion</h3>
+
+<p>Remember earlier how we thought it&rsquo;d be nice if you could add <code>'14'</code> and <code>14</code> together to get 28? We now have all the ingredients to make this happen. Ruby has methods that convert one kind of object into another kind of object. In this <strong>exercise</strong>, we&rsquo;ll do some exciting conversions!</p>
+
+<ol>
+<li><p>Try <code>1.to_s</code>. to_s means &ldquo;to string.&rdquo; Notice that the result comes back with quotation marks &mdash; this isn&rsquo;t the number 1 anymore, but instead the word &ldquo;1&rdquo;!</p></li>
+<li><p>Try <code>1.to_f</code>. to_f means &ldquo;to float.&rdquo; The result is the number 1 as a float &mdash; that is, 1.0.</p></li>
+<li><p>Try <code>2.3.to_i</code>. to_i means &ldquo;to integer.&rdquo; Because integers can only be whole numbers, the trailing .3 is dropped, converting the number to 2.</p></li>
+<li><p>Try <code>'3'.to_i</code>. The word &ldquo;3&rdquo; is now the number 3.</p></li>
+<li><p>Try <code>'14'.to_i + 14</code>. Pretty convenient, huh?</p></li>
+<li><p>Try <code>'Hello'.to_i</code>.</p></li>
+</ol>
+
+
+<p>The result of that last one might surprise you. Ruby tries very hard to perform conversions sensibly, but when it can&rsquo;t convert a string, it&rsquo;ll return zero instead. So be careful of what you&rsquo;re trying to convert, or else you might get zero back instead.</p>
+
+<h3>Next Session</h3>
+
+<p>Now that we&rsquo;ve covered the basics of Ruby, we&rsquo;ll put what we&rsquo;ve learned into action. Using variables, we&rsquo;ll create our first Ruby programs, and finally make the computer work for us!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/21/middleman-for-non-techies/" title="Previous Post: Middleman for Non-Techies">&laquo; Middleman for Non-Techies</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/01/dynamoid-0-dot-4-0/" title="Next Post: Dynamoid 0.4.0">Dynamoid 0.4.0 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

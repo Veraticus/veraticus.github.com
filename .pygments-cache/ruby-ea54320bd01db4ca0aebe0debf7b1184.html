@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_500</span>
+  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:RoutingError</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:UnknownController</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+  <span class="n">rescue_from</span> <span class="ss">AbstractController</span><span class="p">:</span><span class="ss">:ActionNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span> <span class="c1"># To prevent Rails 3.2.8 deprecation warnings</span>
+  <span class="n">rescue_from</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:RecordNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+<span class="k">end</span>
+</pre></div>

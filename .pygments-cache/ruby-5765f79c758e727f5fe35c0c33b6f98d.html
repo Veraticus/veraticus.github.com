@@ -1,0 +1,20 @@
+<div class="highlight"><pre><span class="c1"># sprinkle/policies/base.rb</span>
+
+<span class="n">policy</span> <span class="ss">:base</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="ss">:web</span> <span class="k">do</span>
+  <span class="n">requires</span> <span class="ss">:build_essential</span> <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span><span class="p">)</span>
+                                             <span class="c1"># No method error for templates</span>
+<span class="k">end</span>
+
+<span class="n">package</span> <span class="ss">:build_essential</span> <span class="k">do</span>
+  <span class="n">file</span> <span class="s2">&quot;/etc/build_essential.txt&quot;</span><span class="p">,</span>
+    <span class="ss">contents</span><span class="p">:</span> <span class="n">render</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span><span class="p">),</span> <span class="c1"># No method error for templates</span>
+    <span class="ss">sudo</span><span class="p">:</span> <span class="kp">true</span>
+
+  <span class="n">verify</span> <span class="k">do</span>
+    <span class="n">has_file</span> <span class="s2">&quot;/etc/build_essential.txt&quot;</span>
+    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span> <span class="c1"># Contrived example since you&#39;d never really</span>
+                                            <span class="c1"># just puts something here, but this also</span>
+                                            <span class="c1"># throws a no method error</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

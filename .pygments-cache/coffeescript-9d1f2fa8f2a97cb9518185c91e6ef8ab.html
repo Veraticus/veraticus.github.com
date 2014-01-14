@@ -1,0 +1,24 @@
+<div class="highlight"><pre><span class="nv">module.exports = </span><span class="nf">(robot) -&gt;</span>
+  <span class="nx">robot</span><span class="p">.</span><span class="nx">respond</span> <span class="sr">/deploy site (\w*)/i</span><span class="p">,</span> <span class="nf">(msg) -&gt;</span>
+    <span class="nv">util = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;util&#39;</span><span class="p">)</span>
+    <span class="nv">exec = </span><span class="nx">require</span><span class="p">(</span><span class="s">&#39;child_process&#39;</span><span class="p">).</span><span class="nx">exec</span>
+    
+    <span class="nv">site = </span><span class="nx">msg</span><span class="p">.</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Initiating deploy&quot;</span>
+    <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot git pull&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+      <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
+        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error pulling repository:&quot;</span>
+        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
+      <span class="k">else</span>
+        <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Building &amp; deploying site&quot;</span>
+        <span class="nx">exec</span> <span class="s">&quot;cd /home/hipstabot/workspace/</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s"> &amp;&amp; sudo -u hipstabot rake gen_deploy&quot;</span><span class="p">,</span> <span class="nf">(error, stdout, stderr) -&gt;</span>
+          <span class="k">if</span> <span class="nx">error</span> <span class="o">!=</span> <span class="kc">null</span>
+            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;Fatal error building site:&quot;</span>
+            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="nx">chomp</span> <span class="nx">stderr</span>
+          <span class="k">else</span>
+            <span class="nx">msg</span><span class="p">.</span><span class="nx">send</span> <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">site</span><span class="si">}</span><span class="s">/deploy] Deploy complete&quot;</span>
+
+<span class="nv">chomp = </span><span class="nf">(text) -&gt;</span>
+  <span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(\n|\r)+$/</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+</pre></div>

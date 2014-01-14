@@ -1,0 +1,5 @@
+<div class="highlight"><pre>  <span class="k">if </span>totalmem &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
+  <span class="k">if </span>totalmem &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
+  <span class="k">if </span>cpu &gt; 70% <span class="k">for </span>4 cycles <span class="k">then </span>alert
+  <span class="k">if </span>cpu &gt; 90% <span class="k">for </span>6 cycles <span class="k">then </span><span class="nb">exec</span> <span class="s2">&quot;kill -USR2 `cat /pids/unicorn.pid`&quot;</span>
+</pre></div>

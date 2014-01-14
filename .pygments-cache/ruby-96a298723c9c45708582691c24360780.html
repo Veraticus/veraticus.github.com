@@ -1,0 +1,28 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Label</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:label</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="vi">@label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="kp">true</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">clearColor</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">to_s</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">BigLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="k">super</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">40</span><span class="p">)</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">LittleLabel</span> <span class="o">&lt;</span> <span class="no">Label</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="k">super</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="no">UIFont</span><span class="o">.</span><span class="n">fontWithName</span><span class="p">(</span><span class="s1">&#39;Arial Rounded MT Bold&#39;</span><span class="p">,</span> <span class="ss">size</span><span class="p">:</span><span class="mi">20</span><span class="p">)</span>
+    <span class="vi">@label</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">grayColor</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

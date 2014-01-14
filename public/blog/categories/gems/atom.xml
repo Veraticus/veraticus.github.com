@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: gems | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-01-14T16:52:51-06:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[cryptolalia, for creating Cicada 3301 ciphertext puzzles]]></title>
+    <link href="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/"/>
+    <updated>2013-12-26T10:31:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles</id>
+    <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
+
+<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
+
+<ul>
+<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
+<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
+<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
+<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
+<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
+<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
+</ul>
+
+
+<p>You&rsquo;ve probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!</p>
+
+<h2>Cryptolalia In Action</h2>
+
+<p>Taken from the <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> README:</p>
+
+<p><img src="http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png" alt="Rainbows" /></p>
+
+<p>The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:</p>
+
+<p>The plaintext (&ldquo;secrets are fun&rdquo;) was transformed with a Pollux Morse code cipher:
+<code>ruby
+pollux = Cryptolalia::Cipher::Pollux.new
+pollux.plaintext = 'secrets are fun'
+pollux.dot = ['a', 'b', 'c']
+pollux.dash = ['d', 'e', 'f']
+pollux.seperator = ['g', 'h', 'i']
+pollux.encode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+</code></p>
+
+<p>The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
+<code>ruby
+beale = Cryptolalia::Cipher::Beale.new
+beale.plaintext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
+beale.encode! # "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+</code></p>
+
+<p>The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
+<code>ruby
+steg = Cryptolalia::Cipher::Steganography.new
+steg.plaintext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+steg.file = "test/fixtures/sample.png"
+steg.encoded_in = :lsb
+steg.output_file = File.open('rainbow.png', 'w+')
+steg.encode! # true, see the file above
+</code></p>
+
+<p>Don&rsquo;t believe me? You can decode it yourself, also using cryptolalia:</p>
+
+<p>Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:
+<code>ruby
+steg = Cryptolalia::Cipher::Steganography.new
+steg.file = 'rainbow.png'
+steg.encoded_in = :lsb
+steg.decode! # A very very long string, starting with: "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+</code></p>
+
+<p>Insert the numbers of the Beale homophonic substitution cipher back in:
+<code>ruby
+beale = Cryptolalia::Cipher::Beale.new
+beale.ciphertext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
+beale.decode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+</code></p>
+
+<p>And finally, plug it right back into the Pollux cipher:
+<code>ruby
+pollux = Cryptolalia::Cipher::Pollux.new
+pollux.ciphertext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+pollux.dot = ['a', 'b', 'c']
+pollux.dash = ['d', 'e', 'f']
+pollux.seperator = ['g', 'h', 'i']
+pollux.decode! # "secretsarefun"
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sidekiq + Houston: Production Ready]]></title>
+    <link href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/"/>
+    <updated>2013-10-17T12:13:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready</id>
+    <content type="html"><![CDATA[<p>Three months ago, I wrote <a href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>. The code I included there initially worked great but over time all the APN connections I had established would break and not restart themselves appropriately. To correct this issue, I wrapped the APN connection itself in a class that was more resistant to failure. To help those who are using Sidekiq and Houston together in production, here&rsquo;s the code I used to do so.</p>
+
+<!-- more -->
+
+
+<p>Change the <code>NotifierWorker</code> to look like this:</p>
+
+<p>```ruby</p>
+
+<h1>app/workers/notifier_worker.rb</h1>
+
+<p>require &lsquo;apn_connection&rsquo;</p>
+
+<p>class NotifierWorker
+  include Sidekiq::Worker</p>
+
+<p>  APN_POOL = ConnectionPool.new(:size => 2, :timeout => 300) do</p>
+
+<pre><code>APNConnection.new
+</code></pre>
+
+<p>  end</p>
+
+<p>  def perform(message, recipient_ids, custom_data = nil)</p>
+
+<pre><code>recipient_ids = Array(recipient_ids)
+
+APN_POOL.with do |connection|
+  tokens = User.where(id: recipient_ids).collect {|u| u.devices.collect(&amp;:token)}.flatten
+
+  tokens.each do |token|
+    notification = Houston::Notification.new(device: token)
+    notification.alert = message
+    notification.sound = 'default'
+    notification.custom_data = custom_data
+    connection.write(notification.message)
+  end
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>Of course, the big change here is <code>require apn_connection</code> and the extraction of all the logic that had formerly established our connection with Apple. Now we do that in a new class, sensibly called <code>APNConnection</code>:</p>
+
+<p>```ruby</p>
+
+<h1>lib/apn_connection.rb</h1>
+
+<p>class APNConnection</p>
+
+<p>  def initialize</p>
+
+<pre><code>setup
+</code></pre>
+
+<p>  end</p>
+
+<p>  def setup</p>
+
+<pre><code>@uri, @certificate = if Rails.env.production?
+  [
+    Houston::APPLE_PRODUCTION_GATEWAY_URI,
+    File.read("#{Rails.root}/config/keys/production_push.pem")
+  ]
+else
+  [
+    Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
+    File.read("#{Rails.root}/config/keys/development_push.pem")
+  ]
+end
+
+@connection = Houston::Connection.new(@uri, @certificate, nil)
+@connection.open
+</code></pre>
+
+<p>  end</p>
+
+<p>  def write(data)</p>
+
+<pre><code>begin
+  raise "Connection is closed" unless @connection.open?
+  @connection.write(data)
+rescue Exception =&gt; e
+  attempts ||= 0
+  attempts += 1
+
+  if attempts &lt; 5
+    setup
+    retry
+  else
+    raise e
+  end
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>The main difference here is that the <code>write</code> method will raise an error if the connection has become closed &mdash; this happens most frequently when you write a bad device token into the stream, which causes the APN service to disconnect you. Frustratingly the closure is detected on the request <em>following</em> the bad request, meaning that a perfectly good request encounters an error for no particularly good reason. The retry code here will attempt to reopen the connection to Apple five times and resend the message, until eventually it gives up.</p>
+
+<p>Using this method I have a robust, failure-resistant push notification service in production that I (and my customers) are very pleased with indeed.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sidekiq + Houston: Persistent Apple Connection Pooling]]></title>
+    <link href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/"/>
+    <updated>2013-07-01T21:24:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling</id>
+    <content type="html"><![CDATA[<blockquote><p><strong>I updated the code here based on my production experiences with it in a new post, <a href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&rsquo;s push notification service through a worker. I didn&rsquo;t run into anything offhand, and also haven&rsquo;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&rsquo;s Push Notification service.</p>
+
+<!-- more -->
+
+
+<p>From Houston&rsquo;s documentation, we can easily set up a persistent connection with code like this:</p>
+
+<p>```ruby
+uri, certificate = if Rails.env.production?
+  [</p>
+
+<pre><code>Houston::APPLE_PRODUCTION_GATEWAY_URI,
+File.read("/path/to/production_key.pem")
+</code></pre>
+
+<p>  ]
+else
+  [</p>
+
+<pre><code>Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
+File.read("/path/to/development_key.pem")
+</code></pre>
+
+<p>  ]
+end</p>
+
+<p>connection = Houston::Connection.new(uri, certificate, nil)
+connection.open
+```</p>
+
+<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&rsquo;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
+
+<p><code>ruby
+APN_POOL = ConnectionPool.new(:size =&gt; 2, :timeout =&gt; 300) do
+  # above code
+end
+</code></p>
+
+<p>I didn&rsquo;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
+
+<p>```ruby
+class NotifierWorker
+  include Sidekiq::Worker</p>
+
+<p>  APN_POOL = ConnectionPool.new(:size => 2, :timeout => 300) do</p>
+
+<pre><code>uri, certificate = if Rails.env.production?
+  [
+    Houston::APPLE_PRODUCTION_GATEWAY_URI,
+    File.read("/path/to/production_key.pem")
+  ]
+else
+  [
+    Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
+    File.read("/path/to/development_key.pem")
+  ]
+end
+
+connection = Houston::Connection.new(uri, certificate, nil)
+connection.open
+
+connection
+</code></pre>
+
+<p>  end</p>
+
+<p>  def perform(message, token)</p>
+
+<pre><code>APN_POOL.with do |connection|
+  notification = Houston::Notification.new(device: token)
+  notification.alert = message
+  connection.write(notification.message)
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Huey 2.0.0]]></title>
+    <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
+    <updated>2013-05-09T11:18:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &mdash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+
+<p><code>ruby
+Huey.configure do |config|
+  config.hue_ip = '123.456.789.012'
+end
+</code></p>
+
+<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
+
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/"/>
+    <updated>2013-02-20T19:32:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey</id>
+    <content type="html"><![CDATA[<p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&rsquo;s how to make it work.</p>
+
+<!-- more -->
+
+
+<h2>Huey v1.0.0</h2>
+
+<p>New in huey v1.0.0 are light groups: arbitrary collections of bulbs on which you can run commands simultaneously. Getting them to work is ridiculously simple:</p>
+
+<p><code>ruby
+Huey::Group.new('Living Room') # Contains all bulbs that have 'Living Room' in their name
+Huey::Group.new('Living Room', 'Foyer') # All bulbs that have either 'Living Room' or 'Foyer' in their name
+g = Huey::Group.new(Huey::Bulb.find(1), Huey::Bulb.find(3)) # A group specifically containing bulbs 1 and 3
+g.name = 'My Bulbs' # Name your group to find it later
+</code></p>
+
+<p>Once you have a group set up, you can act on all its bulbs simultaneously as you would on any individual bulb.</p>
+
+<p>```ruby
+group = Huey::Group.find(&lsquo;My Bulbs&rsquo;)</p>
+
+<p>group.bri = 200
+group.on = true
+group.save # All changes you&rsquo;ve made are committed to all the bulbs in a group</p>
+
+<p>group.update(bri: 200, ct: 500) # Set and save in one step
+```</p>
+
+<p>Of course, you probably want to do the same actions to groups over and over again: for example, dimming all your lights at night and brightening them in the morning. For that we have a shorthand called events:</p>
+
+<p><code>ruby
+event = Huey::Event.new(name: 'All Lights Off', group: group, actions: {on: false})
+event.execute # All lights turn off
+</code></p>
+
+<h2>YAML Setup</h2>
+
+<p>Huey can read your groups and events from YAML configuration files. Here&rsquo;s a sample from my setup:</p>
+
+<p>```yaml</p>
+
+<h1>groups.yml</h1>
+
+<p>Study: [&ldquo;Study Side&rdquo;, &ldquo;Study Ceiling&rdquo;]
+Bedroom: [&ldquo;Bedroom Left&rdquo;, &ldquo;Bedroom Right&rdquo;]
+Living Room: [&ldquo;Living Room Front&rdquo;, &ldquo;Living Room Center&rdquo;, &ldquo;Living Room Back&rdquo;]
+```</p>
+
+<p>```yaml</p>
+
+<h1>events.yml</h1>
+
+<p>Wakeup:
+  group: Bedroom
+  actions:</p>
+
+<pre><code>"on": true
+bri: 255
+ct: 200
+</code></pre>
+
+<p>Sunset:
+  group: Bedroom
+  actions:</p>
+
+<pre><code>"on": true
+bri: 255
+ct: 350
+</code></pre>
+
+<p>```</p>
+
+<p><code>ruby
+Huey::Group.import('groups.yml') # Import groups
+Huey::Event.import('events.yml') # Import events
+Huey::Event.find('Wakeup').execute # Run an event on a group
+</code></p>
+
+<p>I&rsquo;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&rsquo;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
+
+<h2>Whenever</h2>
+
+<p>Finally, I have it all stitched together through whenever, because who likes reading crontabs? When you set up whenever, it creates a file called config/schedule.rb that it uses to read the crontab. I altered mine to include this:</p>
+
+<p>```ruby
+job_type :event, %Q(cd /directory/to/huey_control &amp;&amp; ruby -e &ldquo;require &lsquo;huey&rsquo;; Huey::Group.import(&lsquo;groups.yml&rsquo;); Huey::Event.import(&lsquo;events.yml&rsquo;); Huey::Event.find(&lsquo;:task&rsquo;).execute(true)&rdquo;)</p>
+
+<p>every :weekday, at: &lsquo;9:30AM&rsquo; do
+  event &ldquo;Wakeup&rdquo;
+end
+```</p>
+
+<p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
+
+<p>That&rsquo;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&rsquo;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
+
+<p>But there&rsquo;s a lot more you can do with huey if you&rsquo;d like. Why not make an event that&rsquo;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/page/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/04/reachability-with-rubymotion/">Reachability With RubyMotion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-04T17:55:00-06:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A couple days ago I shared with a friend my code to quickly and easily do reachability checks in RubyMotion, and I figured I would post the code on my blog as well. In addition to detecting network reachability, this code suspends the operation queue when the target host is unreachable, allowing you to continue appending requests and ensuring that they will be delivered in the order they were queued.</p>
+
+<p>There might be a more efficient way to do something similar, but this works for me.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/04/reachability-with-rubymotion/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/22/chef-cookbooks-for-rails/">Chef Cookbooks for Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-22T12:36:00-06:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2013</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile trying to find other people&rsquo;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I&rsquo;ll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/22/chef-cookbooks-for-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/27/breaking-up-with-girlsguideto/">Breaking Up With GirlsGuideTo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-27T19:40:00-06:00" pubdate data-updated="true">Dec 27<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s never easy to decide to move on, particularly when you&rsquo;re a cofounder. It definitely feels less like a business shakeup and more like a real breakup.</p>
+
+<p>But I must announce that my time at GirlsGuideTo has officially ended.</p>
+
+<p>I&rsquo;m proud of the work I&rsquo;ve done for GirlsGuideTo. I took a <a href="http://old.girlsguideto.com/home">decrepit, slow PHP Drupal installation</a> and turned it into a <a href="http://girlsguideto.com/">speedy, modernized Rails application</a>. The new GirlsGuideTo uses some incredibly modern technologies to be fast, while still being maintainable and consistent. The pages load near-instantly thanks to <a href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">head.js and Turbolinks</a>, and the Rails code is well-separated and highly tested thanks to some awesome concerns and really nifty Rack middleware.</p>
+
+<p>It also features a really kickass design from my friend <a href="https://twitter.com/LukesBeard">@LukesBeard</a>, so it also looks great in addition to feeling great.</p>
+
+<p>Though I&rsquo;m moving to greener pastures, I&rsquo;m sure GirlsGuideTo has a bright future ahead of them. As for me, I&rsquo;m doing some work for <a href="http://everest.com/">Everest</a> &mdash; they&rsquo;re really awesome people that need their backend scaled right into infinity, and I think I&rsquo;m the guy to do it for them. In fact, if you download the <a href="https://itunes.apple.com/us/app/everest-live-your-dreams-achieve/id581016826?mt=8">super cool free app</a> or have downloaded it at launch, you&rsquo;ve already touched some of my code! The best part about onboarding quickly is having code live in production almost immediately.</p>
+
+<p>So keep on watching this spot for more of the same that you&rsquo;ve come to expect &mdash; adrenaline-filled posts on the exciting world of server scalability and optimization.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/21/huey-gem-release/">Huey Gem Release</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-21T01:53:00-06:00" pubdate data-updated="true">Dec 21<span>st</span>, 2012</time>
+        <span class='readtime'>Reading time less than 1 minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I pushed the first version of <a href="https://github.com/Veraticus/huey">Huey</a> to <a href="http://rubygems.org/gems/huey">RubyGems</a> (calling it 0.1.0).</p>
+
+<p>It&rsquo;s in a really good state right now, actually &mdash; in addition to a rather full and complete set of tests, I added a couple neat new features:</p>
+
+<ul>
+<li><p>Now you can make as many changes as you like to a bulb, and then commit them all at once with <code>save</code> (alias as <code>commit</code> for your convenience).</p></li>
+<li><p>Ability to set colors as a RGB hex. So you can do <code>bulb.rgb  = '#8FF1F5'</code> to get your bulb to be colored aqua. Colors in Hue are a little more pastel than you might expect, though, so exact shade matching might take a bit of experimentation.</p></li>
+<li><p>Copyright and license information.</p></li>
+</ul>
+
+
+<p>I&rsquo;ll be adding more features as I use it more, so watch <a href="https://github.com/Veraticus/huey">the repository</a> for changes.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">Making Your Web Pages Ridiculously Fast (Without Breaking Them)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-18T10:28:00-06:00" pubdate data-updated="true">Dec 18<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent a lot of time optimizing page loading speed on GirlsGuideTo. The result is pages that load almost instantly initially and on subsequent loads; and while I&rsquo;m proud of the work I&rsquo;ve done in getting these pages zippy, there was no real secret sauce involved. Here I&rsquo;ll discuss techniques anyone can use to make their web pages load with amazing rapidity, all without breaking Google Analytics and other scripts you might already have installed.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/12/what-i-want-for-christmas/">What I Want for Christmas</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-12T16:08:00-06:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time less than 1 minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been working super hard recently, though not blogging about it, and meanwhile a lot of people have been asking me what I want for the holiday season.</p>
+
+<p>Thus I&rsquo;m taking a massive departure from the normal, professional tone of this blog and publishing a list of the holiday presents that would just bowl me over with joy. If you know and love me, feel free to buy any item from this list &mdash; or multiple ones if you know and love me that much.</p>
+
+<p>If you don&rsquo;t, then don&rsquo;t worry about it! I&rsquo;ll be back soon with real content that will hopefully be both pithy and edifying.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/12/what-i-want-for-christmas/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">Huey, for Controlling Phillips Hue Lightbulbs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-28T01:08:00-06:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty <a href="http://meethue.com">Phillips Hue lightbulbs</a>. I decided to name it <a href="https://github.com/Veraticus/huey">Huey</a>, since I love nothing more than cute and silly names. I only spent a few hours tonight hacking it together, so I&rsquo;m sure there&rsquo;s a lot of room for improvement, but it works and does everything it&rsquo;s supposed to and seems fairly fault tolerant; so I thought, why not announce it and fix problems when I wake up tomorrow?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
+
+<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&rsquo;s no need for STI here &mdash; there&rsquo;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&rsquo;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&rsquo;re caching under. You&rsquo;re out of luck if you want to change it dynamically.</p>
+
+<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable With Elasticsearch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T12:50:00-05:00" pubdate data-updated="true">Oct 25<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
+
+<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&rsquo;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<div class="highlight"><pre>  <span class="k">def</span> <span class="nf">render_500</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+    <span class="n">render_exception</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+  <span class="k">end</span>
+
+
+  <span class="k">def</span> <span class="nf">render_404</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+    <span class="n">render_exception</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;Page not found&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+  <span class="k">end</span>
+
+
+  <span class="k">def</span> <span class="nf">render_exception</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Server error&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+    <span class="vi">@status</span> <span class="o">=</span> <span class="n">status</span>
+    <span class="vi">@message</span> <span class="o">=</span> <span class="n">message</span>
+    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="no">Rails</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">fatal</span> <span class="n">exception</span><span class="o">.</span><span class="n">backtrace</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">render</span> <span class="ss">template</span><span class="p">:</span> <span class="s2">&quot;errors/error&quot;</span><span class="p">,</span> <span class="ss">formats</span><span class="p">:</span> <span class="o">[</span><span class="ss">:html</span><span class="o">]</span><span class="p">,</span> <span class="ss">layout</span><span class="p">:</span> <span class="s1">&#39;application&#39;</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="vi">@status</span>
+  <span class="k">end</span>
+</pre></div>

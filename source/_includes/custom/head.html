@@ -1,13 +1,13 @@
 <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });

@@ -1,0 +1,9 @@
+<div class="highlight"><pre><span class="n">scores</span> <span class="o">||=</span> <span class="p">{}</span>
+<span class="nb">puts</span> <span class="s1">&#39;Who just scored points?&#39;</span>
+<span class="nb">name</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span> 
+<span class="nb">puts</span> <span class="s1">&#39;How many more points did they get?&#39;</span>
+<span class="n">points</span> <span class="o">=</span> <span class="nb">gets</span><span class="o">.</span><span class="n">chomp</span>
+
+<span class="n">scores</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">points</span>
+<span class="nb">puts</span> <span class="s1">&#39;The current standings are: &#39;</span> <span class="o">+</span> <span class="n">scores</span><span class="o">.</span><span class="n">inspect</span>
+</pre></div>

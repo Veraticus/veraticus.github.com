@@ -1,0 +1,14 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">after_save</span> <span class="ss">:register_query</span>
+
+  <span class="k">def</span> <span class="nf">register_query</span>
+    <span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">register_percolator_query</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">q</span><span class="o">|</span>
+      <span class="n">q</span><span class="o">.</span><span class="n">filtered</span> <span class="k">do</span>
+        <span class="n">query</span> <span class="p">{</span><span class="n">all</span><span class="p">}</span>
+        <span class="n">filter</span><span class="p">(</span><span class="ss">:and</span><span class="p">,</span> <span class="n">elasticsearch_query</span><span class="p">)</span> <span class="k">unless</span> <span class="n">elasticsearch_query</span><span class="o">.</span><span class="n">empty?</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+<span class="k">end</span>
+</pre></div>

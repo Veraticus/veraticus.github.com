@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">has_one</span> <span class="ss">:address</span>
+  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="ss">:address</span>
+
+<span class="k">end</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Calls address.street_address</span>
+</pre></div>

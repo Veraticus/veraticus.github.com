@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>From the RubyMotion Simulator to Your Friend's iPhone - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I&rsquo;ve been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my Introduction to Programming &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">From the RubyMotion Simulator to Your Friend's iPhone</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-10T19:13:00-05:00" pubdate data-updated="true">May 10<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming</a> series today to give the whole Motion thing a break. But I spent far too long on Tuesday getting an app correctly deploying through Testflight, and it was a really painful process. I took copious notes while making it happen, though, so in the interest of saving someone else&rsquo;s time, here is my step-by-step guide to successfully getting an app from your RubyMotion simulator onto someone else&rsquo;s device.</p>
+
+<!-- more -->
+
+
+<h2>1. Set up your Apple Developer Account</h2>
+
+<p>This step is pretty obvious and if you&rsquo;re actually interested in deploying at all, it&rsquo;s probably already complete. But I promised a step-by-step guide, and this is certainly step number one (or more like number zero). If you want to deploy to other people&rsquo;s devices you need an Apple developer account. Sign up for one at <a href="https://developer.apple.com/membercenter/">Apple&rsquo;s developer member center</a>. Buying the iOS development license will set you back $100/year.</p>
+
+<h2>2. Create a Distribution Certificate</h2>
+
+<p>You&rsquo;ll have to <a href="https://developer.apple.com/ios/manage/certificates/team/index.action">create a development certificate first</a>. Once that&rsquo;s done, set yourself up with a <a href="https://developer.apple.com/ios/manage/certificates/team/distribute.action">distribution certificate</a>.</p>
+
+<p><img src="http://udn.epicgames.com/Three/rsrc/Three/AppleiOSProvisioningPortal/ios_provision_distcert_home.png" alt="Create a Distribution Certificate" /></p>
+
+<p>You need to press that big gray button that says, &ldquo;Request Certificate.&rdquo; This distribution certificate is what you&rsquo;ll need to sign the eventual app with. If you use the wrong certificate or don&rsquo;t have one at all, most likely your friends will get the dreaded <a href="http://help.testflightapp.com/customer/portal/articles/402799-i-get-an-%22unable-to-download%22-error-when-installing-my-application">&ldquo;Unable to Download&rdquo;</a> Testflight error, which is certainly among the least helpful error messages I&rsquo;ve ever come across.</p>
+
+<p>When you&rsquo;ve saved the distribution certificate, click on it to add it to your keychain. Note its name: it will be something like, &ldquo;iPhone Distribution Profile: Your Name.&rdquo; Make sure you remember the name of this certificate, as you will need it in step 6.</p>
+
+<h2>3. Add Devices</h2>
+
+<p>This is probably the most straightforward step. Head to the <a href="https://developer.apple.com/ios/manage/devices/index.action">devices section</a>, click the &ldquo;Add Devices&rdquo; button and start adding devices by their UDID. If you&rsquo;re doing this with a friend, link them to the first <a href="http://www.innerfence.com/howto/find-iphone-unique-device-identifier-udid">Google result for finding your UDID</a>, which is both helpful and actually available for viewing by your developer-accountless friends, as opposed to Apple&rsquo;s own instructions which are not.</p>
+
+<h2>4. Make an App ID</h2>
+
+<p>Technically this step is optional, but likely you&rsquo;ll eventually want to do push notifications, or in-app purchases, or something like that. So you may as well get an App ID now and save yourself the trouble of doing so later.</p>
+
+<p>Head over to the <a href="https://developer.apple.com/ios/manage/bundles/add.action">Create App ID</a> page and fill in all the necessary values. There&rsquo;s one field of particular importance to us, however: the bundle identifier. The usual style is <code>com.yourCompany.yourApp</code>, so go for something like that. Remember what you wrote here, as you&rsquo;ll need it again in step 6!</p>
+
+<h2>5. Create a Provisioning Profile, Referencing Your Devices</h2>
+
+<p><img src="http://veratic.us/GXmd/provisioning_profile.jpg" alt="Create a Provisioning Profile" /></p>
+
+<p>Head on over to the <a href="https://developer.apple.com/ios/manage/provisioningprofiles/create.action?type=2">distribution provisioning portal</a> and create a distribution provisioning profile. Ensure you select &ldquo;Ad Hoc&rdquo; for your distribution method (unless you&rsquo;re releasing to the App Store), and select the devices you entered in step 3. Submit the profile and hit Command-R until it&rsquo;s moved from pending to active. Download it; note the location you saved it to as well as its file name. Another thing we need to know for step 6.</p>
+
+<h2>6. Update your RubyMotion Rakefile</h2>
+
+<p>Stop! Do you have:</p>
+
+<ol>
+<li>The name of your distribution certificate, from step 2?</li>
+<li>The bundle identifier, from step 4?</li>
+<li>The filename and path of the distribution provisioning profile, from step 5?</li>
+</ol>
+
+
+<p>If you answered yes to all those questions, good for you! Proceed onwards. If not, check your reading comprehension skills and go back a few steps.</p>
+
+<p>Now that we have all that important information, we have to put it into our Rakefile.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
+</span><span class='line'>  <span class="c1"># The name of your personal distribution profile, from your keychain.</span>
+</span><span class='line'>  <span class="c1"># Distribution profile, NOT development profile!</span>
+</span><span class='line'>  <span class="c1"># This was from step 2.</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
+</span><span class='line'>  <span class="c1"># The bundle identifier, from step 4.</span>
+</span><span class='line'>  <span class="c1"># Exactly as you typed it then.</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
+</span><span class='line'>  <span class="c1"># The filename and full path of your distribution provisioning profile.</span>
+</span><span class='line'>  <span class="c1"># The name is probably an enormous hex string.</span>
+</span><span class='line'>  <span class="c1"># From step 5.  </span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Failure to set any of these values correctly will result in either compilation errors or installation errors and will probably be nightmarishly difficult to track down and fix.</p>
+
+<h2>7. Set up Testflight</h2>
+
+<p>Follow the steps for doing this on the very helpful <a href="http://www.rubymotion.com/developer-center/articles/testflight/">RubyMotion article</a>. Afterwards, your Rakefile will look something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-testflight&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">sdk</span> <span class="o">=</span> <span class="s1">&#39;vendor/TestFlightSDK&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">api_token</span> <span class="o">=</span> <span class="s1">&#39;APIToken&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">team_token</span> <span class="o">=</span> <span class="s1">&#39;TeamToken&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, you should be able to <code>rake testflight notes='What a helpful step-by-step guide!'</code> to actually deploy your app to Testflight, and your users should be able to download and install it no problem.</p>
+
+<p>Writing this all down, it seems rather clear and straightforward. While doing it, unfortunately, it is not. Apple&rsquo;s documentation is really obtuse and the error messages you get during the process are seriously unhelpful. But happily with this guide you should be more or less good to go.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/07/rubymotion-tips-and-tricks/" title="Previous Post: RubyMotion Tips &amp; Tricks">&laquo; RubyMotion Tips &amp; Tricks</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/" title="Next Post: Quick &amp; Easy User Preferences in Rails">Quick &amp; Easy User Preferences in Rails &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

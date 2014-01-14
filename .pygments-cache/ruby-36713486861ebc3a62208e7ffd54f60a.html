@@ -1,0 +1,9 @@
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">share</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="no">SHKItem</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;This is the text you&#39;ll be sharing!&quot;</span><span class="p">)</span>
+  <span class="n">actionSheet</span> <span class="o">=</span> <span class="no">SHKActionSheet</span><span class="o">.</span><span class="n">actionSheetForItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+  <span class="no">SHK</span><span class="o">.</span><span class="n">setRootViewController</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+
+  <span class="n">actionSheet</span><span class="o">.</span><span class="n">showInView</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>

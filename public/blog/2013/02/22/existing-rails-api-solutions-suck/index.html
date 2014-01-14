@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Existing Rails API Solutions Suck - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="In the past two months, since joining Everest, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Existing Rails API Solutions Suck</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-22T11:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2013</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
+
+<p>They all suck.</p>
+
+<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
+
+<ol>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
+</ol>
+
+
+<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
+
+<!-- more -->
+
+
+<h2><a href="https://github.com/intridea/grape">grape</a></h2>
+
+<p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you&rsquo;re doing and what you&rsquo;re expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
+
+<p>Unfortunately that&rsquo;s where the great stuff ends. For Rails applications &mdash; assuming you actually want to use grape with Rails &mdash; it is really an unpleasant solution, since it just doesn&rsquo;t play nicely with Rails.</p>
+
+<p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don&rsquo;t want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you&rsquo;re on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
+
+<p>Second, and for those of you already gearing up to say &ldquo;but grape isn&rsquo;t FOR Rails&rdquo;, you end up duplicating a lot of Rails&#8217; structure inside it anyway, even in small applications. If you don&rsquo;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
+
+<p>Third, if you want to version your API, you get to copy and paste the entire thing. To prevent us doing this every time at Everest, I implemented a module inheritance system for the API versions, but frankly it feels hacky and was difficult to get grape to support properly.</p>
+
+<p>Fourth, its caching support is pathetic. You have to install a completely separate gem (<a href="https://github.com/artsy/garner">garner</a>) if you want any kind of caching at all. Do people who use grape not experience any sort of load? Do their APIs not engage in any sort of database querying? Why is this a tacked-on side project instead of a core feature?</p>
+
+<p>And of course it has no view support. If you want to reuse data representations, define a method in the base API and call it all over the place. It&rsquo;s like a view, but more hidden!</p>
+
+<p>I assume some people must use grape for at least as complicated an app as I do. When I was Googling how to do versioning without copy pasting, I came across numerous slideshows from various Rails conferences discussing how great it is. None of them address any of these problems, so I&rsquo;m curious how the really big players make grape work without these difficulties. (My suspicion is they don&rsquo;t use grape.)</p>
+
+<h2><a href="https://github.com/fabrik42/acts_as_api">acts_as_api</a></h2>
+
+<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &mdash; that&rsquo;s what views are for. You don&rsquo;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&rsquo;t.</p>
+
+<p>This gem leads to really horrible uses like this when you version an API:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:id</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:first_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:last_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:real_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:gender</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:with_timezone</span><span class="p">,</span> <span class="kp">extend</span><span class="p">:</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:timezone</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a versioned resource. You don&rsquo;t want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
+
+<h2><a href="https://github.com/filtersquad/rocket_pants">rocket_pants</a></h2>
+
+<p>rocket_pants actually does quite a lot right (besides having a sweet name): it&rsquo;s fairly DRY and it integrates with Rails pretty well.</p>
+
+<p>That said, versioning is still a tremendous pain in the butt. Routing allows you to at least select which controller your requests are sent to, but this quickly gets complicated:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">1</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item2&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">2</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#override&#39;</span> <span class="c1"># how does this interact with the line above?</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item3&#39;</span> <span class="c1"># x now does something different for only versions 2 and 4</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Confusing!</p>
+
+<p>Why not have a simple fallback method where you define the highest version of your API, and the router checks to see which controllers exist in that version, moving back to an earlier version until it finds a defined controller? You could even have the router detect this on application load to prevent increased loading times. Then you don&rsquo;t need any sort of fooling around with complicated routing rules. Instead you just define the basic structure of your API and your application correctly infers versions from it, and if you have specific overrides you can address them in the routing file.</p>
+
+<p>Wishing aside, rocket_pants also doesn&rsquo;t use views, instead encouraging you to use a model&rsquo;s <code>serializable_hash</code> method to instruct it how to convert the model to JSON. Let&rsquo;s hope you don&rsquo;t have more than one representation of your model.</p>
+
+<h2><a href="https://github.com/bploetz/versionist">versionist</a></h2>
+
+<p>versionist supports views correctly but it suffers from a tremendously overwhelming amount of copy/pasting. It you want to version your API, it copies not only the routes inside your routes.rb, but also:</p>
+
+<ul>
+<li>Your controllers and controller specs</li>
+<li>Your presenters and presenter specs</li>
+<li>Your helpers and helper specs</li>
+<li>Your docs</li>
+</ul>
+
+
+<p>To a new location. These are just copies: in all likelihood they&rsquo;ll end up largely exactly the same as the previous version. It provides a Rails generator that does this automatically. I&rsquo;m on the fence as to whether great support for poor design patterns is unironically helpful though.</p>
+
+<h2><a href="https://github.com/erichmenge/api-versions">api-versions</a></h2>
+
+<p>Though it&rsquo;s practically unknown, in all my searching this is the gem that really got closest to what I was looking for. By default, it uses this heretofore unseen programming concept called &ldquo;inheritance&rdquo; to prevent code duplication from one version of your API to the next.</p>
+
+<p>Unfortunately, when you use its helpfully-provided Rails generator <code>api_versions:bump</code> it still creates a new controller for each of your old controllers. While they inherit code, which is nice, why do you have an empty controller just to provide inheritance to a previous version of the API? Still, this is definitely the least amount of copy/pasting we&rsquo;ve seen up until this point, and I sincerely appreciate the author&rsquo;s attempt to remain DRY in the very wet API landscape.</p>
+
+<h2>So what should I do if I&rsquo;m making a Rails API?</h2>
+
+<p>Use <a href="https://github.com/rails/jbuilder">jbuilder</a> (or <a href="https://github.com/nesquena/rabl">rabl</a>) to create views. If you have a tremendous hatred of views, use <a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a> instead to achieve the same goal. Your controllers should be pretty much like regular Rails ActionControllers. Feel free to include an extremely low-touch library like <a href="https://github.com/bploetz/versionist">versionist</a> or <a href="https://github.com/erichmenge/api-versions">api-versions</a>. Put most of your controller code in modules and include it in the actual controllers to prevent copy and pasting everywhere for the first. For the latter, not much you can do. Suck it up and copy and paste in your routes for both. Unfortunately, that&rsquo;s the best solution I can come up with.</p>
+
+<h2>Stop whining and do something about it!</h2>
+
+<p>You know what? I think I will.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/" title="Previous Post: Home Automation With Phillips Hue &amp; Huey">&laquo; Home Automation With Phillips Hue &amp; Huey</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/" title="Next Post: Why I'm Not Applying to 37Signals (But Why You Should)">Why I'm Not Applying to 37Signals (But Why You Should) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

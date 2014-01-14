@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I heard an argument recently that the data collected by PRISM was safe from abuse because if the government had the technical expertise to gather the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/">Big Brother Is Both Savvy and Incompetent</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-10T12:40:00-05:00" pubdate data-updated="true">Jun 10<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I heard an argument recently that the data collected by <a href="http://en.wikipedia.org/wiki/PRISM_(surveillance_program)">PRISM</a> was safe from abuse because if the government had the technical expertise to gather the data, it had the competency to secure it as well. While on the face of it this statement is flatly absurd, its derivatives can seem plausible:</p>
+
+<ul>
+<li>&ldquo;The data is only used if a court approves.&rdquo; (The fallacious assumption being that the government can reasonably control access to the PRISM data.)</li>
+<li>&ldquo;The government is trying to protect us by safeguarding this information in one place.&rdquo; (Of course, the idea that this centralized database&rsquo;s existence has made said data <strong>more</strong> secure is preposterous.)</li>
+<li>&ldquo;You had no assurance of privacy on the Internet anyway, so why should this bother you?&rdquo; (Because while I can take reasonable steps to make my own data secure, once it&rsquo;s in the government&rsquo;s hands it&rsquo;s their responsibility, and, as should be abundantly obvious, leaks happen.)</li>
+</ul>
+
+
+<p>It&rsquo;s easy to believe that a government agency capable of collecting this information and then keeping its existence a secret for so long must have a way of keeping it safe. Unfortunately, the access that was given to the NSA to take this information has no correlation to the skills necessary to secure it; and the very fact of PRISM&rsquo;s existence will probably prove too enticing a target to remain secure for very long.</p>
+
+<p>Essentially, the argument as I heard it can be expressed as a simple question: if the government is savvy enough to gather the data, surely they&rsquo;re not incompetent enough to lose it? Unfortunately, big brother can indeed be both savvy and incompetent. I think this is the greatest danger to the data PRISM allows access to &mdash; not improper use or excessive domestic surveillance, but complete and outright theft.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/">Gistify 1.1.0: Visibility &amp; Accounts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-03T18:44:00-05:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2013</time>
+        <span class='readtime'>Reading time less than 1 minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I&rsquo;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago &mdash; man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
+
+<p>Anyhow, <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>, the incredibly awesome Mac App that lets you gist quickly and easily, just got a whole lot better. Now you can sign in to your GitHub account to make gists, and set the visibility of your gists to either public or private Also the app screenshots are no longer quite so, well&hellip; drab, for lack of a better word.</p>
+
+<p>If you haven&rsquo;t downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I&rsquo;m slightly biased, I&rsquo;ve been using it all the time and I think it&rsquo;s an incredibly handy tool &mdash; after all, that&rsquo;s why I released it. But if you&rsquo;re not convinced yet, or you&rsquo;re just interested in giving it a shot without paying the $2, let me know and I&rsquo;ll be happy to hook you up.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">Gistify: A Mac App for Easy Gists</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-29T13:32:00-05:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time less than 1 minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I&rsquo;m happy to announce the release of my very first Mac App: <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
+
+<p><a href="https://itunes.apple.com/us/app/gistify/id653231502"><img src="http://f.cl.ly/items/2w0L3S1A2y3H2d3S0c14/Gistify-icon-256.png" alt="Gistify" /></a></p>
+
+<p>Gistify rather simply delivers the content of your clipboard to GitHub&rsquo;s awesome <a href="https://gist.github.com/">Gist</a> service. You can select the default format for all gists and override it on a gist-by-gist basis, and the resulting URL is appended to your clipboard so you can paste it wherever you like.</p>
+
+<p>Simple? Yes indeed, but I desperately wanted it. I made this initial version rapidly to scratch an itch I had &mdash; and perplexingly there&rsquo;s not an existing desktop app that seems to do this already. (There are competing apps that paste to other services, but for some reason none work properly that post to Gist.)</p>
+
+<p>In terms of future plans, I already have a new version submitted for approval to Apple! Version 1.1.0 will allow you to sign in to GitHub and create gists under your username: additionally you can toggle the visibility of gists to either public or secret. And in development is version 1.2.0, which will introduce all kinds of new mind-blowing awesomeness.</p>
+
+<p>So what are you waiting for? Get over to the Mac App store and buy <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
+
+<p>(Oh, and if you like the icon, it&rsquo;s by the super amazing <a href="http://twitter.com/lukesbeard">Luke Beard</a>.)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/09/huey-2-dot-0-0/">Huey 2.0.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T11:18:00-05:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time less than 1 minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &mdash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">hue_ip</span> <span class="o">=</span> <span class="s1">&#39;123.456.789.012&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
+
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">Why Your Startup Is Failing (and How to Fix It)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-30T02:49:00-05:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 7  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The title of this post might be somewhat misleading: it&rsquo;s probably pretty obvious to you why your startup is failing. The same reason any business fails &mdash; you&rsquo;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&rsquo;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &ldquo;When will I see a return on my investment?&rdquo; and &ldquo;How can you possibly be spending so much of my money without making any in return?&rdquo;</p>
+
+<p>Shortly afterwards they stop giving you money and then you know it isn&rsquo;t long until the end.</p>
+
+<p>Maybe you&rsquo;re there right now, or staring down the barrel of that gun. I&rsquo;ve seen it before; I know what it looks like. You&rsquo;re not alone. If you haven&rsquo;t gone off the cliff yet, it&rsquo;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&rsquo;ll be making one of those &ldquo;What I Learned As An Ex-CEO&rdquo; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&rsquo;re failing at all. Afterwards, we can move on to fixing it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/23/the-perils-of-overengineering/">The Perils of Overengineering</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-23T13:19:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/23/the-perils-of-overengineering/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/">Pricing Popular Hosting Options (With Devops Time)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-17T18:16:00-05:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/">Why I&#8217;m Not Applying to 37Signals (but Why You Should)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-19T13:16:00-05:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In case you haven&rsquo;t heard&hellip;</p>
+
+<p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
+
+<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &mdash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
+
+<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &mdash; either way, you&rsquo;ll have an opinion!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-22T11:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2013</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
+
+<p>They all suck.</p>
+
+<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
+
+<ol>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
+</ol>
+
+
+<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/22/existing-rails-api-solutions-suck/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">Home Automation With Phillips Hue &amp; Huey</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T19:32:00-06:00" pubdate data-updated="true">Feb 20<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&rsquo;s how to make it work.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

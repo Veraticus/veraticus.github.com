@@ -1,0 +1,14 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">api_accessible</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:id</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:first_name</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:last_name</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:real_name</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:gender</span>
+  <span class="k">end</span>
+
+  <span class="n">api_accessible</span> <span class="ss">:with_timezone</span><span class="p">,</span> <span class="kp">extend</span><span class="p">:</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:timezone</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

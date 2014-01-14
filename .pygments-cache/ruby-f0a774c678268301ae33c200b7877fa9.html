@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="no">Tire</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="nb">load</span><span class="p">:</span> <span class="kp">true</span><span class="p">})</span> <span class="k">do</span>
+  <span class="n">query</span> <span class="k">do</span>
+    <span class="n">boolean</span> <span class="k">do</span>
+      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;name.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+      <span class="n">should</span> <span class="n">text</span><span class="p">(</span><span class="s1">&#39;title.partial&#39;</span><span class="p">,</span> <span class="s1">&#39;Josh Symonds&#39;</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

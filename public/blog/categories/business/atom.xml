@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: business | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/business/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-01-14T16:52:51-06:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Consulting for Fun and Profit]]></title>
+    <link href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/"/>
+    <updated>2014-01-14T13:13:58-06:00</updated>
+    <id>http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit</id>
+    <content type="html"><![CDATA[<p>2013 was a great year for me specifically, and my web development shop (<a href="http://symondsandson.com">Symonds &amp; Son</a>) in general. Though I initially fell into consulting accidentally, I&rsquo;ve aggressively parlayed it into a successful business &mdash; and my only regret has not been doing so sooner! A lot of developers I know are on the fence about striking out on their own. I&rsquo;m going to lay out how 2013 changed me from a full-time employee to owner of my own business, and in doing so hopefully persuade a few people that the benefits to being in business for yourself far outweigh the risks.</p>
+
+<!-- more -->
+
+
+<h2>Becoming a Mercenary</h2>
+
+<p>At the start of 2013, I was a salaried employee working at a startup. The rate was fine, but I spent a lot of time working &mdash; long hours in the evening to make aggressive sprints, and many meetings during the day to discuss development priorities and investor relations. I wasn&rsquo;t happy, but it was a job, and I was satisfied with it.</p>
+
+<p>A few months into my tenure, I was offered a salary adjustment to help make my company&rsquo;s bottom-line more attractive. Instead of taking it, I proposed an alternative arrangement: I would become a consultant at a rate very similar to my old hourly and I&rsquo;d work part-time. After some negotiation, a deal was struck, and I was officially a free agent.</p>
+
+<p>But I wasn&rsquo;t happy &mdash; indeed, quite the opposite. I spent weeks beforehand freaking out. I had the extra hours available to make up my cut income, but I&rsquo;d need clients to actually pay me for that time. Otherwise I&rsquo;d need to find another salaried position, and fast, since I didn&rsquo;t have much in the way of savings. Disaster was looming, and I spent sleepless nights trying to figure out how I&rsquo;d find a client, how I&rsquo;d convince them to actually pay me, and, if that failed, how I&rsquo;d explain a gap on my resume to future potential employers.</p>
+
+<p>Yet almost immediately upon taking the plunge, an old client wanted me to do new work for them. They recommended me to another company, who told one of their clients about me, and very shortly after I became part-time, I was full-time working for my clients. It took me almost all of 2013 to understand what had happened.</p>
+
+<h2>Charge Them and They&rsquo;ll Thank You</h2>
+
+<p>In case you didn&rsquo;t know, Rails developers &mdash; specifically, good Rails developers with experience in modern tools, an interest in improving themselves, and an aggressive talent for development &mdash; are extremely hard to find. In fact, finding developers who are capable of programming in their chosen language <strong>at all</strong> is a challenge.</p>
+
+<p>But why accept a generalized statement when I can give you a specific example? I&rsquo;m presently working with a client to vet Rails engineers. The rate they&rsquo;re willing to pay is really quite good, yet the candidates their recruiter finds are just terrible. This might be a topic for a separate post, but of the dozen people I&rsquo;ve interviewed:</p>
+
+<ul>
+<li>One didn&rsquo;t know what Rubygems were,</li>
+<li>One didn&rsquo;t know what ActiveRecord was,</li>
+<li>One had no idea how to sort an array in Ruby (and was surprised when I pointed out <a href="http://www.ruby-doc.org/core-2.1.0/Array.html#method-i-sort">Array#sort</a>),</li>
+<li>and one knew all this but had the interpersonal skills of a serial killer. The creepy kind, not the mesmerizing kind.</li>
+</ul>
+
+
+<p>Yet the recruiter says these people are snatched up all the time, at a rate of roughly $100 an hour. I honestly have absolutely no idea how this happens. I&rsquo;m not exaggerating even a little bit when I say I believe that none of these people can code at all &mdash; they have no GitHub profiles, no code samples, absolutely nothing to their names.</p>
+
+<p>(Incidentally, can you do better than these idiot candidates? <a href="mailto:josh@joshsymonds.com">Let me know, I have a pile of money with your name on it.</a>)</p>
+
+<p>I&rsquo;ve come to believe that these people are why I&rsquo;ve succeeded. If you bring dedication, honesty, and actual, real skill to your clients, they will recognize your contributions, keep coming back to you, and tell all their friends about you. And they&rsquo;re willing to pay your hourly rate for long nights, excessive meetings, and even just listening to their plans and helping them improve their processes.</p>
+
+<p>But if that&rsquo;s so, then why do most engineers, even the good ones, stay put at their full-time, salaried positions?</p>
+
+<h2>Success, Outside the Bubble</h2>
+
+<p>I think a lot of it has to do with the startup culture in San Francisco presently. Weirdly, I think it has the effect of keeping engineer salaries artificially lowered.</p>
+
+<p>Our industry is dominated by talk of the tech bubble: all the press is about acquisitions, huge seed funding rounds, and successful entrepreneurs' new projects. But the amount of money in Silicon Valley is really quite limited. There are enormous industries out there that need skilled programmers but lack the sex appeal of a startup or coverage in TechCrunch &mdash; yet they have applications in Rails and backend infrastructure needs too.</p>
+
+<p>And they also have way, way more money. Most of my clients are not extremely large businesses in their fields, but the amount of capital they have dwarfs that of even established startups. And they actually have business models that have worked for them for many years, so I worry less about revenue stream issues (or, heaven forbid, them folding overnight).</p>
+
+<p>Even better, to these companies, you aren&rsquo;t just an engineer with a set salary: you&rsquo;re solving a business problem with software. Your value to them is measured in the millions of dollars you saved their company, not the amount they&rsquo;re expecting to pay to a Rails engineer. And by charging on the former, not the latter, you can turn a very tidy profit indeed.</p>
+
+<h2>When You Try to Fly, Sometimes You Fall</h2>
+
+<p>Of course, the process of getting my business up and running hasn&rsquo;t been all sunshine and roses. I&rsquo;ve made some mistakes and wished I&rsquo;d handled a few things differently.</p>
+
+<ol>
+<li><p>I nickled-and-dimed a client on change requests, alienating that client and making myself appear less professional. Said client did not have a whole lot of money, and while the initial contract amount was commensurately very low, she really didn&rsquo;t appreciate me charging additional for some very minor changes. I should have just sucked it up and done the work, leaving both of us with warm fuzzes in the end, even if I took a slight loss on the contract. Most of my clients hear about me from other satisfied clients, and I would have been better served by her loving me than making a little more money.</p></li>
+<li><p>For pricing my services, I need to start high and work my way down. I generally start client conversations on my hourly rate at what I would consider a reasonable ultimate number, and then allow myself to be driven down from there &mdash; generally because the client wants a long-term contract and expects to save on my hourly based on the length of the engagement.</p></li>
+<li><p>More projects, less hourly. When starting as a consultant, I was really selling only my hours. Now Symonds &amp; Son is a business in its own right, and I&rsquo;ve hired designers and developers to help with my workload. Working with other talented individuals makes much more sense on a project basis, where I can package their (and my) hours together.</p></li>
+</ol>
+
+
+<h2>I&rsquo;m Sold: How Do I Do This?</h2>
+
+<p>&ldquo;Shut up already Josh, I think this is a great idea and want to become a consultant too! What&rsquo;s next?&rdquo;</p>
+
+<p>Make sure you have a good track record and established public credentials. Verify your friends (and your ex-employers) will vouch for the quality of your code and the quality of you as an individual. Go to meetups, write blog posts, have open-sourced code on GitHub &mdash; the more stuff you have on record, the better. Your clients will want to know everything about you they can before they even meet you.</p>
+
+<p>Have a backup plan in case everything goes wrong. Mine was &ldquo;find another full-time Rails job,&rdquo; something that I&rsquo;ve never traditionally had a problem finding. At least think about a safety net so that taking the plunge is less scary.</p>
+
+<p>And consider if you really want to be a mercenary. Many talented coders I know work for peanuts, but they do so for non-profits, amazing startups, and benefit corporations. They don&rsquo;t care that they&rsquo;re not taking home tons of money; they are making a difference in the world, which matters more to them than any paycheck ever could.</p>
+
+<p>But if the idea of consulting appeals to you, then I encourage you to take the plunge. As engineers, our services are as in-demand as ever; if you are a competent engineer, you can turn your skills from a salary into a solution, and companies pay much more handsomely for the latter. And if you try to fly and fail, you have a good chance of landing at another job anyway &mdash; so really, the risk is pretty minimal. And if you take off and soar away, let me know: I always need exciting new companies to work on big contracts with!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why Your Startup Is Failing (And How To Fix It)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/"/>
+    <updated>2013-04-30T02:49:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it</id>
+    <content type="html"><![CDATA[<p>The title of this post might be somewhat misleading: it&rsquo;s probably pretty obvious to you why your startup is failing. The same reason any business fails &mdash; you&rsquo;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&rsquo;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &ldquo;When will I see a return on my investment?&rdquo; and &ldquo;How can you possibly be spending so much of my money without making any in return?&rdquo;</p>
+
+<p>Shortly afterwards they stop giving you money and then you know it isn&rsquo;t long until the end.</p>
+
+<p>Maybe you&rsquo;re there right now, or staring down the barrel of that gun. I&rsquo;ve seen it before; I know what it looks like. You&rsquo;re not alone. If you haven&rsquo;t gone off the cliff yet, it&rsquo;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&rsquo;ll be making one of those &ldquo;What I Learned As An Ex-CEO&rdquo; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&rsquo;re failing at all. Afterwards, we can move on to fixing it.</p>
+
+<!-- more -->
+
+
+<h1>Why You&rsquo;re Failing</h1>
+
+<p>Keep in mind the bottom line here: ultimately you&rsquo;re failing because you&rsquo;re spending more money than you make. Discovering the reason behind this is the most important part of understanding how to correct it. Here, then, are the reasons your startup is failing.</p>
+
+<h2>4. You Hired the Wrong People</h2>
+
+<p>This is an especially easy pitfall for people to fall into. Back when you started your company, you were all excited about your vision, and unfortunately the brightness of said vision blinded you into hiring your old college roommate, or Cousin Mickey, or your sister&rsquo;s wedding photographer. They&rsquo;re really nice people, positive attitude, always on time&hellip; but they just aren&rsquo;t great.</p>
+
+<p>The Wrong People can fall anywhere on the &ldquo;not great&rdquo; spectrum. Some add literally nothing to your company &mdash; their most important skill is having a thousand Twitter followers. Others ostensibly have skills, but they&rsquo;re bad at them. These people are even worse than their do-nothing colleagues, since you&rsquo;ll be spending time correcting their screw-ups in addition to doing your own work.</p>
+
+<p>If you want your startup to be a success, you don&rsquo;t have time to teach anyone the ropes or take on charity cases. You need stellar performers in every position you&rsquo;re hiring for, and that goes double for engineers, since, as a tech startup, they&rsquo;re the ones in the trenches making your product. Anyone in your company that isn&rsquo;t out-and-out amazing is a waste of your money.</p>
+
+<p>If you&rsquo;re not knowledgeable enough to judge whether or not you hired the wrong people, you need to immediately hire someone who can competently make that assessment and include them in your decision-making processes.</p>
+
+<h2>3. You Have Too Many Warm Bodies</h2>
+
+<p>Your startup has four C-level executives, two managers, and two engineers. What&rsquo;s wrong with this picture?</p>
+
+<p>That&rsquo;s a gimmie, obviously, but you might be surprised how often situations like this occur. (Or if you&rsquo;re as bitter and jaded as I am, you won&rsquo;t be surprised at all.) There are only two kinds of people you need in your startup: people who make your product &mdash; usually your engineers and designers &mdash; and people who sell it. Or, instead of selling it, people responsible for figuring out how to make it profitable, like advertising experts or investment gurus. Everyone else is extraneous.</p>
+
+<p>You don&rsquo;t need managers if you&rsquo;ve hired competent engineers. You probably don&rsquo;t need half of your C-level team either. Yes, they&rsquo;re busy all the time and claim their work is integral to the proper functioning of your company. But you wouldn&rsquo;t be staring into the inky abyss of bankruptcy if that were true.</p>
+
+<p>People are truly amazing at generating work for themselves. It&rsquo;s not a testament to the importance of their job, it&rsquo;s a sad reflection on the nature of human existence. Everyone wants to feel important and special, even if they&rsquo;re not really bringing anything to the party. Don&rsquo;t let people waste your rapidly-dwindling money doing this.</p>
+
+<h2>2. You&rsquo;re Wasting Your Time</h2>
+
+<p>There&rsquo;s a lot of ways you can be doing this. Here&rsquo;s a quick list:</p>
+
+<ul>
+<li><strong>Meetings</strong>: You should go into every meeting knowing exactly what that meeting is intended to accomplish. When it&rsquo;s accomplished, the meeting is over. Meetings that don&rsquo;t have a clear agenda do not deserve to occur.</li>
+<li><strong>Process</strong>: Making your product must be fun and easy for your engineers (if they&rsquo;re good engineers, the fun part will come naturally &mdash; supplying the easy is up to you). If it becomes tiresome and unpleasant because of a ridiculous process then you&rsquo;re wasting time.</li>
+<li><strong>Priorities</strong>: Bugs that affect only one customer should be prioritized below bugs affecting fifty customers. Features that no one wants should be slated behind those that customers are clamoring for.</li>
+</ul>
+
+
+<p>Ultimately, if you&rsquo;re not doing something directly applicable to building your application, ensuring its continued success, or selling it, you&rsquo;re wasting your time. Be ruthless here. If you need to constantly remind yourself why what you&rsquo;re doing is valuable&hellip; chances are it probably isn&rsquo;t.</p>
+
+<h2>1. No One Wants Your Product</h2>
+
+<p>The only way for you to make money is to sell something (or give it away and sell something related). If the people aren&rsquo;t buying, then you aren&rsquo;t making money, and, well, here you are.</p>
+
+<p>Don&rsquo;t delude yourself by thinking you don&rsquo;t want users yet. That&rsquo;s like saying you don&rsquo;t want money yet. You want money right now, and you want users right now. You want everyone in the world to be clamoring to use your product, and damn the consequences. It might melt your servers into tiny puddles of liquid metal or bring your system to a screeching halt, but who the fuck cares? You can fix those problems. You need users and you need them immediately.</p>
+
+<p>If your initial bunch of users love what you&rsquo;re doing, they&rsquo;ll recommend it to their friends. That&rsquo;s how you get those clamoring masses beating down your door. If people aren&rsquo;t recommending your product to their networks, there&rsquo;s a reason. Find out what it is and fix it. (Hint: it&rsquo;s because of the same issues you run into when you give a tech demo.)</p>
+
+<p>Getting into TechCrunch doesn&rsquo;t count as people wanting your product. Your customers don&rsquo;t read TechCrunch.</p>
+
+<h1>How To Fix It</h1>
+
+<p>Ultimately, your investors don&rsquo;t care about your clever ideas, neat slideshows, your team or even your tech. They care about making money. Why? Because investors are pragmatists. They know that if they bet a million dollars on twenty startups, they&rsquo;ll lose nineteen million dollars on nineteen failures &mdash; and make a hundred million dollars on one success.</p>
+
+<p>You want to be a pragmatist as well. If you make them money, you&rsquo;ll make money for yourself as well. The way to fix your problems, then, is to reduce costs and raise profits. Easy to say, right? Well, here&rsquo;s the specifics.</p>
+
+<h2>3. BRING ME THE AXE</h2>
+
+<p><img src="http://i.qkme.me/3ox4qa.jpg" alt="TINA! BRING ME THE AXE!!" /></p>
+
+<p>It&rsquo;s time to start firing your employees.</p>
+
+<p>This isn&rsquo;t easy. Most of these people have probably become your friends. Perhaps some of them started as your bosom-buddies. Well, too bad. Maybe you can hire them again later when you&rsquo;re more profitable. But if you don&rsquo;t start trimming now, then in a few months you&rsquo;ll be cutting all of them.</p>
+
+<p>First, get rid of all the people that aren&rsquo;t truly, stunningly great at their jobs, whatever their job is. If that&rsquo;s not enough, next flatten your corporate structure. This usually involves firing middle-management. And finally, start getting rid of C-level executives.</p>
+
+<p>Grab your org chart right now and stare at it. For every box on that piece of paper, ask yourself, &ldquo;Does this person make my company money?&rdquo; If the answer is no, then you know what to do.</p>
+
+<h2>2. Cultivate Elitism</h2>
+
+<p>People should speak of your company and its hiring practices in hushed, awed tones. You want to be the startup that&rsquo;s snatching up all the great talent &mdash; making the best people in the industry offers that they just can&rsquo;t refuse. People talk about 10X engineers, and you want to be entirely composed of those, but not just for engineers: for everything! Get amazing designers, fantastic QA people, the best of the best. If you want to turn your venture around, this is where you should blow your remaining money.</p>
+
+<p>Once that&rsquo;s done, for God&rsquo;s sake, get out of their way. You hired these amazing people to be dynamic forces of change and save your company &mdash; let them do it! Managing great people is hard: you want to pave the road in front of them almost without them realizing you&rsquo;ve done it. Smooth the way, ease the process, and I guarantee that the results will astound you.</p>
+
+<p>You never want to hire anyone that doesn&rsquo;t elicit respect from the other employees of your company. Foster this culture of elitism. Oh, and don&rsquo;t hire until it becomes literally painful that you&rsquo;re short a person. Even then be very very picky. The wrong skills or a bad attitude can send you right back to the &ldquo;firing&rdquo; step of this process again, and you don&rsquo;t want to do that more than once.</p>
+
+<h2>1. Double Down on What Makes You Money</h2>
+
+<p>Whatever your value proposition is, you need to clarify it and refocus your entire company around achieving it. At this point, there&rsquo;s been enough pivoting and more than enough money spent trying to find the money in your initial idea. If there isn&rsquo;t any, then it&rsquo;s time to pack up and go home &mdash; but if there is, it&rsquo;s time to pursue it doggedly and relentlessly.</p>
+
+<p>If a VC offered you a million dollars, no strings attached, this very day, you should refuse. Why? Because you should have been either marginally profitable or marginally popular on your <strong>PREVIOUS</strong> million dollars. If you&rsquo;ve burnt through all that money and there&rsquo;s still not hordes of people beating down your doors, it is time to do some soul-searching.</p>
+
+<p>Why don&rsquo;t more people find my app popular? Why aren&rsquo;t they spending their money on me? These aren&rsquo;t academic questions to be answered at your leisure: these thoughts should be the burning cores of your very being. If you&rsquo;re in the unenviable position of being a failing startup, you must do everything in your power to answer these two questions. Do so and then double down on what you discover. It&rsquo;s your only prayer.</p>
+
+<h1>Afterwards</h1>
+
+<p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist &mdash; your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn&rsquo;t change its fate. The only measure of a company&rsquo;s success is whether or not it makes money. The rest is just icing on the cake.</p>
+
+<p>Can your company do that? Despite my tone, I believe it can. You&rsquo;ve poured your heart and soul into it and you&rsquo;ve done so because you believe you&rsquo;re working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn&rsquo;t enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Perils of Overengineering]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering/"/>
+    <updated>2013-04-23T13:19:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering</id>
+    <content type="html"><![CDATA[<p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
+
+<!-- more -->
+
+
+<h2>Don&rsquo;t Overthink It</h2>
+
+<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &mdash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
+
+<p>Chances are the answer is &ldquo;no.&rdquo; You&rsquo;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
+
+<p>This goes for any technology. Coco Chanel infamously stated, &ldquo;Before you leave the house, look in the mirror and take one thing off.&rdquo; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&rsquo;re included? Did you make the best choices? If you&rsquo;re not sure, do some research. It&rsquo;ll save you a boatload of trouble down the river.</p>
+
+<h2>Respect The Majority</h2>
+
+<p>Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:</p>
+
+<p><code>ruby
+  $d.u.f(:a)
+</code></p>
+
+<p>It takes half a millisecond &mdash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
+
+<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &mdash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
+
+<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&rsquo;ll save everyone involved a lot of money and trouble. No, you won&rsquo;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&rsquo;ll never have to hand off.</p>
+
+<h2>Less is Best</h2>
+
+<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &mdash; both cases &mdash; is to ruthlessly cull what you&rsquo;ve got.</p>
+
+<p>Success, for code, isn&rsquo;t bigger and better. It&rsquo;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&rsquo;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
+
+<p>The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn&rsquo;t need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.</p>
+
+<p>Don&rsquo;t be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won&rsquo;t be used that way anyway, and then you&rsquo;ll look like a genius (in addition to actually being one for following sound advice).</p>
+
+<h2>New IS Cool</h2>
+
+<p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
+
+<p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Applying to 37Signals (But Why You Should)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/"/>
+    <updated>2013-03-19T13:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should</id>
+    <content type="html"><![CDATA[<p>In case you haven&rsquo;t heard&hellip;</p>
+
+<p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
+
+<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &mdash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
+
+<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &mdash; either way, you&rsquo;ll have an opinion!</p>
+
+<!-- more -->
+
+
+<h2>Why You Should Apply</h2>
+
+<ol>
+<li><h3>They&rsquo;ve literally written books about how great it is to work there.</h3>
+
+<p>If you haven&rsquo;t read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won&rsquo;t find stupid meetings, outside investors, or anyone burning the midnight oil here. You&rsquo;ll find work. Great, meaningful, empowering work. When you get right down to it, isn&rsquo;t that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They&rsquo;re committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
+<li><h3><a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">The Man Himself</a>.</h3>
+
+<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&rsquo;ve been lobbying so hard for them to make. He&rsquo;s the inventor of Rails, he&rsquo;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&rsquo;s not to like? I imagine that, if you announced to a room of programmers, &ldquo;I work with DHH,&rdquo; there would be a brief hush and then everyone would be talking over each other. One would say, &ldquo;That man is a crazy person!&rdquo; And another, &ldquo;He&rsquo;s the greatest programmer to ever draw breath!&rdquo; There&rsquo;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
+<li><h3>Fame &amp; fortune await.</h3>
+
+<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&rsquo;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&rsquo;ll talk to will know where you work. Your title and position will be meaningful &mdash; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&rsquo;re a 37signals alum (unless you intend to be a lifer), having &ldquo;Programmer at 37signals&rdquo; on your resume will look even more stellar than all those follower numbers.</p></li>
+<li><h3>Work with the best &mdash; and be the best.</h3>
+
+<p>37signals' programming team is the crème de la crème of the Rails world. You&rsquo;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &mdash; doesn&rsquo;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&rsquo;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
+</ol>
+
+
+<h2>Why You Shouldn&rsquo;t</h2>
+
+<ol>
+<li><h3>You&rsquo;re not the best.</h3>
+
+<p>But in a team of greats, even being great is not enough &mdash; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&rsquo;ll be just another programmer. For some, the knowledge that they&rsquo;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&rsquo;t yet have the fame and reach of 37signals. It&rsquo;s up to you to find them!</p></li>
+<li><h3>While it&rsquo;s a great company, it&rsquo;s still a company.</h3>
+
+<p>I love startups. In a startup I&rsquo;m not just a programmer: I do lots and lots of work with computers, it&rsquo;s true, and most of that is programming. But I&rsquo;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&rsquo;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&rsquo;s not an easy question to answer, but I would bet not a whole lot &mdash; or, at least, less than you would somewhere else.</p></li>
+<li><h3>Go do it yourself.</h3>
+
+<p>While 37signals is a great company, there&rsquo;s nothing inherently special about it. They make CRM software, and while that&rsquo;s an interesting problem space, there&rsquo;s tons of fascinating questions to answer out there &mdash; questions that can only be answered through excellent software! The point of Rework is that there&rsquo;s no real magic in 37signals that people who are smart and dedicated can&rsquo;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&rsquo;d be joining his company, but ultimately, if you&rsquo;re so great, why aren&rsquo;t you out there making a name of your own, rather than riding on someone else&rsquo;s coattails? Even if they&rsquo;re his.</p></li>
+<li><h3>Fame &amp; fortune await!</h3>
+
+<p>If you&rsquo;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&rsquo;re dramatically out of line with what the market pays. And while they&rsquo;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&rsquo;t join stars that have already risen. Do you really want fame and fortune? Then you don&rsquo;t want to join 37signals. They&rsquo;ve already arrived there, and while there&rsquo;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&hellip; regardless of how awesome they are.</p></li>
+</ol>
+
+
+<h2>In The End</h2>
+
+<p>At the point I&rsquo;m at in my career, 37signals &mdash; while incredibly appealing &mdash; isn&rsquo;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&rsquo;t picked this up already, they&rsquo;re my programming heroes: and they should be yours too, because they care about everything that&rsquo;s important in this industry. So if you&rsquo;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
+
+<p>If not, I look forward to seeing what you create in the future, because I bet it&rsquo;ll be stellar.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Breaking Up With GirlsGuideTo]]></title>
+    <link href="http://joshsymonds.com/blog/2012/12/27/breaking-up-with-girlsguideto/"/>
+    <updated>2012-12-27T19:40:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2012/12/27/breaking-up-with-girlsguideto</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s never easy to decide to move on, particularly when you&rsquo;re a cofounder. It definitely feels less like a business shakeup and more like a real breakup.</p>
+
+<p>But I must announce that my time at GirlsGuideTo has officially ended.</p>
+
+<p>I&rsquo;m proud of the work I&rsquo;ve done for GirlsGuideTo. I took a <a href="http://old.girlsguideto.com/home">decrepit, slow PHP Drupal installation</a> and turned it into a <a href="http://girlsguideto.com/">speedy, modernized Rails application</a>. The new GirlsGuideTo uses some incredibly modern technologies to be fast, while still being maintainable and consistent. The pages load near-instantly thanks to <a href="http://joshsymonds.com/blog/2012/12/18/making-your-web-pages-ridiculously-fast-without-breaking-them/">head.js and Turbolinks</a>, and the Rails code is well-separated and highly tested thanks to some awesome concerns and really nifty Rack middleware.</p>
+
+<p>It also features a really kickass design from my friend <a href="https://twitter.com/LukesBeard">@LukesBeard</a>, so it also looks great in addition to feeling great.</p>
+
+<p>Though I&rsquo;m moving to greener pastures, I&rsquo;m sure GirlsGuideTo has a bright future ahead of them. As for me, I&rsquo;m doing some work for <a href="http://everest.com/">Everest</a> &mdash; they&rsquo;re really awesome people that need their backend scaled right into infinity, and I think I&rsquo;m the guy to do it for them. In fact, if you download the <a href="https://itunes.apple.com/us/app/everest-live-your-dreams-achieve/id581016826?mt=8">super cool free app</a> or have downloaded it at launch, you&rsquo;ve already touched some of my code! The best part about onboarding quickly is having code live in production almost immediately.</p>
+
+<p>So keep on watching this spot for more of the same that you&rsquo;ve come to expect &mdash; adrenaline-filled posts on the exciting world of server scalability and optimization.</p>
+]]></content>
+  </entry>
+  
+</feed>

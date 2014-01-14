@@ -1,0 +1,1708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-01-14T16:52:51-06:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Consulting for Fun and Profit]]></title>
+    <link href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/"/>
+    <updated>2014-01-14T13:13:58-06:00</updated>
+    <id>http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit</id>
+    <content type="html"><![CDATA[<p>2013 was a great year for me specifically, and my web development shop (<a href="http://symondsandson.com">Symonds &amp; Son</a>) in general. Though I initially fell into consulting accidentally, I&rsquo;ve aggressively parlayed it into a successful business &mdash; and my only regret has not been doing so sooner! A lot of developers I know are on the fence about striking out on their own. I&rsquo;m going to lay out how 2013 changed me from a full-time employee to owner of my own business, and in doing so hopefully persuade a few people that the benefits to being in business for yourself far outweigh the risks.</p>
+
+<!-- more -->
+
+
+<h2>Becoming a Mercenary</h2>
+
+<p>At the start of 2013, I was a salaried employee working at a startup. The rate was fine, but I spent a lot of time working &mdash; long hours in the evening to make aggressive sprints, and many meetings during the day to discuss development priorities and investor relations. I wasn&rsquo;t happy, but it was a job, and I was satisfied with it.</p>
+
+<p>A few months into my tenure, I was offered a salary adjustment to help make my company&rsquo;s bottom-line more attractive. Instead of taking it, I proposed an alternative arrangement: I would become a consultant at a rate very similar to my old hourly and I&rsquo;d work part-time. After some negotiation, a deal was struck, and I was officially a free agent.</p>
+
+<p>But I wasn&rsquo;t happy &mdash; indeed, quite the opposite. I spent weeks beforehand freaking out. I had the extra hours available to make up my cut income, but I&rsquo;d need clients to actually pay me for that time. Otherwise I&rsquo;d need to find another salaried position, and fast, since I didn&rsquo;t have much in the way of savings. Disaster was looming, and I spent sleepless nights trying to figure out how I&rsquo;d find a client, how I&rsquo;d convince them to actually pay me, and, if that failed, how I&rsquo;d explain a gap on my resume to future potential employers.</p>
+
+<p>Yet almost immediately upon taking the plunge, an old client wanted me to do new work for them. They recommended me to another company, who told one of their clients about me, and very shortly after I became part-time, I was full-time working for my clients. It took me almost all of 2013 to understand what had happened.</p>
+
+<h2>Charge Them and They&rsquo;ll Thank You</h2>
+
+<p>In case you didn&rsquo;t know, Rails developers &mdash; specifically, good Rails developers with experience in modern tools, an interest in improving themselves, and an aggressive talent for development &mdash; are extremely hard to find. In fact, finding developers who are capable of programming in their chosen language <strong>at all</strong> is a challenge.</p>
+
+<p>But why accept a generalized statement when I can give you a specific example? I&rsquo;m presently working with a client to vet Rails engineers. The rate they&rsquo;re willing to pay is really quite good, yet the candidates their recruiter finds are just terrible. This might be a topic for a separate post, but of the dozen people I&rsquo;ve interviewed:</p>
+
+<ul>
+<li>One didn&rsquo;t know what Rubygems were,</li>
+<li>One didn&rsquo;t know what ActiveRecord was,</li>
+<li>One had no idea how to sort an array in Ruby (and was surprised when I pointed out <a href="http://www.ruby-doc.org/core-2.1.0/Array.html#method-i-sort">Array#sort</a>),</li>
+<li>and one knew all this but had the interpersonal skills of a serial killer. The creepy kind, not the mesmerizing kind.</li>
+</ul>
+
+
+<p>Yet the recruiter says these people are snatched up all the time, at a rate of roughly $100 an hour. I honestly have absolutely no idea how this happens. I&rsquo;m not exaggerating even a little bit when I say I believe that none of these people can code at all &mdash; they have no GitHub profiles, no code samples, absolutely nothing to their names.</p>
+
+<p>(Incidentally, can you do better than these idiot candidates? <a href="mailto:josh@joshsymonds.com">Let me know, I have a pile of money with your name on it.</a>)</p>
+
+<p>I&rsquo;ve come to believe that these people are why I&rsquo;ve succeeded. If you bring dedication, honesty, and actual, real skill to your clients, they will recognize your contributions, keep coming back to you, and tell all their friends about you. And they&rsquo;re willing to pay your hourly rate for long nights, excessive meetings, and even just listening to their plans and helping them improve their processes.</p>
+
+<p>But if that&rsquo;s so, then why do most engineers, even the good ones, stay put at their full-time, salaried positions?</p>
+
+<h2>Success, Outside the Bubble</h2>
+
+<p>I think a lot of it has to do with the startup culture in San Francisco presently. Weirdly, I think it has the effect of keeping engineer salaries artificially lowered.</p>
+
+<p>Our industry is dominated by talk of the tech bubble: all the press is about acquisitions, huge seed funding rounds, and successful entrepreneurs&#8217; new projects. But the amount of money in Silicon Valley is really quite limited. There are enormous industries out there that need skilled programmers but lack the sex appeal of a startup or coverage in TechCrunch &mdash; yet they have applications in Rails and backend infrastructure needs too.</p>
+
+<p>And they also have way, way more money. Most of my clients are not extremely large businesses in their fields, but the amount of capital they have dwarfs that of even established startups. And they actually have business models that have worked for them for many years, so I worry less about revenue stream issues (or, heaven forbid, them folding overnight).</p>
+
+<p>Even better, to these companies, you aren&rsquo;t just an engineer with a set salary: you&rsquo;re solving a business problem with software. Your value to them is measured in the millions of dollars you saved their company, not the amount they&rsquo;re expecting to pay to a Rails engineer. And by charging on the former, not the latter, you can turn a very tidy profit indeed.</p>
+
+<h2>When You Try to Fly, Sometimes You Fall</h2>
+
+<p>Of course, the process of getting my business up and running hasn&rsquo;t been all sunshine and roses. I&rsquo;ve made some mistakes and wished I&rsquo;d handled a few things differently.</p>
+
+<ol>
+<li><p>I nickled-and-dimed a client on change requests, alienating that client and making myself appear less professional. Said client did not have a whole lot of money, and while the initial contract amount was commensurately very low, she really didn&rsquo;t appreciate me charging additional for some very minor changes. I should have just sucked it up and done the work, leaving both of us with warm fuzzes in the end, even if I took a slight loss on the contract. Most of my clients hear about me from other satisfied clients, and I would have been better served by her loving me than making a little more money.</p></li>
+<li><p>For pricing my services, I need to start high and work my way down. I generally start client conversations on my hourly rate at what I would consider a reasonable ultimate number, and then allow myself to be driven down from there &mdash; generally because the client wants a long-term contract and expects to save on my hourly based on the length of the engagement.</p></li>
+<li><p>More projects, less hourly. When starting as a consultant, I was really selling only my hours. Now Symonds &amp; Son is a business in its own right, and I&rsquo;ve hired designers and developers to help with my workload. Working with other talented individuals makes much more sense on a project basis, where I can package their (and my) hours together.</p></li>
+</ol>
+
+
+<h2>I&rsquo;m Sold: How Do I Do This?</h2>
+
+<p>&ldquo;Shut up already Josh, I think this is a great idea and want to become a consultant too! What&rsquo;s next?&rdquo;</p>
+
+<p>Make sure you have a good track record and established public credentials. Verify your friends (and your ex-employers) will vouch for the quality of your code and the quality of you as an individual. Go to meetups, write blog posts, have open-sourced code on GitHub &mdash; the more stuff you have on record, the better. Your clients will want to know everything about you they can before they even meet you.</p>
+
+<p>Have a backup plan in case everything goes wrong. Mine was &ldquo;find another full-time Rails job,&rdquo; something that I&rsquo;ve never traditionally had a problem finding. At least think about a safety net so that taking the plunge is less scary.</p>
+
+<p>And consider if you really want to be a mercenary. Many talented coders I know work for peanuts, but they do so for non-profits, amazing startups, and benefit corporations. They don&rsquo;t care that they&rsquo;re not taking home tons of money; they are making a difference in the world, which matters more to them than any paycheck ever could.</p>
+
+<p>But if the idea of consulting appeals to you, then I encourage you to take the plunge. As engineers, our services are as in-demand as ever; if you are a competent engineer, you can turn your skills from a salary into a solution, and companies pay much more handsomely for the latter. And if you try to fly and fail, you have a good chance of landing at another job anyway &mdash; so really, the risk is pretty minimal. And if you take off and soar away, let me know: I always need exciting new companies to work on big contracts with!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[cryptolalia, for creating Cicada 3301 ciphertext puzzles]]></title>
+    <link href="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/"/>
+    <updated>2013-12-26T10:31:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles</id>
+    <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
+
+<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
+
+<ul>
+<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
+<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
+<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
+<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
+<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
+<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
+</ul>
+
+
+<p>You&rsquo;ve probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!</p>
+
+<h2>Cryptolalia In Action</h2>
+
+<p>Taken from the <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> README:</p>
+
+<p><img src="http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png" alt="Rainbows" /></p>
+
+<p>The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:</p>
+
+<p>The plaintext (&ldquo;secrets are fun&rdquo;) was transformed with a Pollux Morse code cipher:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rainbow.png&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># true, see the file above</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Don&rsquo;t believe me? You can decode it yourself, also using cryptolalia:</p>
+
+<p>Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Insert the numbers of the Beale homophonic substitution cipher back in:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And finally, plug it right back into the Pollux cipher:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;secretsarefun&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Don't Code Defensively]]></title>
+    <link href="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively/"/>
+    <updated>2013-11-14T10:30:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/11/14/dont-code-defensively</id>
+    <content type="html"><![CDATA[<p>As an engineer, we&rsquo;re responsible for creating things that people care about deeply. Whether you&rsquo;re programming something as important as a car&rsquo;s operating system or as silly as an iPhone game, our code touches lives. It&rsquo;s no wonder, then, that the people who interact with our products feel strongly about them &mdash; and possibly about us, as well.</p>
+
+<p>This can sometimes be a good thing. It&rsquo;s always touching to receive a heartfelt letter of thanks and admiration from a customer. But much more commonly, you&rsquo;ll hear complaints, demands, and anger.</p>
+
+<p>Under a deluge like that, it&rsquo;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &mdash; if you&rsquo;re willing to take credit for the good things you&rsquo;ve done, you have to &ldquo;take credit&rdquo; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&rsquo;s problems, but to shirk responsibility.</p>
+
+<p>That&rsquo;s what I call coding defensively &mdash; an entirely separate subject from <a href="http://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. Coding defensively mires you in your codebase. It&rsquo;s hard to go forward because you don&rsquo;t want more responsibility, and you can&rsquo;t go back because it would be admitting error. And it&rsquo;s a self-reinforcing cycle: once you start becoming defensive, it&rsquo;s difficult to stop.</p>
+
+<p>I was a defensive coder too. I struggled to own the results of my actions: I would refuse to discuss solutions in a sensible, level-headed way. It took me a long time to change my approach, and as part of doing so I wrote a list of maxims summarizing how I wanted to think and act. When I feel myself slipping I go over them to refresh my resolve. I&rsquo;m publishing them here in the hope that they&rsquo;ll help someone else as much as they&rsquo;ve helped me.</p>
+
+<!-- more -->
+
+
+<h2>No one gets it right all the time</h2>
+
+<p>First, you have to realize that people &mdash; even you &mdash; make mistakes. It&rsquo;s not productive to pretend that it didn&rsquo;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&rsquo;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
+
+<p>I found that achnowledging my fault and being accepting of it removed a lot of the impetus to be defensive. I no longer felt as ashamed of what I&rsquo;d done or that I had to spend time and energy making excuses. The &ldquo;excuse&rdquo; is that mistakes happen: what matters now isn&rsquo;t that the mistake occurred, but how you&rsquo;ll go about addressing it.</p>
+
+<p>Please don&rsquo;t get me wrong &mdash; I&rsquo;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&rsquo;ll still happen, even if you&rsquo;re very good. Since you can&rsquo;t change whether or not you&rsquo;ll make mistakes, you may as well change your attitude to them.</p>
+
+<h2>Be friendly</h2>
+
+<p>In the face of anger or blame, don&rsquo;t turtle up! Instead, kill them with kindness.</p>
+
+<p>As I said way back at the beginning of this post, what we do naturally inspires passion in those around us. Frequently when people run into an engineering problem, this passion will turn to anger. By the time the problem has percolated to us the anger has found its target: the programmer responsible for creating the code in the first place.</p>
+
+<p>Friendliness reminds the people you&rsquo;re interacting with that you&rsquo;re just as dedicated to a solution as they are. Resist when they try to brand you as an antagonist. Their reaction is natural because they believe you made the problem: but in fact, you&rsquo;re partners together in trying to solve it, and kindness reminds them of this fact.</p>
+
+<p>You&rsquo;ll be surprised at the turnarounds you see in people&rsquo;s attitudes when you&rsquo;re unrelentingly friendly to them in return. And once the anger has dissipated, you can work towards a resolution.</p>
+
+<h2>Seriously consider solutions</h2>
+
+<p>Or, if you&rsquo;re a Glengarry Glen Ross fan, &ldquo;always be solving.&rdquo;</p>
+
+<p><img src="http://f.cl.ly/items/2y3x25163d0L0J1A0s14/Image%202013.11.14%209%3A38%3A06%20AM.jpeg" alt="Always Be Solving" /></p>
+
+<p>Putting your existing solutions on a pedestal isn&rsquo;t productive. There&rsquo;s no inherent value to what you have other than that it works &mdash; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
+
+<p>Dismissing solutions out of hand &mdash; particularly if you don&rsquo;t understand them or it seems like they&rsquo;d be difficult to implement &mdash; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&rsquo;t even know.</p>
+
+<p>If it&rsquo;s still more or less perfect despite those flaws, then you have to go for it. Your responsibility is to do what&rsquo;s right, not what&rsquo;s easy.</p>
+
+<p>And guess what? Afterwards, you&rsquo;ll probably feel way more comfortable implementing that solution again in the future, and professional growth is always pretty awesome&hellip; and leads to personal growth as well.</p>
+
+<h2>Your net effect is positive</h2>
+
+<p>Even in the face of overwhelming negativity or horrible problems, you have to remind yourself that your overall effect is a positive one. As humans, we spend an inordinate amount of time concentrating on negative experiences: in the past, perhaps, an embarrassing moment in high school that everyone but you has forgotten, and in your day-to-day job, the errors and problems you feel largely responsible for.</p>
+
+<p>It can be helpful to remind yourself of the good things you&rsquo;ve done too, and that, in the balance, the good outweighs the bad. Doing so gives you the courage to hold your head high, and gives you the self-confidence to tackle your problems head on, instead of hiding from them.</p>
+
+<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &mdash; and the attitude you have towards action &mdash; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&rsquo;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&rsquo;re coding for them, not coding defensively.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[What Makes a Good Programmer Good?]]></title>
+    <link href="http://joshsymonds.com/blog/2013/11/03/what-makes-a-good-programmer-good/"/>
+    <updated>2013-11-03T13:06:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/11/03/what-makes-a-good-programmer-good</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve worked with a lot of programmers over the years &mdash; some of them super amazing, and some distinctly lackluster. As I&rsquo;ve had the pleasure of working with some very skilled individuals recently, I spent some time thinking about what I admire in them. What makes a good programmer so good, and a bad programmer so bad? Or, to mangle English a little bit, what makes a good programmer good?</p>
+
+<p>Based on my experiences, being a great programmer has nothing to do with age, education, or how much money you make. It&rsquo;s all in how you act and, more deeply, how you think. I&rsquo;ve noticed a consistent set of habits in the programmers I admire. More than knowledge of their chosen language, deep understanding of data structures and algorithms, or even more than years of on-the-job experience &mdash; the way they communicate, the way they conduct themselves, and the way they approach programming speak volumes as to their amazing level of skill.</p>
+
+<p>Certainly there&rsquo;s more to being a good programmer than anyone can enumerate, and I wouldn&rsquo;t judge any programmer solely based on the presence (or lack) of these practices. But I do know wisdom when I see it, and when I see a programmer expressing these traits, I think, &ldquo;This person really knows what they&rsquo;re doing.&rdquo;</p>
+
+<!-- more -->
+
+
+<h2>They do their research</h2>
+
+<p>Or &ldquo;measure twice, cut once.&rdquo; Or &ldquo;Google it.&rdquo;</p>
+
+<p>Whatever you call it, most programming problems you&rsquo;re likely to encounter have been solved in some form already &mdash; Ecclesiastes had it right in observing there was nothing new under the sun. In the form of libraries on GitHub, blog posts on the Internet, or just getting in touch with experienced individuals, good programmers know to do the research before they try to solve a problem.</p>
+
+<p>I&rsquo;ve seen even great programmers rush to solutions: but the worst programmers I&rsquo;ve worked with never consult others, and as a result do huge amounts of duplicate work or tackle issues in precisely the wrong way. And unfortunately, they end up paying for their mistakes later.</p>
+
+<h2>They read error messages (and act on them)</h2>
+
+<p>This includes desymbolicating stack traces. Yes, it&rsquo;s ugly and unfortunate &mdash; but if you&rsquo;re not willing to do it how are you going to know what&rsquo;s wrong? The most effective programmers I know aren&rsquo;t afraid to dig deep into problems. The least effective see there was an error but don&rsquo;t even bother reading the error message. (This sounds ridiculous but you&rsquo;d be surprised how frequently I run into it.)</p>
+
+<p>To take this a step further, great programmers see a problem and hunger to solve it. Reading error messages are for them just the beginning: they&rsquo;re anxious to dive deep into the issue that it represents and figure out what&rsquo;s going wrong. They&rsquo;re not interested in passing responsibility, they&rsquo;re interested in finding a solution. The buck really does stop with them.</p>
+
+<h2>They go to the source</h2>
+
+<p>Documentation, tests, people: these things lie. Not intentionally, but if you want to know exactly how something works, then you must view the source yourself.</p>
+
+<p>Don&rsquo;t be afraid if it&rsquo;s not a language you&rsquo;re super familiar with &mdash; if you&rsquo;re primarily a Ruby programmer and you suspect there&rsquo;s an error in one of Ruby&rsquo;s C libraries, go crack it open and have a look. Yes, you might not get it. But who knows? You just might, and you stand a way better chance than if you didn&rsquo;t try at all!</p>
+
+<p>If you&rsquo;re in a closed-source environment then this becomes a lot harder, unfortunately, but the principle still applies. Poor programmers have little interest in viewing source, and as a result problems flummox them much longer than those who are willing to do some research.</p>
+
+<h2>They just do it</h2>
+
+<p>Good programmers are driven to act. There&rsquo;s a compulsion in them that can be difficult to control: they&rsquo;re implementing a solution as soon as they identify a problem or see a new feature request, sometimes too early and sometimes too aggressively. But their instinctive response to a problem is to tackle it head-on.</p>
+
+<p>This can be troublesome at times &mdash; but their enthusiasm is a crucial part of being good at what they do. While some might stonewall or wait for the problem to go away on its own, good programmers start solving.</p>
+
+<p>To put it more simply (and, perhaps, too obviously): if you see someone excitedly grabbing problems and acting on them, chances are you have a good programmer on your hands.</p>
+
+<h2>They avoid crises</h2>
+
+<p>This is mostly a bad programmer trait: they tend to bounce from artificial crisis to artificial crisis, never really understanding one before they move to the next. They&rsquo;ll assign blame to the wrong parts of their program and then spend hours debugging something that works perfectly well. They let their emotions get the better of them, trusting gut feelings rather than careful, explicit analysis.</p>
+
+<p>If you hurry through a problem &mdash; or even view each problem as a world-shattering catastrophe &mdash; you&rsquo;re more likely to make errors or not address the underlying issues. Great programmers take the time to understand what&rsquo;s going wrong, even when there really is a catastrophe: but more than that, they treat regular problems as issues to be solved. Thus they solve more of them more accurately, and do so without raising the tension level of your organization.</p>
+
+<h2>They communicate well</h2>
+
+<p>Ultimately, programming is a form of communication. Being able to succinctly and eloquently express your thoughts is as crucial in writing code as it is in writing prose &mdash; and I&rsquo;ve always found that those who can write a pithy email, elegant status report, or even just an effective memo will also be better programmers than those who cannot.</p>
+
+<p>This applies to code in addition to English. It&rsquo;s certainly possible to make a one-liner filled with parenthesis, brackets, and single-letter functions: but if no one understands it, what&rsquo;s the point? Good programmers take the time to communicate their ideas properly in whatever medium they&rsquo;re using.</p>
+
+<h2>They are passionate</h2>
+
+<p>I think this might be the most important aspect of a good programmer (and perhaps the part of this list most generally applicable to fields other than computer science).</p>
+
+<p>If you truly care about what you&rsquo;re doing &mdash; if it&rsquo;s not just a job, but a hobby, an interest, even a fascination &mdash; then you have a major advantage over anyone else in your field. Great programmers are always programming. Their peers will clock out at eight hours a day: not out their job, but of their field in general. They don&rsquo;t have programming side projects or much interest in contributing back to the community. They&rsquo;re not constantly trying neat new methods and crazy programming languages just to see how they work.</p>
+
+<p>When I see a programmer who&rsquo;s doing their own hobby projects on the weekends, who&rsquo;s involved in the creation of the tools that they use every day, who&rsquo;s fascinated by the new and the interesting: that&rsquo;s when I really know I&rsquo;m looking at an amazing person. Ultimately great programmers view their profession not just as a means to make money, but as a means to make a difference. I think that&rsquo;s what makes the best programmers who they are. Coding, to them, is a way of shaping the world. And that&rsquo;s what I truly respect and admire.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sidekiq + Houston: Production Ready]]></title>
+    <link href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/"/>
+    <updated>2013-10-17T12:13:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready</id>
+    <content type="html"><![CDATA[<p>Three months ago, I wrote <a href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>. The code I included there initially worked great but over time all the APN connections I had established would break and not restart themselves appropriately. To correct this issue, I wrapped the APN connection itself in a class that was more resistant to failure. To help those who are using Sidekiq and Houston together in production, here&rsquo;s the code I used to do so.</p>
+
+<!-- more -->
+
+
+<p>Change the <code>NotifierWorker</code> to look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/workers/notifier_worker.rb</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;apn_connection&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">APNConnection</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">recipient_ids</span><span class="p">,</span> <span class="n">custom_data</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">recipient_ids</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="n">recipient_ids</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">tokens</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">recipient_ids</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">u</span><span class="o">|</span> <span class="n">u</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:token</span><span class="p">)}</span><span class="o">.</span><span class="n">flatten</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">tokens</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">token</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>        <span class="n">notification</span><span class="o">.</span><span class="n">sound</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+</span><span class='line'>        <span class="n">notification</span><span class="o">.</span><span class="n">custom_data</span> <span class="o">=</span> <span class="n">custom_data</span>
+</span><span class='line'>        <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, the big change here is <code>require apn_connection</code> and the extraction of all the logic that had formerly established our connection with Apple. Now we do that in a new class, sensibly called <code>APNConnection</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># lib/apn_connection.rb</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">APNConnection</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span>
+</span><span class='line'>    <span class="n">setup</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">setup</span>
+</span><span class='line'>    <span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/keys/production_push.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/keys/development_push.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="vi">@connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@connection</span><span class="o">.</span><span class="n">open</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="k">raise</span> <span class="s2">&quot;Connection is closed&quot;</span> <span class="k">unless</span> <span class="vi">@connection</span><span class="o">.</span><span class="n">open?</span>
+</span><span class='line'>      <span class="vi">@connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">e</span>
+</span><span class='line'>      <span class="n">attempts</span> <span class="o">||=</span> <span class="mi">0</span>
+</span><span class='line'>      <span class="n">attempts</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">if</span> <span class="n">attempts</span> <span class="o">&lt;</span> <span class="mi">5</span>
+</span><span class='line'>        <span class="n">setup</span>
+</span><span class='line'>        <span class="k">retry</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="k">raise</span> <span class="n">e</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The main difference here is that the <code>write</code> method will raise an error if the connection has become closed &mdash; this happens most frequently when you write a bad device token into the stream, which causes the APN service to disconnect you. Frustratingly the closure is detected on the request <em>following</em> the bad request, meaning that a perfectly good request encounters an error for no particularly good reason. The retry code here will attempt to reopen the connection to Apple five times and resend the message, until eventually it gives up.</p>
+
+<p>Using this method I have a robust, failure-resistant push notification service in production that I (and my customers) are very pleased with indeed.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Helper Methods in Sprinkle]]></title>
+    <link href="http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle/"/>
+    <updated>2013-10-14T16:03:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle</id>
+    <content type="html"><![CDATA[<p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
+
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+
+<!-- more -->
+
+
+<p>Let&rsquo;s say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/config/helpers.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Helpers</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">templates</span>
+</span><span class='line'>      <span class="n">path</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../../&#39;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
+</span><span class='line'>      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">/templates&quot;</span> <span class="c1"># sprinkle/templates/</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can&rsquo;t just do something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/policies/base.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">policy</span> <span class="ss">:base</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="ss">:web</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">requires</span> <span class="ss">:build_essential</span> <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span><span class="p">)</span>
+</span><span class='line'>                                             <span class="c1"># No method error for templates</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">package</span> <span class="ss">:build_essential</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">file</span> <span class="s2">&quot;/etc/build_essential.txt&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">contents</span><span class="p">:</span> <span class="n">render</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span><span class="p">),</span> <span class="c1"># No method error for templates</span>
+</span><span class='line'>    <span class="ss">sudo</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">verify</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">has_file</span> <span class="s2">&quot;/etc/build_essential.txt&quot;</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">templates</span><span class="si">}</span><span class="s2">/build_essential.txt&quot;</span> <span class="c1"># Contrived example since you&#39;d never really</span>
+</span><span class='line'>                                            <span class="c1"># just puts something here, but this also</span>
+</span><span class='line'>                                            <span class="c1"># throws a no method error</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That&rsquo;s easy enough to do. After you define your helper, do something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/config/helpers.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Sprinkle</span><span class="o">::</span><span class="no">Policy</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle::Package</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Package</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Verify</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
+
+<p>I&rsquo;ll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Gistify 1.2.0: Drag &amp; Drop Gisting]]></title>
+    <link href="http://joshsymonds.com/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/"/>
+    <updated>2013-08-13T10:23:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting</id>
+    <content type="html"><![CDATA[<p>Gistify just keeps getting better!</p>
+
+<p><a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify 1.2.0</a> is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an entire file onto the Gistify icon and a new gist will be created from your file. The format of the file will automatically be detected, and the resulting gist URL added to your clipboard just as usual. Amazing!</p>
+
+<p>In addition to that big new feature, 1.2.0 features a number of bug fixes and performance improvements: for example, now Gistify will properly start up if you check the &ldquo;Open at Startup&rdquo; box, and you can copy and paste in the GitHub username/password fields (for the 1Password or LastPass users out there). Just small quality of life improvements generally.</p>
+
+<p>Interested in giving Gistify a shot? Go <a href="https://itunes.apple.com/us/app/gistify/id653231502">download it</a> now! Or if you&rsquo;d like to demo it without paying the $1.99, just let me know and I&rsquo;d be happy to set you up with a review copy.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RubyMotion Update: One Month Later]]></title>
+    <link href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/"/>
+    <updated>2013-08-07T10:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later</id>
+    <content type="html"><![CDATA[<p>My <a href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">last post on RubyMotion</a> generated quite a lot of interest, and I&rsquo;ve been asked a few times for my opinion on the recent RubyMotion bugfixes (like correcting <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a> and <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-32">RM-32</a>). I thought it sensible to revisit this issue a month later to discuss the changes the HipByte team has been making and what they mean for the future of the RubyMotion project.</p>
+
+<!-- more -->
+
+
+<p>The issues Laurent prioritized have done much to restore my confidence in using RubyMotion for production applications (which I think is a great framework anyway, memory issues aside). Before starting new client work in it, I&rsquo;m personally waiting a release or two longer to make sure that the fixes are indicative of a future pattern of prioritizing stability and memory management over exciting new hotness&hellip; Exciting new hotness is definitely great and probably lots of fun to make, but those of us making money on RubyMotion care more for platform stability than nifty new features. Or, at least, I do.</p>
+
+<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &mdash; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&rsquo;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
+
+<blockquote>Every time I heard the phrase &#8220;well-known workaround&#8221; I interpret it as &#8220;tribal knowledge.&#8221;</blockquote>
+
+
+<p>And I think that applied very well to the workarounds available for the memory management issues. If you knew these issues existed and how to circumvent them, you were fine: but if you came into the framework with no foreknowledge and just coded regular Ruby, you were in for a nasty surprise. For RubyMotion to really attract the kind of success it deserves, surprises like that can&rsquo;t exist. Either you should be able to code Ruby as you would in MRI, or the differences in RubyMotion syntax as compared to regular Ruby syntax must be made as clear as possible.</p>
+
+<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &ldquo;we take performance and crashes very seriously&rdquo; &mdash; a much-appreciated statement indeed.</p>
+
+<p>So is RubyMotion worth buying now? In my opinion, yes, very much. It&rsquo;s much faster to build iOS apps in RubyMotion than Objective-C, so if you want to get a rapid prototype out or just don&rsquo;t want to learn C and Objective-C, RubyMotion is a great investment. It&rsquo;s also a great way to get acclimated with the iOS frameworks in a language that&rsquo;s a lot kinder and gentler than Objective-C. And while I don&rsquo;t feel confident saying &ldquo;this is now production-solid&rdquo; yet, I&rsquo;m watching the project very closely and it&rsquo;s definitely moving rapidly in the right direction.</p>
+
+<p>So what&rsquo;s next? Well, I&rsquo;d be lying if I said I weren&rsquo;t super excited about the new <a href="http://blog.rubymotion.com/post/57465814533/create-an-asteroids-game-for-ios-in-15-minutes-with">RubyMotion JoyBox blog post</a>. I&rsquo;ll personally be using RubyMotion to make an awesome game of some sort, because everyone loves games. I know that the RubyMotion team is incredibly dedicated to the framework, and I have the utmost confidence in their work as demonstrated by the performance improvements and bugfixes in versions 2.4 and 2.5. RubyMotion has a very bright future ahead of it; what it&rsquo;s done up to this point is nothing short of amazing, and there&rsquo;s every reason to believe that&rsquo;s a trend HipByte will continue into the future.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sidekiq + Houston: Persistent Apple Connection Pooling]]></title>
+    <link href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/"/>
+    <updated>2013-07-01T21:24:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling</id>
+    <content type="html"><![CDATA[<blockquote><p><strong>I updated the code here based on my production experiences with it in a new post, <a href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&rsquo;s push notification service through a worker. I didn&rsquo;t run into anything offhand, and also haven&rsquo;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&rsquo;s Push Notification service.</p>
+
+<!-- more -->
+
+
+<p>From Houston&rsquo;s documentation, we can easily set up a persistent connection with code like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>  <span class="o">[</span>
+</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="o">[</span>
+</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'><span class="n">connection</span><span class="o">.</span><span class="n">open</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&rsquo;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># above code</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I didn&rsquo;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="o">[</span>
+</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">connection</span><span class="o">.</span><span class="n">open</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">connection</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
+</span><span class='line'>      <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Using RubyMotion in Production]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/"/>
+    <updated>2013-06-26T12:11:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production</id>
+    <content type="html"><![CDATA[<blockquote><p><strong>Based on recent bugfixes and refinements by the RubyMotion team, I&rsquo;ve posted <a href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/">an update to this blog post</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>I&rsquo;m a big proponent of RubyMotion &mdash; a year and a month ago, I wrote an article titled &ldquo;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&rdquo; and despite its divisiveness I still stand behind the points I made. Recently I&rsquo;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&rsquo;t an appropriate choice for production applications.</p>
+
+<!-- more -->
+
+
+<p>Before I begin, I&rsquo;d like to say that I still use RubyMotion frequently and have made production (and prototype) applications built in it. I still love it, have renewed my RubyMotion license, and will do so for the foreseeable future. I believe it is a more productive option for coding than Objective-C. But it has a number of critical issues, and I feel compelled to say that it is an inappropriate choice for those looking for a platform to produce, distribute, and develop iPhone or Mac apps intended for broad release.</p>
+
+<h2>RubyMotion&rsquo;s ARC-equivalent is buggy</h2>
+
+<p>This is the main problem with RubyMotion, but it disguises a host of smaller issues with the RubyMotion project and community that&rsquo;s grown up around it.</p>
+
+<p>RubyMotion, for those who don&rsquo;t know, uses its own analog to Apple&rsquo;s automatic reference counting to obviate the need for manual retention and release of objects. It usually works great. But unfortunately it sometimes prematurely releases objects (or possibly fails to retain them?), leading to hard-to-diagnose memory access errors. Most tragically, these errors occur randomly from a user&rsquo;s perspective &mdash; sometimes the code will succeed (since the memory being referenced still contains the object the OS is expecting, despite being released) while other times it will fail (when the memory contains other data).</p>
+
+<p>This happens most frequently when using blocks and is easily reproducible with a very simple test case:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Test</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">test</span>
+</span><span class='line'>    <span class="n">foo</span> <span class="o">=</span> <span class="mi">42</span>
+</span><span class='line'>    <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="n">foo</span> <span class="o">+</span> <span class="mi">123</span> <span class="p">}</span> <span class="c1"># The local variable foo is released when the function ends</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="no">Test</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">call</span> <span class="c1"># Memory access error -- crashes sometimes, not all the time</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This example is straight from the RubyMotion bug tracker, where this issue is designated <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a>. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare &mdash; and this same issue occurs on the new platform. I&rsquo;m as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
+
+<p>Of course, there&rsquo;s a workaround. Instance variables are retained by the class, so changing <code>foo</code> above to <code>@foo</code> will correct the crashing error &mdash; sometimes. I&rsquo;ve used instance variables and have still experienced crashes in blocks and I&rsquo;m frankly not sure if it&rsquo;s due to this error or something else entirely.</p>
+
+<p>And that&rsquo;s really the core issue: it&rsquo;s difficult to determine which memory access errors are due to RM-3, which are the result of some other RubyMotion retain/release error, and which are caused by you screwing something up.</p>
+
+<h2>Why is this a problem?</h2>
+
+<p>Aside from the severity of this issue &mdash; randomly crashing code and memory access errors are, in my mind, emergencies to be corrected as soon as humanly possible &mdash; the way that the bug has been handled, both by the community and the RubyMotion team, is very concerning.</p>
+
+<p>The RubyMotion team is very small. Making a garbage collector that&rsquo;s as stable and performant as Objective-C&rsquo;s ARC (developed over years by many smart programmers) is a tall task indeed for a tiny group of people, regardless of their obvious brilliance. But more concerning than the time it&rsquo;s taken to fix this error is the lack of communication and visibility regarding it. There&rsquo;s been little said to the community about the severity of this issue, when a fix is expected, or how to properly diagnose and repair the problem until a release patches it.</p>
+
+<p>As developers, we use tools like RubyMotion not just for hobby projects, but to create real products that are used daily. We must be able to expect that critical flaws in our toolchains will be fixed promptly &mdash; otherwise it&rsquo;s irresponsible of us to create our applications using them. And this isn&rsquo;t the only old bug that hasn&rsquo;t been discussed in awhile: the bug tracker is littered with issues of varying severity that are not scheduled for fixing and have no recent comments from the RubyMotion team.</p>
+
+<p>The RubyMotion community, meanwhile, is an amazing place full of overwhelmingly positive people&hellip; which I think works against us when trying to raise concerns with the framework itself. I really like RubyMotion and I think many in the community feel the same. Voicing serious problems is much less exciting for us than discussing new features or building awesome wrappers, so those who do point them out are largely ignored or dismissed as naysayers.</p>
+
+<p>Happily, this seems to be changing.</p>
+
+<h2>Why post about this now?</h2>
+
+<p>Because of <a href="https://groups.google.com/forum/#!topic/rubymotion/x6-9c__IHH0">this email thread</a> in the RubyMotion group. Summary: lots of people are experiencing memory-related issues that are a result of RM-3 or possibly some other difficult-to-identify problem with RubyMotion&rsquo;s memory management, and they&rsquo;re coming forward and talking about them. One post in the thread states:</p>
+
+<blockquote>I&#8217;m experiencing these memory-related types of crashes (like SIGSEGV and SIGBUS) with about 10-20% of users in production.</blockquote>
+
+
+<p>That&rsquo;s a truly startling number if accurate. I haven&rsquo;t bundled Crittercism (or another app performance analyzer) in production, but I&rsquo;ve heard from people using my applications who have experienced random crashes that I can only assume are memory-related. And mine is admittedly an incredibly simple app &mdash; apps with more views and complicated networking code seem like they&rsquo;d be leaving themselves open to even more potential memory-related errors. (Generally, it seems like the more asynchronous stuff you do, the more likely your code is to hit a released object.)</p>
+
+<p>While I&rsquo;ve personally experienced these RubyMotion memory problems myself, I never thought they were part of a bigger problem: I don&rsquo;t regularly go to meetups or watch the bug tracker, and was startled to discover that the issues were endemic to the community. People have been trying to raise visibility of these problems but so far there&rsquo;s been little said about them outside of the issue tracker and a few isolated posts in the community group.</p>
+
+<p>While I think RubyMotion is a great project and I love using it, it&rsquo;s inarguable that these memory-management issues are serious, fundamental flaws in the framework. They prevent the creation of stable, reliable code through no fault of the developer&rsquo;s, leading to random crashes and poor user experience. Thus I cannot recommend anyone use RubyMotion for applications that users will touch until these issues are sorted out &mdash; which I hope they will be, and very soon.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Big Brother is Both Savvy and Incompetent]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/"/>
+    <updated>2013-06-10T12:40:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent</id>
+    <content type="html"><![CDATA[<p>I heard an argument recently that the data collected by <a href="http://en.wikipedia.org/wiki/PRISM_(surveillance_program)">PRISM</a> was safe from abuse because if the government had the technical expertise to gather the data, it had the competency to secure it as well. While on the face of it this statement is flatly absurd, its derivatives can seem plausible:</p>
+
+<ul>
+<li>&ldquo;The data is only used if a court approves.&rdquo; (The fallacious assumption being that the government can reasonably control access to the PRISM data.)</li>
+<li>&ldquo;The government is trying to protect us by safeguarding this information in one place.&rdquo; (Of course, the idea that this centralized database&rsquo;s existence has made said data <strong>more</strong> secure is preposterous.)</li>
+<li>&ldquo;You had no assurance of privacy on the Internet anyway, so why should this bother you?&rdquo; (Because while I can take reasonable steps to make my own data secure, once it&rsquo;s in the government&rsquo;s hands it&rsquo;s their responsibility, and, as should be abundantly obvious, leaks happen.)</li>
+</ul>
+
+
+<p>It&rsquo;s easy to believe that a government agency capable of collecting this information and then keeping its existence a secret for so long must have a way of keeping it safe. Unfortunately, the access that was given to the NSA to take this information has no correlation to the skills necessary to secure it; and the very fact of PRISM&rsquo;s existence will probably prove too enticing a target to remain secure for very long.</p>
+
+<p>Essentially, the argument as I heard it can be expressed as a simple question: if the government is savvy enough to gather the data, surely they&rsquo;re not incompetent enough to lose it? Unfortunately, big brother can indeed be both savvy and incompetent. I think this is the greatest danger to the data PRISM allows access to &mdash; not improper use or excessive domestic surveillance, but complete and outright theft.</p>
+
+<!-- more -->
+
+
+<h2>Savvy Through Access</h2>
+
+<p>Why does the act of collecting this information have no bearing on said information&rsquo;s security?</p>
+
+<p>Consider a child visiting the Library of Congress. He has an enormous storehouse of human knowledge at his fingertips: would you say then that this child would make a reasonable gatekeeper of that knowledge? Certainly not &mdash; just because the child has access to this repository doesn&rsquo;t mean he should be director of it. He&rsquo;d lend books out without properly tracking them, he wouldn&rsquo;t be able to adequately secure the premises, and before you know it instead of a great Library of Congress you&rsquo;d have a tremendous auditorium empty of books.</p>
+
+<p>The US Government found itself in a similar position. Through the unique and regrettable powers offered it through the Patriot Act, it could visit the library (in this case, the storehouses of data on the Internet) whenever it wanted to. So of course it decided that this meant it should be the director of that library. The government has no particular skills or capabilities that make it uniquely suited to the administration of the knowledge it&rsquo;s gathered: it seems savvy enough to have gathered it when, in fact, anyone with access similar to the NSA&rsquo;s could have done so and would have had just as much of a &ldquo;right&rdquo; to it.</p>
+
+<p>This analogy is somewhat troublesome. After all, prior to the NSA&rsquo;s intervention, there wasn&rsquo;t one library for personal information on the Internet at all. If you wanted to know someone&rsquo;s Google searches, you&rsquo;d presumably have to hack Google. And if you wanted their bank account information, you&rsquo;d have to compromise their bank. That brings me to my next point: that assembling this single unified source of information represents a catastrophic single point of failure, and simultaneously provides a tremendous motive for theft.</p>
+
+<h2>Eventually Incompetent</h2>
+
+<p>My primary concern isn&rsquo;t that the data will be misused by the government (though it seems inevitable it will be). It&rsquo;s the security of the data itself. One point of access with all this information is akin to storing all gold in the entire world in one bank. Regardless of how well the bank is guarded, a lot of people are going to be very interested indeed in finding a way in &mdash; and it seems inevitable that, due to the fact that there are so few guards relative to potential criminals, and the incentive to break in is so motivating, a way will eventually be found.</p>
+
+<p>When my email, my online orders, my telephone conversations were stored separately in different servers, the barrier to assembling a complete profile of my online activity was rather high &mdash; a potential hacker would have to compromise numerous services and some incredibly tight security multiple times to really get a clear picture of my habits. But the NSA has done all of this hackers&#8217; work for him: all he must do is hack into one incredibly secure system, instead of a plethora of them.</p>
+
+<p>And while hacking the NSA sounds nearly impossible, there are security flaws discovered all the time in software, even software widely considered extremely secure. And now that the existence of PRISM is well-known, all of those flaws (and the newest ones discovered, before there&rsquo;s even an opportunity to fix them) will be tried on the NSA. Both by hacker groups and foreign governments.</p>
+
+<p>Does anyone really believe this new treasure trove of knowledge will remain secret for long?</p>
+
+<h2>What Can We Do?</h2>
+
+<p>Unfortunately, at this point, not much can be done about the situation. As should be abundantly clear it&rsquo;s really only a matter of time until PRISM is compromised. There are too many people who want the information it contains, and eventually they&rsquo;ll hit on some means to acquire it.</p>
+
+<p>The only really safe thing to do, now that PRISM is public knowledge, is to destroy the data it contains and stop the program. Regrettably it seems that the government really does believe that, because it had the savvy to acquire the knowledge, it&rsquo;s somehow competent enough to keep it safe from everyone else on the planet. In the end, it isn&rsquo;t the government that will pay the price for this hubris, but instead us citizens who were monitored: our secrets will be the ones to be released, because we trusted our government to allow us some privacy.</p>
+
+<p>Going forward, everyone should start encrypting their emails and conversations. The <a href="https://ssd.eff.org/">EFF&rsquo;s surveillance self-defense site</a> is a good read that gives some helpful tips. But ultimately, if you don&rsquo;t want your information to available on PRISM, it might be time to set up your own personal cloud or VPN and stop using big data and social networking sites. If that&rsquo;s not possible, then at least consider what you post to them &mdash; now we truly know that not only is everything we do on the Internet public, but there are people dumb enough to gather it all in one place so that it can easily be stolen.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Gistify 1.1.0: Visibility &amp; Accounts]]></title>
+    <link href="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/"/>
+    <updated>2013-06-03T18:44:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts</id>
+    <content type="html"><![CDATA[<p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I&rsquo;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago &mdash; man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
+
+<p>Anyhow, <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>, the incredibly awesome Mac App that lets you gist quickly and easily, just got a whole lot better. Now you can sign in to your GitHub account to make gists, and set the visibility of your gists to either public or private Also the app screenshots are no longer quite so, well&hellip; drab, for lack of a better word.</p>
+
+<p>If you haven&rsquo;t downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I&rsquo;m slightly biased, I&rsquo;ve been using it all the time and I think it&rsquo;s an incredibly handy tool &mdash; after all, that&rsquo;s why I released it. But if you&rsquo;re not convinced yet, or you&rsquo;re just interested in giving it a shot without paying the $2, let me know and I&rsquo;ll be happy to hook you up.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Gistify: a Mac App for Easy Gists]]></title>
+    <link href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/"/>
+    <updated>2013-05-29T13:32:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists</id>
+    <content type="html"><![CDATA[<p>Today I&rsquo;m happy to announce the release of my very first Mac App: <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
+
+<p><a href="https://itunes.apple.com/us/app/gistify/id653231502"><img src="http://f.cl.ly/items/2w0L3S1A2y3H2d3S0c14/Gistify-icon-256.png" alt="Gistify" /></a></p>
+
+<p>Gistify rather simply delivers the content of your clipboard to GitHub&rsquo;s awesome <a href="https://gist.github.com/">Gist</a> service. You can select the default format for all gists and override it on a gist-by-gist basis, and the resulting URL is appended to your clipboard so you can paste it wherever you like.</p>
+
+<p>Simple? Yes indeed, but I desperately wanted it. I made this initial version rapidly to scratch an itch I had &mdash; and perplexingly there&rsquo;s not an existing desktop app that seems to do this already. (There are competing apps that paste to other services, but for some reason none work properly that post to Gist.)</p>
+
+<p>In terms of future plans, I already have a new version submitted for approval to Apple! Version 1.1.0 will allow you to sign in to GitHub and create gists under your username: additionally you can toggle the visibility of gists to either public or secret. And in development is version 1.2.0, which will introduce all kinds of new mind-blowing awesomeness.</p>
+
+<p>So what are you waiting for? Get over to the Mac App store and buy <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
+
+<p>(Oh, and if you like the icon, it&rsquo;s by the super amazing <a href="http://twitter.com/lukesbeard">Luke Beard</a>.)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Huey 2.0.0]]></title>
+    <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
+    <updated>2013-05-09T11:18:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &mdash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">hue_ip</span> <span class="o">=</span> <span class="s1">&#39;123.456.789.012&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
+
+<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why Your Startup Is Failing (And How To Fix It)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/"/>
+    <updated>2013-04-30T02:49:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it</id>
+    <content type="html"><![CDATA[<p>The title of this post might be somewhat misleading: it&rsquo;s probably pretty obvious to you why your startup is failing. The same reason any business fails &mdash; you&rsquo;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&rsquo;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &ldquo;When will I see a return on my investment?&rdquo; and &ldquo;How can you possibly be spending so much of my money without making any in return?&rdquo;</p>
+
+<p>Shortly afterwards they stop giving you money and then you know it isn&rsquo;t long until the end.</p>
+
+<p>Maybe you&rsquo;re there right now, or staring down the barrel of that gun. I&rsquo;ve seen it before; I know what it looks like. You&rsquo;re not alone. If you haven&rsquo;t gone off the cliff yet, it&rsquo;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&rsquo;ll be making one of those &ldquo;What I Learned As An Ex-CEO&rdquo; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&rsquo;re failing at all. Afterwards, we can move on to fixing it.</p>
+
+<!-- more -->
+
+
+<h1>Why You&rsquo;re Failing</h1>
+
+<p>Keep in mind the bottom line here: ultimately you&rsquo;re failing because you&rsquo;re spending more money than you make. Discovering the reason behind this is the most important part of understanding how to correct it. Here, then, are the reasons your startup is failing.</p>
+
+<h2>4. You Hired the Wrong People</h2>
+
+<p>This is an especially easy pitfall for people to fall into. Back when you started your company, you were all excited about your vision, and unfortunately the brightness of said vision blinded you into hiring your old college roommate, or Cousin Mickey, or your sister&rsquo;s wedding photographer. They&rsquo;re really nice people, positive attitude, always on time&hellip; but they just aren&rsquo;t great.</p>
+
+<p>The Wrong People can fall anywhere on the &ldquo;not great&rdquo; spectrum. Some add literally nothing to your company &mdash; their most important skill is having a thousand Twitter followers. Others ostensibly have skills, but they&rsquo;re bad at them. These people are even worse than their do-nothing colleagues, since you&rsquo;ll be spending time correcting their screw-ups in addition to doing your own work.</p>
+
+<p>If you want your startup to be a success, you don&rsquo;t have time to teach anyone the ropes or take on charity cases. You need stellar performers in every position you&rsquo;re hiring for, and that goes double for engineers, since, as a tech startup, they&rsquo;re the ones in the trenches making your product. Anyone in your company that isn&rsquo;t out-and-out amazing is a waste of your money.</p>
+
+<p>If you&rsquo;re not knowledgeable enough to judge whether or not you hired the wrong people, you need to immediately hire someone who can competently make that assessment and include them in your decision-making processes.</p>
+
+<h2>3. You Have Too Many Warm Bodies</h2>
+
+<p>Your startup has four C-level executives, two managers, and two engineers. What&rsquo;s wrong with this picture?</p>
+
+<p>That&rsquo;s a gimmie, obviously, but you might be surprised how often situations like this occur. (Or if you&rsquo;re as bitter and jaded as I am, you won&rsquo;t be surprised at all.) There are only two kinds of people you need in your startup: people who make your product &mdash; usually your engineers and designers &mdash; and people who sell it. Or, instead of selling it, people responsible for figuring out how to make it profitable, like advertising experts or investment gurus. Everyone else is extraneous.</p>
+
+<p>You don&rsquo;t need managers if you&rsquo;ve hired competent engineers. You probably don&rsquo;t need half of your C-level team either. Yes, they&rsquo;re busy all the time and claim their work is integral to the proper functioning of your company. But you wouldn&rsquo;t be staring into the inky abyss of bankruptcy if that were true.</p>
+
+<p>People are truly amazing at generating work for themselves. It&rsquo;s not a testament to the importance of their job, it&rsquo;s a sad reflection on the nature of human existence. Everyone wants to feel important and special, even if they&rsquo;re not really bringing anything to the party. Don&rsquo;t let people waste your rapidly-dwindling money doing this.</p>
+
+<h2>2. You&rsquo;re Wasting Your Time</h2>
+
+<p>There&rsquo;s a lot of ways you can be doing this. Here&rsquo;s a quick list:</p>
+
+<ul>
+<li><strong>Meetings</strong>: You should go into every meeting knowing exactly what that meeting is intended to accomplish. When it&rsquo;s accomplished, the meeting is over. Meetings that don&rsquo;t have a clear agenda do not deserve to occur.</li>
+<li><strong>Process</strong>: Making your product must be fun and easy for your engineers (if they&rsquo;re good engineers, the fun part will come naturally &mdash; supplying the easy is up to you). If it becomes tiresome and unpleasant because of a ridiculous process then you&rsquo;re wasting time.</li>
+<li><strong>Priorities</strong>: Bugs that affect only one customer should be prioritized below bugs affecting fifty customers. Features that no one wants should be slated behind those that customers are clamoring for.</li>
+</ul>
+
+
+<p>Ultimately, if you&rsquo;re not doing something directly applicable to building your application, ensuring its continued success, or selling it, you&rsquo;re wasting your time. Be ruthless here. If you need to constantly remind yourself why what you&rsquo;re doing is valuable&hellip; chances are it probably isn&rsquo;t.</p>
+
+<h2>1. No One Wants Your Product</h2>
+
+<p>The only way for you to make money is to sell something (or give it away and sell something related). If the people aren&rsquo;t buying, then you aren&rsquo;t making money, and, well, here you are.</p>
+
+<p>Don&rsquo;t delude yourself by thinking you don&rsquo;t want users yet. That&rsquo;s like saying you don&rsquo;t want money yet. You want money right now, and you want users right now. You want everyone in the world to be clamoring to use your product, and damn the consequences. It might melt your servers into tiny puddles of liquid metal or bring your system to a screeching halt, but who the fuck cares? You can fix those problems. You need users and you need them immediately.</p>
+
+<p>If your initial bunch of users love what you&rsquo;re doing, they&rsquo;ll recommend it to their friends. That&rsquo;s how you get those clamoring masses beating down your door. If people aren&rsquo;t recommending your product to their networks, there&rsquo;s a reason. Find out what it is and fix it. (Hint: it&rsquo;s because of the same issues you run into when you give a tech demo.)</p>
+
+<p>Getting into TechCrunch doesn&rsquo;t count as people wanting your product. Your customers don&rsquo;t read TechCrunch.</p>
+
+<h1>How To Fix It</h1>
+
+<p>Ultimately, your investors don&rsquo;t care about your clever ideas, neat slideshows, your team or even your tech. They care about making money. Why? Because investors are pragmatists. They know that if they bet a million dollars on twenty startups, they&rsquo;ll lose nineteen million dollars on nineteen failures &mdash; and make a hundred million dollars on one success.</p>
+
+<p>You want to be a pragmatist as well. If you make them money, you&rsquo;ll make money for yourself as well. The way to fix your problems, then, is to reduce costs and raise profits. Easy to say, right? Well, here&rsquo;s the specifics.</p>
+
+<h2>3. BRING ME THE AXE</h2>
+
+<p><img src="http://i.qkme.me/3ox4qa.jpg" alt="TINA! BRING ME THE AXE!!" /></p>
+
+<p>It&rsquo;s time to start firing your employees.</p>
+
+<p>This isn&rsquo;t easy. Most of these people have probably become your friends. Perhaps some of them started as your bosom-buddies. Well, too bad. Maybe you can hire them again later when you&rsquo;re more profitable. But if you don&rsquo;t start trimming now, then in a few months you&rsquo;ll be cutting all of them.</p>
+
+<p>First, get rid of all the people that aren&rsquo;t truly, stunningly great at their jobs, whatever their job is. If that&rsquo;s not enough, next flatten your corporate structure. This usually involves firing middle-management. And finally, start getting rid of C-level executives.</p>
+
+<p>Grab your org chart right now and stare at it. For every box on that piece of paper, ask yourself, &ldquo;Does this person make my company money?&rdquo; If the answer is no, then you know what to do.</p>
+
+<h2>2. Cultivate Elitism</h2>
+
+<p>People should speak of your company and its hiring practices in hushed, awed tones. You want to be the startup that&rsquo;s snatching up all the great talent &mdash; making the best people in the industry offers that they just can&rsquo;t refuse. People talk about 10X engineers, and you want to be entirely composed of those, but not just for engineers: for everything! Get amazing designers, fantastic QA people, the best of the best. If you want to turn your venture around, this is where you should blow your remaining money.</p>
+
+<p>Once that&rsquo;s done, for God&rsquo;s sake, get out of their way. You hired these amazing people to be dynamic forces of change and save your company &mdash; let them do it! Managing great people is hard: you want to pave the road in front of them almost without them realizing you&rsquo;ve done it. Smooth the way, ease the process, and I guarantee that the results will astound you.</p>
+
+<p>You never want to hire anyone that doesn&rsquo;t elicit respect from the other employees of your company. Foster this culture of elitism. Oh, and don&rsquo;t hire until it becomes literally painful that you&rsquo;re short a person. Even then be very very picky. The wrong skills or a bad attitude can send you right back to the &ldquo;firing&rdquo; step of this process again, and you don&rsquo;t want to do that more than once.</p>
+
+<h2>1. Double Down on What Makes You Money</h2>
+
+<p>Whatever your value proposition is, you need to clarify it and refocus your entire company around achieving it. At this point, there&rsquo;s been enough pivoting and more than enough money spent trying to find the money in your initial idea. If there isn&rsquo;t any, then it&rsquo;s time to pack up and go home &mdash; but if there is, it&rsquo;s time to pursue it doggedly and relentlessly.</p>
+
+<p>If a VC offered you a million dollars, no strings attached, this very day, you should refuse. Why? Because you should have been either marginally profitable or marginally popular on your <strong>PREVIOUS</strong> million dollars. If you&rsquo;ve burnt through all that money and there&rsquo;s still not hordes of people beating down your doors, it is time to do some soul-searching.</p>
+
+<p>Why don&rsquo;t more people find my app popular? Why aren&rsquo;t they spending their money on me? These aren&rsquo;t academic questions to be answered at your leisure: these thoughts should be the burning cores of your very being. If you&rsquo;re in the unenviable position of being a failing startup, you must do everything in your power to answer these two questions. Do so and then double down on what you discover. It&rsquo;s your only prayer.</p>
+
+<h1>Afterwards</h1>
+
+<p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist &mdash; your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn&rsquo;t change its fate. The only measure of a company&rsquo;s success is whether or not it makes money. The rest is just icing on the cake.</p>
+
+<p>Can your company do that? Despite my tone, I believe it can. You&rsquo;ve poured your heart and soul into it and you&rsquo;ve done so because you believe you&rsquo;re working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn&rsquo;t enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Perils of Overengineering]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering/"/>
+    <updated>2013-04-23T13:19:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering</id>
+    <content type="html"><![CDATA[<p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
+
+<!-- more -->
+
+
+<h2>Don&rsquo;t Overthink It</h2>
+
+<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &mdash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
+
+<p>Chances are the answer is &ldquo;no.&rdquo; You&rsquo;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
+
+<p>This goes for any technology. Coco Chanel infamously stated, &ldquo;Before you leave the house, look in the mirror and take one thing off.&rdquo; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&rsquo;re included? Did you make the best choices? If you&rsquo;re not sure, do some research. It&rsquo;ll save you a boatload of trouble down the river.</p>
+
+<h2>Respect The Majority</h2>
+
+<p>Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$d</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="ss">:a</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It takes half a millisecond &mdash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
+
+<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &mdash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
+
+<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&rsquo;ll save everyone involved a lot of money and trouble. No, you won&rsquo;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&rsquo;ll never have to hand off.</p>
+
+<h2>Less is Best</h2>
+
+<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &mdash; both cases &mdash; is to ruthlessly cull what you&rsquo;ve got.</p>
+
+<p>Success, for code, isn&rsquo;t bigger and better. It&rsquo;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&rsquo;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
+
+<p>The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn&rsquo;t need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.</p>
+
+<p>Don&rsquo;t be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won&rsquo;t be used that way anyway, and then you&rsquo;ll look like a genius (in addition to actually being one for following sound advice).</p>
+
+<h2>New IS Cool</h2>
+
+<p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
+
+<p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
+    <updated>2013-04-17T18:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+
+<!-- more -->
+
+
+<h2>Comparisons</h2>
+
+<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
+
+<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+
+<p>So let&rsquo;s get down to the details!</p>
+
+<h3>Amazon Web Services</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$277.00</td>
+    <td>$30.74</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
+    </td>
+    <td>$500.00</td>
+    <td>$40.26</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      5 hours maintenance
+    </td>
+    <td>$1500.00</td>
+    <td>$750.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$2277.00</th>
+    <th>$821.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$12129.00</th>
+  </tr>
+</table>
+
+
+<p>No surprises here: if you&rsquo;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&rsquo;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&rsquo;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
+
+<h3>RackSpace</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB managed cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$262.80</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$321.20</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      10 hours setup<br />
+      2 hours maintenance
+    </td>
+    <td>$750.00</td>
+    <td>$300.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$750.00</th>
+    <th>$884.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$11358.00</th>
+  </tr>
+</table>
+
+
+<p>RackSpace&rsquo;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&rsquo;ll keep services running and your servers themselves operational) and that&rsquo;s reflected in a lowered monthly devops cost. They don&rsquo;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&rsquo;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
+
+<h3>BlueBox</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud instance</h4>
+      6 unicorn workers<br/>
+      1 nginx reverse proxy<br/>
+      memcached
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>1 4GB cloud database instance</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$385.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      0 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$0.00</td>
+    <td>$0.00</td>
+  </tr>
+  <tr class='highlighted'>
+    <th>Total</th>
+    <th>$0.00</th>
+    <th>$770.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$9240.00</th>
+  </tr>
+</table>
+
+
+<p>BlueBox&rsquo;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&rsquo;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&rsquo;s product is easily the most expensive. You&rsquo;re paying for their expertise much more than their hardware.</p>
+
+<h3>Heroku</h3>
+
+<table class='numbers'>
+  <tr>
+    <th style='width: 72%;'>Service</th>
+    <th>Setup</th>
+    <th>Monthly</th>
+  </tr>
+  <tr>
+    <td>
+      <h4>4 dynos</h4>
+      12 unicorn workers<br/>
+    </td>
+    <td>$0.00</td>
+    <td>$143.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>memcached addon (500 MB)</h4>
+    </td>
+    <td>$0.00</td>
+    <td>$40.00</td>
+  </tr>
+  <tr>
+    <td><h4>Fugu database instance</h4></td>
+    <td>$0.00</td>
+    <td>$400.00</td>
+  </tr>
+  <tr>
+    <td>
+      <h4>Devops Time</h4>
+      2 hours setup<br />
+      0 hours maintenance
+    </td>
+    <td>$300.00</td>
+    <td>$0.00</td>
+  </tr>
+    <tr class='highlighted'>
+    <th>Total</th>
+    <th>$300.00</th>
+    <th>$583.00</th>
+  </tr>
+  <tr class='highlighted'>
+    <th>First Year</th>
+    <th colspan='2'>$7296.00</th>
+  </tr>
+</table>
+
+
+<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+
+<h2>Conclusions</h2>
+
+<p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I'm Not Applying to 37Signals (But Why You Should)]]></title>
+    <link href="http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/"/>
+    <updated>2013-03-19T13:16:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should</id>
+    <content type="html"><![CDATA[<p>In case you haven&rsquo;t heard&hellip;</p>
+
+<p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
+
+<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &mdash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
+
+<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &mdash; either way, you&rsquo;ll have an opinion!</p>
+
+<!-- more -->
+
+
+<h2>Why You Should Apply</h2>
+
+<ol>
+<li><h3>They&rsquo;ve literally written books about how great it is to work there.</h3>
+
+<p>If you haven&rsquo;t read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won&rsquo;t find stupid meetings, outside investors, or anyone burning the midnight oil here. You&rsquo;ll find work. Great, meaningful, empowering work. When you get right down to it, isn&rsquo;t that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They&rsquo;re committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
+<li><h3><a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">The Man Himself</a>.</h3>
+
+<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&rsquo;ve been lobbying so hard for them to make. He&rsquo;s the inventor of Rails, he&rsquo;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&rsquo;s not to like? I imagine that, if you announced to a room of programmers, &ldquo;I work with DHH,&rdquo; there would be a brief hush and then everyone would be talking over each other. One would say, &ldquo;That man is a crazy person!&rdquo; And another, &ldquo;He&rsquo;s the greatest programmer to ever draw breath!&rdquo; There&rsquo;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
+<li><h3>Fame &amp; fortune await.</h3>
+
+<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&rsquo;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&rsquo;ll talk to will know where you work. Your title and position will be meaningful &mdash; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&rsquo;re a 37signals alum (unless you intend to be a lifer), having &ldquo;Programmer at 37signals&rdquo; on your resume will look even more stellar than all those follower numbers.</p></li>
+<li><h3>Work with the best &mdash; and be the best.</h3>
+
+<p>37signals&#8217; programming team is the crème de la crème of the Rails world. You&rsquo;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &mdash; doesn&rsquo;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&rsquo;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
+</ol>
+
+
+<h2>Why You Shouldn&rsquo;t</h2>
+
+<ol>
+<li><h3>You&rsquo;re not the best.</h3>
+
+<p>But in a team of greats, even being great is not enough &mdash; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&rsquo;ll be just another programmer. For some, the knowledge that they&rsquo;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&rsquo;t yet have the fame and reach of 37signals. It&rsquo;s up to you to find them!</p></li>
+<li><h3>While it&rsquo;s a great company, it&rsquo;s still a company.</h3>
+
+<p>I love startups. In a startup I&rsquo;m not just a programmer: I do lots and lots of work with computers, it&rsquo;s true, and most of that is programming. But I&rsquo;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&rsquo;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&rsquo;s not an easy question to answer, but I would bet not a whole lot &mdash; or, at least, less than you would somewhere else.</p></li>
+<li><h3>Go do it yourself.</h3>
+
+<p>While 37signals is a great company, there&rsquo;s nothing inherently special about it. They make CRM software, and while that&rsquo;s an interesting problem space, there&rsquo;s tons of fascinating questions to answer out there &mdash; questions that can only be answered through excellent software! The point of Rework is that there&rsquo;s no real magic in 37signals that people who are smart and dedicated can&rsquo;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&rsquo;d be joining his company, but ultimately, if you&rsquo;re so great, why aren&rsquo;t you out there making a name of your own, rather than riding on someone else&rsquo;s coattails? Even if they&rsquo;re his.</p></li>
+<li><h3>Fame &amp; fortune await!</h3>
+
+<p>If you&rsquo;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&rsquo;re dramatically out of line with what the market pays. And while they&rsquo;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&rsquo;t join stars that have already risen. Do you really want fame and fortune? Then you don&rsquo;t want to join 37signals. They&rsquo;ve already arrived there, and while there&rsquo;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&hellip; regardless of how awesome they are.</p></li>
+</ol>
+
+
+<h2>In The End</h2>
+
+<p>At the point I&rsquo;m at in my career, 37signals &mdash; while incredibly appealing &mdash; isn&rsquo;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&rsquo;t picked this up already, they&rsquo;re my programming heroes: and they should be yours too, because they care about everything that&rsquo;s important in this industry. So if you&rsquo;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
+
+<p>If not, I look forward to seeing what you create in the future, because I bet it&rsquo;ll be stellar.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Existing Rails API Solutions Suck]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck/"/>
+    <updated>2013-02-22T11:00:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck</id>
+    <content type="html"><![CDATA[<p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
+
+<p>They all suck.</p>
+
+<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
+
+<ol>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
+</ol>
+
+
+<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
+
+<!-- more -->
+
+
+<h2><a href="https://github.com/intridea/grape">grape</a></h2>
+
+<p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you&rsquo;re doing and what you&rsquo;re expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
+
+<p>Unfortunately that&rsquo;s where the great stuff ends. For Rails applications &mdash; assuming you actually want to use grape with Rails &mdash; it is really an unpleasant solution, since it just doesn&rsquo;t play nicely with Rails.</p>
+
+<p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don&rsquo;t want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you&rsquo;re on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
+
+<p>Second, and for those of you already gearing up to say &ldquo;but grape isn&rsquo;t FOR Rails&rdquo;, you end up duplicating a lot of Rails&#8217; structure inside it anyway, even in small applications. If you don&rsquo;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
+
+<p>Third, if you want to version your API, you get to copy and paste the entire thing. To prevent us doing this every time at Everest, I implemented a module inheritance system for the API versions, but frankly it feels hacky and was difficult to get grape to support properly.</p>
+
+<p>Fourth, its caching support is pathetic. You have to install a completely separate gem (<a href="https://github.com/artsy/garner">garner</a>) if you want any kind of caching at all. Do people who use grape not experience any sort of load? Do their APIs not engage in any sort of database querying? Why is this a tacked-on side project instead of a core feature?</p>
+
+<p>And of course it has no view support. If you want to reuse data representations, define a method in the base API and call it all over the place. It&rsquo;s like a view, but more hidden!</p>
+
+<p>I assume some people must use grape for at least as complicated an app as I do. When I was Googling how to do versioning without copy pasting, I came across numerous slideshows from various Rails conferences discussing how great it is. None of them address any of these problems, so I&rsquo;m curious how the really big players make grape work without these difficulties. (My suspicion is they don&rsquo;t use grape.)</p>
+
+<h2><a href="https://github.com/fabrik42/acts_as_api">acts_as_api</a></h2>
+
+<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &mdash; that&rsquo;s what views are for. You don&rsquo;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&rsquo;t.</p>
+
+<p>This gem leads to really horrible uses like this when you version an API:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:id</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:first_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:last_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:real_name</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:gender</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:with_timezone</span><span class="p">,</span> <span class="kp">extend</span><span class="p">:</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:timezone</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a versioned resource. You don&rsquo;t want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
+
+<h2><a href="https://github.com/filtersquad/rocket_pants">rocket_pants</a></h2>
+
+<p>rocket_pants actually does quite a lot right (besides having a sweet name): it&rsquo;s fairly DRY and it integrates with Rails pretty well.</p>
+
+<p>That said, versioning is still a tremendous pain in the butt. Routing allows you to at least select which controller your requests are sent to, but this quickly gets complicated:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">1</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item2&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">2</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#override&#39;</span> <span class="c1"># how does this interact with the line above?</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item3&#39;</span> <span class="c1"># x now does something different for only versions 2 and 4</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Confusing!</p>
+
+<p>Why not have a simple fallback method where you define the highest version of your API, and the router checks to see which controllers exist in that version, moving back to an earlier version until it finds a defined controller? You could even have the router detect this on application load to prevent increased loading times. Then you don&rsquo;t need any sort of fooling around with complicated routing rules. Instead you just define the basic structure of your API and your application correctly infers versions from it, and if you have specific overrides you can address them in the routing file.</p>
+
+<p>Wishing aside, rocket_pants also doesn&rsquo;t use views, instead encouraging you to use a model&rsquo;s <code>serializable_hash</code> method to instruct it how to convert the model to JSON. Let&rsquo;s hope you don&rsquo;t have more than one representation of your model.</p>
+
+<h2><a href="https://github.com/bploetz/versionist">versionist</a></h2>
+
+<p>versionist supports views correctly but it suffers from a tremendously overwhelming amount of copy/pasting. It you want to version your API, it copies not only the routes inside your routes.rb, but also:</p>
+
+<ul>
+<li>Your controllers and controller specs</li>
+<li>Your presenters and presenter specs</li>
+<li>Your helpers and helper specs</li>
+<li>Your docs</li>
+</ul>
+
+
+<p>To a new location. These are just copies: in all likelihood they&rsquo;ll end up largely exactly the same as the previous version. It provides a Rails generator that does this automatically. I&rsquo;m on the fence as to whether great support for poor design patterns is unironically helpful though.</p>
+
+<h2><a href="https://github.com/erichmenge/api-versions">api-versions</a></h2>
+
+<p>Though it&rsquo;s practically unknown, in all my searching this is the gem that really got closest to what I was looking for. By default, it uses this heretofore unseen programming concept called &ldquo;inheritance&rdquo; to prevent code duplication from one version of your API to the next.</p>
+
+<p>Unfortunately, when you use its helpfully-provided Rails generator <code>api_versions:bump</code> it still creates a new controller for each of your old controllers. While they inherit code, which is nice, why do you have an empty controller just to provide inheritance to a previous version of the API? Still, this is definitely the least amount of copy/pasting we&rsquo;ve seen up until this point, and I sincerely appreciate the author&rsquo;s attempt to remain DRY in the very wet API landscape.</p>
+
+<h2>So what should I do if I&rsquo;m making a Rails API?</h2>
+
+<p>Use <a href="https://github.com/rails/jbuilder">jbuilder</a> (or <a href="https://github.com/nesquena/rabl">rabl</a>) to create views. If you have a tremendous hatred of views, use <a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a> instead to achieve the same goal. Your controllers should be pretty much like regular Rails ActionControllers. Feel free to include an extremely low-touch library like <a href="https://github.com/bploetz/versionist">versionist</a> or <a href="https://github.com/erichmenge/api-versions">api-versions</a>. Put most of your controller code in modules and include it in the actual controllers to prevent copy and pasting everywhere for the first. For the latter, not much you can do. Suck it up and copy and paste in your routes for both. Unfortunately, that&rsquo;s the best solution I can come up with.</p>
+
+<h2>Stop whining and do something about it!</h2>
+
+<p>You know what? I think I will.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>
+    <link href="http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/"/>
+    <updated>2013-02-20T19:32:00-06:00</updated>
+    <id>http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey</id>
+    <content type="html"><![CDATA[<p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&rsquo;s how to make it work.</p>
+
+<!-- more -->
+
+
+<h2>Huey v1.0.0</h2>
+
+<p>New in huey v1.0.0 are light groups: arbitrary collections of bulbs on which you can run commands simultaneously. Getting them to work is ridiculously simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Contains all bulbs that have &#39;Living Room&#39; in their name</span>
+</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">,</span> <span class="s1">&#39;Foyer&#39;</span><span class="p">)</span> <span class="c1"># All bulbs that have either &#39;Living Room&#39; or &#39;Foyer&#39; in their name</span>
+</span><span class='line'><span class="n">g</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># A group specifically containing bulbs 1 and 3</span>
+</span><span class='line'><span class="n">g</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;My Bulbs&#39;</span> <span class="c1"># Name your group to find it later</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once you have a group set up, you can act on all its bulbs simultaneously as you would on any individual bulb.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;My Bulbs&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">200</span>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">save</span> <span class="c1"># All changes you&#39;ve made are committed to all the bulbs in a group</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="ss">bri</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="ss">ct</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># Set and save in one step</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, you probably want to do the same actions to groups over and over again: for example, dimming all your lights at night and brightening them in the morning. For that we have a shorthand called events:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">event</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;All Lights Off&#39;</span><span class="p">,</span> <span class="ss">group</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="ss">actions</span><span class="p">:</span> <span class="p">{</span><span class="ss">on</span><span class="p">:</span> <span class="kp">false</span><span class="p">})</span>
+</span><span class='line'><span class="n">event</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># All lights turn off</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>YAML Setup</h2>
+
+<p>Huey can read your groups and events from YAML configuration files. Here&rsquo;s a sample from my setup:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># groups.yml</span>
+</span><span class='line'><span class="l-Scalar-Plain">Study</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Study</span><span class="nv"> </span><span class="s">Side&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Study</span><span class="nv"> </span><span class="s">Ceiling&quot;</span><span class="p-Indicator">]</span>
+</span><span class='line'><span class="l-Scalar-Plain">Bedroom</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Bedroom</span><span class="nv"> </span><span class="s">Left&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Bedroom</span><span class="nv"> </span><span class="s">Right&quot;</span><span class="p-Indicator">]</span>
+</span><span class='line'><span class="l-Scalar-Plain">Living Room</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Front&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Center&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Back&quot;</span><span class="p-Indicator">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># events.yml</span>
+</span><span class='line'><span class="l-Scalar-Plain">Wakeup</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">group</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Bedroom</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">actions</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="s">&quot;on&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">bri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">255</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">ct</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">200</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">Sunset</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">group</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Bedroom</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">actions</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="s">&quot;on&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">bri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">255</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">ct</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">350</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;groups.yml&#39;</span><span class="p">)</span> <span class="c1"># Import groups</span>
+</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;events.yml&#39;</span><span class="p">)</span> <span class="c1"># Import events</span>
+</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Wakeup&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># Run an event on a group</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&rsquo;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
+
+<h2>Whenever</h2>
+
+<p>Finally, I have it all stitched together through whenever, because who likes reading crontabs? When you set up whenever, it creates a file called config/schedule.rb that it uses to read the crontab. I altered mine to include this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">job_type</span> <span class="ss">:event</span><span class="p">,</span> <span class="sx">%Q(cd /directory/to/huey_control &amp;&amp; ruby -e &quot;require &#39;huey&#39;; Huey::Group.import(&#39;groups.yml&#39;); Huey::Event.import(&#39;events.yml&#39;); Huey::Event.find(&#39;:task&#39;).execute(true)&quot;)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">every</span> <span class="ss">:weekday</span><span class="p">,</span> <span class="ss">at</span><span class="p">:</span> <span class="s1">&#39;9:30AM&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">event</span> <span class="s2">&quot;Wakeup&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
+
+<p>That&rsquo;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&rsquo;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
+
+<p>But there&rsquo;s a lot more you can do with huey if you&rsquo;d like. Why not make an event that&rsquo;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
+]]></content>
+  </entry>
+  
+</feed>

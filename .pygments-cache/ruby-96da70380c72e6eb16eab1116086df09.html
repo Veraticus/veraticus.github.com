@@ -1,0 +1,6 @@
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">clear_photo_index</span>
+  <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">delete</span>
+  <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:mappings</span> <span class="o">=&gt;</span> <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">mapping_to_hash</span><span class="p">,</span> <span class="ss">:settings</span> <span class="o">=&gt;</span> <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span>
+  <span class="no">Photo</span><span class="o">.</span><span class="n">tire</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">refresh</span>
+<span class="k">end</span>
+</pre></div>

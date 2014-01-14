@@ -1,0 +1,14 @@
+<div class="highlight"><pre><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;motion-testflight&#39;</span>
+
+<span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Test App&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">codesign_certificate</span> <span class="o">=</span> <span class="s1">&#39;iPhone Distribution: Your Name Here&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;com.yourCompany.yourApp&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">provisioning_profile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/your/distribution_provisioning_profile.mobileprovision&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">sdk</span> <span class="o">=</span> <span class="s1">&#39;vendor/TestFlightSDK&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">api_token</span> <span class="o">=</span> <span class="s1">&#39;APIToken&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">testflight</span><span class="o">.</span><span class="n">team_token</span> <span class="o">=</span> <span class="s1">&#39;TeamToken&#39;</span>
+<span class="k">end</span>
+</pre></div>

@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby in the Sandbox: SandRBox - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I volunteer in the cyber center at the Center on Halsted. They&rsquo;re always looking for people to teach new classes, so I figured I would teach an &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby in the Sandbox: SandRBox</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-31T11:19:00-05:00" pubdate data-updated="true">Mar 31<span>st</span>, 2012</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They&rsquo;re always looking for people to teach new classes, so I figured I would teach an introduction to programming class &mdash; an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner&rsquo;s language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it&rsquo;s super fun.</p>
+
+<p>Unfortunately, getting stuff installed on the computers at the cyber center is kind of a headache. Like most chronically underfunded but well-meaning institutions, there are about three levels of bureaucracy between you and getting anything done. And teaching Ruby without the aid of irb would be next to impossible. So what&rsquo;s a guy to do?</p>
+
+<p>Simple: <a href="http://sandrbox.herokuapp.com/">create irb online</a>.</p>
+
+<!-- more -->
+
+
+<p>Now, I hear what you&rsquo;re saying: &ldquo;Josh, that already exists, and it&rsquo;s called <a href="http://tryruby.org/">tryruby.org</a>!&rdquo; Unfortunately, I don&rsquo;t like tryruby all that much. I have nothing but respect for their mission, but the service itself is achingly slow and frequently it won&rsquo;t work at all. I don&rsquo;t know what they&rsquo;re running it on (the only code I could find on github was months old), but I figured I could whip up something better.</p>
+
+<p><a href="https://github.com/Veraticus/Sandrbox">Turns out I was right</a>. Sandrbox is a simple project that I&rsquo;m actually pretty proud of; it makes use of some very edge-case metaprogramming concepts to create as secure an irb environment as I could whip up. In addition to removing dangerous methods on classes (and their metaclasses), it has some really nice syntactical sugar that makes it easy to understand where you are in a block. And when the execution of your secure code is done, it restores all the classes and methods that were missing while removing any new ones that were added, guaranteeing that your environment will be exactly the same as before you started executing code.</p>
+
+<p>This is obviously important if you intend to run that code on a server somewhere &mdash; after all, you can&rsquo;t have someone doing something like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sb">`killall -9 thin`</span> <span class="c1"># bad</span>
+</span><span class='line'><span class="no">Kernel</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;rm -rf /&quot;</span><span class="p">)</span> <span class="c1"># worse</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These methods when executed in Sandrbox are instead gently sanitized:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;`killall -9 thin`&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="c1"># =&gt; [&quot;NameError: undefined local variable or method ``&#39; for Kernel:Module&quot;]</span>
+</span><span class='line'><span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;Kernel.exec(&quot;rm -rf /&quot;)&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="c1"># =&gt; [&quot;NameError: undefined local variable or method `exec&#39; for Kernel:Module&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While still allowing you to retain the power and complexity of Ruby:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;class Foo&#39;</span><span class="p">,</span> <span class="s1">&#39;def test&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;Hi!&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo.new.test&#39;</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="c1"># =&gt; [nil, &#39;&quot;Hi!&quot;&#39;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Even cooler is that it automatically does some parsing for you, so that you know when code can be executed or the user is probably not done yet typing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">response</span> <span class="o">=</span> <span class="no">Sandrbox</span><span class="o">.</span><span class="n">perform</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;class Foo&#39;</span><span class="p">,</span> <span class="s1">&#39;def test&#39;</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">output</span> <span class="c1"># []</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">complete?</span> <span class="c1"># false</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">indent_level</span> <span class="c1"># 2</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">indent_character</span> <span class="c1"># &#39;def&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course &mdash; it&rsquo;ll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can&rsquo;t destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can&rsquo;t say that it&rsquo;s totally secure yet, but it&rsquo;s a damn sight better than uncensored irb, and after a week or two of work I bet I&rsquo;ll be able to get it locked down pretty damn tight.</p>
+
+<p>But until then, go ahead and try to break it!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/" title="Previous Post: Delegation when Delegate Just Won't Work">&laquo; Delegation when Delegate Just Won't Work</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/03/how-to-refactor-a-large-and-old-project/" title="Next Post: How to Refactor a Large and Old Project">How to Refactor a Large and Old Project &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

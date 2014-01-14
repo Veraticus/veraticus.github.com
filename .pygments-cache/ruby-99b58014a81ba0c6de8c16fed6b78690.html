@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="no">FnordMetric</span><span class="o">.</span><span class="n">server_configuration</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">:redis_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://localhost:6379&quot;</span><span class="p">,</span>
+  <span class="ss">:redis_prefix</span> <span class="o">=&gt;</span> <span class="s2">&quot;fnordmetric&quot;</span><span class="p">,</span>
+  <span class="ss">:inbound_stream</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1339&quot;</span><span class="o">]</span><span class="p">,</span>
+  <span class="ss">:start_worker</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">development?</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;FNORD_WORKER&#39;</span><span class="o">]</span> <span class="p">?</span> <span class="kp">true</span> <span class="p">:</span> <span class="kp">false</span><span class="p">),</span>
+  <span class="ss">:print_stats</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="ss">:event_queue_ttl</span> <span class="o">=&gt;</span> <span class="mi">120</span><span class="p">,</span>
+  <span class="ss">:event_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span>
+  <span class="ss">:session_data_ttl</span> <span class="o">=&gt;</span> <span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span>
+<span class="p">}</span>
+</pre></div>

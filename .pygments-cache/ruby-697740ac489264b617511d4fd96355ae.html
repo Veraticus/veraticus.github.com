@@ -1,0 +1,7 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Tagging</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">attr_accessible</span> <span class="ss">:tag_id</span><span class="p">,</span> <span class="ss">:taggable_id</span><span class="p">,</span> <span class="ss">:taggable_type</span>
+
+  <span class="n">belongs_to</span> <span class="ss">:tag</span>
+  <span class="n">belongs_to</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="k">end</span>
+</pre></div>

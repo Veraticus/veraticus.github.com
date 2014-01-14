@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="n">group</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;My Bulbs&#39;</span><span class="p">)</span>
+
+<span class="n">group</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">group</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">group</span><span class="o">.</span><span class="n">save</span> <span class="c1"># All changes you&#39;ve made are committed to all the bulbs in a group</span>
+
+<span class="n">group</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="ss">bri</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="ss">ct</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># Set and save in one step</span>
+</pre></div>

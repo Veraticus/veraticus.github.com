@@ -1,0 +1,14 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Vote</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="n">belongs_to</span> <span class="ss">:voteable</span><span class="p">,</span> <span class="ss">polymorphic</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">touch</span><span class="p">:</span> <span class="kp">true</span>
+
+  <span class="n">after_create</span> <span class="ss">:increment_counters</span>
+  <span class="n">after_destroy</span> <span class="ss">:decrement_counters</span>
+
+  <span class="o">[</span><span class="ss">:increment</span><span class="p">,</span> <span class="ss">:decrement</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="o">|</span>
+    <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counters&quot;</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">voteable_type</span><span class="o">.</span><span class="n">classify</span><span class="o">.</span><span class="n">constantize</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">type</span><span class="si">}</span><span class="s2">_counter&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">votes_count&quot;</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">voteable_id</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</pre></div>

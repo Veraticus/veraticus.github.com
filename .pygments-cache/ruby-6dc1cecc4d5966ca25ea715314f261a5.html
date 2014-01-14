@@ -1,0 +1,19 @@
+<div class="highlight"><pre><span class="k">module</span> <span class="nn">Taggable</span>
+  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+
+  <span class="n">included</span> <span class="k">do</span>
+    <span class="n">has_many</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:taggable</span>
+    <span class="n">has_many</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:taggings</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="nb">name</span><span class="o">.</span><span class="n">strip!</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="no">Tag</span><span class="o">.</span><span class="n">find_or_create_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">taggings</span><span class="o">.</span><span class="n">find_or_create_by_tag_id</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">tag_names</span>
+    <span class="n">tags</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:name</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

@@ -1,0 +1,32 @@
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="nf">-&gt;</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(event) -&gt;</span>
+    <span class="nv">element = </span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+    <span class="nv">url = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;href&#39;</span>
+    <span class="k">return</span> <span class="kc">false</span> <span class="k">unless</span> <span class="nx">url</span>
+    <span class="nv">container = </span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-container&#39;</span><span class="p">)</span>
+    <span class="nv">selector = </span><span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-selector&#39;</span>
+    <span class="nv">more = </span><span class="kc">true</span>
+
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+      <span class="nv">url: </span><span class="nx">url</span>
+      <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
+        <span class="nv">elements = </span><span class="nx">$</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="nx">selector</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+          <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;All content loaded&#39;</span><span class="p">)</span>
+                 <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;done&#39;</span><span class="p">)</span>
+                 <span class="p">.</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)</span>
+        <span class="k">else</span>
+          <span class="nx">container</span><span class="p">.</span><span class="nx">append</span> <span class="nx">elements</span>
+          <span class="nx">elements</span><span class="p">.</span><span class="nx">css</span> <span class="nv">opacity: </span><span class="mi">0</span>
+          <span class="nx">elements</span><span class="p">.</span><span class="nx">imagesLoaded</span> <span class="nf">(event) -&gt;</span>
+            <span class="nx">elements</span><span class="p">.</span><span class="nx">animate</span> <span class="nv">opacity: </span><span class="mi">1</span>
+            <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;[data-selector]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)).</span>
+                    <span class="nx">html</span><span class="p">(</span><span class="s">&#39;More &amp;raquo;&#39;</span><span class="p">)</span>
+            <span class="nx">container</span><span class="p">.</span><span class="nx">masonry</span> <span class="s">&#39;appended&#39;</span><span class="p">,</span> <span class="nx">elements</span><span class="p">,</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-masonry&#39;</span><span class="p">)</span>
+              
+      <span class="nv">beforeSend: </span><span class="nf">-&gt;</span>
+        <span class="nx">element</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s">&#39;Loading more...&#39;</span><span class="p">)</span>
+               <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;loading&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">false</span>
+</pre></div>

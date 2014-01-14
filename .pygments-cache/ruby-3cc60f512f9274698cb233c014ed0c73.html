@@ -1,0 +1,10 @@
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">initWithFrame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="vi">@share</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeCustom</span><span class="p">)</span>
+  <span class="vi">@share</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Tap to Share&quot;</span><span class="p">,</span> <span class="ss">forState</span><span class="p">:</span><span class="no">UIControlStateNormal</span><span class="p">)</span>
+  <span class="vi">@share</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span>
+  <span class="vi">@share</span><span class="o">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="ss">action</span><span class="p">:</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="ss">forControlEvents</span><span class="p">:</span><span class="no">UIControlEventTouchUpInside</span><span class="p">)</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@share</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</pre></div>

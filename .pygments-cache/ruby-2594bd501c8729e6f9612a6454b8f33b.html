@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="k">module</span> <span class="nn">MyApplication</span>
+  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Application</span>
+
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+  <span class="c1"># 404 catcher</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">after_initialize</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">append</span><span class="p">{</span> <span class="n">match</span> <span class="s1">&#39;*a&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;application#render_404&#39;</span> <span class="p">}</span> <span class="k">unless</span> <span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>

@@ -74,7 +74,6 @@ body > nav {
       float: right;
       text-align: left;
       padding-left: .8em;
-      width: $sidebar-width-medium - $pad-medium*2 - $sidebar-pad-medium + 20px;
       .search {
         width: 93%;
         font-size: .95em;
@@ -82,19 +81,10 @@ body > nav {
       }
     }
     ul[data-subscription$=email] + form {
-      width: $sidebar-width-medium - $pad-medium*2 - $sidebar-pad-medium - 58px;
       .search { width: 91%; }
     }
     fieldset.mobile-nav { display: none; }
     fieldset[role=search]{ width: 99%; }
-  }
-  @media only screen and (min-width: 992px) {
-    form {
-      width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 + 10px;
-    }
-    ul[data-subscription$=email] + form {
-      width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 - 58px;
-    }
   }
 }
 .no-placeholder {
@@ -118,18 +108,6 @@ body > nav {
   &:hover:after { background-color: lighten($nav-color, 20); }
 }
 .maskImage {
-  body > nav {
-    @media only screen and (min-width: 550px) {
-      ul[data-subscription$=email] + form {
-        width: $sidebar-width-medium - $pad-medium*2 - $sidebar-pad-medium - 32px;
-      }
-    }
-    @media only screen and (min-width: 992px) {
-      ul[data-subscription$=email] + form {
-        width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 - 32px;
-      }
-    }
-  }
   ul.subscription { position: relative; top: .2em; li, a { border: 0; padding: 0; }}
   a[rel=subscribe-rss]{ @include mask-subscription-nav('rss.png'); }
   a[rel=subscribe-email]{ @include mask-subscription-nav('email.png'); }
