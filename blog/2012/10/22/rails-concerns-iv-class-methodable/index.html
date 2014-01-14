@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many &hellip;">
+  <meta name="description" content="In my application, seed data is an unfortunate necessity. I don&rsquo;t like it but it&rsquo;s there, and it&rsquo;s tightly integrated into many &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,13 +113,15 @@
 
 
 <time datetime="2012-10-22T14:27:00-05:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>In my application, seed data is an unfortunate necessity. I don&#8217;t like it but it&#8217;s there, and it&#8217;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&#8217;re looking for something? Not me, that&#8217;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+  <div class="entry-content"><p>In my application, seed data is an unfortunate necessity. I don&rsquo;t like it but it&rsquo;s there, and it&rsquo;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&rsquo;re looking for something? Not me, that&rsquo;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
 
 <p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
 
@@ -128,7 +130,7 @@
 
 <h2>Methodizing Names</h2>
 
-<p>The first problem with a concern like this is that it&#8217;s no easier to call class methods that have weird characters in them. You can do <code>Tag.send('Health &amp; Wellness')</code> but the goal here is to eliminate intervening calls, so that we end up with <code>Tag.health_wellness</code>. Having <code>send</code> in there looks weird and doesn&#8217;t seem very clean.</p>
+<p>The first problem with a concern like this is that it&rsquo;s no easier to call class methods that have weird characters in them. You can do <code>Tag.send('Health &amp; Wellness')</code> but the goal here is to eliminate intervening calls, so that we end up with <code>Tag.health_wellness</code>. Having <code>send</code> in there looks weird and doesn&rsquo;t seem very clean.</p>
 
 <p>I opted to fix this with a new String method I called <code>methodize</code>. Put it in your lib folder and Rails will load it when the application starts.</p>
 
@@ -147,7 +149,7 @@
 
 <h2>Setting a Scope</h2>
 
-<p>The models that employ this concern will probably have different columns you&#8217;ll want to find them by. One might be called &#8216;name&#8217;, whereas another might be &#8216;title&#8217; or &#8216;slug&#8217;. To get around these differences, our concern will assume that each model will have a scope that smooths over these differences. I called that scope &#8216;named&#8217;.</p>
+<p>The models that employ this concern will probably have different columns you&rsquo;ll want to find them by. One might be called &lsquo;name&rsquo;, whereas another might be &lsquo;title&rsquo; or &lsquo;slug&rsquo;. To get around these differences, our concern will assume that each model will have a scope that smooths over these differences. I called that scope &lsquo;named&rsquo;.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -160,7 +162,7 @@
 
 <h2>Creating the Concern</h2>
 
-<p>The concern itself is quite simple. It consists of one method, <code>class_methodable</code>. We call that with an array of names that we want to turn into class methods. For each of those, we define a singleton method that sets or gets a class variable of the value we&#8217;re looking for. The code itself follows:</p>
+<p>The concern itself is quite simple. It consists of one method, <code>class_methodable</code>. We call that with an array of names that we want to turn into class methods. For each of those, we define a singleton method that sets or gets a class variable of the value we&rsquo;re looking for. The code itself follows:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -185,7 +187,7 @@
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">ClassMethodable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
 </span><span class='line'>    <span class="k">def</span> <span class="nf">class_methodable</span><span class="p">(</span><span class="nb">methods</span><span class="p">)</span>
@@ -211,7 +213,7 @@
 
 <h2>Using It</h2>
 
-<p>Now that everything&#8217;s in place, actually using the concern is quite simple. In our class:</p>
+<p>Now that everything&rsquo;s in place, actually using the concern is quite simple. In our class:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -239,38 +241,21 @@
 
 <p>Now we can reference our seed data quickly and cleanly, without having to resort constantly to finders.</p>
 </div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
 
 
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-22T14:27:00-05:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rails/'>rails</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -297,59 +282,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

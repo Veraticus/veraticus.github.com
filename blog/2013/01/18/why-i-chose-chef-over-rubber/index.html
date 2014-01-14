@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,81 +113,66 @@
 
 
 <time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &#8211; and surprising even myself &#8211; I ended up choosing Chef as our solution. Here&#8217;s why.</p>
+  <div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
 
 <!-- more -->
 
 
 <h2>Collaboration</h2>
 
-<p>One of rubber&#8217;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&#8217;ll get a merge conflict in your server yaml file: you really don&#8217;t want to make a mistake resolving <em>that</em> merge conflict.</p>
+<p>One of rubber&rsquo;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&rsquo;ll get a merge conflict in your server yaml file: you really don&rsquo;t want to make a mistake resolving <em>that</em> merge conflict.</p>
 
-<p>By contrast, it&#8217;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&#8217;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&#8217;s actually going into the servers.</p>
+<p>By contrast, it&rsquo;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&rsquo;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&rsquo;s actually going into the servers.</p>
 
 <p>Chef is just a better tool for teams of people.</p>
 
 <h2>Extensibility &amp; Community Support</h2>
 
-<p>For the tools that rubber provides in its stack &#8211; and it provides a lot &#8211; it&#8217;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&#8217;s no real extensibility, and while it&#8217;s easy enough to roll your own recipes, it&#8217;d definitely be ideal not to repeat work if you&#8217;re fairly confident someone else has already done it.</p>
+<p>For the tools that rubber provides in its stack &mdash; and it provides a lot &mdash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
 
-<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&#8217;re not precisely what you&#8217;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
+<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&rsquo;re not precisely what you&rsquo;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
 
-<p>We&#8217;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&#8217;ve been developing internally for us. It&#8217;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
+<p>We&rsquo;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&rsquo;ve been developing internally for us. It&rsquo;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
 
 <h2>More Granularity</h2>
 
-<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&#8217;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
+<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&rsquo;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
 
 <p>Similarly changing postfix configuration on a per-environment basis is a snap.</p>
 
 <h1>But Rubber is a Great Tool</h1>
 
-<p>Don&#8217;t get me wrong: I still really like rubber. It doesn&#8217;t fit for Everest&#8217;s use case, definitely &#8211; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
+<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &mdash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
 
-<p>Why? It&#8217;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&#8217;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&#8217;ll go far, but trying to work against its defaults will be really painful.</p>
+<p>Why? It&rsquo;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&rsquo;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&rsquo;ll go far, but trying to work against its defaults will be really painful.</p>
 
 <h2>Final Word on Chef vs. Puppet</h2>
 
-<p>Doesn&#8217;t matter, choose whichever you like more.</p>
+<p>Doesn&rsquo;t matter, choose whichever you like more.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/chef/'>chef</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -214,59 +199,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

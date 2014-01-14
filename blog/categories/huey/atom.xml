@@ -4,7 +4,7 @@
   <title><![CDATA[Category: huey | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/huey/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-07T23:55:47-06:00</updated>
+  <updated>2014-01-14T16:47:54-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,7 +18,7 @@
     <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
     <updated>2013-05-09T11:18:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
-    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue's own bridge discovery protocol. This is both faster and more extensible -- now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &mdash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
 
 <p><code>ruby
 Huey.configure do |config|
@@ -37,7 +37,7 @@ end
     <link href="http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/"/>
     <updated>2013-02-20T19:32:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey</id>
-    <content type="html"><![CDATA[<p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here's how to make it work.</p>
+    <content type="html"><![CDATA[<p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&rsquo;s how to make it work.</p>
 
 <!-- more -->
 
@@ -56,11 +56,11 @@ g.name = 'My Bulbs' # Name your group to find it later
 <p>Once you have a group set up, you can act on all its bulbs simultaneously as you would on any individual bulb.</p>
 
 <p>```ruby
-group = Huey::Group.find('My Bulbs')</p>
+group = Huey::Group.find(&lsquo;My Bulbs&rsquo;)</p>
 
 <p>group.bri = 200
 group.on = true
-group.save # All changes you've made are committed to all the bulbs in a group</p>
+group.save # All changes you&rsquo;ve made are committed to all the bulbs in a group</p>
 
 <p>group.update(bri: 200, ct: 500) # Set and save in one step
 ```</p>
@@ -74,15 +74,15 @@ event.execute # All lights turn off
 
 <h2>YAML Setup</h2>
 
-<p>Huey can read your groups and events from YAML configuration files. Here's a sample from my setup:</p>
+<p>Huey can read your groups and events from YAML configuration files. Here&rsquo;s a sample from my setup:</p>
 
 <p>```yaml</p>
 
 <h1>groups.yml</h1>
 
-<p>Study: ["Study Side", "Study Ceiling"]
-Bedroom: ["Bedroom Left", "Bedroom Right"]
-Living Room: ["Living Room Front", "Living Room Center", "Living Room Back"]
+<p>Study: [&ldquo;Study Side&rdquo;, &ldquo;Study Ceiling&rdquo;]
+Bedroom: [&ldquo;Bedroom Left&rdquo;, &ldquo;Bedroom Right&rdquo;]
+Living Room: [&ldquo;Living Room Front&rdquo;, &ldquo;Living Room Center&rdquo;, &ldquo;Living Room Back&rdquo;]
 ```</p>
 
 <p>```yaml</p>
@@ -115,25 +115,25 @@ Huey::Event.import('events.yml') # Import events
 Huey::Event.find('Wakeup').execute # Run an event on a group
 </code></p>
 
-<p>I'm setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it's likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
+<p>I&rsquo;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&rsquo;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
 
 <h2>Whenever</h2>
 
 <p>Finally, I have it all stitched together through whenever, because who likes reading crontabs? When you set up whenever, it creates a file called config/schedule.rb that it uses to read the crontab. I altered mine to include this:</p>
 
 <p>```ruby
-job_type :event, %Q(cd /directory/to/huey_control &amp;&amp; ruby -e "require 'huey'; Huey::Group.import('groups.yml'); Huey::Event.import('events.yml'); Huey::Event.find(':task').execute(true)")</p>
+job_type :event, %Q(cd /directory/to/huey_control &amp;&amp; ruby -e &ldquo;require &lsquo;huey&rsquo;; Huey::Group.import(&lsquo;groups.yml&rsquo;); Huey::Event.import(&lsquo;events.yml&rsquo;); Huey::Event.find(&lsquo;:task&rsquo;).execute(true)&rdquo;)</p>
 
-<p>every :weekday, at: '9:30AM' do
-  event "Wakeup"
+<p>every :weekday, at: &lsquo;9:30AM&rsquo; do
+  event &ldquo;Wakeup&rdquo;
 end
 ```</p>
 
 <p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
 
-<p>That's all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you've provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
+<p>That&rsquo;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&rsquo;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
 
-<p>But there's a lot more you can do with huey if you'd like. Why not make an event that's triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
+<p>But there&rsquo;s a lot more you can do with huey if you&rsquo;d like. Why not make an event that&rsquo;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
 ]]></content>
   </entry>
   
@@ -144,7 +144,7 @@ end
     <id>http://joshsymonds.com/blog/2012/12/21/huey-gem-release</id>
     <content type="html"><![CDATA[<p>I pushed the first version of <a href="https://github.com/Veraticus/huey">Huey</a> to <a href="http://rubygems.org/gems/huey">RubyGems</a> (calling it 0.1.0).</p>
 
-<p>It's in a really good state right now, actually -- in addition to a rather full and complete set of tests, I added a couple neat new features:</p>
+<p>It&rsquo;s in a really good state right now, actually &mdash; in addition to a rather full and complete set of tests, I added a couple neat new features:</p>
 
 <ul>
 <li><p>Now you can make as many changes as you like to a bulb, and then commit them all at once with <code>save</code> (alias as <code>commit</code> for your convenience).</p></li>
@@ -153,7 +153,7 @@ end
 </ul>
 
 
-<p>I'll be adding more features as I use it more, so watch <a href="https://github.com/Veraticus/huey">the repository</a> for changes.</p>
+<p>I&rsquo;ll be adding more features as I use it more, so watch <a href="https://github.com/Veraticus/huey">the repository</a> for changes.</p>
 ]]></content>
   </entry>
   
@@ -162,12 +162,12 @@ end
     <link href="http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs/"/>
     <updated>2012-11-28T01:08:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2012/11/28/huey-for-controlling-phillips-hue-lightbulbs</id>
-    <content type="html"><![CDATA[<p>I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty <a href="http://meethue.com">Phillips Hue lightbulbs</a>. I decided to name it <a href="https://github.com/Veraticus/huey">Huey</a>, since I love nothing more than cute and silly names. I only spent a few hours tonight hacking it together, so I'm sure there's a lot of room for improvement, but it works and does everything it's supposed to and seems fairly fault tolerant; so I thought, why not announce it and fix problems when I wake up tomorrow?</p>
+    <content type="html"><![CDATA[<p>I just authored a cool little Gem that allows for automatic discovery of, and control over, the pretty nifty <a href="http://meethue.com">Phillips Hue lightbulbs</a>. I decided to name it <a href="https://github.com/Veraticus/huey">Huey</a>, since I love nothing more than cute and silly names. I only spent a few hours tonight hacking it together, so I&rsquo;m sure there&rsquo;s a lot of room for improvement, but it works and does everything it&rsquo;s supposed to and seems fairly fault tolerant; so I thought, why not announce it and fix problems when I wake up tomorrow?</p>
 
 <!-- more -->
 
 
-<p>Huey uses <a href="http://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol">SSDP</a> to discover the IP of the Hue hub the first time the code is run. I wish I could take credit for the EventMachine code that went into making this work correctly, but actually I largely cribbed it from Turboladen's <a href="https://github.com/turboladen/upnp">upnp library</a>. I would've just included it as a Gem dependency but for some reason it's not released as a Gem, which is pretty frustrating for situations like this.</p>
+<p>Huey uses <a href="http://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol">SSDP</a> to discover the IP of the Hue hub the first time the code is run. I wish I could take credit for the EventMachine code that went into making this work correctly, but actually I largely cribbed it from Turboladen&rsquo;s <a href="https://github.com/turboladen/upnp">upnp library</a>. I would&rsquo;ve just included it as a Gem dependency but for some reason it&rsquo;s not released as a Gem, which is pretty frustrating for situations like this.</p>
 
 <p>I chose a pretty boring UUID for Huey to use: <code>'0123456789abdcef0123456789abcdef'</code>. This works just fine, but if you want to change it Huey is ultra-configurable and you can do so either in a block or directly:</p>
 
@@ -179,10 +179,10 @@ end
 
 <p>  end
   # or
-  Huey::Config.uuid = '0123456789abdcef0123456789abcdef'
+  Huey::Config.uuid = &lsquo;0123456789abdcef0123456789abcdef&rsquo;
 ```</p>
 
-<p>The first time you issue a request to the Hue hub, you'll likely see an attractive error message like this:</p>
+<p>The first time you issue a request to the Hue hub, you&rsquo;ll likely see an attractive error message like this:</p>
 
 <p><code>ruby
   Huey::Errors::PressLinkButton: 'Press the link button and try your request again'
@@ -194,15 +194,15 @@ end
 Huey::Bulb.all # Returns an array of your bulbs</p>
 
 <p>bulb = Huey::Bulb.find(1) # Finds the bulb with the ID of 1
-bulb = Huey::Bulb.find('Living Room') # Finds the bulb with the name 'Living Room'</p>
+bulb = Huey::Bulb.find(&lsquo;Living Room&rsquo;) # Finds the bulb with the name &lsquo;Living Room&rsquo;</p>
 
 <p>bulb.alert! # Flashes the bulb in question once, useful for checking connectivity
 bulb.on = false # Turn the bulb off
 bulb.bri = 100 # Dim the bulb a little bit
-bulb.ct = 500 # Change the bulb's color
+bulb.ct = 500 # Change the bulb&rsquo;s color
 ```</p>
 
-<p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I'll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
+<p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I&rsquo;ll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
 ]]></content>
   </entry>
   

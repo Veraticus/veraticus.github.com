@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but &hellip;">
+  <meta name="description" content="It took me a long time to author this &mdash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,47 +113,49 @@
 
 
 <time datetime="2012-08-05T17:48:00-05:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>It took me a long time to author this &#8211; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&#8217;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+  <div class="entry-content"><p>It took me a long time to author this &mdash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&rsquo;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
 
-<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &#8211; I&#8217;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&#8217;s browser.</p>
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &mdash; I&rsquo;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&rsquo;s browser.</p>
 
 <!-- more -->
 
 
 <h2>Digging Deeper into Ruby</h2>
 
-<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &#8211; integers, strings, and floats &#8211; and we also learned what methods are and how they can be used to manipulate those objects. Today we&#8217;ll start by learning about variables, a key concept in computer programming. Afterwards, we&#8217;ll use variables to understand more about Ruby&#8217;s basic objects, and then we&#8217;ll discover how we can create and manipulate entirely new classes of objects.</p>
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &mdash; integers, strings, and floats &mdash; and we also learned what methods are and how they can be used to manipulate those objects. Today we&rsquo;ll start by learning about variables, a key concept in computer programming. Afterwards, we&rsquo;ll use variables to understand more about Ruby&rsquo;s basic objects, and then we&rsquo;ll discover how we can create and manipulate entirely new classes of objects.</p>
 
 <h3>Variables</h3>
 
-<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you&#8217;ll need to reference the same piece of data over and over again. Maybe you have a string that&#8217;s particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
+<p>A variable is a way of naming data. Why would you want to do this? In computer programs, you&rsquo;ll need to reference the same piece of data over and over again. Maybe you have a string that&rsquo;s particularly important to you; maybe you want to store the result of a calculation so you can refer to it later; or maybe you have an open file that you need to read data from. Variables let you accomplish these goals and more.</p>
 
-<p>In Ruby, variable names are all lower-case, and they can&#8217;t contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you&#8217;ll see its value: so when you type <code>mary</code>, you&#8217;ll see <code>"little lamb"</code>.</p>
+<p>In Ruby, variable names are all lower-case, and they can&rsquo;t contain numbers or spaces. <code>variable</code>, <code>this_is_a_long_name</code>, and <code>specialsauce</code> are all valid variable names. In order to use a variable, you just assign it to any Ruby object with an equal sign, like this: <code>mary = 'little lamb'</code>. Now you can always refer to that same <code>'little lamb'</code> string by using the <code>mary</code> variable. If you type the variable name by itself into repl.it, you&rsquo;ll see its value: so when you type <code>mary</code>, you&rsquo;ll see <code>"little lamb"</code>.</p>
 
-<p>Let&#8217;s do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
+<p>Let&rsquo;s do a quick <strong>exercise</strong> to understand the power and importance of variables in Ruby.</p>
 
 <ol>
 <li><p>Try <code>mary = 'little lamb'</code>. Now, type <code>mary</code>. It has the value of <code>'little lamb'</code>. This is how you assign variables.</p></li>
-<li><p>Let&#8217;s put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you&#8217;re actually using that string. So when you type <code>mary + 'chop'</code>, you&#8217;re actually saying <code>'little lamb' + 'chop'</code>.</p></li>
-<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>&#8217; previously, <code>mary</code>&#8217;s value hasn&#8217;t changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
+<li><p>Let&rsquo;s put our variable to use! Try <code>mary + 'chop'</code>. <code>mary</code> is exactly equivalent to <code>'little lamb'</code>: essentially, <code>mary</code> is the name of that string, now, and every time you call it by its name you&rsquo;re actually using that string. So when you type <code>mary + 'chop'</code>, you&rsquo;re actually saying <code>'little lamb' + 'chop'</code>.</p></li>
+<li><p>Try <code>mary</code> again. Note that even though we saw <code>'little lambchop</code>&lsquo; previously, <code>mary</code>&rsquo;s value hasn&rsquo;t changed. The only way to change the value of a variable is to assign it with an equals sign.</p></li>
 <li><p>Try <code>mary = mary + 'chop'</code>. Now the variable <code>mary</code> is going to be <code>'little lambchop'</code>, because we assigned it again.</p></li>
 <li><p>Try <code>dinner = mary</code>. The variable <code>dinner</code> now has the same value as the variable <code>mary</code>, which is to say, <code>'little lambchop'</code>.</p></li>
-<li><p>Let&#8217;s change what we&#8217;re having for dinner. Try <code>dinner = 'big lambchop'</code>. We&#8217;ve changed the value of <code>dinner</code>: what do you think&#8217;s happened to the value of <code>mary</code>?</p></li>
-<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn&#8217;t changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn&#8217;t affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
-<li><p>Let&#8217;s use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
-<li><p>Finally, let&#8217;s change our number. Try <code>number = number * 3</code>.</p></li>
+<li><p>Let&rsquo;s change what we&rsquo;re having for dinner. Try <code>dinner = 'big lambchop'</code>. We&rsquo;ve changed the value of <code>dinner</code>: what do you think&rsquo;s happened to the value of <code>mary</code>?</p></li>
+<li><p>Try <code>mary</code> to find out. Are you surprised that its value hasn&rsquo;t changed? Each variable gets its own copy of the object you assigned to it. Changing the value of one variable doesn&rsquo;t affect any other similarly-assigned variables. Even though <code>dinner</code> and <code>mary</code> looked like they had the same value, actually each of them had a copy of the same string.</p></li>
+<li><p>Let&rsquo;s use some numbers with variables. Try <code>number = 3</code>. Then do some basic math. Try <code>number + number</code>, <code>number * number</code>, and <code>number / number</code>.</p></li>
+<li><p>Finally, let&rsquo;s change our number. Try <code>number = number * 3</code>.</p></li>
 </ol>
 
 
-<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It&#8217;s so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
+<p>Reassignment of an existing variable (as in <code>number = number * 3</code>) is an extremely common pattern in any programming language. It&rsquo;s so common, in fact, that Ruby provides some clever shorthand to make it even easier to do.</p>
 
-<p>Let&#8217;s explore variable reassignment in an <strong>exercise</strong>.</p>
+<p>Let&rsquo;s explore variable reassignment in an <strong>exercise</strong>.</p>
 
 <ol>
 <li><p>Try <code>mary = 'little lamb'</code>. Now, try <code>mary += 'chop'</code>. This is exactly equivalent to <code>mary = mary + 'chop'</code>.</p></li>
@@ -163,13 +165,13 @@
 
 <p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
 
-<p>Now that we understand variables, the rest of Ruby&#8217;s world opens up before us. The basic types we discussed &#8211; integers, strings, floats, and variables &#8211; form the foundation for the Ruby programming language. Now that we&#8217;ve learned about them, we can learn about some exciting new objects&#8230; and then eventually how to create new kinds of objects of our very own!</p>
+<p>Now that we understand variables, the rest of Ruby&rsquo;s world opens up before us. The basic types we discussed &mdash; integers, strings, floats, and variables &mdash; form the foundation for the Ruby programming language. Now that we&rsquo;ve learned about them, we can learn about some exciting new objects&hellip; and then eventually how to create new kinds of objects of our very own!</p>
 
 <h3>Organizing Data</h3>
 
 <p>We know now how we would put in numbers and letters in a Ruby program. But what if you want to organize them? Say you wanted to create a list of names, or perhaps you needed a dictionary of words. What would be the best way to do that?</p>
 
-<p>That&#8217;s what we&#8217;ll discover now.</p>
+<p>That&rsquo;s what we&rsquo;ll discover now.</p>
 
 <h3>Arrays</h3>
 
@@ -177,52 +179,52 @@
 
 <p><code>["This", "is", 'an', 'array', 123]</code></p>
 
-<p>The brackets around the array are telling you what it is &#8211; an array. The elements of the array are separated by commas. This array has five elements &#8211; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&#8217;s as big as you need.</p>
+<p>The brackets around the array are telling you what it is &mdash; an array. The elements of the array are separated by commas. This array has five elements &mdash; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&rsquo;s as big as you need.</p>
 
-<p>Let&#8217;s try some <strong>exercises</strong> to understand how to use arrays.</p>
+<p>Let&rsquo;s try some <strong>exercises</strong> to understand how to use arrays.</p>
 
 <ol>
-<li><p>Let&#8217;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
-<li><p>Let&#8217;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
-<li><p>Being friendless sucks. Let&#8217;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &#8216;tom&#8217;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &#8211; without the parenthesis or the dot &#8211; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
-<li><p>Let&#8217;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &#8211; the object to be inserted into the array &#8211; and push it onto the very end.</p></li>
-<li><p>When you count an array&#8217;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&#8217;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
+<li><p>Let&rsquo;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
+<li><p>Let&rsquo;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
+<li><p>Being friendless sucks. Let&rsquo;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &lsquo;tom&rsquo;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &mdash; without the parenthesis or the dot &mdash; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let&rsquo;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &mdash; the object to be inserted into the array &mdash; and push it onto the very end.</p></li>
+<li><p>When you count an array&rsquo;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&rsquo;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
 <li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
-<li><p>This is all well and good, but let&#8217;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&#8217;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
+<li><p>This is all well and good, but let&rsquo;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&rsquo;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
 </ol>
 
 
-<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &#8211; that is, the first element is always the first, the last element is always the last &#8211; you can encode a lot of information in them and be confident of accessing it later.</p>
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &mdash; that is, the first element is always the first, the last element is always the last &mdash; you can encode a lot of information in them and be confident of accessing it later.</p>
 
 <h3>Hashes</h3>
 
-<p>A hash is like a dictionary. In a dictionary, you look up a word &#8211; say, &#8216;zebra&#8217; &#8211; and read a definition (&#8216;a big white and black striped horse-like animal&#8217;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &#8216;zebra&#8217; in a dictionary: it&#8217;s what you use to look up information in a hash. Values are the definitions: they&#8217;re what you get back when you look up a word.</p>
+<p>A hash is like a dictionary. In a dictionary, you look up a word &mdash; say, &lsquo;zebra&rsquo; &mdash; and read a definition (&lsquo;a big white and black striped horse-like animal&rsquo;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &lsquo;zebra&rsquo; in a dictionary: it&rsquo;s what you use to look up information in a hash. Values are the definitions: they&rsquo;re what you get back when you look up a word.</p>
 
 <p>Hashes look like this:</p>
 
 <p><code>{'mary' =&gt; 'little lamb', 'freddy' =&gt; 1, 'zebra' =&gt; 'a big white and black striped horse-like animal', 1 =&gt; 3}</code></p>
 
-<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They&#8217;re very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first&#8230; but inside a hash, there&#8217;s no guarantee that the element we just added will be the last. Let&#8217;s try some <strong>exercises</strong> to explore this exciting new data structure.</p>
+<p>Hashes are always contained in curly brackets, and each key has a hash rocket <code>=&gt;</code> that points to its value. They&rsquo;re very different from arrays, though: hashes have no internal ordering. In an array, we know the first element will always be first&hellip; but inside a hash, there&rsquo;s no guarantee that the element we just added will be the last. Let&rsquo;s try some <strong>exercises</strong> to explore this exciting new data structure.</p>
 
 <ol>
-<li><p>First, let&#8217;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&#8217;d have made a blank hash; instead we&#8217;re starting it with an entry.</p></li>
-<li><p>Let&#8217;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
-<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &#8211; &#8216;peacock&#8217; &#8211; to a new value &#8211; &#8216;beautiful&#8217;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
-<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &#8211; so the keys and values might not appear in the same positions you&#8217;d expect.</p></li>
-<li><p>Keys have to be unique in a hash &#8211; if you assign a value to a key that already exists, it will replace that key&#8217;s existing value. Let&#8217;s change the value of &#8216;zebra&#8217;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &#8216;zebra&#8217; is &#8216;striped&#8217;, instead of &#8216;animal&#8217;.</p></li>
-<li><p>Finally, data structures can contain other data structures. Let&#8217;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
+<li><p>First, let&rsquo;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&rsquo;d have made a blank hash; instead we&rsquo;re starting it with an entry.</p></li>
+<li><p>Let&rsquo;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &mdash; &lsquo;peacock&rsquo; &mdash; to a new value &mdash; &lsquo;beautiful&rsquo;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &mdash; so the keys and values might not appear in the same positions you&rsquo;d expect.</p></li>
+<li><p>Keys have to be unique in a hash &mdash; if you assign a value to a key that already exists, it will replace that key&rsquo;s existing value. Let&rsquo;s change the value of &lsquo;zebra&rsquo;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &lsquo;zebra&rsquo; is &lsquo;striped&rsquo;, instead of &lsquo;animal&rsquo;.</p></li>
+<li><p>Finally, data structures can contain other data structures. Let&rsquo;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
 </ol>
 
 
 <p>Hashes are a great format for storing information in a way that we want to quickly look up later. Whereas arrays are for lists of things, hashes are very much like dictionaries.</p>
 
-<p>We&#8217;ll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It&#8217;s time to use what we&#8217;ve learned to create our very first program.</p>
+<p>We&rsquo;ll look more at hashes and arrays later, when we discuss further how to manipulate data structures. But as of right now, we now know all the basic types in Ruby! It&rsquo;s time to use what we&rsquo;ve learned to create our very first program.</p>
 
 <h3>Our First Program</h3>
 
-<p>We now know enough to write our very first program in Ruby! We need two methods we haven&#8217;t discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let&#8217;s use those methods to create a program that automatically tabulates points for us.</p>
+<p>We now know enough to write our very first program in Ruby! We need two methods we haven&rsquo;t discussed so far: <code>gets</code> and <code>puts</code>. <code>gets</code> grabs the next line of input from the command line; <code>puts</code> spits out whatever we tell it to the console. Let&rsquo;s use those methods to create a program that automatically tabulates points for us.</p>
 
-<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&#8217;t really covered yet. When you write code in there, and press the &#8216;play&#8217; button in the upper right, the code will be executed and you&#8217;ll see the result on the right-hand side. Let&#8217;s try entering this in to the text editor half of repl.it:</p>
+<p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&rsquo;t really covered yet. When you write code in there, and press the &lsquo;play&rsquo; button in the upper right, the code will be executed and you&rsquo;ll see the result on the right-hand side. Let&rsquo;s try entering this in to the text editor half of repl.it:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -243,62 +245,45 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Let&#8217;s dissect this progrma line-by-line to understand what&#8217;s happening here.</p>
+<p>Let&rsquo;s dissect this progrma line-by-line to understand what&rsquo;s happening here.</p>
 
-<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn&#8217;t already been assigned: we&#8217;ll cover how it works more in the next lesson.</p>
+<p>In the first line, we create a hash called <code>scores</code>. The <code>||=</code> syntax only assigns the variable if it hasn&rsquo;t already been assigned: we&rsquo;ll cover how it works more in the next lesson.</p>
 
 <p>In the second line, we ask the user who scored points.</p>
 
-<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &#8211; but that return isn&#8217;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &mdash; but that return isn&rsquo;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
 
 <p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
 
 <p>The seventh line performs hash assignment, like we just learned: the score is inserted into the hash so that we can keep track of it.</p>
 
-<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that&#8217;s easily understandable to humans.</p>
+<p>And finally, in the fifth line, we output the actual scores. <code>inspect</code> returns a view of the object that&rsquo;s easily understandable to humans.</p>
 
-<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we&#8217;ll discover how to have the program automatically loop so that we don&#8217;t have to keep running it manually.</p>
+<p>You can run this progrma multiple times. Every time you do, you can add in a new score to the hash; later we&rsquo;ll discover how to have the program automatically loop so that we don&rsquo;t have to keep running it manually.</p>
 
 <h3>Your First Program</h3>
 
-<p>Now that we know a little about Ruby, it&#8217;s time for you to make your very first program all on your own!</p>
+<p>Now that we know a little about Ruby, it&rsquo;s time for you to make your very first program all on your own!</p>
 
-<p>Let&#8217;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
+<p>Let&rsquo;s create a boss program. Have it ask you what your name is, and what your hobby is. Then use the string method <code>upcase</code> to have it yell back to you that you should get back to work doing that.</p>
 
-<p>Next time, we&#8217;ll learn how to control flow through our Ruby programs, and we&#8217;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
+<p>Next time, we&rsquo;ll learn how to control flow through our Ruby programs, and we&rsquo;ll start really digging into what makes the Ruby programming language so cool: enumerators!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-05T17:48:00-05:00" pubdate data-updated="true">Aug 5<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/beginner/'>beginner</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -325,59 +310,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

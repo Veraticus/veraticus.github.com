@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It&#8217;s not uncommon to have login-required forms accessible to users who aren&#8217;t logged in &#8211; for example, maybe you&#8217;re trying to &hellip;">
+  <meta name="description" content="It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,15 +113,17 @@
 
 
 <time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true">Oct 10<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>It&#8217;s not uncommon to have login-required forms accessible to users who aren&#8217;t logged in &#8211; for example, maybe you&#8217;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &#8220;post&#8221; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&#8217;s not logged in presses the button? In most Rails applications, they&#8217;d be logged in, redirected back to the page they were referred from, and they&#8217;d have to click the thumbs-up again.</p>
+  <div class="entry-content"><p>It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &ldquo;post&rdquo; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&rsquo;s not logged in presses the button? In most Rails applications, they&rsquo;d be logged in, redirected back to the page they were referred from, and they&rsquo;d have to click the thumbs-up again.</p>
 
-<p>That sort of sucks. They already clicked it once. Why can&#8217;t we remember that?</p>
+<p>That sort of sucks. They already clicked it once. Why can&rsquo;t we remember that?</p>
 
 <p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
 
@@ -130,9 +132,9 @@
 
 <h2>Pre-Controller Setup</h2>
 
-<p>This method is rather login-agnostic; it should work if you&#8217;re using <a href="https://github.com/plataformatec/devise">Devise</a>, <a href="https://github.com/intridea/omniauth">OmniAuth</a>, <a href="https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview">both</a>, or neither. For the purposes of my examples, however, I&#8217;m using OmniAuth.</p>
+<p>This method is rather login-agnostic; it should work if you&rsquo;re using <a href="https://github.com/plataformatec/devise">Devise</a>, <a href="https://github.com/intridea/omniauth">OmniAuth</a>, <a href="https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview">both</a>, or neither. For the purposes of my examples, however, I&rsquo;m using OmniAuth.</p>
 
-<p>First, put some code wherever you redirect to force login. I do that when I see a <code>CanCan::AccessDenied</code> error, but you should do it wherever makes sense for you. Here&#8217;s an example method very similar to the one I use.</p>
+<p>First, put some code wherever you redirect to force login. I do that when I see a <code>CanCan::AccessDenied</code> error, but you should do it wherever makes sense for you. Here&rsquo;s an example method very similar to the one I use.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -174,7 +176,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Since I&#8217;m using OmniAuth and Facebook, this will result in the user being logged in. In the login callback &#8211; I chose sessions#create &#8211; we need to do some special detection and redirection.</p>
+<p>Since I&rsquo;m using OmniAuth and Facebook, this will result in the user being logged in. In the login callback &mdash; I chose sessions#create &mdash; we need to do some special detection and redirection.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -208,14 +210,14 @@
 </span><span class='line'>        <span class="n">redirect_to</span> <span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;/&#39;</span>
 </span><span class='line'>      <span class="k">end</span>
 </span><span class='line'>    <span class="k">else</span>
-</span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_url</span><span class="p">,</span> <span class="n">flash</span><span class="p">:</span> <span class="p">{</span><span class="n">error</span><span class="p">:</span> <span class="s1">&#39;You could not be logged in.&#39;</span><span class="p">}</span>
+</span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_url</span><span class="p">,</span> <span class="ss">flash</span><span class="p">:</span> <span class="p">{</span><span class="ss">error</span><span class="p">:</span> <span class="s1">&#39;You could not be logged in.&#39;</span><span class="p">}</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The interesting portion is <code>redirect_to '/redirect_back'</code>. That&#8217;s our middleware hook: when the session variables are set correctly, and you go to <code>/redirect_back</code>, the middleware will activate and do a POST to the application. So, in essence, <code>/redirect_back</code> stands in for whatever request you just tried to go. That&#8217;s why this doesn&#8217;t work with GET requests: with a GET, the new URL for the page will be <code>/redirect_back</code> regardless of what the page is, which looks pretty weird.</p>
+<p>The interesting portion is <code>redirect_to '/redirect_back'</code>. That&rsquo;s our middleware hook: when the session variables are set correctly, and you go to <code>/redirect_back</code>, the middleware will activate and do a POST to the application. So, in essence, <code>/redirect_back</code> stands in for whatever request you just tried to go. That&rsquo;s why this doesn&rsquo;t work with GET requests: with a GET, the new URL for the page will be <code>/redirect_back</code> regardless of what the page is, which looks pretty weird.</p>
 
 <h2>The Middleware</h2>
 
@@ -258,7 +260,7 @@
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">req</span> <span class="o">=</span> <span class="no">Rack</span><span class="o">::</span><span class="no">Request</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">req</span> <span class="o">=</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Request</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/redirect_back&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span> <span class="o">&amp;&amp;</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
@@ -266,7 +268,7 @@
 </span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;CONTENT_TYPE&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span>
 </span><span class='line'>
 </span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_method</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s2">&quot;rack.input&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIO</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Rack</span><span class="o">::</span><span class="no">Utils</span><span class="o">.</span><span class="n">build_nested_query</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">))</span>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s2">&quot;rack.input&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIO</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">Rack</span><span class="p">:</span><span class="ss">:Utils</span><span class="o">.</span><span class="n">build_nested_query</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">))</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_post_params</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span>
 </span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">[</span><span class="n">param</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span>
 </span><span class='line'>      <span class="k">end</span>
@@ -286,13 +288,13 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The whole idea of this middleware is to reformat the path and add in all the appropriate params from the session variables, and then call the Rails application with it. Rails believes that &#8211; despite the URL being <code>redirect_back</code> &#8211; we&#8217;ve made a correctly-formatted post and processes it correctly, sending another redirect to the client when it&#8217;s completed.</p>
+<p>The whole idea of this middleware is to reformat the path and add in all the appropriate params from the session variables, and then call the Rails application with it. Rails believes that &mdash; despite the URL being <code>redirect_back</code> &mdash; we&rsquo;ve made a correctly-formatted post and processes it correctly, sending another redirect to the client when it&rsquo;s completed.</p>
 
 <h2>Post-Controller Setup</h2>
 
-<p>The only problem is that, since we&#8217;re dealing with forms here, Rails needs a CSRF token. Without it, it&#8217;ll purge the session at the beginning of the request and we&#8217;ll end up in a redirect loop.</p>
+<p>The only problem is that, since we&rsquo;re dealing with forms here, Rails needs a CSRF token. Without it, it&rsquo;ll purge the session at the beginning of the request and we&rsquo;ll end up in a redirect loop.</p>
 
-<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&#8217;t use the cookie session storage mechanism (and you should not be), you can be sure enough of the user&#8217;s identity to ignore the authenticity token on this one request.</p>
+<p>However, remember how we <code>reset_session</code> at sessions#new? We can be confident that this session is not fixated; we cleaned it before entering the middleware, and the middleware only deals with session variables. Provided you don&rsquo;t use the cookie session storage mechanism (and you should not be), you can be sure enough of the user&rsquo;s identity to ignore the authenticity token on this one request.</p>
 
 <p>We also need to ensure that Rails places a new, correct CSRF token into the session. Otherwise users&#8217; sessions will be deleted by the CSRF handlers upon their next post, which will seem to have an invalid, old token.</p>
 
@@ -309,7 +311,7 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>  <span class="n">protect_from_forgery</span>
 </span><span class='line'>  <span class="n">skip_before_filter</span> <span class="ss">:verify_authenticity_token</span><span class="p">,</span> <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="ss">:redirected?</span>
 </span><span class='line'>
@@ -325,42 +327,25 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>As a bonus we also clean out the session a little bit so that <code>/redirect_back</code> won&#8217;t work again.</p>
+<p>As a bonus we also clean out the session a little bit so that <code>/redirect_back</code> won&rsquo;t work again.</p>
 
-<p>And that&#8217;s that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output &#8211; all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can&#8217;t be beat.</p>
+<p>And that&rsquo;s that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output &mdash; all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can&rsquo;t be beat.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true">Oct 10<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rails/'>rails</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -387,59 +372,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

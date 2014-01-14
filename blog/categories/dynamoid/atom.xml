@@ -4,7 +4,7 @@
   <title><![CDATA[Category: dynamoid | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/dynamoid/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-07T23:55:47-06:00</updated>
+  <updated>2014-01-14T16:47:54-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,7 +18,7 @@
     <link href="http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0/"/>
     <updated>2012-05-01T00:04:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/05/01/dynamoid-0-dot-4-0</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven't worked -- they've all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon's DynamoDB.</p>
+    <content type="html"><![CDATA[<p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&rsquo;t worked &mdash; they&rsquo;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&rsquo;s DynamoDB.</p>
 
 <p>What do I mean by that?</p>
 
@@ -27,7 +27,7 @@
 
 <h3>Per-table Performance</h3>
 
-<p>Previously to 0.4.0, Dynamoid's table provisioning relied on the defaults that Dynamoid provided (100 read, 20 write) and then manual tuning if you wanted to make any changes from there. And that's for every table. This was especially frustrating because you can only scale up to twice the current value (though you can do that as many times as you want)... but the real downer is you can only scale down 20%, and you can only do that once per day. So obviously if my defaults didn't work for you, you had to go through a couple of days of readjustment, and who wants that?</p>
+<p>Previously to 0.4.0, Dynamoid&rsquo;s table provisioning relied on the defaults that Dynamoid provided (100 read, 20 write) and then manual tuning if you wanted to make any changes from there. And that&rsquo;s for every table. This was especially frustrating because you can only scale up to twice the current value (though you can do that as many times as you want)&hellip; but the real downer is you can only scale down 20%, and you can only do that once per day. So obviously if my defaults didn&rsquo;t work for you, you had to go through a couple of days of readjustment, and who wants that?</p>
 
 <p>Now you can specify performance options for each table you create, using the new <code>table</code> Dynamoid syntax:</p>
 
@@ -39,32 +39,32 @@ class Tweet
 end
 ```</p>
 
-<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace -- so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
+<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &mdash; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
 
 <h3>Consistent Querying</h3>
 
-<p>Consistency in enormous databases can be a troublesome question to address. I've read <a href="http://nosql.mypopescu.com/post/18844539755/why-dynamodb-consistent-reads-cost-twice-or-whats">that DynamoDB's consistent pricing</a> is too high and I agree with Alex's points: but we live in a universe where DynamoDB consistent reading is reality, so we may as well make the best of it.</p>
+<p>Consistency in enormous databases can be a troublesome question to address. I&rsquo;ve read <a href="http://nosql.mypopescu.com/post/18844539755/why-dynamodb-consistent-reads-cost-twice-or-whats">that DynamoDB&rsquo;s consistent pricing</a> is too high and I agree with Alex&rsquo;s points: but we live in a universe where DynamoDB consistent reading is reality, so we may as well make the best of it.</p>
 
-<p>That said, thanks to <a href="https://github.com/ananthakumaran">Anantha Kumaran</a>, Dynamoid can now take full advantage of DynamoDB's consistent read feature. Issuing queries like this:</p>
+<p>That said, thanks to <a href="https://github.com/ananthakumaran">Anantha Kumaran</a>, Dynamoid can now take full advantage of DynamoDB&rsquo;s consistent read feature. Issuing queries like this:</p>
 
 <p><code>ruby
 Address.where(:city =&gt; 'Chicago').consistent.all
 Address.find(1, :consistent =&gt; true)
 </code></p>
 
-<p>Will retrieve all results, even the most recently-written ones. I gotta say, having people you don't even know commit to projects is one of the joys of open source programming, and this feature was written entirely by Anantha (though refactored a bit by yours truly).</p>
+<p>Will retrieve all results, even the most recently-written ones. I gotta say, having people you don&rsquo;t even know commit to projects is one of the joys of open source programming, and this feature was written entirely by Anantha (though refactored a bit by yours truly).</p>
 
 <h3>Future Functionality</h3>
 
-<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that's a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations -- it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents... but we already perform indexing, so it wouldn't be that bad.</p>
+<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&rsquo;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &mdash; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&hellip; but we already perform indexing, so it wouldn&rsquo;t be that bad.</p>
 
-<p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I'm not sure about this functionality, though, for the same reason that I'm unsure about adding geolocation.</p>
+<p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I&rsquo;m not sure about this functionality, though, for the same reason that I&rsquo;m unsure about adding geolocation.</p>
 
 <p>Geolocation, you say? Yes indeed. Initially I had specced out a <a href="http://en.wikipedia.org/wiki/Geohash">geohash-style</a> geolocation functionality that would allow models to do single-field location and distance finding. The longer I pondered the problem, though, the less compelling this answer seemed to me. Amazing pieces of software have already been developed (like <a href="http://www.elasticsearch.org/">elasticsearch</a>) that are dedicated only to indexing (both text and geolocation). They do it faster and easier than DynamoDB probably ever could, and even Amazon has acknowledged this with the creation of their <a href="http://aws.amazon.com/cloudsearch/">CloudSearch</a> service.</p>
 
-<p>So I'm not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
+<p>So I&rsquo;m not sure complicated indexing will ever be on the table for Dynamoid. DynamoDB has some strengths and some really glaring weakness; and one of those weaknesses is indexing. Denormalized data is a pain to manage, and even though Dynamoid takes care of it all for you behind the scenes, complicated index tables make your application difficult to understand and painful to manage.</p>
 
-<p>Unless I hear compelling arguments otherwise, I'll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I'm working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
+<p>Unless I hear compelling arguments otherwise, I&rsquo;ll probably be relying on elasticsearch for my future Dynamoid applications. But the two of them should go together like peanut butter and chocolate; I&rsquo;m working on a project now that should make significant use of both of them, so look for a future blog post detailing the two of them working together!</p>
 ]]></content>
   </entry>
   
@@ -73,20 +73,20 @@ Address.find(1, :consistent =&gt; true)
     <link href="http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations/"/>
     <updated>2012-03-01T12:54:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2012/03/01/working-around-dynamodbs-limitations</id>
-    <content type="html"><![CDATA[<p>I've been giving a lot of thought recently to working around DynamoDB's built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been giving a lot of thought recently to working around DynamoDB&rsquo;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
 
-<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I'll talk a little about overcoming the indexing problem, since I'm still noodling around the transaction issue.</p>
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&rsquo;ll talk a little about overcoming the indexing problem, since I&rsquo;m still noodling around the transaction issue.</p>
 
 <!-- more -->
 
 
-<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you're modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
+<p>Amazon itself recommends non-flattened data in place of traditional indexes: replicate the data you&rsquo;re modeling in many tables, and search those tables by the hash and range key to find the data you want. This is kind of a pain to do manually, but (shameless self-promotion!) happens automatically with awesome gems like <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>.</p>
 
-<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables... but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
+<p>There are, of course, downsides. A single table with multiple indexes can potentially become dozens of tables&hellip; but happily DynamoDB allows each account 256 tables by default, and you can request even more capacity by just asking them. Another is making sure that data remains consistent across all your index tables, which is a pain to do by hand but relatively easy when automated.</p>
 
-<p>This still doesn't allow really complex indexed operations -- you can find by email and name, for example, but you can't find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes... far more than DynamoDB can easily provide or accomplish alone.</p>
+<p>This still doesn&rsquo;t allow really complex indexed operations &mdash; you can find by email and name, for example, but you can&rsquo;t find by geolocation. For problems like this, we return to the idea of using existing tools: and for Rails, using Solr through the excellent <a href="https://github.com/sunspot/sunspot">Sunspot</a> Gem would be my solution of choice. It provides easy and quick geospatial indexing, and indeed, searching on any kind or combination of indexes&hellip; far more than DynamoDB can easily provide or accomplish alone.</p>
 
-<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB... and I can see the potential for geospatial indexing using DynamoDB's range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB's case.</p>
+<p>Unfortunately, it does require another database (of sorts) in addition to DynamoDB&hellip; and I can see the potential for geospatial indexing using DynamoDB&rsquo;s range keys in clever ways. But using existing tools to supplement the shortcomings of others is a pretty classy strategy, and would work really well in DynamoDB&rsquo;s case.</p>
 ]]></content>
   </entry>
   
@@ -95,18 +95,18 @@ Address.find(1, :consistent =&gt; true)
     <link href="http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/"/>
     <updated>2012-02-22T15:00:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb</id>
-    <content type="html"><![CDATA[<p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it's a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn't really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
+    <content type="html"><![CDATA[<p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&rsquo;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&rsquo;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
 
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> -- it's essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn't really do a whole lot of exciting stuff yet...</p>
+<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &mdash; it&rsquo;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&rsquo;t really do a whole lot of exciting stuff yet&hellip;</p>
 
 <p>But it will soon! The TODO list is particularly exciting:</p>
 
 <ul>
 <li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
 <li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon's provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you're used to with ActiveRecord, so that you can do User.where(:name => 'Josh') rather than User.find_by_name('Josh').</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
+<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&rsquo;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
+<li>Not-gimpy finders: Criteria like you&rsquo;re used to with ActiveRecord, so that you can do User.where(:name => &lsquo;Josh&rsquo;) rather than User.find_by_name(&lsquo;Josh&rsquo;).</li>
+<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now &ndash; 1.day)</li>
 </ul>
 
 

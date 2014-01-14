@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,37 +113,39 @@
 
 
 <time datetime="2012-12-18T10:28:00-06:00" pubdate data-updated="true">Dec 18<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I spent a lot of time optimizing page loading speed on GirlsGuideTo. The result is pages that load almost instantly initially and on subsequent loads; and while I&#8217;m proud of the work I&#8217;ve done in getting these pages zippy, there was no real secret sauce involved. Here I&#8217;ll discuss techniques anyone can use to make their web pages load with amazing rapidity, all without breaking Google Analytics and other scripts you might already have installed.</p>
+  <div class="entry-content"><p>I spent a lot of time optimizing page loading speed on GirlsGuideTo. The result is pages that load almost instantly initially and on subsequent loads; and while I&rsquo;m proud of the work I&rsquo;ve done in getting these pages zippy, there was no real secret sauce involved. Here I&rsquo;ll discuss techniques anyone can use to make their web pages load with amazing rapidity, all without breaking Google Analytics and other scripts you might already have installed.</p>
 
 <!-- more -->
 
 
 <h2>Speed It Up</h2>
 
-<p>There are two JavaScript additions to your page I&#8217;ll be discussing here: head.js and Turbolinks.</p>
+<p>There are two JavaScript additions to your page I&rsquo;ll be discussing here: head.js and Turbolinks.</p>
 
 <h3>Head.js</h3>
 
-<p>The first ingredient in our speed cake is <a href="http://headjs.com/">head.js</a>. While head.js has a number of components &#8211; media queries and dynamic CSS among them &#8211; the reason it initially became popular, and the reason I&#8217;m talking about it now, is its basic, core functionality. Head.js allows you to asynchronously load your page&#8217;s scripts. This might not sound like an enormous time savings, but consider this: do you use <a href="http://www.google.com/webfonts">Google Web Fonts</a> or <a href="https://typekit.com/">Adobe&#8217;s TypeKit</a>? Chances are you do, since everyone loves fonts. But fonts must be downloaded by the client browser, a process that usually occurs in the page&#8217;s head (before dom rendering has even begun), slowing down the rest of the page load while it waits.</p>
+<p>The first ingredient in our speed cake is <a href="http://headjs.com/">head.js</a>. While head.js has a number of components &mdash; media queries and dynamic CSS among them &mdash; the reason it initially became popular, and the reason I&rsquo;m talking about it now, is its basic, core functionality. Head.js allows you to asynchronously load your page&rsquo;s scripts. This might not sound like an enormous time savings, but consider this: do you use <a href="http://www.google.com/webfonts">Google Web Fonts</a> or <a href="https://typekit.com/">Adobe&rsquo;s TypeKit</a>? Chances are you do, since everyone loves fonts. But fonts must be downloaded by the client browser, a process that usually occurs in the page&rsquo;s head (before dom rendering has even begun), slowing down the rest of the page load while it waits.</p>
 
-<p>And your user sees an empty browser while they&#8217;re waiting. That&#8217;s unacceptable.</p>
+<p>And your user sees an empty browser while they&rsquo;re waiting. That&rsquo;s unacceptable.</p>
 
-<p>Head.js alleviates this problem by giving you asynchronous script loading. Your application JavaScript, your fonts, jQuery, Google Analytics&#8230; everything that got put into your head that stopped your page from loading now loads at the same time as the rest of your content. Your user sees a page faster and is happier as a result.</p>
+<p>Head.js alleviates this problem by giving you asynchronous script loading. Your application JavaScript, your fonts, jQuery, Google Analytics&hellip; everything that got put into your head that stopped your page from loading now loads at the same time as the rest of your content. Your user sees a page faster and is happier as a result.</p>
 
-<p>Here&#8217;s what the code looks like for GirlsGuideTo:</p>
+<p>Here&rsquo;s what the code looks like for GirlsGuideTo:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">head</span><span class="p">.</span><span class="nx">js</span><span class="p">(</span> <span class="p">{</span> <span class="s1">&#39;application&#39;</span><span class="o">:</span> <span class="s1">&#39;//girlsguideto.cloudfront.net/assets/application.js&#39;</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;typekit&#39;</span><span class="o">:</span> <span class="s1">&#39;//use.typekit.net/typekit.js&#39;</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;ga&#39;</span><span class="o">:</span> <span class="s1">&#39;//www.google-analytics.com/ga.js&#39;</span> <span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;jquery.embedly-2.1.7&#39;</span><span class="o">:</span> <span class="s1">&#39;//scripts.embed.ly/jquery.embedly-2.1.7.min.js&#39;</span> <span class="p">}</span> <span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Of course I didn&#8217;t hand-code that myself, I used the super helpful <a href="https://github.com/muitocomplicado/headjs-rails">headjs-rails</a> Gem to put this in my application.html.erb&#8217;s head:</p>
+<p>Of course I didn&rsquo;t hand-code that myself, I used the super helpful <a href="https://github.com/muitocomplicado/headjs-rails">headjs-rails</a> Gem to put this in my application.html.erb&rsquo;s head:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -152,11 +154,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Pretty easy, huh? Give it a shot and you&#8217;ll see your page load times start really blazing.</p>
+<p>Pretty easy, huh? Give it a shot and you&rsquo;ll see your page load times start really blazing.</p>
 
 <h3>Turbolinks</h3>
 
-<p>Playing off of Defunkt&#8217;s amazing <a href="http://pjax.heroku.com/">pjax</a>, <a href="https://github.com/rails/turbolinks">Turbolinks</a> speeds up your pageloads by making every page request Ajax-y (or more accurately Pjax-y). When you click on a link, Turbolinks will fetch the page you requested and replace the existing document&#8217;s body with its content. No CSS or JavaScript loading occurs, making each page load blazingly fast &#8211; and thanks to the magic of pushState, your back button and everything else you&#8217;d expect on the page still work.</p>
+<p>Playing off of Defunkt&rsquo;s amazing <a href="http://pjax.heroku.com/">pjax</a>, <a href="https://github.com/rails/turbolinks">Turbolinks</a> speeds up your pageloads by making every page request Ajax-y (or more accurately Pjax-y). When you click on a link, Turbolinks will fetch the page you requested and replace the existing document&rsquo;s body with its content. No CSS or JavaScript loading occurs, making each page load blazingly fast &mdash; and thanks to the magic of pushState, your back button and everything else you&rsquo;d expect on the page still work.</p>
 
 <p>Turbolinks is ridiculously easy to install. Simply add it to your Gemfile and then, in your application.js, add this line:</p>
 
@@ -167,11 +169,11 @@
 
 <h2>Now Fix It</h2>
 
-<p>If you followed my advice up until this point, you might be stunned to discover your Google Analytics and <code>$(document).ready()</code> stuff has completely broken. No worries! We&#8217;ll fix it, and it&#8217;ll be quick and easy to do so.</p>
+<p>If you followed my advice up until this point, you might be stunned to discover your Google Analytics and <code>$(document).ready()</code> stuff has completely broken. No worries! We&rsquo;ll fix it, and it&rsquo;ll be quick and easy to do so.</p>
 
 <h3>$(document).ready()</h3>
 
-<p>This is the easiest thing to correct. <code>$(document).ready()</code> now fires before all your scripts have finished loading, since each script is loaded asynchronously and separately. So you&#8217;ll either see weird behavior from it, or it won&#8217;t execute at all (since $ will be undefined, as jQuery has yet to load). Simply replace all instances of <code>$(document).ready()</code> with <code>head()</code>. <code>head()</code> is called by head.js when your scripts have loaded. Something like this would make sense:</p>
+<p>This is the easiest thing to correct. <code>$(document).ready()</code> now fires before all your scripts have finished loading, since each script is loaded asynchronously and separately. So you&rsquo;ll either see weird behavior from it, or it won&rsquo;t execute at all (since $ will be undefined, as jQuery has yet to load). Simply replace all instances of <code>$(document).ready()</code> with <code>head()</code>. <code>head()</code> is called by head.js when your scripts have loaded. Something like this would make sense:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -196,7 +198,7 @@
 
 <h3>Google Analytics</h3>
 
-<p>Google Analytics will load correctly on your initial page load, now. But unfortunately it won&#8217;t load on any subsequent pages, since additional pages are called via Ajax. We need to hook into one of Turbolink&#8217;s events to correctly record users visiting our site:</p>
+<p>Google Analytics will load correctly on your initial page load, now. But unfortunately it won&rsquo;t load on any subsequent pages, since additional pages are called via Ajax. We need to hook into one of Turbolink&rsquo;s events to correctly record users visiting our site:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -219,62 +221,45 @@
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="nf">-&gt;</span>
 </span><span class='line'>  <span class="nx">doExcitingThings</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>You&#8217;ll want to add this as well:</p>
+<p>You&rsquo;ll want to add this as well:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="nf">-&gt;</span>
 </span><span class='line'>  <span class="nx">doExcitingThings</span><span class="p">()</span>
 </span><span class='line'>
-</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span> <span class="s">&#39;page:change&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span> <span class="s">&#39;page:change&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
 </span><span class='line'>  <span class="nx">doExcitingThings</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Remember this is only for scripts that you&#8217;re sure are loaded after jQuery &#8211; scripts loaded asynchronously need to use <code>head()</code> instead of <code>$(document).ready()</code>.</p>
+<p>Remember this is only for scripts that you&rsquo;re sure are loaded after jQuery &mdash; scripts loaded asynchronously need to use <code>head()</code> instead of <code>$(document).ready()</code>.</p>
 
-<p>And that&#8217;s all there is to it! With these simple tips (and simple fixes) your pages will be incredibly, ridiculously fast. The only downside to these techniques relates to Turbolinks. If you have a lot of script-specific state on your pages, clearing it out between page loads will probably be a big headache. For most of us, without highly stateful JavaScript applications, all you&#8217;ll see are massive speed improvements. Your users won&#8217;t believe how fast your site is, and best of all, these changes are really easy to implement. So what&#8217;re you waiting for? Get JavaScripting!</p>
+<p>And that&rsquo;s all there is to it! With these simple tips (and simple fixes) your pages will be incredibly, ridiculously fast. The only downside to these techniques relates to Turbolinks. If you have a lot of script-specific state on your pages, clearing it out between page loads will probably be a big headache. For most of us, without highly stateful JavaScript applications, all you&rsquo;ll see are massive speed improvements. Your users won&rsquo;t believe how fast your site is, and best of all, these changes are really easy to implement. So what&rsquo;re you waiting for? Get JavaScripting!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-18T10:28:00-06:00" pubdate data-updated="true">Dec 18<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/javascript/'>javascript</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -301,59 +286,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

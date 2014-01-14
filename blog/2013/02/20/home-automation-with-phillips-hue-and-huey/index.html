@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,13 +113,15 @@
 
 
 <time datetime="2013-02-20T19:32:00-06:00" pubdate data-updated="true">Feb 20<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&#8217;s how to make it work.</p>
+  <div class="entry-content"><p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&rsquo;s how to make it work.</p>
 
 <!-- more -->
 
@@ -132,9 +134,9 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Contains all bulbs that have &#39;Living Room&#39; in their name</span>
-</span><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">,</span> <span class="s1">&#39;Foyer&#39;</span><span class="p">)</span> <span class="c1"># All bulbs that have either &#39;Living Room&#39; or &#39;Foyer&#39; in their name</span>
-</span><span class='line'><span class="n">g</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># A group specifically containing bulbs 1 and 3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Contains all bulbs that have &#39;Living Room&#39; in their name</span>
+</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">,</span> <span class="s1">&#39;Foyer&#39;</span><span class="p">)</span> <span class="c1"># All bulbs that have either &#39;Living Room&#39; or &#39;Foyer&#39; in their name</span>
+</span><span class='line'><span class="n">g</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># A group specifically containing bulbs 1 and 3</span>
 </span><span class='line'><span class="n">g</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;My Bulbs&#39;</span> <span class="c1"># Name your group to find it later</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -148,13 +150,13 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;My Bulbs&#39;</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;My Bulbs&#39;</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">200</span>
 </span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">true</span>
 </span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">save</span> <span class="c1"># All changes you&#39;ve made are committed to all the bulbs in a group</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bri</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">ct</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># Set and save in one step</span>
+</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="ss">bri</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="ss">ct</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># Set and save in one step</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -162,14 +164,14 @@
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">event</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Event</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;All Lights Off&#39;</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="p">{</span><span class="n">on</span><span class="p">:</span> <span class="kp">false</span><span class="p">})</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">event</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;All Lights Off&#39;</span><span class="p">,</span> <span class="ss">group</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="ss">actions</span><span class="p">:</span> <span class="p">{</span><span class="ss">on</span><span class="p">:</span> <span class="kp">false</span><span class="p">})</span>
 </span><span class='line'><span class="n">event</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># All lights turn off</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <h2>YAML Setup</h2>
 
-<p>Huey can read your groups and events from YAML configuration files. Here&#8217;s a sample from my setup:</p>
+<p>Huey can read your groups and events from YAML configuration files. Here&rsquo;s a sample from my setup:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -220,13 +222,13 @@
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;groups.yml&#39;</span><span class="p">)</span> <span class="c1"># Import groups</span>
-</span><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Event</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;events.yml&#39;</span><span class="p">)</span> <span class="c1"># Import events</span>
-</span><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Wakeup&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># Run an event on a group</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;groups.yml&#39;</span><span class="p">)</span> <span class="c1"># Import groups</span>
+</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;events.yml&#39;</span><span class="p">)</span> <span class="c1"># Import events</span>
+</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Wakeup&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># Run an event on a group</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I&#8217;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&#8217;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
+<p>I&rsquo;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&rsquo;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
 
 <h2>Whenever</h2>
 
@@ -239,7 +241,7 @@
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">job_type</span> <span class="ss">:event</span><span class="p">,</span> <span class="sx">%Q(cd /directory/to/huey_control &amp;&amp; ruby -e &quot;require &#39;huey&#39;; Huey::Group.import(&#39;groups.yml&#39;); Huey::Event.import(&#39;events.yml&#39;); Huey::Event.find(&#39;:task&#39;).execute(true)&quot;)</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">every</span> <span class="ss">:weekday</span><span class="p">,</span> <span class="n">at</span><span class="p">:</span> <span class="s1">&#39;9:30AM&#39;</span> <span class="k">do</span>
+</span><span class='line'><span class="n">every</span> <span class="ss">:weekday</span><span class="p">,</span> <span class="ss">at</span><span class="p">:</span> <span class="s1">&#39;9:30AM&#39;</span> <span class="k">do</span>
 </span><span class='line'>  <span class="n">event</span> <span class="s2">&quot;Wakeup&quot;</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -247,42 +249,25 @@
 
 <p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
 
-<p>That&#8217;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&#8217;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
+<p>That&rsquo;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&rsquo;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
 
-<p>But there&#8217;s a lot more you can do with huey if you&#8217;d like. Why not make an event that&#8217;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
+<p>But there&rsquo;s a lot more you can do with huey if you&rsquo;d like. Why not make an event that&rsquo;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-20T19:32:00-06:00" pubdate data-updated="true">Feb 20<span>th</span>, 2013</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/huey/'>huey</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -309,59 +294,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

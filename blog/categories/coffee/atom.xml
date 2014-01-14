@@ -4,7 +4,7 @@
   <title><![CDATA[Category: coffee | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/coffee/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-07T23:55:47-06:00</updated>
+  <updated>2014-01-14T16:47:54-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,9 +18,9 @@
     <link href="http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/"/>
     <updated>2012-10-14T21:20:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button</id>
-    <content type="html"><![CDATA[<p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn't have JavaScript, they'd still see something sensible... but if they did, they'd get a sweet fade-in of more content appended right to the content container. Oh, and I also didn't want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+    <content type="html"><![CDATA[<p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&rsquo;t have JavaScript, they&rsquo;d still see something sensible&hellip; but if they did, they&rsquo;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&rsquo;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
 
-<p>I didn't find anything, so I took a crack at creating it myself. This is the result.</p>
+<p>I didn&rsquo;t find anything, so I took a crack at creating it myself. This is the result.</p>
 
 <!-- more -->
 
@@ -32,7 +32,7 @@
 <p>Because it was unobtrusive, it should work on standard links, replacing them with an AJAX-y alternative if they have appropriate attributes. I hit on a link that looked like this:</p>
 
 <p>```ruby
-&lt;%= link_to 'More...'.html_safe, root_path(page: @page + 1),</p>
+&lt;%= link_to &lsquo;More&hellip;&rsquo;.html_safe, root_path(page: @page + 1),</p>
 
 <pre><code>class: 'next_page', 'data-selector' =&gt; '.articles .article',
 'data-container' =&gt; '.articles'%&gt;
@@ -40,15 +40,15 @@
 
 <p>```</p>
 
-<p>If the link has <code>data-selector</code> and <code>data-container</code> attributes, it's supposed to be an AJAX more button. The selector tells the script what to look for in the new page; the container tells it where to append the newly found elements. With this use case in hand, I proceeded to coding.</p>
+<p>If the link has <code>data-selector</code> and <code>data-container</code> attributes, it&rsquo;s supposed to be an AJAX more button. The selector tells the script what to look for in the new page; the container tells it where to append the newly found elements. With this use case in hand, I proceeded to coding.</p>
 
 <h2>The Code</h2>
 
-<p>I apologize in advance if there's a cleaner way to do this. My CoffeeScript is pretty weak.</p>
+<p>I apologize in advance if there&rsquo;s a cleaner way to do this. My CoffeeScript is pretty weak.</p>
 
 <p>```coffeescript
-$(document).ready ->
-  $('[data-selector]').click (event) -></p>
+$(document).ready &ndash;>
+  $(&lsquo;[data-selector]&rsquo;).click (event) &ndash;></p>
 
 <pre><code>element = $(this)
 url = element.attr 'href'
@@ -83,9 +83,9 @@ return false
 
 <p>```</p>
 
-<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we're adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the "More" button again -- or we disable the "More" button if we found no content.</p>
+<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we&rsquo;re adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the &ldquo;More&rdquo; button again &mdash; or we disable the &ldquo;More&rdquo; button if we found no content.</p>
 
-<p>Overall pretty simple but I was satisfied with this solution. Oh, and there's a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
+<p>Overall pretty simple but I was satisfied with this solution. Oh, and there&rsquo;s a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
 ]]></content>
   </entry>
   

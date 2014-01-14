@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-07T23:55:47-06:00</updated>
+  <updated>2014-01-14T16:47:54-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,18 +18,18 @@
     <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
     <updated>2013-04-17T18:16:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers -- but as opposed to most price breakdowns I've read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I'm assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
 
 <!-- more -->
 
 
 <h2>Comparisons</h2>
 
-<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren't that complicated. We'll go for a medium database instance and aggressively cache as much as possible, thus we'll also need to provide memcached room somewhere.</p>
+<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
 
-<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I'll include the hours as I would estimate them personally, but for other people it might take longer or shorter -- and the price could go up if there's a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
 
-<p>So let's get down to the details!</p>
+<p>So let&rsquo;s get down to the details!</p>
 
 <h3>Amazon Web Services</h3>
 
@@ -77,7 +77,7 @@
 </table>
 
 
-<p>No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I've had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don't need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
+<p>No surprises here: if you&rsquo;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&rsquo;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&rsquo;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
 
 <h3>RackSpace</h3>
 
@@ -125,7 +125,7 @@
 </table>
 
 
-<p>RackSpace's managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they'll keep services running and your servers themselves operational) and that's reflected in a lowered monthly devops cost. They don't do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won't have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
+<p>RackSpace&rsquo;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&rsquo;ll keep services running and your servers themselves operational) and that&rsquo;s reflected in a lowered monthly devops cost. They don&rsquo;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&rsquo;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
 
 <h3>BlueBox</h3>
 
@@ -173,7 +173,7 @@
 </table>
 
 
-<p>BlueBox's claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you'd otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox's product is easily the most expensive. You're paying for their expertise much more than their hardware.</p>
+<p>BlueBox&rsquo;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&rsquo;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&rsquo;s product is easily the most expensive. You&rsquo;re paying for their expertise much more than their hardware.</p>
 
 <h3>Heroku</h3>
 
@@ -224,11 +224,11 @@
 </table>
 
 
-<p>I'm always somewhat mystified by Heroku's pricing -- their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku's internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
 
 <h2>Conclusions</h2>
 
-<p>I don't think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they're reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
+<p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
 ]]></content>
   </entry>
   
@@ -237,13 +237,13 @@
     <link href="http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/"/>
     <updated>2013-03-19T13:16:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should</id>
-    <content type="html"><![CDATA[<p>In case you haven't heard...</p>
+    <content type="html"><![CDATA[<p>In case you haven&rsquo;t heard&hellip;</p>
 
 <p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
 
-<p>Yes, it's true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth -- which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you're into Rails, you'd have to be stupid to not at least consider such an amazing opportunity.</p>
+<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &mdash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
 
-<p>So I did, and because I'm a programmer I carefully enumerated my thoughts. If you're on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you -- either way, you'll have an opinion!</p>
+<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &mdash; either way, you&rsquo;ll have an opinion!</p>
 
 <!-- more -->
 
@@ -251,44 +251,44 @@
 <h2>Why You Should Apply</h2>
 
 <ol>
-<li><h3>They've literally written books about how great it is to work there.</h3>
+<li><h3>They&rsquo;ve literally written books about how great it is to work there.</h3>
 
-<p>If you haven't read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won't find stupid meetings, outside investors, or anyone burning the midnight oil here. You'll find work. Great, meaningful, empowering work. When you get right down to it, isn't that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They're committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
+<p>If you haven&rsquo;t read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won&rsquo;t find stupid meetings, outside investors, or anyone burning the midnight oil here. You&rsquo;ll find work. Great, meaningful, empowering work. When you get right down to it, isn&rsquo;t that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They&rsquo;re committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
 <li><h3><a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">The Man Himself</a>.</h3>
 
-<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I've been lobbying so hard for them to make. He's the inventor of Rails, he's highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what's not to like? I imagine that, if you announced to a room of programmers, "I work with DHH," there would be a brief hush and then everyone would be talking over each other. One would say, "That man is a crazy person!" And another, "He's the greatest programmer to ever draw breath!" There's not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
+<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&rsquo;ve been lobbying so hard for them to make. He&rsquo;s the inventor of Rails, he&rsquo;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&rsquo;s not to like? I imagine that, if you announced to a room of programmers, &ldquo;I work with DHH,&rdquo; there would be a brief hush and then everyone would be talking over each other. One would say, &ldquo;That man is a crazy person!&rdquo; And another, &ldquo;He&rsquo;s the greatest programmer to ever draw breath!&rdquo; There&rsquo;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
 <li><h3>Fame &amp; fortune await.</h3>
 
-<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren't stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you'll talk to will know where you work. Your title and position will be meaningful -- and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you're a 37signals alum (unless you intend to be a lifer), having "Programmer at 37signals" on your resume will look even more stellar than all those follower numbers.</p></li>
-<li><h3>Work with the best -- and be the best.</h3>
+<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&rsquo;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&rsquo;ll talk to will know where you work. Your title and position will be meaningful &mdash; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&rsquo;re a 37signals alum (unless you intend to be a lifer), having &ldquo;Programmer at 37signals&rdquo; on your resume will look even more stellar than all those follower numbers.</p></li>
+<li><h3>Work with the best &mdash; and be the best.</h3>
 
-<p>37signals' programming team is the crème de la crème of the Rails world. You'll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link -- doesn't that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You'll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
+<p>37signals' programming team is the crème de la crème of the Rails world. You&rsquo;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &mdash; doesn&rsquo;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&rsquo;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
 </ol>
 
 
-<h2>Why You Shouldn't</h2>
+<h2>Why You Shouldn&rsquo;t</h2>
 
 <ol>
-<li><h3>You're not the best.</h3>
+<li><h3>You&rsquo;re not the best.</h3>
 
-<p>But in a team of greats, even being great is not enough -- or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you'll be just another programmer. For some, the knowledge that they're there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don't yet have the fame and reach of 37signals. It's up to you to find them!</p></li>
-<li><h3>While it's a great company, it's still a company.</h3>
+<p>But in a team of greats, even being great is not enough &mdash; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&rsquo;ll be just another programmer. For some, the knowledge that they&rsquo;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&rsquo;t yet have the fame and reach of 37signals. It&rsquo;s up to you to find them!</p></li>
+<li><h3>While it&rsquo;s a great company, it&rsquo;s still a company.</h3>
 
-<p>I love startups. In a startup I'm not just a programmer: I do lots and lots of work with computers, it's true, and most of that is programming. But I'm also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don't know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That's not an easy question to answer, but I would bet not a whole lot -- or, at least, less than you would somewhere else.</p></li>
+<p>I love startups. In a startup I&rsquo;m not just a programmer: I do lots and lots of work with computers, it&rsquo;s true, and most of that is programming. But I&rsquo;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&rsquo;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&rsquo;s not an easy question to answer, but I would bet not a whole lot &mdash; or, at least, less than you would somewhere else.</p></li>
 <li><h3>Go do it yourself.</h3>
 
-<p>While 37signals is a great company, there's nothing inherently special about it. They make CRM software, and while that's an interesting problem space, there's tons of fascinating questions to answer out there -- questions that can only be answered through excellent software! The point of Rework is that there's no real magic in 37signals that people who are smart and dedicated can't create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you'd be joining his company, but ultimately, if you're so great, why aren't you out there making a name of your own, rather than riding on someone else's coattails? Even if they're his.</p></li>
+<p>While 37signals is a great company, there&rsquo;s nothing inherently special about it. They make CRM software, and while that&rsquo;s an interesting problem space, there&rsquo;s tons of fascinating questions to answer out there &mdash; questions that can only be answered through excellent software! The point of Rework is that there&rsquo;s no real magic in 37signals that people who are smart and dedicated can&rsquo;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&rsquo;d be joining his company, but ultimately, if you&rsquo;re so great, why aren&rsquo;t you out there making a name of your own, rather than riding on someone else&rsquo;s coattails? Even if they&rsquo;re his.</p></li>
 <li><h3>Fame &amp; fortune await!</h3>
 
-<p>If you're a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they're dramatically out of line with what the market pays. And while they're famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can't join stars that have already risen. Do you really want fame and fortune? Then you don't want to join 37signals. They've already arrived there, and while there's money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company... regardless of how awesome they are.</p></li>
+<p>If you&rsquo;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&rsquo;re dramatically out of line with what the market pays. And while they&rsquo;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&rsquo;t join stars that have already risen. Do you really want fame and fortune? Then you don&rsquo;t want to join 37signals. They&rsquo;ve already arrived there, and while there&rsquo;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&hellip; regardless of how awesome they are.</p></li>
 </ol>
 
 
 <h2>In The End</h2>
 
-<p>At the point I'm at in my career, 37signals -- while incredibly appealing -- isn't the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven't picked this up already, they're my programming heroes: and they should be yours too, because they care about everything that's important in this industry. So if you're at all interested in being a programmer among programmers, then 37signals is calling you.</p>
+<p>At the point I&rsquo;m at in my career, 37signals &mdash; while incredibly appealing &mdash; isn&rsquo;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&rsquo;t picked this up already, they&rsquo;re my programming heroes: and they should be yours too, because they care about everything that&rsquo;s important in this industry. So if you&rsquo;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
 
-<p>If not, I look forward to seeing what you create in the future, because I bet it'll be stellar.</p>
+<p>If not, I look forward to seeing what you create in the future, because I bet it&rsquo;ll be stellar.</p>
 ]]></content>
   </entry>
   
@@ -297,16 +297,16 @@
     <link href="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck/"/>
     <updated>2013-02-22T11:00:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck</id>
-    <content type="html"><![CDATA[<p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I've spent quite a lot of time and effort researching and reviewing the various Rails API gems and I've come to a startling and disheartening conclusion.</p>
+    <content type="html"><![CDATA[<p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
 
 <p>They all suck.</p>
 
 <p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
 
 <ol>
-<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn't need to browse through every version of the API, applying it to each file.</li>
-<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that's fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
-<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I've installed in it, like logging, error reporting, performance metrics and so on.</li>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
 </ol>
 
 
@@ -317,25 +317,25 @@
 
 <h2><a href="https://github.com/intridea/grape">grape</a></h2>
 
-<p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you're doing and what you're expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
+<p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you&rsquo;re doing and what you&rsquo;re expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
 
-<p>Unfortunately that's where the great stuff ends. For Rails applications -- assuming you actually want to use grape with Rails -- it is really an unpleasant solution, since it just doesn't play nicely with Rails.</p>
+<p>Unfortunately that&rsquo;s where the great stuff ends. For Rails applications &mdash; assuming you actually want to use grape with Rails &mdash; it is really an unpleasant solution, since it just doesn&rsquo;t play nicely with Rails.</p>
 
-<p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don't want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you're on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
+<p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don&rsquo;t want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you&rsquo;re on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
 
-<p>Second, and for those of you already gearing up to say "but grape isn't FOR Rails", you end up duplicating a lot of Rails' structure inside it anyway, even in small applications. If you don't want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
+<p>Second, and for those of you already gearing up to say &ldquo;but grape isn&rsquo;t FOR Rails&rdquo;, you end up duplicating a lot of Rails' structure inside it anyway, even in small applications. If you don&rsquo;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
 
 <p>Third, if you want to version your API, you get to copy and paste the entire thing. To prevent us doing this every time at Everest, I implemented a module inheritance system for the API versions, but frankly it feels hacky and was difficult to get grape to support properly.</p>
 
 <p>Fourth, its caching support is pathetic. You have to install a completely separate gem (<a href="https://github.com/artsy/garner">garner</a>) if you want any kind of caching at all. Do people who use grape not experience any sort of load? Do their APIs not engage in any sort of database querying? Why is this a tacked-on side project instead of a core feature?</p>
 
-<p>And of course it has no view support. If you want to reuse data representations, define a method in the base API and call it all over the place. It's like a view, but more hidden!</p>
+<p>And of course it has no view support. If you want to reuse data representations, define a method in the base API and call it all over the place. It&rsquo;s like a view, but more hidden!</p>
 
-<p>I assume some people must use grape for at least as complicated an app as I do. When I was Googling how to do versioning without copy pasting, I came across numerous slideshows from various Rails conferences discussing how great it is. None of them address any of these problems, so I'm curious how the really big players make grape work without these difficulties. (My suspicion is they don't use grape.)</p>
+<p>I assume some people must use grape for at least as complicated an app as I do. When I was Googling how to do versioning without copy pasting, I came across numerous slideshows from various Rails conferences discussing how great it is. None of them address any of these problems, so I&rsquo;m curious how the really big players make grape work without these difficulties. (My suspicion is they don&rsquo;t use grape.)</p>
 
 <h2><a href="https://github.com/fabrik42/acts_as_api">acts_as_api</a></h2>
 
-<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view -- that's what views are for. You don't see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn't.</p>
+<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &mdash; that&rsquo;s what views are for. You don&rsquo;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&rsquo;t.</p>
 
 <p>This gem leads to really horrible uses like this when you version an API:</p>
 
@@ -361,37 +361,37 @@ t.add :gender
 end
 ```</p>
 
-<p>This is a versioned resource. You don't want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
+<p>This is a versioned resource. You don&rsquo;t want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
 
 <h2><a href="https://github.com/filtersquad/rocket_pants">rocket_pants</a></h2>
 
-<p>rocket_pants actually does quite a lot right (besides having a sweet name): it's fairly DRY and it integrates with Rails pretty well.</p>
+<p>rocket_pants actually does quite a lot right (besides having a sweet name): it&rsquo;s fairly DRY and it integrates with Rails pretty well.</p>
 
 <p>That said, versioning is still a tremendous pain in the butt. Routing allows you to at least select which controller your requests are sent to, but this quickly gets complicated:</p>
 
 <p>```ruby
 api version: 1 do
-  get 'x', to: 'test#item'
+  get &lsquo;x&rsquo;, to: &lsquo;test#item&rsquo;
 end</p>
 
 <p>api version: 1..3 do
-  get 'y', to: 'test#item2'
+  get &lsquo;y&rsquo;, to: &lsquo;test#item2&rsquo;
 end</p>
 
 <p>api version: 2 do
-  get 'y', to: 'test#override' # how does this interact with the line above?
+  get &lsquo;y&rsquo;, to: &lsquo;test#override&rsquo; # how does this interact with the line above?
 end</p>
 
 <p>api version: 2..4 do
-  get 'x', to: 'test#item3' # x now does something different for only versions 2 and 4
+  get &lsquo;x&rsquo;, to: &lsquo;test#item3&rsquo; # x now does something different for only versions 2 and 4
 end
 ```</p>
 
 <p>Confusing!</p>
 
-<p>Why not have a simple fallback method where you define the highest version of your API, and the router checks to see which controllers exist in that version, moving back to an earlier version until it finds a defined controller? You could even have the router detect this on application load to prevent increased loading times. Then you don't need any sort of fooling around with complicated routing rules. Instead you just define the basic structure of your API and your application correctly infers versions from it, and if you have specific overrides you can address them in the routing file.</p>
+<p>Why not have a simple fallback method where you define the highest version of your API, and the router checks to see which controllers exist in that version, moving back to an earlier version until it finds a defined controller? You could even have the router detect this on application load to prevent increased loading times. Then you don&rsquo;t need any sort of fooling around with complicated routing rules. Instead you just define the basic structure of your API and your application correctly infers versions from it, and if you have specific overrides you can address them in the routing file.</p>
 
-<p>Wishing aside, rocket_pants also doesn't use views, instead encouraging you to use a model's <code>serializable_hash</code> method to instruct it how to convert the model to JSON. Let's hope you don't have more than one representation of your model.</p>
+<p>Wishing aside, rocket_pants also doesn&rsquo;t use views, instead encouraging you to use a model&rsquo;s <code>serializable_hash</code> method to instruct it how to convert the model to JSON. Let&rsquo;s hope you don&rsquo;t have more than one representation of your model.</p>
 
 <h2><a href="https://github.com/bploetz/versionist">versionist</a></h2>
 
@@ -405,17 +405,17 @@ end
 </ul>
 
 
-<p>To a new location. These are just copies: in all likelihood they'll end up largely exactly the same as the previous version. It provides a Rails generator that does this automatically. I'm on the fence as to whether great support for poor design patterns is unironically helpful though.</p>
+<p>To a new location. These are just copies: in all likelihood they&rsquo;ll end up largely exactly the same as the previous version. It provides a Rails generator that does this automatically. I&rsquo;m on the fence as to whether great support for poor design patterns is unironically helpful though.</p>
 
 <h2><a href="https://github.com/erichmenge/api-versions">api-versions</a></h2>
 
-<p>Though it's practically unknown, in all my searching this is the gem that really got closest to what I was looking for. By default, it uses this heretofore unseen programming concept called "inheritance" to prevent code duplication from one version of your API to the next.</p>
+<p>Though it&rsquo;s practically unknown, in all my searching this is the gem that really got closest to what I was looking for. By default, it uses this heretofore unseen programming concept called &ldquo;inheritance&rdquo; to prevent code duplication from one version of your API to the next.</p>
 
-<p>Unfortunately, when you use its helpfully-provided Rails generator <code>api_versions:bump</code> it still creates a new controller for each of your old controllers. While they inherit code, which is nice, why do you have an empty controller just to provide inheritance to a previous version of the API? Still, this is definitely the least amount of copy/pasting we've seen up until this point, and I sincerely appreciate the author's attempt to remain DRY in the very wet API landscape.</p>
+<p>Unfortunately, when you use its helpfully-provided Rails generator <code>api_versions:bump</code> it still creates a new controller for each of your old controllers. While they inherit code, which is nice, why do you have an empty controller just to provide inheritance to a previous version of the API? Still, this is definitely the least amount of copy/pasting we&rsquo;ve seen up until this point, and I sincerely appreciate the author&rsquo;s attempt to remain DRY in the very wet API landscape.</p>
 
-<h2>So what should I do if I'm making a Rails API?</h2>
+<h2>So what should I do if I&rsquo;m making a Rails API?</h2>
 
-<p>Use <a href="https://github.com/rails/jbuilder">jbuilder</a> (or <a href="https://github.com/nesquena/rabl">rabl</a>) to create views. If you have a tremendous hatred of views, use <a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a> instead to achieve the same goal. Your controllers should be pretty much like regular Rails ActionControllers. Feel free to include an extremely low-touch library like <a href="https://github.com/bploetz/versionist">versionist</a> or <a href="https://github.com/erichmenge/api-versions">api-versions</a>. Put most of your controller code in modules and include it in the actual controllers to prevent copy and pasting everywhere for the first. For the latter, not much you can do. Suck it up and copy and paste in your routes for both. Unfortunately, that's the best solution I can come up with.</p>
+<p>Use <a href="https://github.com/rails/jbuilder">jbuilder</a> (or <a href="https://github.com/nesquena/rabl">rabl</a>) to create views. If you have a tremendous hatred of views, use <a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a> instead to achieve the same goal. Your controllers should be pretty much like regular Rails ActionControllers. Feel free to include an extremely low-touch library like <a href="https://github.com/bploetz/versionist">versionist</a> or <a href="https://github.com/erichmenge/api-versions">api-versions</a>. Put most of your controller code in modules and include it in the actual controllers to prevent copy and pasting everywhere for the first. For the latter, not much you can do. Suck it up and copy and paste in your routes for both. Unfortunately, that&rsquo;s the best solution I can come up with.</p>
 
 <h2>Stop whining and do something about it!</h2>
 
@@ -428,7 +428,7 @@ end
     <link href="http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails/"/>
     <updated>2013-01-22T12:36:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/01/22/chef-cookbooks-for-rails</id>
-    <content type="html"><![CDATA[<p>I spent awhile trying to find other people's Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I'll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
+    <content type="html"><![CDATA[<p>I spent awhile trying to find other people&rsquo;s Chef cookbook collections for deploying Rails applications. In the absence of anything other than old GitHub repositories, I decided to write a quick post summarizing the cookbooks I used and a few settings that made them work as I expected. I&rsquo;ll go by the roles that I created to organize the cookbooks, starting with the most basic: base.</p>
 
 <!-- more -->
 
@@ -463,7 +463,7 @@ run_list %W(
 )
 </code></p>
 
-<p>This is the run list I'm using as the base for all the servers. I don't think there's anything surprising here, but I do want to point out a few things:</p>
+<p>This is the run list I&rsquo;m using as the base for all the servers. I don&rsquo;t think there&rsquo;s anything surprising here, but I do want to point out a few things:</p>
 
 <ul>
 <li><strong>openssh</strong> should be configured like this:</li>
@@ -471,7 +471,7 @@ run_list %W(
 
 
 <p>```ruby
-  default_attributes 'openssh' => {</p>
+  default_attributes &lsquo;openssh&rsquo; => {</p>
 
 <pre><code>  'permit_root_login' =&gt; 'no',
   'password_authentication' =&gt; 'no'
@@ -480,18 +480,18 @@ run_list %W(
 
 <p>```</p>
 
-<p>You don't want to allow root logins or password logins. It is also probably worthwhile to delete any preexisting sudoer for your AMI image if one exists (like ubuntu for example), using...</p>
+<p>You don&rsquo;t want to allow root logins or password logins. It is also probably worthwhile to delete any preexisting sudoer for your AMI image if one exists (like ubuntu for example), using&hellip;</p>
 
 <ul>
-<li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It's really helpful.</p></li>
-<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list -- it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn't matter a whole lot to me. But I can definitely see taking this out.</p></li>
-<li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you'll get confused.</p></li>
+<li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It&rsquo;s really helpful.</p></li>
+<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &mdash; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&rsquo;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
+<li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you&rsquo;ll get confused.</p></li>
 </ul>
 
 
 <h2>statistics</h2>
 
-<p>I'm running Graylog2 and Graphite to compile logs and interesting statistics from our servers. This is the runlist that establishes the role dedicated to these two pieces of software, which I called <code>statistics</code>:</p>
+<p>I&rsquo;m running Graylog2 and Graphite to compile logs and interesting statistics from our servers. This is the runlist that establishes the role dedicated to these two pieces of software, which I called <code>statistics</code>:</p>
 
 <p><code>ruby
 run_list %W(
@@ -508,7 +508,7 @@ run_list %W(
 <p>I use <a href="https://github.com/titanous/chef-ebs">this EBS cookbook</a> with this configuration:</p>
 
 <p>```ruby
-default_attributes 'ebs' => {</p>
+default_attributes &lsquo;ebs&rsquo; => {</p>
 
 <pre><code>'volumes' =&gt; {
   '/data' =&gt; {
@@ -521,7 +521,7 @@ default_attributes 'ebs' => {</p>
 <p>  }
 ```</p>
 
-<p>This server saves and compiles enormous amounts of data, and in order to hold it all correctly I provision an external EBS drive to contain it. I'm actually not even sure 100 gigs is enough space but it seems good for now. elasticsearch, mongodb, and graphite are all set up to save their data to subdirectores in /data. While I could easily have made this a RAID array instead, persistence of this data is not super important to me right now: while it would suck to lose all our analytics information, given our traffic it would rebuild into something useful very quickly anyway.</p>
+<p>This server saves and compiles enormous amounts of data, and in order to hold it all correctly I provision an external EBS drive to contain it. I&rsquo;m actually not even sure 100 gigs is enough space but it seems good for now. elasticsearch, mongodb, and graphite are all set up to save their data to subdirectores in /data. While I could easily have made this a RAID array instead, persistence of this data is not super important to me right now: while it would suck to lose all our analytics information, given our traffic it would rebuild into something useful very quickly anyway.</p>
 
 <p>I would use nginx instead of Apache2, but for a server only accessible internally that will probably not see a lot of traffic, it was much easier and faster to just set up Apache2 and passenger than start unicorns for the Graphite and Graylog web interfaces.</p>
 
@@ -538,7 +538,7 @@ run_list %W(
 <p>Probably among the least surprising roles. The application servers use nginx and unicorn for blazingly fast speed. Make sure to add the nginx collectd plugin to this server for additional metrics and monitoring:</p>
 
 <p>```ruby
-default_attributes 'collectd' => {</p>
+default_attributes &lsquo;collectd&rsquo; => {</p>
 
 <pre><code>'plugins' =&gt; {
   'nginx' =&gt; { }
@@ -548,7 +548,7 @@ default_attributes 'collectd' => {</p>
 <p>  }
 ```</p>
 
-<p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don't discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
+<p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don&rsquo;t discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
 
 <h1>Security &amp; Safety</h1>
 
@@ -563,7 +563,7 @@ default_attributes 'collectd' => {</p>
     <id>http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails</id>
     <content type="html"><![CDATA[<p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
 
-<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there's no need for STI here -- there's really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn't let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you're caching under. You're out of luck if you want to change it dynamically.</p>
+<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&rsquo;s no need for STI here &mdash; there&rsquo;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&rsquo;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&rsquo;re caching under. You&rsquo;re out of luck if you want to change it dynamically.</p>
 
 <p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
 
@@ -591,7 +591,7 @@ end
 <p>end
 ```</p>
 
-<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object's class after a vote is created or destroyed; note that I don't intend to change the type of the vote, but if you do, you'll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
+<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object&rsquo;s class after a vote is created or destroyed; note that I don&rsquo;t intend to change the type of the vote, but if you do, you&rsquo;ll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
 
 <p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Hipstamatic&#8217;s Rails application is deployed to Amazon&#8217;s Elastic Cloud, and we make extensive use of Amazon&#8217;s Web Services in &hellip;">
+  <meta name="description" content="Hipstamatic&rsquo;s Rails application is deployed to Amazon&rsquo;s Elastic Cloud, and we make extensive use of Amazon&rsquo;s Web Services in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,24 +113,26 @@
 
 
 <time datetime="2012-04-12T13:30:00-05:00" pubdate data-updated="true">Apr 12<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Hipstamatic&#8217;s Rails application is deployed to Amazon&#8217;s Elastic Cloud, and we make extensive use of Amazon&#8217;s Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
+  <div class="entry-content"><p>Hipstamatic&rsquo;s Rails application is deployed to Amazon&rsquo;s Elastic Cloud, and we make extensive use of Amazon&rsquo;s Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
 
 <!-- more -->
 
 
 <h2>Improve Database Performance</h2>
 
-<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here&#8217;s what I did to decrease load on our database:</p>
+<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here&rsquo;s what I did to decrease load on our database:</p>
 
 <h3>Find Slow Queries</h3>
 
-<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2&#8217;s <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won&#8217;t show up since they aren&#8217;t running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
+<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2&rsquo;s <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won&rsquo;t show up since they aren&rsquo;t running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -149,34 +151,34 @@
 
 <h3>Index Lots</h3>
 
-<p>Index the crap out of everything. It&#8217;s nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you&#8217;ll rapidly discover that various fields that aren&#8217;t indexed together should be, but examining the individual queries your application makes and ensuring they&#8217;re all indexed is an awesome (though boring) use of your time.</p>
+<p>Index the crap out of everything. It&rsquo;s nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you&rsquo;ll rapidly discover that various fields that aren&rsquo;t indexed together should be, but examining the individual queries your application makes and ensuring they&rsquo;re all indexed is an awesome (though boring) use of your time.</p>
 
-<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you&#8217;ll have to get into your code yourself to find out what really needs indexing. Automated tools can&#8217;t really replace actual hands-on experience&#8230; at least, not in this case.</p>
+<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you&rsquo;ll have to get into your code yourself to find out what really needs indexing. Automated tools can&rsquo;t really replace actual hands-on experience&hellip; at least, not in this case.</p>
 
-<h3>Don&#8217;t Use Your Database</h3>
+<h3>Don&rsquo;t Use Your Database</h3>
 
-<p>Sticking something into the database isn&#8217;t always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn&#8217;t another tool to do that job. In particular, think about:</p>
+<p>Sticking something into the database isn&rsquo;t always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn&rsquo;t another tool to do that job. In particular, think about:</p>
 
 <ul>
 <li><h4>memcached</h4>
 
-<p>If you want to rapidly retrieve data and it&#8217;s in key-value form, and persistence doesn&#8217;t really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
+<p>If you want to rapidly retrieve data and it&rsquo;s in key-value form, and persistence doesn&rsquo;t really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
 <li><h4>redis</h4>
 
-<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets &#8211; especially if these data structures are going to end up being extremely large or called very frequently &#8211; use redis.</p></li>
+<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets &mdash; especially if these data structures are going to end up being extremely large or called very frequently &mdash; use redis.</p></li>
 <li><h4>elasticsearch</h4>
 
-<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can&#8217;t say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you&#8217;re performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
+<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can&rsquo;t say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you&rsquo;re performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
 </ul>
 
 
 <h2>Use More Caching</h2>
 
-<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess&#8230;) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
+<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess&hellip;) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
 
-<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I&#8217;d be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
+<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I&rsquo;d be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
 
-<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails&#8217; helper methods won&#8217;t find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
+<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails&#8217; helper methods won&rsquo;t find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -195,44 +197,27 @@
 
 <h2>Be Responsive</h2>
 
-<p>One of the great things about being deployed to the cloud is that you can &#8211; and should! &#8211; scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they&#8217;ll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
+<p>One of the great things about being deployed to the cloud is that you can &mdash; and should! &mdash; scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they&rsquo;ll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
 
-<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you&#8217;re at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary &#8211; getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you&#8217;re getting hammered, and don&#8217;t be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
+<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you&rsquo;re at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary &mdash; getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you&rsquo;re getting hammered, and don&rsquo;t be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
 
-<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we&#8217;re saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
+<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we&rsquo;re saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-12T13:30:00-05:00" pubdate data-updated="true">Apr 12<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -259,59 +244,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

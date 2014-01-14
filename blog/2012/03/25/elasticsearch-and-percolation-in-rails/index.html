@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,20 +113,22 @@
 
 
 <time datetime="2012-03-25T11:39:00-05:00" pubdate data-updated="true">Mar 25<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &#8211; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &#8211; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&#8217;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&#8217;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
+  <div class="entry-content"><p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &mdash; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &mdash; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&rsquo;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&rsquo;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
 
 <!-- more -->
 
 
-<p>Initially, magic albums were a set of complicated MySQL queries. I think anyone who&#8217;s had experience with indexes in an enormous MySQL database knows where this one is going&#8230; its performance was terrible, and as more people created more albums our RDS instance started really chugging. The worst part was we were spending enormous amounts of time, energy, and money invested in a small part of our application, and it was having a cascade effect through the database ruining the rest of the user experience.</p>
+<p>Initially, magic albums were a set of complicated MySQL queries. I think anyone who&rsquo;s had experience with indexes in an enormous MySQL database knows where this one is going&hellip; its performance was terrible, and as more people created more albums our RDS instance started really chugging. The worst part was we were spending enormous amounts of time, energy, and money invested in a small part of our application, and it was having a cascade effect through the database ruining the rest of the user experience.</p>
 
-<p>As a stopgap measure, we switched to using Redis lists to hold the association but kept the actual index in MySQL. Recently though we migrated away from MySQL completely to an index storage called <a href="http://www.elasticsearch.org/">elasticsearch</a>. Elasticsearch is awesome because it&#8217;s built on Lucene, is incredibly easy to get going, and is very very powerful. I passed over search solutions like <a href="http://sphinxsearch.com/">Sphinx</a> and <a href="http://www.searchify.com/">Searchify</a> mostly because we aren&#8217;t doing any text searching: all of the queries albums perform on photos are controlled by direct, matched fields. We just needed a great, simple engine for indexing them constantly and pulling results out quickly &#8211; an engine that wouldn&#8217;t bring the rest of our stack down if there was an indexing failure or if we were bombarded with many simultaneous queries.</p>
+<p>As a stopgap measure, we switched to using Redis lists to hold the association but kept the actual index in MySQL. Recently though we migrated away from MySQL completely to an index storage called <a href="http://www.elasticsearch.org/">elasticsearch</a>. Elasticsearch is awesome because it&rsquo;s built on Lucene, is incredibly easy to get going, and is very very powerful. I passed over search solutions like <a href="http://sphinxsearch.com/">Sphinx</a> and <a href="http://www.searchify.com/">Searchify</a> mostly because we aren&rsquo;t doing any text searching: all of the queries albums perform on photos are controlled by direct, matched fields. We just needed a great, simple engine for indexing them constantly and pulling results out quickly &mdash; an engine that wouldn&rsquo;t bring the rest of our stack down if there was an indexing failure or if we were bombarded with many simultaneous queries.</p>
 
 <p>Elasticsearch has given us all that and more. Using the amazing <a href="https://github.com/karmi/tire">tire</a> gem, it was simple to get our photo model set up correctly:</p>
 
@@ -141,8 +143,8 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Tire</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Search</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Tire</span><span class="p">:</span><span class="ss">:Model</span><span class="o">::</span><span class="no">Search</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="n">mapping</span> <span class="k">do</span>
 </span><span class='line'>    <span class="n">indexes</span> <span class="ss">:id</span>
@@ -155,7 +157,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>(The code here is changed slightly from its production form to redact business logic and simplify it.) Of course, the real magic takes place in the albums model. Albums are essentially saved queries, if you think about it: they should search for photos every time they&#8217;re called. So we have a method to generate the query we&#8217;re looking for:</p>
+<p>(The code here is changed slightly from its production form to redact business logic and simplify it.) Of course, the real magic takes place in the albums model. Albums are essentially saved queries, if you think about it: they should search for photos every time they&rsquo;re called. So we have a method to generate the query we&rsquo;re looking for:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -169,7 +171,7 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_query</span>
 </span><span class='line'>    <span class="n">query</span> <span class="o">=</span> <span class="o">[]</span>
@@ -184,9 +186,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>These are all, in elasticsearch parlance, filters rather than queries: queries must look into data fields and perform operations in them, whereas filters just filter on a fields&#8217; value directly&#8230; exactly what I was looking for. <code>terms</code> instructs the filter parser that at least one of the select elements must match. <code>range</code>, as you can see, allows us to pull only photos within a certain date. <code>geo_distance</code> is particularly cool and lets us filter all photos by their geographic location.</p>
+<p>These are all, in elasticsearch parlance, filters rather than queries: queries must look into data fields and perform operations in them, whereas filters just filter on a fields&#8217; value directly&hellip; exactly what I was looking for. <code>terms</code> instructs the filter parser that at least one of the select elements must match. <code>range</code>, as you can see, allows us to pull only photos within a certain date. <code>geo_distance</code> is particularly cool and lets us filter all photos by their geographic location.</p>
 
-<p>Using this couldn&#8217;t be simpler:</p>
+<p>Using this couldn&rsquo;t be simpler:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -199,7 +201,7 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">elasticsearch_photos</span>
 </span><span class='line'>    <span class="n">finder</span> <span class="o">=</span> <span class="no">Photo</span><span class="o">.</span><span class="n">search</span> <span class="k">do</span>
@@ -213,11 +215,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Tada! Easy and simple searching inside your models. The performance gain for us was massive; elasticsearch has a ridiculously small memory footprint, but consistently returns responses to us in 50-60 milliseconds. Now that&#8217;s performance!</p>
+<p>Tada! Easy and simple searching inside your models. The performance gain for us was massive; elasticsearch has a ridiculously small memory footprint, but consistently returns responses to us in 50-60 milliseconds. Now that&rsquo;s performance!</p>
 
-<p>Many of you might be wondering, though, how we get the reverse of this association. Albums have many (searched) photos; how does a photo know what album it&#8217;s in? This was a stumbling block for the other search solutions I investigated, and I was concerned I would have to bust out the old, gimpy MySQL.</p>
+<p>Many of you might be wondering, though, how we get the reverse of this association. Albums have many (searched) photos; how does a photo know what album it&rsquo;s in? This was a stumbling block for the other search solutions I investigated, and I was concerned I would have to bust out the old, gimpy MySQL.</p>
 
-<p>But elasticsearch to the rescue! It employs a very neat feature called <a href="http://www.elasticsearch.org/blog/2011/02/08/percolator.html">the percolator</a>. Percolation allows us to save searches as an index themselves, and then determine what objects match any of the saved searches. So, we save the search an album would conduct along with the album&#8217;s ID into the photo percolator; then we can determine what queries a photo matches when we save it. It&#8217;s really quite ingenuous and was, of course, ridiculously easy to set up:</p>
+<p>But elasticsearch to the rescue! It employs a very neat feature called <a href="http://www.elasticsearch.org/blog/2011/02/08/percolator.html">the percolator</a>. Percolation allows us to save searches as an index themselves, and then determine what objects match any of the saved searches. So, we save the search an album would conduct along with the album&rsquo;s ID into the photo percolator; then we can determine what queries a photo matches when we save it. It&rsquo;s really quite ingenuous and was, of course, ridiculously easy to set up:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -232,7 +234,7 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>  <span class="n">after_save</span> <span class="ss">:register_query</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">register_query</span>
@@ -256,7 +258,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">percolated_albums</span>
 </span><span class='line'>    <span class="no">Album</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="no">Photo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">percolate</span><span class="p">(</span><span class="nb">self</span><span class="p">))</span>
@@ -265,40 +267,23 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I&#8217;ll save details on how I did that for another post.</p>
+<p>This was a rather whirlwind tour, but I was really impressed at how easy it was to get elasticsearch set up properly. It really has added quite a lot to our stack and I look forward to using it on other domain problems (maybe even including full text search)! It was pretty easy to get it tested as well, but I think I&rsquo;ll save details on how I did that for another post.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-25T11:39:00-05:00" pubdate data-updated="true">Mar 25<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/gems/'>gems</a>, <a class='category' href='/blog/categories/rails/'>rails</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -325,59 +310,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

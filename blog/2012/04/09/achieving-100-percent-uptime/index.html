@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,28 +113,30 @@
 
 
 <time datetime="2012-04-09T17:52:00-05:00" pubdate data-updated="true">Apr 9<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
+  <div class="entry-content"><p><img src="http://f.cl.ly/items/0q2M3B2o1f1D1D451B1S/uptime.jpg" alt="Uptime - 100%" /></p>
 
-<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users&#8217; perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email &#8211; it&#8217;s a good indication of how well I did my job in the previous week. And for a couple weeks now I&#8217;m happy to report I&#8217;ve been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
+<p>Keeping a highly available web application online is no joke. Everything above 99% is extremely impressive; that means that you battled the forces of <a href="http://en.wikipedia.org/wiki/Software_erosion">erosion</a> and probably even deployed some pretty neat features without even a hiccup from your users&#8217; perspective. I always feel great when I get our weekly <a href="http://newrelic.com/">New Relic</a> status report email &mdash; it&rsquo;s a good indication of how well I did my job in the previous week. And for a couple weeks now I&rsquo;m happy to report I&rsquo;ve been very proud indeed, with 100% uptime on the Hipstamatic web application.</p>
 
-<p>How do you achieve numbers like these? Unfortunately getting to 100% isn&#8217;t an easy road, and I want to state up front that I also don&#8217;t think it&#8217;s a realistic goal. Issues you can&#8217;t control can ruin your uptime number, and you shouldn&#8217;t feel broken up about that. It happens to everybody. But it&#8217;s always good setting goals that are difficult to achieve, and this one is no different.</p>
+<p>How do you achieve numbers like these? Unfortunately getting to 100% isn&rsquo;t an easy road, and I want to state up front that I also don&rsquo;t think it&rsquo;s a realistic goal. Issues you can&rsquo;t control can ruin your uptime number, and you shouldn&rsquo;t feel broken up about that. It happens to everybody. But it&rsquo;s always good setting goals that are difficult to achieve, and this one is no different.</p>
 
-<p>So what&#8217;s the secret to 100% uptime?</p>
+<p>So what&rsquo;s the secret to 100% uptime?</p>
 
 <!-- more -->
 
 
 <h2>Watch It Constantly</h2>
 
-<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they&#8217;ll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
+<p>Some people check their fantasy baseball league or their portfolio every morning. At the slightest hint of trouble, they&rsquo;ll be waist-deep in trading players or stocks to get everything right back on track. You should be that way with your servers and the software that runs on them. This usually means monitoring software, and a lot of it.</p>
 
-<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications&#8217; behavior and warn you when that behavior becomes dangerous. Here&#8217;s a sample of our unicorn monit file:</p>
+<p>At Hipstamatic, we make extensive use of New Relic to give us a broad overview of our application. It helps us proactively fix nascent problems, analyzing slow queries and sluggish pages. But you need something closer to the metal, and for that we use <a href="http://mmonit.com/monit/">monit</a>. Monit is an amazing tool to control your applications&#8217; behavior and warn you when that behavior becomes dangerous. Here&rsquo;s a sample of our unicorn monit file:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -147,11 +149,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This states that I get an alert when unicorn&#8217;s total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
+<p>This states that I get an alert when unicorn&rsquo;s total memory or CPU usage exceeds 70%, and that unicorn receives a USR2 signal when total memory or CPU exceed 90%.</p>
 
 <p>Finally, we employ <a href="http://munin-monitoring.org/">munin</a> to compile statistics that we care about, including nginx connections and unicorn requests served.</p>
 
-<p>Yes, this is a lot of monitoring. But I feel like even this isn&#8217;t enough. You can&#8217;t watch your stack too carefully, and you can&#8217;t have too many tools in place to help you analyze what&#8217;s going on. Consider this trifecta of tools only a start, but at least it&#8217;s a good one.</p>
+<p>Yes, this is a lot of monitoring. But I feel like even this isn&rsquo;t enough. You can&rsquo;t watch your stack too carefully, and you can&rsquo;t have too many tools in place to help you analyze what&rsquo;s going on. Consider this trifecta of tools only a start, but at least it&rsquo;s a good one.</p>
 
 <h2>Seamless Deploys</h2>
 
@@ -171,7 +173,7 @@
 </span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">server</span><span class="o">.</span><span class="n">pid</span> <span class="o">!=</span> <span class="n">old_pid</span>
 </span><span class='line'>    <span class="k">begin</span>
 </span><span class='line'>      <span class="no">Process</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="s2">&quot;QUIT&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_pid</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">rescue</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ENOENT</span><span class="p">,</span> <span class="no">Errno</span><span class="o">::</span><span class="no">ESRCH</span>
+</span><span class='line'>    <span class="k">rescue</span> <span class="ss">Errno</span><span class="p">:</span><span class="ss">:ENOENT</span><span class="p">,</span> <span class="ss">Errno</span><span class="p">:</span><span class="ss">:ESRCH</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
@@ -185,11 +187,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it&#8217;s ready to start processing connections.</p>
+<p>USR2 is the signal that tells unicorn to start reloading itself: the before_fork causes the new server to kill the old server only when it&rsquo;s ready to start processing connections.</p>
 
 <h2>Migrations Without Downtime</h2>
 
-<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you&#8217;re changing how existing code interacts with the database &#8211; for new tables, simply migrate before deploying and you&#8217;re done. If only it could be that easy all the time&#8230;</p>
+<p>The last key component to 100% uptime is migrating your database without bringing your site down. Of course, this only applies if you&rsquo;re changing how existing code interacts with the database &mdash; for new tables, simply migrate before deploying and you&rsquo;re done. If only it could be that easy all the time&hellip;</p>
 
 <p>Frequently we are required to change existing tables and colums or add new ones. For those of us still using relational databases, migrations almost always mean locked tables, and locked tables mean site downtime. To fix this problem, my tool of choice has been <a href="https://github.com/soundcloud/large-hadron-migrator">Large Hadron Migrator</a>. Large Hadron Migrator requires very little from your tables (just an autoincrementing ID) and allows you to alter tables and even add new columns without bringing your site down.</p>
 
@@ -208,7 +210,7 @@
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddOrdersCountToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddOrdersCountToUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migration</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
 </span><span class='line'>    <span class="no">Lhm</span><span class="o">.</span><span class="n">change_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
@@ -226,46 +228,29 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you&#8217;re gonna need to get your hands dirty. Using this method you&#8217;ll be able to become the envy of your friends and peers, for you&#8217;ll be able to execute zero downtime migrations.</p>
+<p>Yes, unfortunately, this includes raw SQL. There is a <a href="http://rubydoc.info/github/soundcloud/large-hadron-migrator/master/Lhm/Migrator#add_column-instance_method">small DSL</a> that exposes a few common methods, but for anything really deep you&rsquo;re gonna need to get your hands dirty. Using this method you&rsquo;ll be able to become the envy of your friends and peers, for you&rsquo;ll be able to execute zero downtime migrations.</p>
 
-<p>And those three points are the main ways I&#8217;ve reduced our downtime. It&#8217;s a difficult road to 100%, but it&#8217;s worth it because you can stare at pretty graphs like this:</p>
+<p>And those three points are the main ways I&rsquo;ve reduced our downtime. It&rsquo;s a difficult road to 100%, but it&rsquo;s worth it because you can stare at pretty graphs like this:</p>
 
 <p><img src="http://f.cl.ly/items/470B350J0U0q1u3r0T0s/availability-1.jpg" alt="Better than Facebook" /></p>
 
 <p>And imagine that your website and a 100% bar are sitting right at the very tippy top.</p>
 </div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
 
 
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-09T17:52:00-05:00" pubdate data-updated="true">Apr 9<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/servers/'>servers</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -292,59 +277,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

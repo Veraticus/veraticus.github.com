@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="For the second part of my series on Rails concerns (following part one earlier this week), I&#8217;ll be dissecting a tagging system and how to make &hellip;">
+  <meta name="description" content="For the second part of my series on Rails concerns (following part one earlier this week), I&rsquo;ll be dissecting a tagging system and how to make &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,13 +113,15 @@
 
 
 <time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&#8217;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&#8217;re going to have to roll your own solution. That&#8217;s what I&#8217;m doing for GirlsGuideTo, and this is how I implemented it.</p>
+  <div class="entry-content"><p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&rsquo;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&rsquo;re going to have to roll your own solution. That&rsquo;s what I&rsquo;m doing for GirlsGuideTo, and this is how I implemented it.</p>
 
 <!-- more -->
 
@@ -134,18 +136,18 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tag</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>  <span class="n">has_many</span> <span class="ss">:taggings</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:addresses</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">Address</span>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:users</span><span class="p">,</span> <span class="n">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">User</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:addresses</span><span class="p">,</span> <span class="ss">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">Address</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">through</span><span class="p">:</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">source</span><span class="p">:</span> <span class="ss">:taggable</span><span class="p">,</span> <span class="n">source_type</span><span class="p">:</span> <span class="no">User</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Unfortunately, you can&#8217;t just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don&#8217;t work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can&#8217;t <code>SELECT * from taggables</code>, since there is no taggables table.</p>
+<p>Unfortunately, you can&rsquo;t just say <code>belongs_to :taggable, through: :taggings</code>. Polymorphic has-and-belongs-to-many associations don&rsquo;t work, since they have no real table to select from. To illustrate this concept, consider the <code>Tag</code> model above: if you had a line like <code>belongs_to :taggable</code> and called <code>tag.taggables</code>, what would be returned? Theoretically an array of objects, but the objects would be of all different sorts: some would be addresses, some would be users. And how would they be grabbed from the database? You can&rsquo;t <code>SELECT * from taggables</code>, since there is no taggables table.</p>
 
-<p>This is frustrating, but easy enough to work around. You&#8217;ll have to specify every model that&#8217;s taggable in the <code>Tag</code> class. But since we&#8217;ll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you&#8217;re confident, you can define a taggables method yourself:</p>
+<p>This is frustrating, but easy enough to work around. You&rsquo;ll have to specify every model that&rsquo;s taggable in the <code>Tag</code> class. But since we&rsquo;ll be employing a concern here, we know that all of the taggable classes will respond the same way. Thus, if you&rsquo;re confident, you can define a taggables method yourself:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -156,7 +158,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you&#8217;ll want to display the different kinds of taggables in different places anyway.</p>
+<p>Whether or not you decide to do this is up to you. I would recommend against it since likely you&rsquo;ll want to display the different kinds of taggables in different places anyway.</p>
 
 <h2>The Join Model</h2>
 
@@ -168,7 +170,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tagging</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tagging</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
 </span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:tag_id</span><span class="p">,</span> <span class="ss">:taggable_id</span><span class="p">,</span> <span class="ss">:taggable_type</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:tag</span>
@@ -179,11 +181,11 @@
 
 <p>ruby</p>
 
-<p>There&#8217;s nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won&#8217;t fill in the association correctly.</p>
+<p>There&rsquo;s nothing particularly surprising here. Just remember to set the <code>taggable</code> to polymorphic or Rails won&rsquo;t fill in the association correctly.</p>
 
 <h2>The Taggable Concern</h2>
 
-<p>Finally, we can get to the concern itself. This is how I&#8217;ve set it up:</p>
+<p>Finally, we can get to the concern itself. This is how I&rsquo;ve set it up:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -204,7 +206,7 @@
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Taggable</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="n">included</span> <span class="k">do</span>
 </span><span class='line'>    <span class="n">has_many</span> <span class="ss">:taggings</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:taggable</span>
@@ -224,44 +226,27 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we&#8217;ll be including this concern in multiple ActiveRecord models &#8211; and those models will automatically <code>has_many</code> :taggings and :tags.</p>
+<p>This uses a new feature of concerns: the <code>included</code> statement. Anything inside this block will be executed by the including class when the inclusion occurs. In this case, we&rsquo;ll be including this concern in multiple ActiveRecord models &mdash; and those models will automatically <code>has_many</code> :taggings and :tags.</p>
 
-<p>And on those models we&#8217;ll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn&#8217;t exist before, it will automatically be created, and then it&#8217;ll be added to the model&#8217;s taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
+<p>And on those models we&rsquo;ll be able to do some neat stuff. We can automatically add a tag just by calling <code>model.tag("tag_name")</code>: if it didn&rsquo;t exist before, it will automatically be created, and then it&rsquo;ll be added to the model&rsquo;s taggings. Also we can get a handy array of all the names of tags for a model. This is just the start of the functionality you can employ, though. Taggable would be a sensible place to put tag cloud creation and tagging contexts, if you wanted to ape more functionality from acts-as-taggable-on while still retaining your own customized implementations.</p>
 
-<p>Next time I discuss concerns, I&#8217;ll talk about an ActionController concern to improve your page&#8217;s SEO and Facebook Graph integration. It&#8217;ll be pretty awesome, so stay tuned!</p>
+<p>Next time I discuss concerns, I&rsquo;ll talk about an ActionController concern to improve your page&rsquo;s SEO and Facebook Graph integration. It&rsquo;ll be pretty awesome, so stay tuned!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rails/'>rails</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -288,59 +273,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

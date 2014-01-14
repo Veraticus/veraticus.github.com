@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-07T23:55:47-06:00</updated>
+  <updated>2014-01-14T16:47:54-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,14 +18,14 @@
     <link href="http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle/"/>
     <updated>2013-10-14T16:03:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle</id>
-    <content type="html"><![CDATA[<p>Recently I've been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It's most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber's biggest advantage is its pre-built recipes: it's a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
+    <content type="html"><![CDATA[<p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
 
-<p>Sprinkle (and rubber) are very different from most other server provisioning software I've used -- on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano's downsides too: primary among them is that it's easy to repeat yourself if you're not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
 
 <!-- more -->
 
 
-<p>Let's say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
+<p>Let&rsquo;s say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
 
 <p>```ruby</p>
 
@@ -44,14 +44,14 @@ end
 end
 ```</p>
 
-<p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can't just do something like this:</p>
+<p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can&rsquo;t just do something like this:</p>
 
 <p>```ruby</p>
 
 <h1>sprinkle/policies/base.rb</h1>
 
 <p>policy :base, roles: :web do
-  requires :build_essential if File.exists?("#{templates}/build_essential.txt")</p>
+  requires :build_essential if File.exists?(&ldquo;#{templates}/build_essential.txt&rdquo;)</p>
 
 <pre><code>                                         # No method error for templates
 </code></pre>
@@ -59,7 +59,7 @@ end
 <p>end</p>
 
 <p>package :build_essential do
-  file "/etc/build_essential.txt",</p>
+  file &ldquo;/etc/build_essential.txt&rdquo;,</p>
 
 <pre><code>contents: render("#{templates}/build_essential.txt"), # No method error for templates
 sudo: true
@@ -77,7 +77,7 @@ puts "#{templates}/build_essential.txt" # Contrived example since you'd never re
 end
 ```</p>
 
-<p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That's easy enough to do. After you define your helper, do something like this:</p>
+<p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That&rsquo;s easy enough to do. After you define your helper, do something like this:</p>
 
 <p>```ruby</p>
 
@@ -108,7 +108,7 @@ end
 
 <p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
 
-<p>I'll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
+<p>I&rsquo;ll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
 ]]></content>
   </entry>
   
@@ -117,18 +117,18 @@ end
     <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
     <updated>2013-04-17T18:16:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers -- but as opposed to most price breakdowns I've read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I'm assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
 
 <!-- more -->
 
 
 <h2>Comparisons</h2>
 
-<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren't that complicated. We'll go for a medium database instance and aggressively cache as much as possible, thus we'll also need to provide memcached room somewhere.</p>
+<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
 
-<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I'll include the hours as I would estimate them personally, but for other people it might take longer or shorter -- and the price could go up if there's a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
 
-<p>So let's get down to the details!</p>
+<p>So let&rsquo;s get down to the details!</p>
 
 <h3>Amazon Web Services</h3>
 
@@ -176,7 +176,7 @@ end
 </table>
 
 
-<p>No surprises here: if you're using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I've had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don't need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
+<p>No surprises here: if you&rsquo;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&rsquo;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&rsquo;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
 
 <h3>RackSpace</h3>
 
@@ -224,7 +224,7 @@ end
 </table>
 
 
-<p>RackSpace's managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they'll keep services running and your servers themselves operational) and that's reflected in a lowered monthly devops cost. They don't do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won't have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
+<p>RackSpace&rsquo;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&rsquo;ll keep services running and your servers themselves operational) and that&rsquo;s reflected in a lowered monthly devops cost. They don&rsquo;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&rsquo;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
 
 <h3>BlueBox</h3>
 
@@ -272,7 +272,7 @@ end
 </table>
 
 
-<p>BlueBox's claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you'd otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox's product is easily the most expensive. You're paying for their expertise much more than their hardware.</p>
+<p>BlueBox&rsquo;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&rsquo;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&rsquo;s product is easily the most expensive. You&rsquo;re paying for their expertise much more than their hardware.</p>
 
 <h3>Heroku</h3>
 
@@ -323,11 +323,11 @@ end
 </table>
 
 
-<p>I'm always somewhat mystified by Heroku's pricing -- their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku's internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
 
 <h2>Conclusions</h2>
 
-<p>I don't think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they're reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
+<p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
 ]]></content>
   </entry>
   
@@ -336,42 +336,42 @@ end
     <link href="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/"/>
     <updated>2013-01-18T14:34:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber</id>
-    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation -- and surprising even myself -- I ended up choosing Chef as our solution. Here's why.</p>
+    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
 
 <!-- more -->
 
 
 <h2>Collaboration</h2>
 
-<p>One of rubber's weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you'll get a merge conflict in your server yaml file: you really don't want to make a mistake resolving <em>that</em> merge conflict.</p>
+<p>One of rubber&rsquo;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&rsquo;ll get a merge conflict in your server yaml file: you really don&rsquo;t want to make a mistake resolving <em>that</em> merge conflict.</p>
 
-<p>By contrast, it's really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn't be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what's actually going into the servers.</p>
+<p>By contrast, it&rsquo;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&rsquo;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&rsquo;s actually going into the servers.</p>
 
 <p>Chef is just a better tool for teams of people.</p>
 
 <h2>Extensibility &amp; Community Support</h2>
 
-<p>For the tools that rubber provides in its stack -- and it provides a lot -- it's an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There's no real extensibility, and while it's easy enough to roll your own recipes, it'd definitely be ideal not to repeat work if you're fairly confident someone else has already done it.</p>
+<p>For the tools that rubber provides in its stack &mdash; and it provides a lot &mdash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
 
-<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they're not precisely what you're looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
+<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&rsquo;re not precisely what you&rsquo;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
 
-<p>We're using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I've been developing internally for us. It's a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
+<p>We&rsquo;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&rsquo;ve been developing internally for us. It&rsquo;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
 
 <h2>More Granularity</h2>
 
-<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user's SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
+<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&rsquo;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
 
 <p>Similarly changing postfix configuration on a per-environment basis is a snap.</p>
 
 <h1>But Rubber is a Great Tool</h1>
 
-<p>Don't get me wrong: I still really like rubber. It doesn't fit for Everest's use case, definitely -- with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
+<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &mdash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
 
-<p>Why? It's just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don't have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you'll go far, but trying to work against its defaults will be really painful.</p>
+<p>Why? It&rsquo;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&rsquo;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&rsquo;ll go far, but trying to work against its defaults will be really painful.</p>
 
 <h2>Final Word on Chef vs. Puppet</h2>
 
-<p>Doesn't matter, choose whichever you like more.</p>
+<p>Doesn&rsquo;t matter, choose whichever you like more.</p>
 ]]></content>
   </entry>
   
@@ -380,7 +380,7 @@ end
     <link href="http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/"/>
     <updated>2012-06-03T22:43:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku</id>
-    <content type="html"><![CDATA[<p>There's been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I've managed applications both inside Heroku and outside it, and personally speaking, I just can't decide whether or not I like the web's premier platform-as-a-service or not. Every now and again I'll gnash my teeth in frustration over it, and then other times I'll sigh dreamily and think of all the wonderful things Heroku has done for me -- and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it's right for you.</p>
+    <content type="html"><![CDATA[<p>There&rsquo;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&rsquo;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&rsquo;t decide whether or not I like the web&rsquo;s premier platform-as-a-service or not. Every now and again I&rsquo;ll gnash my teeth in frustration over it, and then other times I&rsquo;ll sigh dreamily and think of all the wonderful things Heroku has done for me &mdash; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&rsquo;s right for you.</p>
 
 <!-- more -->
 
@@ -389,43 +389,43 @@ end
 
 <h3>Lets Me Sleep At Night</h3>
 
-<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons -- an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
+<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons &mdash; an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
 
-<p>Heroku's Postgres instances also do automatic backups and have always been available whenever I've needed them. Heroku doesn't pay their infrastructure team enough, in my opinion; I've seriously never had a single outage of any sort on their service, and I have this comforting belief that if something did go horribly awry, I would be in good hands.</p>
+<p>Heroku&rsquo;s Postgres instances also do automatic backups and have always been available whenever I&rsquo;ve needed them. Heroku doesn&rsquo;t pay their infrastructure team enough, in my opinion; I&rsquo;ve seriously never had a single outage of any sort on their service, and I have this comforting belief that if something did go horribly awry, I would be in good hands.</p>
 
 <h3>Easy &amp; Fast</h3>
 
-<p>Getting started on Heroku is ridiculously easy. You can have an app deployed there in just a minute or two, all from doing nothing more than adding a git remote and pushing to it. No matter how good your Chef recipes are, it'll take you at least fifteen minutes to get a bare EC2 instance provisioned from nothing to accepting HTTP connections. After you do that, of course, clever use of AMIs will get there much quicker... but still nowhere near as fast as Heroku.</p>
+<p>Getting started on Heroku is ridiculously easy. You can have an app deployed there in just a minute or two, all from doing nothing more than adding a git remote and pushing to it. No matter how good your Chef recipes are, it&rsquo;ll take you at least fifteen minutes to get a bare EC2 instance provisioned from nothing to accepting HTTP connections. After you do that, of course, clever use of AMIs will get there much quicker&hellip; but still nowhere near as fast as Heroku.</p>
 
 <h3>Extensible</h3>
 
-<p>This is sort of a rider to "easy &amp; fast," but I think it deserves its own bulletpoint. Heroku addons provide managed solutions for nearly every need your application might have. Email sending, Redis instances, elasticsearch searching... and it's really cool of Heroku to essentially provide marketing for these smaller SaaS companies. Additionally all of the addons I've used have worked really well, so there's definitely some quality control going on.</p>
+<p>This is sort of a rider to &ldquo;easy &amp; fast,&rdquo; but I think it deserves its own bulletpoint. Heroku addons provide managed solutions for nearly every need your application might have. Email sending, Redis instances, elasticsearch searching&hellip; and it&rsquo;s really cool of Heroku to essentially provide marketing for these smaller SaaS companies. Additionally all of the addons I&rsquo;ve used have worked really well, so there&rsquo;s definitely some quality control going on.</p>
 
 <h3>Flexible</h3>
 
-<p>Heroku's Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons -- essentially anything at all, as long as you're willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
+<p>Heroku&rsquo;s Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons &mdash; essentially anything at all, as long as you&rsquo;re willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
 
 <h2>Cons</h2>
 
 <h3>Expensive</h3>
 
-<p>There's really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it's not just Heroku -- especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost... and a big one, at that.</p>
+<p>There&rsquo;s really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it&rsquo;s not just Heroku &mdash; especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost&hellip; and a big one, at that.</p>
 
 <h3>Deploys Suck</h3>
 
-<p>Deploying to Heroku is easy and fast -- the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There's no unicorn-style rolling deployments here. For small applications this is somewhat acceptable -- in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
+<p>Deploying to Heroku is easy and fast &mdash; the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There&rsquo;s no unicorn-style rolling deployments here. For small applications this is somewhat acceptable &mdash; in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
 
 <h3>Addon Constrained</h3>
 
-<p>If you want to do something really customized or compiled on Heroku -- something that needs the JRE, for example -- you're pretty much screwed unless an addon already exists for it. You can't compile elasticsearch or Lucene yourself, and if you don't like the addons that provide those solutions you're essentially out of luck. You'll need to spool up your own EC2 instance, add Heroku's security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you're doing that, why not just manage the entire application yourself as well?</p>
+<p>If you want to do something really customized or compiled on Heroku &mdash; something that needs the JRE, for example &mdash; you&rsquo;re pretty much screwed unless an addon already exists for it. You can&rsquo;t compile elasticsearch or Lucene yourself, and if you don&rsquo;t like the addons that provide those solutions you&rsquo;re essentially out of luck. You&rsquo;ll need to spool up your own EC2 instance, add Heroku&rsquo;s security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you&rsquo;re doing that, why not just manage the entire application yourself as well?</p>
 
 <h2>Conclusions</h2>
 
-<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku's platform-as-a-service. They're fast to deploy because they don't take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive -- and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that's just something that Heroku can't provide.</p>
+<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku&rsquo;s platform-as-a-service. They&rsquo;re fast to deploy because they don&rsquo;t take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive &mdash; and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that&rsquo;s just something that Heroku can&rsquo;t provide.</p>
 
-<p>So, for a big application, I would stick to doing it by hand. Yes, you'll have a few more infrastructure annoyances, but you'll need the control.</p>
+<p>So, for a big application, I would stick to doing it by hand. Yes, you&rsquo;ll have a few more infrastructure annoyances, but you&rsquo;ll need the control.</p>
 
-<p>But! All big appliations started small. There's nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku's ability to start lean and quick, then don't be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it's easy and fast. And that's the real beauty of Heroku -- it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
+<p>But! All big appliations started small. There&rsquo;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&rsquo;s ability to start lean and quick, then don&rsquo;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&rsquo;s easy and fast. And that&rsquo;s the real beauty of Heroku &mdash; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
 ]]></content>
   </entry>
   
@@ -434,18 +434,18 @@ end
     <link href="http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent/"/>
     <updated>2012-04-12T13:30:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent</id>
-    <content type="html"><![CDATA[<p>Hipstamatic's Rails application is deployed to Amazon's Elastic Cloud, and we make extensive use of Amazon's Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
+    <content type="html"><![CDATA[<p>Hipstamatic&rsquo;s Rails application is deployed to Amazon&rsquo;s Elastic Cloud, and we make extensive use of Amazon&rsquo;s Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
 
 <!-- more -->
 
 
 <h2>Improve Database Performance</h2>
 
-<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here's what I did to decrease load on our database:</p>
+<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here&rsquo;s what I did to decrease load on our database:</p>
 
 <h3>Find Slow Queries</h3>
 
-<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2's <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won't show up since they aren't running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
+<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2&rsquo;s <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won&rsquo;t show up since they aren&rsquo;t running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
 
 <p><code>ruby
 require 'factory_girl'
@@ -459,34 +459,34 @@ end
 
 <h3>Index Lots</h3>
 
-<p>Index the crap out of everything. It's nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you'll rapidly discover that various fields that aren't indexed together should be, but examining the individual queries your application makes and ensuring they're all indexed is an awesome (though boring) use of your time.</p>
+<p>Index the crap out of everything. It&rsquo;s nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you&rsquo;ll rapidly discover that various fields that aren&rsquo;t indexed together should be, but examining the individual queries your application makes and ensuring they&rsquo;re all indexed is an awesome (though boring) use of your time.</p>
 
-<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you'll have to get into your code yourself to find out what really needs indexing. Automated tools can't really replace actual hands-on experience... at least, not in this case.</p>
+<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you&rsquo;ll have to get into your code yourself to find out what really needs indexing. Automated tools can&rsquo;t really replace actual hands-on experience&hellip; at least, not in this case.</p>
 
-<h3>Don't Use Your Database</h3>
+<h3>Don&rsquo;t Use Your Database</h3>
 
-<p>Sticking something into the database isn't always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn't another tool to do that job. In particular, think about:</p>
+<p>Sticking something into the database isn&rsquo;t always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn&rsquo;t another tool to do that job. In particular, think about:</p>
 
 <ul>
 <li><h4>memcached</h4>
 
-<p>If you want to rapidly retrieve data and it's in key-value form, and persistence doesn't really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
+<p>If you want to rapidly retrieve data and it&rsquo;s in key-value form, and persistence doesn&rsquo;t really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
 <li><h4>redis</h4>
 
-<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets -- especially if these data structures are going to end up being extremely large or called very frequently -- use redis.</p></li>
+<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets &mdash; especially if these data structures are going to end up being extremely large or called very frequently &mdash; use redis.</p></li>
 <li><h4>elasticsearch</h4>
 
-<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can't say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you're performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
+<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can&rsquo;t say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you&rsquo;re performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
 </ul>
 
 
 <h2>Use More Caching</h2>
 
-<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess...) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
+<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess&hellip;) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
 
-<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I'd be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
+<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I&rsquo;d be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
 
-<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails' helper methods won't find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
+<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails' helper methods won&rsquo;t find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
 
 <p>```ruby
 def after_save(object)
@@ -503,11 +503,11 @@ end
 
 <h2>Be Responsive</h2>
 
-<p>One of the great things about being deployed to the cloud is that you can -- and should! -- scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they'll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
+<p>One of the great things about being deployed to the cloud is that you can &mdash; and should! &mdash; scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they&rsquo;ll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
 
-<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you're at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary -- getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you're getting hammered, and don't be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
+<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you&rsquo;re at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary &mdash; getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you&rsquo;re getting hammered, and don&rsquo;t be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
 
-<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we're saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
+<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we&rsquo;re saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
 ]]></content>
   </entry>
   

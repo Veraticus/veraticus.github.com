@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&#8217;ve been using RubyMotion for four days now. I still like it a lot, and I think the coolest thing about it is the rapidly-evolving community &hellip;">
+  <meta name="description" content="I&rsquo;ve been using RubyMotion for four days now. I still like it a lot, and I think the coolest thing about it is the rapidly-evolving community &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,20 +113,22 @@
 
 
 <time datetime="2012-05-07T17:48:00-05:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve been using RubyMotion for four days now. I still like it a lot, and I think the coolest thing about it is the rapidly-evolving community around its use. Ian Phillips figured out how to <a href="http://ianp.org/2012/05/07/rubymotion-and-interface-builder/">link Interface Builder and RubyMotion</a>; Alan deLevie wrote a neat <a href="https://github.com/adelevie/ParseModel">connection to Parse.com</a>. Personally, I&#8217;ve been spending the time writing lots of code. I&#8217;ve just deployed my first RubyMotion app into TestFlight and sent it to some testers. Soon hopefully I&#8217;ll have an actual RubyMotion app, which is pretty exciting! I&#8217;ve learned a lot in the last four days of use and wanted to post a few tips and tricks to hopefully make life easier for other RubyMotionists.</p>
+  <div class="entry-content"><p>I&rsquo;ve been using RubyMotion for four days now. I still like it a lot, and I think the coolest thing about it is the rapidly-evolving community around its use. Ian Phillips figured out how to <a href="http://ianp.org/2012/05/07/rubymotion-and-interface-builder/">link Interface Builder and RubyMotion</a>; Alan deLevie wrote a neat <a href="https://github.com/adelevie/ParseModel">connection to Parse.com</a>. Personally, I&rsquo;ve been spending the time writing lots of code. I&rsquo;ve just deployed my first RubyMotion app into TestFlight and sent it to some testers. Soon hopefully I&rsquo;ll have an actual RubyMotion app, which is pretty exciting! I&rsquo;ve learned a lot in the last four days of use and wanted to post a few tips and tricks to hopefully make life easier for other RubyMotionists.</p>
 
 <!-- more -->
 
 
 <h2>Wrap It Up</h2>
 
-<p>I&#8217;m using <code>NSUserDefaults</code> to store some cached data so I don&#8217;t flood my server. Calling <code>NSUserDefaults</code> constantly was really getting me down though, so I made this cute little wrapper class that does all the hard work for me.</p>
+<p>I&rsquo;m using <code>NSUserDefaults</code> to store some cached data so I don&rsquo;t flood my server. Calling <code>NSUserDefaults</code> constantly was really getting me down though, so I made this cute little wrapper class that does all the hard work for me.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -229,7 +231,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I only want to cache the data for one hour (3600 seconds); that&#8217;s why I only return true for <code>exists?</code> if the keys are younger than that. Using this cache is really simple.</p>
+<p>I only want to cache the data for one hour (3600 seconds); that&rsquo;s why I only return true for <code>exists?</code> if the keys are younger than that. Using this cache is really simple.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -248,11 +250,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The only caveat to this wrapper &#8211; something I need to look at more &#8211; is that you can only store property values in it. In other words, no custom classes, which sort of sucks if you have a lot of models that you want to hold somewhere. I&#8217;m getting around this by storing IDs and then looking them up afterwards in my model. I could use CoreData instead (and the sample app has <a href="https://github.com/HipByte/RubyMotionSamples/blob/master/Locations/app/locations_store.rb">an excellent example of how to use it</a>) but that&#8217;s a level of complexity I don&#8217;t think my app needs yet.</p>
+<p>The only caveat to this wrapper &mdash; something I need to look at more &mdash; is that you can only store property values in it. In other words, no custom classes, which sort of sucks if you have a lot of models that you want to hold somewhere. I&rsquo;m getting around this by storing IDs and then looking them up afterwards in my model. I could use CoreData instead (and the sample app has <a href="https://github.com/HipByte/RubyMotionSamples/blob/master/Locations/app/locations_store.rb">an excellent example of how to use it</a>) but that&rsquo;s a level of complexity I don&rsquo;t think my app needs yet.</p>
 
-<h2>Don&#8217;t Be Afraid To Use Blocks</h2>
+<h2>Don&rsquo;t Be Afraid To Use Blocks</h2>
 
-<p>Blocks are one of the coolest parts of Ruby! A lot of Objective-C code can be made more readable and more beautiful by sticking it in block syntax. Here&#8217;s a little UIView helper to show you what I mean.</p>
+<p>Blocks are one of the coolest parts of Ruby! A lot of Objective-C code can be made more readable and more beautiful by sticking it in block syntax. Here&rsquo;s a little UIView helper to show you what I mean.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -264,7 +266,7 @@
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UIView</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">animate_with_block</span><span class="p">(</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">beginAnimations</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">context</span><span class="ss">:nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">beginAnimations</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="ss">context</span><span class="p">:</span><span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">animationDuration</span> <span class="o">=</span> <span class="n">duration</span>
 </span><span class='line'>    <span class="k">yield</span>
 </span><span class='line'>    <span class="n">commitAnimations</span>
@@ -293,7 +295,7 @@
 <span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#Before</span>
 </span><span class='line'><span class="k">def</span> <span class="nf">showSelection</span>
-</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">beginAnimations</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">context</span><span class="ss">:nil</span><span class="p">)</span>
+</span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">beginAnimations</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="ss">context</span><span class="p">:</span><span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>  <span class="no">UIView</span><span class="o">.</span><span class="n">animationDuration</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span>
 </span><span class='line'>  <span class="vi">@selection</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span class='line'>  <span class="vi">@picker</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
@@ -310,11 +312,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>There&#8217;s a lot of stuff I ended up wrapping in blocks just for sanity&#8217;s sake; having to commitAnimations or synchronize after every operation is a big downer. Remembering to end blocks is quite a bit easier, and as a bonus makes your code look a lot more readable as well.</p>
+<p>There&rsquo;s a lot of stuff I ended up wrapping in blocks just for sanity&rsquo;s sake; having to commitAnimations or synchronize after every operation is a big downer. Remembering to end blocks is quite a bit easier, and as a bonus makes your code look a lot more readable as well.</p>
 
 <h2>Make Shortcuts</h2>
 
-<p>I stole this one rather blatantly from <a href="http://samsoff.es/posts/rubymotion-review">Sam Soffes</a>. It&#8217;s trivially easy to open up classes and add your own methods to them:</p>
+<p>I stole this one rather blatantly from <a href="http://samsoff.es/posts/rubymotion-review">Sam Soffes</a>. It&rsquo;s trivially easy to open up classes and add your own methods to them:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -327,71 +329,54 @@
 <span class='line-number'>9</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">UIColor</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">darkBlueColor</span>
-</span><span class='line'>    <span class="vi">@dark_blue_color</span> <span class="o">||=</span> <span class="nb">self</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">44</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@dark_blue_color</span> <span class="o">||=</span> <span class="nb">self</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="ss">green</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">blue</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">44</span><span class="p">,</span> <span class="ss">alpha</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">lightBlueColor</span>
-</span><span class='line'>    <span class="vi">@light_blue_color</span> <span class="o">||=</span> <span class="nb">self</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">21</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">88</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@light_blue_color</span> <span class="o">||=</span> <span class="nb">self</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="ss">green</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">21</span><span class="p">,</span> <span class="ss">blue</span><span class="p">:</span><span class="mi">0</span><span class="o">.</span><span class="mi">88</span><span class="p">,</span> <span class="ss">alpha</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Then you have your own cool code like <code>UIColor.darkBlueColor</code> next to the standard UIColor methods. If you find yourself copying and pasting something over and over, don&#8217;t! It&#8217;s super easy to make extensible, quick shortcuts in Ruby. Take advantage of that.</p>
+<p>Then you have your own cool code like <code>UIColor.darkBlueColor</code> next to the standard UIColor methods. If you find yourself copying and pasting something over and over, don&rsquo;t! It&rsquo;s super easy to make extensible, quick shortcuts in Ruby. Take advantage of that.</p>
 
 <h2>Stand on the Shoulders of Giants</h2>
 
 <p>There are a lot of RubyMotion projects popping up out there, and there are a lot of existing Cocoapods projects. Why reinvent the wheel? Use other peoples&#8217; smarts to propel your own project ahead quickly and easily; if you find yourself outgrowing your dependencies, then you should consider doing them yourself, but not before.</p>
 
-<p>For example, I&#8217;ve been using <a href="https://github.com/AFNetworking/AFNetworking">AFNetworking</a> to do my networking management, connections, and callbacks &#8211; they already made the whole NSURLConnection stuff easy to use, and I gotta say using it in Ruby is super easy too:</p>
+<p>For example, I&rsquo;ve been using <a href="https://github.com/AFNetworking/AFNetworking">AFNetworking</a> to do my networking management, connections, and callbacks &mdash; they already made the whole NSURLConnection stuff easy to use, and I gotta say using it in Ruby is super easy too:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Server</span><span class="o">.</span><span class="n">sharedInstance</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:{</span><span class="ss">:user_id</span> <span class="o">=&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
-</span><span class='line'>  <span class="n">success</span><span class="ss">:lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">operation</span><span class="p">,</span> <span class="n">response</span><span class="o">|</span> <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;User gotten!&#39;</span><span class="p">},</span>
-</span><span class='line'>  <span class="n">failure</span><span class="ss">:lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">operation</span><span class="p">,</span> <span class="n">error</span><span class="o">|</span> <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">#{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)}</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Server</span><span class="o">.</span><span class="n">sharedInstance</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="ss">parameters</span><span class="p">:{</span><span class="ss">:user_id</span> <span class="o">=&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+</span><span class='line'>  <span class="ss">success</span><span class="p">:</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">operation</span><span class="p">,</span> <span class="n">response</span><span class="o">|</span> <span class="vi">@label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;User gotten!&#39;</span><span class="p">},</span>
+</span><span class='line'>  <span class="ss">failure</span><span class="p">:</span><span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">operation</span><span class="p">,</span> <span class="n">error</span><span class="o">|</span> <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">#{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)}</span>
 </span><span class='line'><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Of course, you&#8217;ll want to do something a bit more interactive with your error than just log it, but you get the idea. Meanwhile, on the RubyMotion side, I stole quite a bit of code from <a href="https://github.com/mattetti/BubbleWrap">BubbleWrap</a>, specifically the really excellent <a href="https://github.com/mattetti/BubbleWrap/blob/master/lib/kernel.rb">kernel shortcuts</a>. Being able to do <code>simulator?</code> or <code>ipad?</code> is really awesome and a big time saver. I really hope that RubyMotion gets its own concept of Gems soon; it&#8217;ll make receiving code faster than just copying and pasting it directly into my source.</p>
+<p>Of course, you&rsquo;ll want to do something a bit more interactive with your error than just log it, but you get the idea. Meanwhile, on the RubyMotion side, I stole quite a bit of code from <a href="https://github.com/mattetti/BubbleWrap">BubbleWrap</a>, specifically the really excellent <a href="https://github.com/mattetti/BubbleWrap/blob/master/lib/kernel.rb">kernel shortcuts</a>. Being able to do <code>simulator?</code> or <code>ipad?</code> is really awesome and a big time saver. I really hope that RubyMotion gets its own concept of Gems soon; it&rsquo;ll make receiving code faster than just copying and pasting it directly into my source.</p>
 
-<p>As I get closer to releasing the app I&#8217;m working on, I&#8217;m sure I&#8217;ll have more interesting tips and tricks to share: these thoughts are really all that stood out to me after a quick review of my code. As I said at the top, I&#8217;m still really impressed with RubyMotion; I&#8217;ve had a few more random crashes without error messages or backtraces, but that&#8217;s my only real complaint so far. We&#8217;ll see how RubyMotion fares as my app moves towards release, but I am personally hopeful, and at the very least it&#8217;s made iPhone programming a lot less painful.</p>
+<p>As I get closer to releasing the app I&rsquo;m working on, I&rsquo;m sure I&rsquo;ll have more interesting tips and tricks to share: these thoughts are really all that stood out to me after a quick review of my code. As I said at the top, I&rsquo;m still really impressed with RubyMotion; I&rsquo;ve had a few more random crashes without error messages or backtraces, but that&rsquo;s my only real complaint so far. We&rsquo;ll see how RubyMotion fares as my app moves towards release, but I am personally hopeful, and at the very least it&rsquo;s made iPhone programming a lot less painful.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-07T17:48:00-05:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rubymotion/'>rubymotion</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -418,59 +403,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

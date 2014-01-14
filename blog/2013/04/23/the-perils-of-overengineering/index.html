@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Overengineering is a special subset of the generalized problem of &#8220;making bad choices.&#8221; Usually overengineering is the result of one of &hellip;">
+  <meta name="description" content="Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,15 +27,15 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Average' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
   $.noConflict();
   jQuery(document).ready(function($) {
-    var stickyTop = $('nav').offset().top; // returns number 
-    $(window).scroll(function(){ // scroll event  
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
       var windowTop = $(window).scrollTop(); // returns number
       $('nav').toggleClass('sticky', (stickyTop < windowTop))
     });
@@ -57,7 +57,7 @@
 
 </head>
 
-<body   >
+<body >
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
@@ -85,7 +85,7 @@
   <ul class="main-navigation">
   <li id='logo'><a href="/">Josh Symonds</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/resume/">Resume</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
 </ul>
 
 </div></nav>
@@ -113,24 +113,26 @@
 
 
 <time datetime="2013-04-23T13:19:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Overengineering is a special subset of the generalized problem of &#8220;making bad choices.&#8221; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&#8217;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
+  <div class="entry-content"><p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
 
 <!-- more -->
 
 
-<h2>Don&#8217;t Overthink It</h2>
+<h2>Don&rsquo;t Overthink It</h2>
 
-<p>Does your app really need Meteor? I&#8217;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&#8217;t super awesome or that people shouldn&#8217;t know it &#8211; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
+<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &mdash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
 
-<p>Chances are the answer is &#8220;no.&#8221; You&#8217;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
+<p>Chances are the answer is &ldquo;no.&rdquo; You&rsquo;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
 
-<p>This goes for any technology. Coco Chanel infamously stated, &#8220;Before you leave the house, look in the mirror and take one thing off.&#8221; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&#8217;re included? Did you make the best choices? If you&#8217;re not sure, do some research. It&#8217;ll save you a boatload of trouble down the river.</p>
+<p>This goes for any technology. Coco Chanel infamously stated, &ldquo;Before you leave the house, look in the mirror and take one thing off.&rdquo; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&rsquo;re included? Did you make the best choices? If you&rsquo;re not sure, do some research. It&rsquo;ll save you a boatload of trouble down the river.</p>
 
 <h2>Respect The Majority</h2>
 
@@ -141,60 +143,43 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>It takes half a millisecond &#8211; before caches have been warmed. It&#8217;s schemaless and uses join tables for every column. You&#8217;re the happiest programmer on the planet.</p>
+<p>It takes half a millisecond &mdash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
 
-<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&#8217;t know how it works, and no, tests don&#8217;t reasonably define expectations or replace documentation. Even documentation won&#8217;t save them from the bugs hiding in your custom solution &#8211; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
+<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &mdash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
 
-<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&#8217;ll save everyone involved a lot of money and trouble. No, you won&#8217;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&#8217;ll never have to hand off.</p>
+<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&rsquo;ll save everyone involved a lot of money and trouble. No, you won&rsquo;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&rsquo;ll never have to hand off.</p>
 
 <h2>Less is Best</h2>
 
-<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &#8220;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&#8221; And again, what he applied to design, I apply to code. The best way to fix overengineering &#8211; both cases &#8211; is to ruthlessly cull what you&#8217;ve got.</p>
+<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &mdash; both cases &mdash; is to ruthlessly cull what you&rsquo;ve got.</p>
 
-<p>Success, for code, isn&#8217;t bigger and better. It&#8217;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&#8217;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
+<p>Success, for code, isn&rsquo;t bigger and better. It&rsquo;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&rsquo;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
 
-<p>The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn&#8217;t need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.</p>
+<p>The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn&rsquo;t need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.</p>
 
-<p>Don&#8217;t be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won&#8217;t be used that way anyway, and then you&#8217;ll look like a genius (in addition to actually being one for following sound advice).</p>
+<p>Don&rsquo;t be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won&rsquo;t be used that way anyway, and then you&rsquo;ll look like a genius (in addition to actually being one for following sound advice).</p>
 
 <h2>New IS Cool</h2>
 
-<p>I know why it&#8217;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&#8217;ve been waiting for? But remember to keep your audience in mind. If you&#8217;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&#8217;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
+<p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
 
-<p>Your time to shine &#8211; your opportunity to cut yourself on the bleeding edge &#8211; is with your own private projects. And if you&#8217;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&#8230; and without falling into one of the pitfalls of overengineering.</p>
+<p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='https://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
 </div>
 
 
+
   <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Josh Symonds</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-23T13:19:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/business/'>business</a>, <a class='category' href='/blog/categories/coding/'>coding</a>
-  
-</span>
-
-
-    </p>
     
       <div class="sharing">
   
@@ -221,59 +206,6 @@
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1 style='margin-bottom: 0.4em;'>About Me</h1>
-  <p>Creator of amazing iOS and web applications, RubyMotion and Rails expert, devops guru and server wrangler. <a href="http://symondsandson.com" target="_blank">Hire me</a> if you want it done right. I write Ruby, maintain servers, and wear a lot of different hats.</p>
-</section>
-<section>
-  <h1>My Apps</h1>
-  <p id='app-widget-com-joshsymonds-gistify'>
-  <img src='http://a2.mzstatic.com/us/r1000/111/Purple/v4/fc/2a/f7/fc2af733-acef-76d1-3fa2-a45531b3f1ce/Gistify.60x60-50.png' class='app-icon' style='width:60px; height:60px; vertical-align:middle; margin: 0.1em; border: 0em' />
-  <span class='app-name'>
-    <a class='com-joshsymonds-gistify' href='https://itunes.apple.com/us/app/gistify/id653231502?mt=12&uo=4' target='_blank'>Gistify</a>
-  </span>
-</p>
-
-</section><section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">cryptolalia, for creating Cicada 3301 ciphertext puzzles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/dont-code-defensively/">Don't Code Defensively</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/03/what-makes-a-good-programmer-good/">What Makes a Good Programmer Good?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Latest Tweets</h1>
-  <a class="twitter-timeline" href="https://twitter.com/Veraticus" data-widget-id="344582039774822400">Tweets by @Veraticus</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-  
-</aside>
-
 
     </div>
   </div>

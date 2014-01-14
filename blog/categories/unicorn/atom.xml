@@ -4,7 +4,7 @@
   <title><![CDATA[Category: unicorn | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/unicorn/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-07T23:55:47-06:00</updated>
+  <updated>2014-01-14T16:47:54-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -27,17 +27,17 @@
 
 <h2>worker_processes</h2>
 
-<p>I searched high and low for a guide on how many workers each of my unicorns should employ and came up empty-handed. Unfortunately, this is highly dependent on your application. If you do complicated ImageMagick or PDF transformations on your server threads (which you shouldn't with unicorn, but hey, who knows) then your threads will use a lot of memory, especially on those operations. For reference, our Rails app takes up about 25 megabytes of memory per worker. However, we have offloaded all of our long-running and memory-intensive tasks into Resque.</p>
+<p>I searched high and low for a guide on how many workers each of my unicorns should employ and came up empty-handed. Unfortunately, this is highly dependent on your application. If you do complicated ImageMagick or PDF transformations on your server threads (which you shouldn&rsquo;t with unicorn, but hey, who knows) then your threads will use a lot of memory, especially on those operations. For reference, our Rails app takes up about 25 megabytes of memory per worker. However, we have offloaded all of our long-running and memory-intensive tasks into Resque.</p>
 
-<p>We use EC2's m1.xlarge instance class and have 30 workers running per server. This number is intentionally set low; in my experience, the closer you come to maximum resource usage in an EC2 instance, the more likely it is to crash, or even worse become unresponsive.</p>
+<p>We use EC2&rsquo;s m1.xlarge instance class and have 30 workers running per server. This number is intentionally set low; in my experience, the closer you come to maximum resource usage in an EC2 instance, the more likely it is to crash, or even worse become unresponsive.</p>
 
 <h2>working_directory</h2>
 
-<p>This should be fairly straightforward but has an important caveat: make sure to make this the static path of your current deploy, so the actual target of your symlink. Ours is <code>'/our/app/directory/current'</code>. Putting fanciness in here is very likely to get you shot in the foot with unicorn not reloading your app correctly, so I can't stress enough, just make this a simple string.</p>
+<p>This should be fairly straightforward but has an important caveat: make sure to make this the static path of your current deploy, so the actual target of your symlink. Ours is <code>'/our/app/directory/current'</code>. Putting fanciness in here is very likely to get you shot in the foot with unicorn not reloading your app correctly, so I can&rsquo;t stress enough, just make this a simple string.</p>
 
 <h2>listen</h2>
 
-<p>Our backlog is set to 64. If a unicorn has 64 queued connections likely it's dead and we need failover to happen immediately; nginx takes care of that when unicorn refuses to service a request.</p>
+<p>Our backlog is set to 64. If a unicorn has 64 queued connections likely it&rsquo;s dead and we need failover to happen immediately; nginx takes care of that when unicorn refuses to service a request.</p>
 
 <h2>preload_app</h2>
 
@@ -45,7 +45,7 @@
 
 <h2>Gemfile</h2>
 
-<p>We had an issue where unicorn wouldn't pick up our Gemfile correctly. Turns out that it doesn't understand symlinked directories for reading gemfiles, so we had to employ this dazzling bit of code to get new gems into our bundle when the unicorns restarted:</p>
+<p>We had an issue where unicorn wouldn&rsquo;t pick up our Gemfile correctly. Turns out that it doesn&rsquo;t understand symlinked directories for reading gemfiles, so we had to employ this dazzling bit of code to get new gems into our bundle when the unicorns restarted:</p>
 
 <p><code>ruby
 before_exec do |server|
@@ -55,7 +55,7 @@ end
 
 <h2>before_fork and after_fork magic</h2>
 
-<p>If you're seriously considering unicorn, I'm sure you've seen the following gisted:</p>
+<p>If you&rsquo;re seriously considering unicorn, I&rsquo;m sure you&rsquo;ve seen the following gisted:</p>
 
 <p>```ruby
 before_fork do |server, worker|
@@ -64,7 +64,7 @@ before_fork do |server, worker|
 <pre><code>ActiveRecord::Base.connection.disconnect!
 </code></pre>
 
-<p>  old_pid = "#{server.config[:pid]}.oldbin"
+<p>  old_pid = &ldquo;#{server.config[:pid]}.oldbin&rdquo;
   if File.exists?(old_pid) &amp;&amp; server.pid != old_pid</p>
 
 <pre><code>begin
@@ -77,7 +77,7 @@ end
 end
 ```ruby</p>
 
-<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn's biggest selling points -- zero downtime deploys.</p>
+<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn&rsquo;s biggest selling points &mdash; zero downtime deploys.</p>
 
 <p><code>ruby
 after_fork do |server, worker|
