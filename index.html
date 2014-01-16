@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="2013 was a great year for me specifically, and my web development shop (Symonds &amp; Son) in general. Though I initially fell into consulting &hellip;">
+  <meta name="description" content="In my previous post, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -99,6 +99,53 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/01/16/programming-the-new-family-business/">Programming the New Family Business</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-16T11:28:19-06:00" pubdate data-updated="true">Jan 16<span>th</span>, 2014</time>
+        <span class='readtime'>Reading time 7  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &mdash; specifically, <strong>my</strong> successful consulting business &mdash; actually look like?</p>
+
+<p><a href="http://symondsandson.com">Symonds &amp; Son</a> isn&rsquo;t named to sound cute and hipstery. I&rsquo;m the son; I&rsquo;m in business with my father, and I recently hired my mother to be my assistant and bookkeeper. The company&rsquo;s name is intended to evoke images of traditional, reliable family businesses, where trust, excellence, and a reputation for quality products are their cornerstones. These companies, traditionally centered around carpentry and other hand-made professions, are my models for how to run Symonds &amp; Son. We are, if you&rsquo;ll forgive me using the phrase, a bespoke development shop, where our great output and superb relationship with our clients are our highest priorities.</p>
+
+<p>But building my profession into a company &mdash; and a company with my parents, no less &mdash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/16/programming-the-new-family-business/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/01/14/rails-consulting-for-fun-and-profit/">Rails Consulting for Fun and Profit</a></h1>
     
     
@@ -169,121 +216,14 @@
 
   <div class="entry-content"><p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
 
-<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
-
-<ul>
-<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
-<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
-<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
-<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
-<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
-<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
-</ul>
-
-
-<p>You&rsquo;ve probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!</p>
-
-<h2>Cryptolalia In Action</h2>
-
-<p>Taken from the <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> README:</p>
-
-<p><img src="http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png" alt="Rainbows" /></p>
-
-<p>The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:</p>
-
-<p>The plaintext (&ldquo;secrets are fun&rdquo;) was transformed with a Pollux Morse code cipher:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rainbow.png&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># true, see the file above</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Don&rsquo;t believe me? You can decode it yourself, also using cryptolalia:</p>
-
-<p>Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Insert the numbers of the Beale homophonic substitution cipher back in:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And finally, plug it right back into the Pollux cipher:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;secretsarefun&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>So I decided to make it.</p>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">More &rarr;</a>
+    </footer>
   
 
 
@@ -601,51 +541,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">Why I&#8217;m Not Using RubyMotion in Production</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-26T12:11:00-05:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
-        <span class='readtime'>Reading time 5  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p><strong>Based on recent bugfixes and refinements by the RubyMotion team, I&rsquo;ve posted <a href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/">an update to this blog post</a>. Check it out after reading this article.</strong></p></blockquote>
-
-<p>I&rsquo;m a big proponent of RubyMotion &mdash; a year and a month ago, I wrote an article titled &ldquo;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&rdquo; and despite its divisiveness I still stand behind the points I made. Recently I&rsquo;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&rsquo;t an appropriate choice for production applications.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">More &rarr;</a>
     </footer>
   
 
