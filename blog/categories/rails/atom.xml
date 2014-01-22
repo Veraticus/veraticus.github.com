@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-16T14:56:28-06:00</updated>
+  <updated>2014-01-22T17:39:18-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Supercharge Your Rails Development Environment]]></title>
+    <link href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/"/>
+    <updated>2014-01-22T08:55:45-06:00</updated>
+    <id>http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment</id>
+    <content type="html"><![CDATA[<p>I love trying to improve my development environment. Efficiency is important to me: I spend hours and hours a day programming, and even a 1% or 2% productivity boost would provide a massive time savings over the course of a year. Or, as xkcd so pithily put it:</p>
+
+<p><a href="http://xkcd.com/1205/"><img src="http://imgs.xkcd.com/comics/is_it_worth_the_time.png" alt="Is It Worth The Time?" /></a></p>
+
+<p>Of course, I&rsquo;ve probably obliterated any potential savings by spending so much time experimenting, but now that I&rsquo;ve done it you don&rsquo;t have to! Listed here is everything important to me to get my development environment zipping along. Hopefully you&rsquo;ll be able to find something useful here too that makes your programming experiences a little bit faster.</p>
+
+<!-- more -->
+
+
+<h2>Basics</h2>
+
+<ul>
+<li><p>Font: <strong><a href="http://store1.adobe.com/cfusion/store/html/index.cfm?event=displayFontPackage&amp;code=1960">Source Code Pro</a> (Free)</strong> A good, clean, monospaced font is extremely important. You&rsquo;ll be staring at it in your text editor and on your terminal, and it has to be easy on the eyes while still differentiating similar-looking characters (l as in llama, 1 as in the number, I as in yours truly). I&rsquo;ve used Inconsolata, Monaco, and Anonymous extensively, but found Source Code Pro to be superior in almost all respects: more readable, more beautiful, less tiring to the eyes. Realistically they&rsquo;re all pretty close though, so just find something you like and go with it.</p></li>
+<li><p>Computer: <strong><a href="http://store.apple.com/us/mac">MacBook</a> ($Lots)</strong> Ruby is cross-platform: you can develop on a Mac, Linux, or even Windows if you like. I prefer a Mac. They&rsquo;re extremely reliable, very well-designed, with rock-solid performance characteristics and extremely impressive support guarantees. They really only have one downside, but it&rsquo;s a doozy: the big price tag. See if you can get your employer to buy one for you. Some people don&rsquo;t like OSX, but in my mind it unifies a good user experience with the power of Unix under the hood. There&rsquo;s definitely some stuff about Windows I like more (I have a gaming PC that uses Windows 8), but for development, Macs can&rsquo;t be beat. They also have great, first-class tool support for anything you&rsquo;re likely to do in Rails.</p></li>
+<li><p>Shell: <strong><a href="http://www.zsh.org/">zsh</a>, specifically <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> (Free)</strong> zsh is what bash wants to be. Command completion, sharing of history between shells, spelling correction, amazing prompts&hellip; and oh-my-zsh makes it easy to set up and install. If you need some inspiration for your <code>.zshrc</code>, <a href="https://gist.github.com/Veraticus/8563408">check out mine</a>! My favorite feature is sleeping 10 seconds after you do an <code>rm</code> glob&hellip; this has saved me from my own stupidity more than once. (Lots of stuff from my <code>.zshrc</code> is taken from <a href="http://stackoverflow.com/questions/171563/whats-in-your-zshrc">this StackOverflow question</a>.)</p></li>
+</ul>
+
+
+<h2>Mac Apps</h2>
+
+<ul>
+<li><p><strong><a href="https://agilebits.com/onepassword/mac">1Password</a> ($50)</strong> Insanely expensive compared to most other software on this list, but also pretty non-negotiable. I have over 300 passwords stored in it &mdash; including six client logins to AWS, four to RackSpace, and untold multiples for my own servers: how am I supposed to keep all of that straight myself? And generate new ultra-secure passwords whenever I need? Well thankfully I don&rsquo;t have to. 1Password has bulletproof security and I&rsquo;m never concerned I&rsquo;ll lose, forget, or even care about any individual password ever again.</p></li>
+<li><p><strong><a href="http://www.alfredapp.com/">Alfred</a> (Free to try, &pound;17 to buy)</strong> I use Alfred to open nearly everything on my computer. Not just apps! Alfred can open web pages, login automatically with 1Password integration, perform calculations, run one-off terminal commands, find and open files&hellip; Alfred has enormously simplified everything I do with my Mac. Definitely a huge time-saver.</p></li>
+<li><p><strong><a href="http://asepsis.binaryage.com/">Asepsis</a> (Free)</strong> So many important files on your comptuer are dotfiles, which are hidden by default on Macs. So you turn on viewing hidden files&hellip; and suddenly, everywhere you go, you see the dreaded <code>.DS_Store</code>. I hate seeing <code>.DS_Store</code> files. They appear in every directory, they appear on your desktop, they appear in your nightmares&hellip; well Asepsis gets rid of all of them. And it&rsquo;s free.</p></li>
+<li><p><strong><a href="http://www.macbartender.com/">Bartender</a> (Free to try, $15 to buy)</strong> Look at the upper-right of your Mac. Do you see the volume icon there? The AirPlay icon? Even worse, your own name? (What, are you worried you&rsquo;ll forget it?) Banish the clutter into Bartender and clean up your menu bar: you can hide all the icons you never (or rarely) use, and even configure them to display only when their app does something important.</p></li>
+<li><p><strong><a href="http://lightheadsw.com/caffeine/">Caffeine</a> (Free)</strong> Prevent your Mac from ever falling asleep. Helpful if you&rsquo;ve ever started a long-running task, left your computer for awhile, and returned to find it had stopped to take a nap.</p></li>
+<li><p><strong><a href="http://www.getcloudapp.com/">CloudApp</a> (Free, or $4.99 a month)</strong> CloudApp gives you drag-and-drop sharing of any file you&rsquo;d desire. I love having my drops available at a vanity URL (<a href="http://veratic.us">http://veratic.us</a>) &mdash; you&rsquo;d be surprised how many developers say how cool that is, and ask how they can get one of their own. If you don&rsquo;t want the URL then the free version should suit you just fine.</p></li>
+<li><p><strong><a href="http://giantcomet.com/flint/mac/">Flint</a> (Free, then $14.99)</strong> I love Campfire and BaseCamp. Flint makes Campfire easy-to-use. Even better, it gives me a badged icon in my dock when people speak, and a growl notification when they mention my name.</p></li>
+<li><p><strong><a href="http://gistifyapp.com/">Gistify</a> ($1.99)</strong> Shameless self-promotion, but I honestly love the app I made for myself! I make gists all the time; gistify gives you drag-and-drop gisting of snippets or files, and allows you to create gists from your clipboard contents. Super convenient and super lightweight.</p></li>
+<li><p><strong><a href="http://growl.info/">Growl</a> (Free, or $3.99)</strong> The Apple Notification Center is pretty good&hellip; but Growl still seems to be the gold standard for notifications. One of the first pieces of software I install on a new computer. (That said, I have no idea what the $3.99 version does. Growl is one of the few pieces of software on this list I&rsquo;ve never bought.)</p></li>
+<li><p><strong><a href="http://hyperdock.bahoom.com/">HyperDock</a> (Free, or $9.95)</strong> Allows you to hover over your dock items and see a preview pane summarizing all of that app&rsquo;s open windows, a la Windows' default behavior when you hover over an app in the taskbar. Extremely helpful if you have a lot of files open simultaneously &mdash; for example, if you have lots of projects open at once in your text editor.</p></li>
+<li><p><strong><a href="http://www.iterm2.com/#/section/home">iTerm 2</a> (Free)</strong> The best terminal replacement ever &mdash; I don&rsquo;t know how I ever lived with out, and once you start using it, you&rsquo;ll never be able to go back to the default Mac terminal. It has so many nice improvements I can&rsquo;t even list them all, and for the absurd price of &ldquo;free&rdquo; there&rsquo;s absolutely no reason not to use it.</p></li>
+<li><p><strong><a href="http://www.obdev.at/products/littlesnitch/index.html">Little Snitch</a> (Free to try, $34.95 to buy)</strong> Little Snitch is a really excellent software firewall. I&rsquo;m incredibly paranoid about network security, especially on my development machine. Little Snitch allows me to opt-out of connections I don&rsquo;t trust and really lock down my computer &mdash; not only in general, but on a network-by-network basis. As a bonus, it lets me see my network traffic so I get notified if DropBox suddenly decides to resync everything.</p></li>
+<li><p><strong><a href="https://www.monosnap.com/welcome">Monosnap</a> (Free, $4.99 to enable sharing)</strong> The best skitch replacement (since Evernote ruined it). Fast screen or window captures with built-in DropBox, CloudApp, and Evernote uploading for only $4.99. It&rsquo;ll record videos of your screen and even take selfies on your Mac&rsquo;s camera, if you&rsquo;re too lazy to grab your phone.</p></li>
+<li><p><strong><a href="http://www.sublimetext.com/3">Sublime Text 3</a> (Free, then $70(!))</strong> My favorite text editor (and I&rsquo;ve tried most of them). Expensive? Definitely. But you get what you pay for. ST3&rsquo;s best feature is its incredibly versatile package system &mdash; there&rsquo;s a package for pretty much everything, and as a bonus it supports most of TextMate&rsquo;s plugins as well. Despite its depth and power, it&rsquo;s still light-weight enough to start instantly and doesn&rsquo;t spend any time doing reindexing or otherwise chugging. ST3 is also cross-platform if you end up doing a bit of light programming on something other than your primarily development machine, which is useful for standardizing your editor everywhere.</p></li>
+<li><p><strong><a href="http://totalspaces.binaryage.com/">TotalSpaces</a> (Free to try, $18 to buy)</strong> I don&rsquo;t like Mac&rsquo;s default Spaces implementation &mdash; four desktops right next to each other means the furthest space could be two screens away, and the widgets view is totally worthless. TotalSpaces lets you stack desktops in a grid and move left, right, up, and down. Now every space is only one swipe away from any other space. As a bonus you can get rid of the widgets as well.</p></li>
+<li><p><strong><a href="http://tapbots.com/software/tweetbot/mac/">Tweetbot</a> ($19.99)</strong> Twitter is actually a valuable professional tool for me. It lets me keep on top of interesting news and developments in the tech world, contact authors of the software I use directly, and find lots of pictures of kittens. But leaving the #kittens aside, Tweetbot is the best app I&rsquo;ve used for twittering. It&rsquo;s fast, effective, and stays out of my way when I don&rsquo;t want it.</p></li>
+<li><p><strong><a href="http://www.uniboxapp.com/">Unibox</a> ($9.99)</strong> I like Unibox compared to Mail.app and Mail Pilot: it&rsquo;s speedy, it organizes mail effectively, and I feel like I have a bit more control of my inbox. That said I haven&rsquo;t yet run into the program that <em>completely</em> replaces Gmail in a browser for me&hellip; Unibox is as close as I&rsquo;ve come and I use it on a daily basis, but if I&rsquo;m searching for a specific piece of mail, I turn to gmail.</p></li>
+</ul>
+
+
+<h2>Sublime Text Packages</h2>
+
+<p>If you love Sublime Text 3, you&rsquo;ll want the best packages for it too. Here&rsquo;s what I recommend:</p>
+
+<ul>
+<li><p><a href="https://sublime.wbond.net/">Package Control</a> allows you to find, install, and update Sublime Text 3 packages. A prerequisite for installing anything else without going insane.</p></li>
+<li><p><a href="http://buymeasoda.github.io/soda-theme/">Soda</a> is a beautiful, functional theme that I really enjoy. I&rsquo;ve tried a few others and didn&rsquo;t find them nearly as compelling (<a href="http://kkga.github.io/spacegray/">SpaceGray</a> is also quite nice, though the syntax highlighting isn&rsquo;t to my taste). Because I find it easier to read light text on a dark background, I use Soda Dark specifically.</p></li>
+<li><p><a href="http://wbond.net/sublime_packages/alignment">Alignment</a> makes it easy to align everything properly and make your code nice and readable.</p></li>
+<li><p><a href="https://github.com/facelessuser/BracketHighlighter">BracketHighlighter</a> shows you if you&rsquo;re inside brackets (or a block, or HTML element) and where the start and end of said brackets are. Invaluable.</p></li>
+<li><p><a href="https://github.com/kemayo/sublime-text-git">git</a> gives you git integration right in Sublime Text 3, and works great with&hellip;</p></li>
+<li><p><a href="http://www.jisaacks.com/gitgutter">GitGutter</a>, which shows in your gutter changes that are waiting to be committed.</p></li>
+<li><p><a href="https://github.com/titoBouzout/SideBarEnhancements">SidebarEnhancements</a> gives you tons more options when you right-click anything in your sidebar, including clipboard, move to trash, reveal in finder, open in another program, and everything else you&rsquo;d expect a sidebar to reasonably contain.</p></li>
+<li><p><a href="http://sublimelinter.readthedocs.org/en/latest/">SublimeLinter</a> (and linters for your languages of choice) provides cheap and easy sanity-checking of your code. Now you&rsquo;ll know as soon as you save (or as soon as you finish typing, if you like) if you fat-fingered a variable name.</p></li>
+</ul>
+
+
+<h2>Useful Development Tools</h2>
+
+<ul>
+<li><p><a href="http://brew.sh/">homebrew</a> is the best package manager I&rsquo;ve come across. It&rsquo;ll install everything from libxml2 to postgresql from source automatically, helps you manage upgrades from one version to the next, and is fast and performant.</p></li>
+<li><p><a href="https://github.com/sstephenson/rbenv">rbev</a> allows you to have multiple versions of Ruby on your system simultaneously, each without stepping on the others' toes. If you regularly develop in runtimes other than MRI (I have to do JRuby stuff somewhat frequently, for example) this allows you switch back and forth without going insane.</p></li>
+<li><p><a href="https://github.com/burke/zeus">zeus</a> preloads your Rails apps so that tests, the console, and the server all load lightning-fast. The milliseconds you wait for Rails to start now become microseconds, saving you entire minutes per year&hellip; And isn&rsquo;t that really the point of optimization?</p></li>
+</ul>
+
+
+<p>I&rsquo;m sure there&rsquo;s a lot that I missed and some things I don&rsquo;t even know about. If I didn&rsquo;t include your favorite app, Sublime Text plugin, or Rails development tool let me know <a href="http://twitter.com/Veraticus">@Veraticus</a> &mdash; there&rsquo;s nothing I love more than taking a new app for a spin and even adopting it if it turns out to be amazing!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
@@ -553,49 +628,6 @@ default_attributes &lsquo;collectd&rsquo; => {</p>
 <h1>Security &amp; Safety</h1>
 
 <p>Before you deploy a server using any of these roles, make sure to keep security and safety in mind. A lot of these tools (like Graphite and Graylog2) allow web access and run servers with potential security vulnerabilities. Lock them behind Apache2 basic access, change your EC2 security group settings to allow only certain IP addresses access, and establish a VPN for your internal network. With logs, statistics, and other business-sensitive information, you can never be too security-conscious.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dynamic Cache Counters in Rails]]></title>
-    <link href="http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails/"/>
-    <updated>2012-10-29T17:55:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/10/29/dynamic-cache-counters-in-rails</id>
-    <content type="html"><![CDATA[<p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
-
-<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&rsquo;s no need for STI here &mdash; there&rsquo;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&rsquo;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&rsquo;re caching under. You&rsquo;re out of luck if you want to change it dynamically.</p>
-
-<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
-
-<!-- more -->
-
-
-<p>The most ideal way to do this is to hook into the existing <a href="http://api.rubyonrails.org/classes/ActiveRecord/CounterCache.html">ActiveRecord CounterCache</a> module. Given that, the code is quite simple, really:</p>
-
-<p>```ruby
-class Vote &lt; ActiveRecord::Base
-  belongs_to :voteable, polymorphic: true, touch: true</p>
-
-<p>  after_create :increment_counters
-  after_destroy :decrement_counters</p>
-
-<p>  [:increment, :decrement].each do |type|</p>
-
-<pre><code>define_method("#{type}_counters") do
-  voteable_type.classify.constantize.send("#{type}_counter", "#{self.type}votes_count".to_sym, self.voteable_id)
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p>The CounterCache module has two methods we care about here: <code>increment_counter</code> and <code>decrement_counter</code>. We manually trigger these methods on the parent object&rsquo;s class after a vote is created or destroyed; note that I don&rsquo;t intend to change the type of the vote, but if you do, you&rsquo;ll also need an after_save callback to decrement one counter and increment another. So with these callbacks, if I have a vote with type <code>up</code>, it will call <code>increment_counter</code> on the column <code>upvotes_count</code> with the ID of the saving object.</p>
-
-<p>This code assumes that the parent model will correctly have a counter column of the appropriate type defined.</p>
-
-<p>Instead of this quasi-hack, I briefly investigated patching Rails to allow the <code>counter_cache</code> option to accept a lambda or proc, but doing so would have involved a lot of changes and would probably be stuck forever in Github issues. This change, while not exactly as clean and portable, does the job with a minimum of fuss.</p>
 ]]></content>
   </entry>
   

@@ -353,16 +353,22 @@
         <lastmod>2014-01-16T14:54:15-06:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/
+        </loc>
+        <lastmod>2014-01-22T17:38:45-06:00</lastmod>
+    </url>
+    <url>
         <loc>http://joshsymonds.com/404.html</loc>
         <lastmod>2014-01-10T01:12:47-06:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2014-01-16T14:55:04-06:00</lastmod>
+        <lastmod>2014-01-22T17:38:45-06:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2014-01-16T14:55:04-06:00</lastmod>
+        <lastmod>2014-01-22T17:38:45-06:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>

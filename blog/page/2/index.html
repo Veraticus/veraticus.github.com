@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Based on recent bugfixes and refinements by the RubyMotion team, I&rsquo;ve posted an update to this blog post. Check it out after reading this &hellip;">
+  <meta name="description" content="I updated the code here based on my production experiences with it in a new post, Sidekiq + Houston: Production Ready. Check it out after reading &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p><strong>I updated the code here based on my production experiences with it in a new post, <a href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>. Check it out after reading this article.</strong></p></blockquote>
+
+<p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&rsquo;s push notification service through a worker. I didn&rsquo;t run into anything offhand, and also haven&rsquo;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&rsquo;s Push Notification service.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -512,62 +557,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-22T11:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2013</time>
-        <span class='readtime'>Reading time 6  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
-
-<p>They all suck.</p>
-
-<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
-
-<ol>
-<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
-<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
-<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
-</ol>
-
-
-<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/22/existing-rails-api-solutions-suck/">More &rarr;</a>
     </footer>
   
 

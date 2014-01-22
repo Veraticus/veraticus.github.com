@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I use the wonderful elasticsearch for my searching needs. I described in previous posts how I use and test elasticsearch in general; but in my &hellip;">
+  <meta name="description" content="I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails. The problem is best summed up in a use case. I have a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
+
+<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&rsquo;s no need for STI here &mdash; there&rsquo;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&rsquo;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&rsquo;re caching under. You&rsquo;re out of luck if you want to change it dynamically.</p>
+
+<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -492,49 +539,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-12T09:48:00-05:00" pubdate data-updated="true">Jul 12<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 6  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and <a href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/">two</a> of my series on Rails concerns, I&rsquo;m going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren&rsquo;t already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook&rsquo;s Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the <a href="https://github.com/kpumuk/meta-tags/">meta-tags</a> gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/12/rails-concerns-iii-metatags/">More &rarr;</a>
     </footer>
   
 
