@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&rsquo;ve been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my Introduction to Programming &hellip;">
+  <meta name="description" content="My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/">Quick &amp; Easy User Preferences in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-16T18:11:00-05:00" pubdate data-updated="true">May 16<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn&rsquo;t like what was presently out there. I don&rsquo;t really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code&rsquo;s for you.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -489,59 +532,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/04/09/achieving-100-percent-uptime/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/06/how-i-scaled-hipstamatic/">How I Scaled Hipstamatic</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-06T10:58:00-05:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 5  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://joshsymonds.com/blog/2012/04/03/how-to-refactor-a-large-and-old-project/">Proper Refactoring</a> proceeds apace, but I think in my last post I gave the impression that the Hipstamatic Rails project is inefficient or, even worse, slow. Nothing could be further from the truth; over the course of two years I&rsquo;ve been continuously improving the project to be more responsive and much, much faster. How much faster? Well, unfortunately, I don&rsquo;t have metrics from the first months I worked at Synthetic. But we were using XML and then plist to generate our responses to the iPhone app, and that process was achingly slow: I would estimate 200ms on average.</p>
-
-<p>Now, take a look at our average response time over the last month.</p>
-
-<p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
-
-<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&rsquo;m proud of our 115ms average response time. Proud but not satisfied &mdash; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&rsquo;s no reason we can&rsquo;t achieve 50-70ms response times with better caching and slimmer applications.</p>
-
-<p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That&rsquo;s an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
-
-<p>Synthetic is <a href="http://heysynthetic.com/about_us/">a team</a> of extremely talented individuals. But as our main Rails programmer and only server administrator, I wanted to discuss the lessons I personally learned in making Hipstamatic&rsquo;s web site and web services fast. (Or, at the very least, a lot faster.)</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/04/06/how-i-scaled-hipstamatic/">More &rarr;</a>
     </footer>
   
 
