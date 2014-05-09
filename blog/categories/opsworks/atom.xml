@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: opsworks | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/opsworks/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-05-09T13:42:32-05:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
+    <link href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/"/>
+    <updated>2014-05-09T13:00:45-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+<!-- more -->
+
+
+<h2>0. Get your chef recipes working in OpsWorks</h2>
+
+<p>Don&rsquo;t do any of this until you have a fully-provisioned server working exactly as you&rsquo;d expect. Make sure <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html">auto healing</a> is disabled for the layer. The rest of the steps assume you have such a properly set-up instance, a well configured layer, and that the original image was Ubuntu 12.04.</p>
+
+<h2>1. Download your X.509 certificates</h2>
+
+<p>Amazon has a pretty good <a href="http://docs.aws.amazon.com/AmazonDevPay/latest/DevPayDeveloperGuide/X509Certificates.html">checklist</a> for how to do this. You need X.509 certificates so only you and Amazon can access your AMI, which for most layers is a sensible security precaution. For this walkthrough I&rsquo;ll assume you have the private key downloaded to ~/certs/pk-X509.pem and the the certificate downloaded to ~/certs/cert-X509.pem.</p>
+
+<h2>2. Transfer your certs to the server</h2>
+
+<p>On the server itself:</p>
+
+<p><code>bash
+mkdir -p /tmp/cert/
+</code></p>
+
+<p>On your local computer:</p>
+
+<p><code>
+scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
+</code></p>
+
+<p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
+
+<h2>3. Download the EC2 AMI tools</h2>
+
+<p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
+
+<p><code>bash
+sudo apt-get install -y unzip
+wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+sudo mkdir -p /usr/local/ec2
+sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
+export EC2_AMITOOL_HOME=/usr/local/ec2/ec2-ami-tools-1.5.3/
+export PATH=$EC2_AMITOOL_HOME/bin:$PATH
+</code></p>
+
+<p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
+
+<h2>4. Download the EC2 API tools</h2>
+
+<p>A similar process to step 3.</p>
+
+<p><code>bash
+wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+sudo unzip ec2-api-tools.zip -d /usr/local/ec2
+sudo apt-get install -y openjdk-7-jre
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre/
+export EC2_HOME=/usr/local/ec2/ec2-api-tools-1.6.13.0/
+export PATH=$PATH:$EC2_HOME/bin
+export AWS_ACCESS_KEY=YourAccessKey
+export AWS_SECRET_KEY=YourSecretKey
+</code></p>
+
+<p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
+
+<h2>5. Ensure your version of GRUB is correct</h2>
+
+<p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
+
+<p><code>bash
+sudo apt-get install -y grub gdisk kpartx
+</code></p>
+
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+
+<h2>6. Stop all services</h2>
+
+<p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
+
+<p><code>bash
+sudo service monit stop
+sudo service mysql stop
+sudo service nginx stop
+sudo service redis stop
+sudo service memcached stop
+sudo service opsworks-agent stop
+</code></p>
+
+<p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
+
+<h2>7. Remove instance configuration directories</h2>
+
+<p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
+
+<p>```bash
+sudo rm -rf /etc/aws/opsworks/ \</p>
+
+<pre><code>        /opt/aws/opsworks/ \
+        /var/log/aws/opsworks/ \
+        /var/lib/aws/opsworks/ \
+        /etc/monit.d/opsworks-agent.monitrc \
+        /etc/monit/conf.d/opsworks-agent.monitrc \
+        /var/lib/cloud/
+</code></pre>
+
+<p>```</p>
+
+<h2>8. Bundle the volume</h2>
+
+<p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
+
+<p>```bash
+ec2-bundle-vol -k /tmp/cert/pk-X509.pem \</p>
+
+<pre><code>           -c /tmp/cert/cert-X509.pem \
+           -u 123456789012 \
+           -r x86_64 \
+           -e /tmp/cert \
+           -i $(find /etc /usr /opt -name '*.pem' -o -name '*.crt' -o -name '*.gpg' | tr '\n' ',')
+</code></pre>
+
+<p>```</p>
+
+<p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
+
+<p>This command will probably take a long while to run.</p>
+
+<h2>9. Create and upload the volume to an S3 bucket</h2>
+
+<p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
+
+<p>```bash
+ec2-upload-bundle -b bucket_name/image_name \</p>
+
+<pre><code>              -m /tmp/image.manifest.xml \
+              --region us-east-1
+</code></pre>
+
+<p>```</p>
+
+<p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
+
+<h2>10. Register the AMI</h2>
+
+<p>Only one step left, and this is an easy one! You can</p>
+
+<p><code>bash
+ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
+</code></p>
+
+<p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
+]]></content>
+  </entry>
+  
+</feed>

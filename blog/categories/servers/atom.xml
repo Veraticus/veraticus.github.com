@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-03-13T00:00:05-05:00</updated>
+  <updated>2014-05-09T13:42:32-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
+    <link href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/"/>
+    <updated>2014-05-09T13:00:45-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+<!-- more -->
+
+
+<h2>0. Get your chef recipes working in OpsWorks</h2>
+
+<p>Don&rsquo;t do any of this until you have a fully-provisioned server working exactly as you&rsquo;d expect. Make sure <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html">auto healing</a> is disabled for the layer. The rest of the steps assume you have such a properly set-up instance, a well configured layer, and that the original image was Ubuntu 12.04.</p>
+
+<h2>1. Download your X.509 certificates</h2>
+
+<p>Amazon has a pretty good <a href="http://docs.aws.amazon.com/AmazonDevPay/latest/DevPayDeveloperGuide/X509Certificates.html">checklist</a> for how to do this. You need X.509 certificates so only you and Amazon can access your AMI, which for most layers is a sensible security precaution. For this walkthrough I&rsquo;ll assume you have the private key downloaded to ~/certs/pk-X509.pem and the the certificate downloaded to ~/certs/cert-X509.pem.</p>
+
+<h2>2. Transfer your certs to the server</h2>
+
+<p>On the server itself:</p>
+
+<p><code>bash
+mkdir -p /tmp/cert/
+</code></p>
+
+<p>On your local computer:</p>
+
+<p><code>
+scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
+</code></p>
+
+<p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
+
+<h2>3. Download the EC2 AMI tools</h2>
+
+<p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
+
+<p><code>bash
+sudo apt-get install -y unzip
+wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+sudo mkdir -p /usr/local/ec2
+sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
+export EC2_AMITOOL_HOME=/usr/local/ec2/ec2-ami-tools-1.5.3/
+export PATH=$EC2_AMITOOL_HOME/bin:$PATH
+</code></p>
+
+<p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
+
+<h2>4. Download the EC2 API tools</h2>
+
+<p>A similar process to step 3.</p>
+
+<p><code>bash
+wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+sudo unzip ec2-api-tools.zip -d /usr/local/ec2
+sudo apt-get install -y openjdk-7-jre
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre/
+export EC2_HOME=/usr/local/ec2/ec2-api-tools-1.6.13.0/
+export PATH=$PATH:$EC2_HOME/bin
+export AWS_ACCESS_KEY=YourAccessKey
+export AWS_SECRET_KEY=YourSecretKey
+</code></p>
+
+<p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
+
+<h2>5. Ensure your version of GRUB is correct</h2>
+
+<p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
+
+<p><code>bash
+sudo apt-get install -y grub gdisk kpartx
+</code></p>
+
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+
+<h2>6. Stop all services</h2>
+
+<p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
+
+<p><code>bash
+sudo service monit stop
+sudo service mysql stop
+sudo service nginx stop
+sudo service redis stop
+sudo service memcached stop
+sudo service opsworks-agent stop
+</code></p>
+
+<p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
+
+<h2>7. Remove instance configuration directories</h2>
+
+<p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
+
+<p>```bash
+sudo rm -rf /etc/aws/opsworks/ \</p>
+
+<pre><code>        /opt/aws/opsworks/ \
+        /var/log/aws/opsworks/ \
+        /var/lib/aws/opsworks/ \
+        /etc/monit.d/opsworks-agent.monitrc \
+        /etc/monit/conf.d/opsworks-agent.monitrc \
+        /var/lib/cloud/
+</code></pre>
+
+<p>```</p>
+
+<h2>8. Bundle the volume</h2>
+
+<p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
+
+<p>```bash
+ec2-bundle-vol -k /tmp/cert/pk-X509.pem \</p>
+
+<pre><code>           -c /tmp/cert/cert-X509.pem \
+           -u 123456789012 \
+           -r x86_64 \
+           -e /tmp/cert \
+           -i $(find /etc /usr /opt -name '*.pem' -o -name '*.crt' -o -name '*.gpg' | tr '\n' ',')
+</code></pre>
+
+<p>```</p>
+
+<p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
+
+<p>This command will probably take a long while to run.</p>
+
+<h2>9. Create and upload the volume to an S3 bucket</h2>
+
+<p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
+
+<p>```bash
+ec2-upload-bundle -b bucket_name/image_name \</p>
+
+<pre><code>              -m /tmp/image.manifest.xml \
+              --region us-east-1
+</code></pre>
+
+<p>```</p>
+
+<p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
+
+<h2>10. Register the AMI</h2>
+
+<p>Only one step left, and this is an easy one! You can</p>
+
+<p><code>bash
+ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
+</code></p>
+
+<p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Helper Methods in Sprinkle]]></title>
@@ -426,88 +581,6 @@ end
 <p>So, for a big application, I would stick to doing it by hand. Yes, you&rsquo;ll have a few more infrastructure annoyances, but you&rsquo;ll need the control.</p>
 
 <p>But! All big appliations started small. There&rsquo;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&rsquo;s ability to start lean and quick, then don&rsquo;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&rsquo;s easy and fast. And that&rsquo;s the real beauty of Heroku &mdash; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Reducing Our AWS Costs by 60%]]></title>
-    <link href="http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent/"/>
-    <updated>2012-04-12T13:30:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/04/12/reducing-our-aws-costs-by-60-percent</id>
-    <content type="html"><![CDATA[<p>Hipstamatic&rsquo;s Rails application is deployed to Amazon&rsquo;s Elastic Cloud, and we make extensive use of Amazon&rsquo;s Web Services in keeping it nimble and performant. Last month, I dedicated two weeks to increasing the responsiveness of the application while simultaneously improving its performance. As a result of the changes I implemented, our AWS costs for this month will be 60% lower than they were last month. This is a pretty dramatic drop, and I wanted to discuss the tools and techniques I used to make it happen.</p>
-
-<!-- more -->
-
-
-<h2>Improve Database Performance</h2>
-
-<p>One of the biggest cost savings I implemented was scaling back our RDS instance. We use a multi-AZ deployment to ensure constant availability; unfortunately, multi-AZ instances are extremely expensive, and I knew that if we could decrease the size of our instance we could save quite a bit of money. Targeting this part of our infrastructure proved very fruitful for lowering costs, and here&rsquo;s what I did to decrease load on our database:</p>
-
-<h3>Find Slow Queries</h3>
-
-<p>Step through everything your app does with <a href="https://github.com/flyerhzm/bullet">bullet</a> and Rails 3.2&rsquo;s <a href="http://weblog.rubyonrails.org/2011/12/6/what-s-new-in-edge-rails-explain/">slow query explainer</a>. Really get into the nitty-gritty here: run your resque jobs, go to every single controller action, and run all the model code you can get your hands on. Make sure you have a lot of data loaded into your database when you do this, or else queries that might be slow won&rsquo;t show up since they aren&rsquo;t running under actual load conditions. I added hundreds of thousands of records using FactoryGirl like this (from the Rails console):</p>
-
-<p><code>ruby
-require 'factory_girl'
-require '.test/factories.rb' # or wherever your factory file is located
-200000.times do
-  Factory.create(:photo)
-end
-</code></p>
-
-<p>Repeat as needed. Remember your production system will likely have millions of records; get as close as you can to this without overwhelming your development machine.</p>
-
-<h3>Index Lots</h3>
-
-<p>Index the crap out of everything. It&rsquo;s nearly impossible to have too many indexes in a relational database, and every field you execute a query on should be indexed. Usually under production load conditions you&rsquo;ll rapidly discover that various fields that aren&rsquo;t indexed together should be, but examining the individual queries your application makes and ensuring they&rsquo;re all indexed is an awesome (though boring) use of your time.</p>
-
-<p>I used <a href="https://github.com/plentz/lol_dba">lol_dba</a> to get a starting point for indexes I wanted to add, but honestly you&rsquo;ll have to get into your code yourself to find out what really needs indexing. Automated tools can&rsquo;t really replace actual hands-on experience&hellip; at least, not in this case.</p>
-
-<h3>Don&rsquo;t Use Your Database</h3>
-
-<p>Sticking something into the database isn&rsquo;t always the right solution to a problem. I discussed <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">in a previous post</a> the problems we encountered in implementing a database-driven solution for something that should never have touched the database. Extremely large join tables in particular have awful performance, and the indexes on them can rapidly grow to a really ridiculous size. Before putting something in the database, consider if there isn&rsquo;t another tool to do that job. In particular, think about:</p>
-
-<ul>
-<li><h4>memcached</h4>
-
-<p>If you want to rapidly retrieve data and it&rsquo;s in key-value form, and persistence doesn&rsquo;t really matter, use memcached instead. Be severe when you consider if something needs persistence. Do you really need to keep <em>every</em> message you pass to a client, or would keeping a count of them be sufficient?</p></li>
-<li><h4>redis</h4>
-
-<p>Redis gives you the benefits of a semi-persistent datastore with some really nice data structures. If you need lists, sets, or ordered sets &mdash; especially if these data structures are going to end up being extremely large or called very frequently &mdash; use redis.</p></li>
-<li><h4>elasticsearch</h4>
-
-<p>For geospatial, filter-based, and/or full-text indexing, relational database performance has nothing on dedicated indexing tools. I can&rsquo;t say enough nice things about elasticsearch in general and <a href="https://github.com/karmi/tire">tire</a> in particular. elasticsearch is easy to set up, has a fraction of the overhead of a database, and several times its speed. If you&rsquo;re performing a complicated, variated SQL query, consider if that query could be run on an indexing engine instead.</p></li>
-</ul>
-
-
-<h2>Use More Caching</h2>
-
-<p>I touched on this in <a href="http://joshsymonds.com/blog/2012/04/06/how-i-scaled-hipstamatic/">my scaling post</a> but I want to restate it here: caching allows you to reduce load on every part of your application. (Except the cache I guess&hellip;) With proper caching you can remove web servers, application servers, and database servers from your setup. In addition to scaling down our database instance, we removed two entire extra-large EC2 instances because of better caching.</p>
-
-<p>Figure out what to cache first and foremost by investigating your metrics. New Relic, Google analytics, even munin and monit will all provide you clues as to where users are going. I&rsquo;d be willing to bet money almost all of your traffic is directed to the same five or ten extremely popular sources. Extract partials from those pages, or just cache them in their entirety: then serve the results instead of hitting your database (or ideally even before hitting your application servers).</p>
-
-<p>The most important key to our caching strategy are definitely Rails sweepers. Rails sweepers keep caching DRY: instead of expiring caches manually over and over in your models and controllers, do it in one centralized place. Just keep in mind that sometimes Rails' helper methods won&rsquo;t find the proper cache, especially if you use multiple domains for one application. In that case specify the fragment you need to expire directly, like so:</p>
-
-<p>```ruby
-def after_save(object)
-  [:domain1, :domain2, :domain3].each do |domain|</p>
-
-<pre><code>expire_fragment "views/#{domain}/objects/#{object.id}"
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>I have this extracted out on a per-environment basis, specifying the domains to expire in our environment files. It works out really well.</p>
-
-<h2>Be Responsive</h2>
-
-<p>One of the great things about being deployed to the cloud is that you can &mdash; and should! &mdash; scale up and down frequently. I usually have fifteen stopped EC2 instances sitting around, waiting to be added to my stack: with only a quick bootup, they&rsquo;ll be available to handle web or application traffic, or even add more resque workers and extra redis or memcached instances. These tools are highly dynamic and most of them can be scaled up and down quite easily, and stopped EC2 instances cost you nearly nothing (as long as the provisioned EBS drive is relatively small). And their cost is really very affordable when you consider how agile they allow you to be.</p>
-
-<p>The key to being responsive is to communicate with your business. Is there a press release dropping that day? Time to scale up. New product coming soon? Bring those application servers online. Monitor your metrics carefully when you&rsquo;re at heightened capacity; when it looks like traffic has slowed, feel free to scale back down. But always be wary &mdash; getting featured in a big publication can crush your servers unexpectedly. Ensure that you either have automated tools or great alerts letting you know when you&rsquo;re getting hammered, and don&rsquo;t be afraid to bring more servers online in a hurry. Overscaling in the short-term is a great idea: even the biggest EC2 instances cost only a few dollars an hour, and the peace of mind they give you is priceless.</p>
-
-<p>Using these methods me allowed me to streamline our stack really significantly. Not only are we faster than we were just three months ago; we&rsquo;re saving a boatload of money each month. And being more awesome while spending less money is definitely a win/win.</p>
 ]]></content>
   </entry>
   

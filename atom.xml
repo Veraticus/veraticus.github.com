@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-03-13T00:00:05-05:00</updated>
+  <updated>2014-05-09T13:42:32-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,192 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
+    <link href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/"/>
+    <updated>2014-05-09T13:00:45-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+<!-- more -->
+
+
+<h2>0. Get your chef recipes working in OpsWorks</h2>
+
+<p>Don&rsquo;t do any of this until you have a fully-provisioned server working exactly as you&rsquo;d expect. Make sure <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html">auto healing</a> is disabled for the layer. The rest of the steps assume you have such a properly set-up instance, a well configured layer, and that the original image was Ubuntu 12.04.</p>
+
+<h2>1. Download your X.509 certificates</h2>
+
+<p>Amazon has a pretty good <a href="http://docs.aws.amazon.com/AmazonDevPay/latest/DevPayDeveloperGuide/X509Certificates.html">checklist</a> for how to do this. You need X.509 certificates so only you and Amazon can access your AMI, which for most layers is a sensible security precaution. For this walkthrough I&rsquo;ll assume you have the private key downloaded to ~/certs/pk-X509.pem and the the certificate downloaded to ~/certs/cert-X509.pem.</p>
+
+<h2>2. Transfer your certs to the server</h2>
+
+<p>On the server itself:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /tmp/cert/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On your local computer:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
+
+<h2>3. Download the EC2 AMI tools</h2>
+
+<p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get install -y unzip
+</span><span class='line'>wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+</span><span class='line'>sudo mkdir -p /usr/local/ec2
+</span><span class='line'>sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
+</span><span class='line'><span class="nb">export </span><span class="nv">EC2_AMITOOL_HOME</span><span class="o">=</span>/usr/local/ec2/ec2-ami-tools-1.5.3/
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$EC2_AMITOOL_HOME</span>/bin:<span class="nv">$PATH</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
+
+<h2>4. Download the EC2 API tools</h2>
+
+<p>A similar process to step 3.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+</span><span class='line'>sudo unzip ec2-api-tools.zip -d /usr/local/ec2
+</span><span class='line'>sudo apt-get install -y openjdk-7-jre
+</span><span class='line'><span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-7-openjdk-amd64/jre/
+</span><span class='line'><span class="nb">export </span><span class="nv">EC2_HOME</span><span class="o">=</span>/usr/local/ec2/ec2-api-tools-1.6.13.0/
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$EC2_HOME</span>/bin
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY</span><span class="o">=</span>YourAccessKey
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_KEY</span><span class="o">=</span>YourSecretKey
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
+
+<h2>5. Ensure your version of GRUB is correct</h2>
+
+<p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get install -y grub gdisk kpartx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+
+<h2>6. Stop all services</h2>
+
+<p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo service monit stop
+</span><span class='line'>sudo service mysql stop
+</span><span class='line'>sudo service nginx stop
+</span><span class='line'>sudo service redis stop
+</span><span class='line'>sudo service memcached stop
+</span><span class='line'>sudo service opsworks-agent stop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
+
+<h2>7. Remove instance configuration directories</h2>
+
+<p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm -rf /etc/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /opt/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /var/log/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /var/lib/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /etc/monit.d/opsworks-agent.monitrc <span class="se">\</span>
+</span><span class='line'>            /etc/monit/conf.d/opsworks-agent.monitrc <span class="se">\</span>
+</span><span class='line'>            /var/lib/cloud/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>8. Bundle the volume</h2>
+
+<p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-bundle-vol -k /tmp/cert/pk-X509.pem <span class="se">\</span>
+</span><span class='line'>               -c /tmp/cert/cert-X509.pem <span class="se">\</span>
+</span><span class='line'>               -u 123456789012 <span class="se">\</span>
+</span><span class='line'>               -r x86_64 <span class="se">\</span>
+</span><span class='line'>               -e /tmp/cert <span class="se">\</span>
+</span><span class='line'>               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> | tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
+
+<p>This command will probably take a long while to run.</p>
+
+<h2>9. Create and upload the volume to an S3 bucket</h2>
+
+<p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-upload-bundle -b bucket_name/image_name <span class="se">\</span>
+</span><span class='line'>                  -m /tmp/image.manifest.xml <span class="se">\</span>
+</span><span class='line'>                  --region us-east-1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
+
+<h2>10. Register the AMI</h2>
+
+<p>Only one step left, and this is an easy one! You can</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Interviewing Symonds &amp; Son]]></title>
@@ -1355,225 +1541,6 @@
 <p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
 
 <p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
-    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
-    <updated>2013-04-17T18:16:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
-
-<!-- more -->
-
-
-<h2>Comparisons</h2>
-
-<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
-
-<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
-
-<p>So let&rsquo;s get down to the details!</p>
-
-<h3>Amazon Web Services</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$277.00</td>
-    <td>$30.74</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
-    </td>
-    <td>$500.00</td>
-    <td>$40.26</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      10 hours setup<br />
-      5 hours maintenance
-    </td>
-    <td>$1500.00</td>
-    <td>$750.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$2277.00</th>
-    <th>$821.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$12129.00</th>
-  </tr>
-</table>
-
-
-<p>No surprises here: if you&rsquo;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&rsquo;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&rsquo;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
-
-<h3>RackSpace</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB managed cloud instance</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$0.00</td>
-    <td>$262.80</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud database instance</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$321.20</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      10 hours setup<br />
-      2 hours maintenance
-    </td>
-    <td>$750.00</td>
-    <td>$300.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$750.00</th>
-    <th>$884.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$11358.00</th>
-  </tr>
-</table>
-
-
-<p>RackSpace&rsquo;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&rsquo;ll keep services running and your servers themselves operational) and that&rsquo;s reflected in a lowered monthly devops cost. They don&rsquo;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&rsquo;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
-
-<h3>BlueBox</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud instance</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$0.00</td>
-    <td>$385.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud database instance</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$385.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      0 hours setup<br />
-      0 hours maintenance
-    </td>
-    <td>$0.00</td>
-    <td>$0.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$0.00</th>
-    <th>$770.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$9240.00</th>
-  </tr>
-</table>
-
-
-<p>BlueBox&rsquo;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&rsquo;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&rsquo;s product is easily the most expensive. You&rsquo;re paying for their expertise much more than their hardware.</p>
-
-<h3>Heroku</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>4 dynos</h4>
-      12 unicorn workers<br/>
-    </td>
-    <td>$0.00</td>
-    <td>$143.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>memcached addon (500 MB)</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$40.00</td>
-  </tr>
-  <tr>
-    <td><h4>Fugu database instance</h4></td>
-    <td>$0.00</td>
-    <td>$400.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      2 hours setup<br />
-      0 hours maintenance
-    </td>
-    <td>$300.00</td>
-    <td>$0.00</td>
-  </tr>
-    <tr class='highlighted'>
-    <th>Total</th>
-    <th>$300.00</th>
-    <th>$583.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$7296.00</th>
-  </tr>
-</table>
-
-
-<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
-
-<h2>Conclusions</h2>
-
-<p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
 ]]></content>
   </entry>
   
