@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-05-09T13:42:32-05:00</updated>
+  <updated>2014-05-10T21:33:54-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -188,7 +188,7 @@
 
 <h2>10. Register the AMI</h2>
 
-<p>Only one step left, and this is an easy one! You can</p>
+<p>Only one step left, and this is an easy one! You can register the AMI with this command:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
