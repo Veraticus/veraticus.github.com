@@ -1,0 +1,7 @@
+<div class="highlight"><pre><span class="c"># Create the orphan branch</span>
+git checkout --orphan cookbooks
+git rm -rf .
+git add . -A
+git commit -m <span class="s1">&#39;Initial commit&#39;</span>
+git push origin cookbooks
+</pre></div>

@@ -342,11 +342,35 @@
         <loc>
             http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/
         </loc>
-        <lastmod>2014-01-10T01:09:54-06:00</lastmod>
+        <lastmod>2014-01-16T14:55:04-06:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/</loc>
         <lastmod>2014-01-14T16:52:46-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business/</loc>
+        <lastmod>2014-01-16T14:54:15-06:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/
+        </loc>
+        <lastmod>2014-01-22T18:49:28-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son/</loc>
+        <lastmod>2014-03-12T23:58:25-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/
+        </loc>
+        <lastmod>2014-05-10T21:33:29-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks/</loc>
+        <lastmod>2014-06-11T18:10:46-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/404.html</loc>
@@ -354,11 +378,11 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2014-01-14T16:52:46-06:00</lastmod>
+        <lastmod>2014-06-11T18:10:46-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2014-01-14T16:52:46-06:00</lastmod>
+        <lastmod>2014-06-11T18:10:46-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>

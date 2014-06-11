@@ -1,0 +1,9 @@
+<div class="highlight"><pre>wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+sudo unzip ec2-api-tools.zip -d /usr/local/ec2
+sudo apt-get install -y openjdk-7-jre
+<span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-7-openjdk-amd64/jre
+<span class="nb">export </span><span class="nv">EC2_HOME</span><span class="o">=</span>/usr/local/ec2/ec2-api-tools-1.6.13.0/
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$EC2_HOME</span>/bin
+<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY</span><span class="o">=</span>YourAccessKey
+<span class="nb">export </span><span class="nv">AWS_SECRET_KEY</span><span class="o">=</span>YourSecretKey
+</pre></div>

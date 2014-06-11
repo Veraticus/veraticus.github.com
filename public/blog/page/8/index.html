@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Configuring unicorn for your Rails servers is as much an art as it is a science. That said, there are some things that make the configuration and &hellip;">
+  <meta name="description" content="Over the weekend I spent some time getting Fnordmetric set up in an application. On the surface it looks really cool and quite nifty, but I ran into &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,8 +26,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -93,6 +92,231 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/13/fnordmetric-native-rails-metrics/">Fnordmetric: Native Rails Metrics</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-13T22:05:00-05:00" pubdate data-updated="true">Mar 13<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the weekend I spent some time getting <a href="https://github.com/paulasmuth/fnordmetric">Fnordmetric</a> set up in an application. On the surface it looks really cool and quite nifty, but I ran into some trouble getting it configured how I wanted it and figured I&rsquo;d make a post about it. I think I might have been struggling against the conventions in it a little too much, but it was still an instructive battle.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/13/fnordmetric-native-rails-metrics/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/">Rails 3: Arel, Arel_Table, and Squeel</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-10T10:17:00-06:00" pubdate data-updated="true">Mar 10<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails 3 provides a lot of really neat functionality, and one of the pieces that looked coolest was Arel &mdash; ActiveRecord&rsquo;s own relational algebra. Finally, we could get rid of SQL in queries and use a clear, syntactic DSL to manage our queries!</p>
+
+<p>Well, in reality, that isn&rsquo;t quite what happened. ActiveRecord&rsquo;s Arel functionality does provide some neat criteria chaining methods, but unfortunately you either end of typing a lot of raw SQL:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">Ruby 1.9 Awesomeness Part 1: SecureRandom</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T19:07:00-06:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ruby 1.9 includes a lot of neat stuff, and one of the coolest things is the SecureRandom module.</p>
+
+<p>SecureRandom presents a plethora of useful methods for creating random numbers and strings. You can <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/securerandom/rdoc/SecureRandom.html">check out the documentation</a> for a full list, but some of the more personally useful methods I&rsquo;ve found are:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/07/ruby-1-dot-9-awesomeness-part-1-securerandom/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/04/dont-mess-with-primary-keys/">Don&#8217;t Mess With Primary Keys</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T19:11:00-06:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://stackoverflow.com/users/1224374/veraticus">I really like answering questions on Stack Overflow</a> &mdash; it&rsquo;s like a trivia game that you win by knowing Rails backwards and forwards, but instead of cheesy prizes you get awesome reputation points! And also little badges!</p>
+
+<p>Recently I&rsquo;ve been seeing a lot of beginner-style questions, and the most popular has definitely been some variant of &ldquo;how do I mess with the primary key column?&rdquo;</p>
+
+<p>The answer is always, invariably, the same: don&rsquo;t.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/04/dont-mess-with-primary-keys/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Working Around DynamoDB&#8217;s Limitations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been giving a lot of thought recently to working around DynamoDB&rsquo;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&rsquo;ll talk a little about overcoming the indexing problem, since I&rsquo;m still noodling around the transaction issue.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/01/working-around-dynamodbs-limitations/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>

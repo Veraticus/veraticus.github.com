@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="2013 was a great year for me specifically, and my web development shop (Symonds &amp; Son) in general. Though I initially fell into consulting &hellip;">
+  <meta name="description" content="I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in my last post, and I&rsquo;ve been really enjoying the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,8 +26,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -93,6 +92,233 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/11/getting-started-with-aws-opsworks/">Getting Started With AWS OpsWorks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-11T13:59:00-05:00" pubdate data-updated="true">Jun 11<span>th</span>, 2014</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
+
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+
+<p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/11/getting-started-with-aws-opsworks/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">Creating an AWS OpsWorks Instance Store AMI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-09T13:00:45-05:00" pubdate data-updated="true">May 9<span>th</span>, 2014</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/12/interviewing-symonds-and-son/">Interviewing Symonds &amp; Son</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-12T23:43:18-05:00" pubdate data-updated="true">Mar 12<span>th</span>, 2014</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &mdash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/12/interviewing-symonds-and-son/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/22/supercharge-your-rails-development-environment/">Supercharge Your Rails Development Environment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-22T08:55:45-06:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2014</time>
+        <span class='readtime'>Reading time 7  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I love trying to improve my development environment. Efficiency is important to me: I spend hours and hours a day programming, and even a 1% or 2% productivity boost would provide a massive time savings over the course of a year. Or, as xkcd so pithily put it:</p>
+
+<p><a href="http://xkcd.com/1205/"><img src="http://imgs.xkcd.com/comics/is_it_worth_the_time.png" alt="Is It Worth The Time?" /></a></p>
+
+<p>Of course, I&rsquo;ve probably obliterated any potential savings by spending so much time experimenting, but now that I&rsquo;ve done it you don&rsquo;t have to! Listed here is everything important to me to get my development environment zipping along. Hopefully you&rsquo;ll be able to find something useful here too that makes your programming experiences a little bit faster.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/22/supercharge-your-rails-development-environment/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/16/programming-the-new-family-business/">Programming the New Family Business</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-16T11:28:19-06:00" pubdate data-updated="true">Jan 16<span>th</span>, 2014</time>
+        <span class='readtime'>Reading time 7  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &mdash; specifically, <strong>my</strong> successful consulting business &mdash; actually look like?</p>
+
+<p><a href="http://symondsandson.com">Symonds &amp; Son</a> isn&rsquo;t named to sound cute and hipstery. I&rsquo;m the son; I&rsquo;m in business with my father, and I recently hired my mother to be my assistant and bookkeeper. The company&rsquo;s name is intended to evoke images of traditional, reliable family businesses, where trust, excellence, and a reputation for quality products are their cornerstones. These companies, traditionally centered around carpentry and other hand-made professions, are my models for how to run Symonds &amp; Son. We are, if you&rsquo;ll forgive me using the phrase, a bespoke development shop, where our great output and superb relationship with our clients are our highest priorities.</p>
+
+<p>But building my profession into a company &mdash; and a company with my parents, no less &mdash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/16/programming-the-new-family-business/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -169,121 +395,14 @@
 
   <div class="entry-content"><p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
 
-<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
-
-<ul>
-<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
-<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
-<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
-<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
-<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
-<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
-</ul>
-
-
-<p>You&rsquo;ve probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!</p>
-
-<h2>Cryptolalia In Action</h2>
-
-<p>Taken from the <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> README:</p>
-
-<p><img src="http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png" alt="Rainbows" /></p>
-
-<p>The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:</p>
-
-<p>The plaintext (&ldquo;secrets are fun&rdquo;) was transformed with a Pollux Morse code cipher:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rainbow.png&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># true, see the file above</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Don&rsquo;t believe me? You can decode it yourself, also using cryptolalia:</p>
-
-<p>Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
-</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Insert the numbers of the Beale homophonic substitution cipher back in:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
-</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And finally, plug it right back into the Pollux cipher:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
-</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;secretsarefun&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>So I decided to make it.</p>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/">More &rarr;</a>
+    </footer>
   
 
 
@@ -424,228 +543,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-14T16:03:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2013</time>
-        <span class='readtime'>Reading time 2  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
-
-<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/14/helper-methods-in-sprinkle/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-13T10:23:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2013</time>
-        <span class='readtime'>Reading time less than 1 minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Gistify just keeps getting better!</p>
-
-<p><a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify 1.2.0</a> is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an entire file onto the Gistify icon and a new gist will be created from your file. The format of the file will automatically be detected, and the resulting gist URL added to your clipboard just as usual. Amazing!</p>
-
-<p>In addition to that big new feature, 1.2.0 features a number of bug fixes and performance improvements: for example, now Gistify will properly start up if you check the &ldquo;Open at Startup&rdquo; box, and you can copy and paste in the GitHub username/password fields (for the 1Password or LastPass users out there). Just small quality of life improvements generally.</p>
-
-<p>Interested in giving Gistify a shot? Go <a href="https://itunes.apple.com/us/app/gistify/id653231502">download it</a> now! Or if you&rsquo;d like to demo it without paying the $1.99, just let me know and I&rsquo;d be happy to set you up with a review copy.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/07/rubymotion-update-one-month-later/">RubyMotion Update: One Month Later</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-07T10:59:00-05:00" pubdate data-updated="true">Aug 7<span>th</span>, 2013</time>
-        <span class='readtime'>Reading time 2  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>My <a href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">last post on RubyMotion</a> generated quite a lot of interest, and I&rsquo;ve been asked a few times for my opinion on the recent RubyMotion bugfixes (like correcting <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a> and <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-32">RM-32</a>). I thought it sensible to revisit this issue a month later to discuss the changes the HipByte team has been making and what they mean for the future of the RubyMotion project.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/07/rubymotion-update-one-month-later/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
-        <span class='readtime'>Reading time 2  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p><strong>I updated the code here based on my production experiences with it in a new post, <a href="http://joshsymonds.com/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a>. Check it out after reading this article.</strong></p></blockquote>
-
-<p>Having not updated <a href="http://github.com/Veraticus/rapnd">rapnd</a> in a good long while, I was looking for well-supported, up-to-date solution for persisting long-running connections to Apple&rsquo;s push notification service through a worker. I didn&rsquo;t run into anything offhand, and also haven&rsquo;t posted a helpful code snippet in awhile, so this is how I connected <a href="https://github.com/nomad/houston">Houston</a> and <a href="https://github.com/mperham/sidekiq">Sidekiq</a> to Apple&rsquo;s Push Notification service.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">Why I&#8217;m Not Using RubyMotion in Production</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-26T12:11:00-05:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
-        <span class='readtime'>Reading time 5  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p><strong>Based on recent bugfixes and refinements by the RubyMotion team, I&rsquo;ve posted <a href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/">an update to this blog post</a>. Check it out after reading this article.</strong></p></blockquote>
-
-<p>I&rsquo;m a big proponent of RubyMotion &mdash; a year and a month ago, I wrote an article titled &ldquo;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&rdquo; and despite its divisiveness I still stand behind the points I made. Recently I&rsquo;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&rsquo;t an appropriate choice for production applications.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/">More &rarr;</a>
     </footer>
   
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-14T16:52:51-06:00</updated>
+  <updated>2014-06-11T18:11:54-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,624 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started With AWS OpsWorks]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks/"/>
+    <updated>2014-06-11T13:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
+
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+
+<p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
+
+<!-- more -->
+
+
+<h2>1. Setup vagrant to be compatible with OpsWorks</h2>
+
+<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &mdash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;ubuntu-precise64&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_url</span> <span class="o">=</span> <span class="s2">&quot;https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Specifies the chef version Opsworks is running</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">omnibus</span><span class="o">.</span><span class="n">chef_version</span> <span class="o">=</span> <span class="s2">&quot;11.10.0&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This requires the <code>vagrant-omnibus</code> plugin, which you can install with <code>vagrant plugin install vagrant-omnibus</code>.</p>
+
+<h2>2. Use librarian-chef</h2>
+
+<p>OpsWorks expects all of your recipes to be in one git repository that it can download. This may be bad practice for many chefs, but since it&rsquo;s required here and it&rsquo;s the cookbook repository format that <a href="https://github.com/applicationsonline/librarian-chef">librarian-chef</a> expects and supports, you&rsquo;ll want to download and configure librarian-chef.</p>
+
+<p>Just the default librarian-chef configuration works, with one exception: you&rsquo;ll want to strip <code>.git</code> directories from the checked-out sources to prevent OpsWorks from becoming confused. That&rsquo;s relatively easy to set up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>librarian-chef config install.strip-dot-git 1 --local
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I store the source of my cookbooks in one repository and use an orphan branch of that same repository for the actual cookbooks that are installed and managed by librarian. This is pretty easy to set up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Create the orphan branch</span>
+</span><span class='line'>git checkout --orphan cookbooks
+</span><span class='line'>git rm -rf .
+</span><span class='line'>git add . -A
+</span><span class='line'>git commit -m <span class="s1">&#39;Initial commit&#39;</span>
+</span><span class='line'>git push origin cookbooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then in your master branch, set up your cookbook branch as a submodule in a subdirectory that librarian-chef will install to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># .gitmodules</span>
+</span><span class='line'><span class="o">[</span>submodule <span class="s2">&quot;cookbooks&quot;</span><span class="o">]</span>
+</span><span class='line'>  <span class="nv">path</span> <span class="o">=</span> cookbooks
+</span><span class='line'>  <span class="nv">url</span> <span class="o">=</span> git@github.com:user/repository.git
+</span><span class='line'>  <span class="nv">branch</span> <span class="o">=</span> cookbooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I have a small Rakefile that allows me to run <code>rake</code> to sync my changes directly to the cookbooks branch.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;install all cookbooks and synchronize them to GitHub&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Installing cookbooks&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;librarian-chef install&quot;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Pushing cookbooks to GitHub&quot;</span>
+</span><span class='line'>  <span class="n">cd</span> <span class="s2">&quot;cookbooks&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="sx">%Q(echo &quot;gitdir: ../.git/modules/cookbooks&quot; &gt; .git)</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git add -u&quot;</span>
+</span><span class='line'>    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Cookbooks generated via librarian-chef at </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git commit -m </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git pull&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git push origin cookbooks&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Done!&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Keep in mind this setup isn&rsquo;t ideal for collaboration: if I had a lot of people updating the cookbooks simultaneously, I would definitely set up separate repositories. But for smaller OpsWorks projects, this works perfectly well.</p>
+
+<h2>3. Don&rsquo;t bother with OpsWorks&#8217; recipe syntax</h2>
+
+<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &mdash; or bring chef recipes from elsewhere to OpsWorks &mdash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># No!</span>
+</span><span class='line'><span class="n">node</span><span class="o">[</span><span class="ss">:deploy</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">app_name</span><span class="p">,</span> <span class="n">deploy</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">template</span> <span class="s1">&#39;/etc/init/puma.conf&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">source</span> <span class="s1">&#39;puma.conf&#39;</span>
+</span><span class='line'>    <span class="n">owner</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>    <span class="n">group</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>    <span class="n">mode</span>   <span class="s1">&#39;0644&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Use the plainer, simpler:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Yes!</span>
+</span><span class='line'><span class="n">template</span> <span class="s1">&#39;/etc/init/puma.conf&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">source</span> <span class="s1">&#39;puma.conf&#39;</span>
+</span><span class='line'>  <span class="n">owner</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>  <span class="n">group</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>  <span class="n">mode</span>   <span class="s1">&#39;0644&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The former syntax won&rsquo;t work properly on vagrant, just for starters, which is a great reason all by itself not to use it. You&rsquo;ll want to control what recipes get applied where through custom layers rather than OpsWorks&#8217; special syntax.</p>
+
+<h2>4. Overwrite any recipes that overlap</h2>
+
+<p>OpsWorks inserts a lot of their own recipes into your cookbooks, and you can&rsquo;t disable this behavior, even if you&rsquo;re using your own custom recipes. This can lead to naming collisions that can be frustrating to resolve. For a Rails stack, I had to manually remove the <code>unicorn</code> and <code>passenger-apache2</code> cookbooks that led to merge errors with the <code>application_ruby</code> cookbook. Thankfully, removing cookbooks in OpsWorks is pretty easy: if you have a recipe named exactly the same as an OpsWorks one, yours will replace it.</p>
+
+<p>You&rsquo;ll want to create a cookbook named after the offending cookbook (for example, <code>unicorn</code>) and replace every file in the OpsWorks cookbook with a blank one. You can find all the OpsWorks cookbook sources <a href="https://github.com/aws/opsworks-cookbooks">in their GitHub repository</a>. So, to continue the unicorn example, you&rsquo;d make a <code>unicorn</code> directory, a <code>recipes</code> subdirectory, and three files: <code>default</code>, <code>rails</code>, and <code>stop</code>. The content of all these files should be something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Prevent OpsWorks from trying to install this cookbook.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks&#8217; cookbooks.</p>
+
+<h2>4. OpsWorks is your single point of truth</h2>
+
+<p>Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You&rsquo;ll want to set up everything you can with sensible attributes in your custom application recipes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># site-cookbooks/your-app/attributes/default.rb</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;database&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;pool&#39;</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;app_database&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;password&#39;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then pass overrides in your stack JSON. Your stack JSON is where you&rsquo;ll enumerate all the settings particular to your environment: though I&rsquo;m not incredibly happy with this setup, as it&rsquo;s not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it&rsquo;s not difficult to update multiple stacks or create a new one from sensible defaults.</p>
+
+<h2>5. Use the AWS API</h2>
+
+<p>So what&rsquo;s the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can&rsquo;t achieve anywhere else. But for more details on that, you&rsquo;ll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
+    <link href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/"/>
+    <updated>2014-05-09T13:00:45-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+<!-- more -->
+
+
+<h2>0. Get your chef recipes working in OpsWorks</h2>
+
+<p>Don&rsquo;t do any of this until you have a fully-provisioned server working exactly as you&rsquo;d expect. Make sure <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html">auto healing</a> is disabled for the layer. The rest of the steps assume you have such a properly set-up instance, a well configured layer, and that the original image was Ubuntu 12.04.</p>
+
+<h2>1. Download your X.509 certificates</h2>
+
+<p>Amazon has a pretty good <a href="http://docs.aws.amazon.com/AmazonDevPay/latest/DevPayDeveloperGuide/X509Certificates.html">checklist</a> for how to do this. You need X.509 certificates so only you and Amazon can access your AMI, which for most layers is a sensible security precaution. For this walkthrough I&rsquo;ll assume you have the private key downloaded to ~/certs/pk-X509.pem and the the certificate downloaded to ~/certs/cert-X509.pem.</p>
+
+<h2>2. Transfer your certs to the server</h2>
+
+<p>On the server itself:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /tmp/cert/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On your local computer:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
+
+<h2>3. Download the EC2 AMI tools</h2>
+
+<p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get install -y unzip
+</span><span class='line'>wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+</span><span class='line'>sudo mkdir -p /usr/local/ec2
+</span><span class='line'>sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
+</span><span class='line'><span class="nb">export </span><span class="nv">EC2_AMITOOL_HOME</span><span class="o">=</span>/usr/local/ec2/ec2-ami-tools-1.5.3/
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$EC2_AMITOOL_HOME</span>/bin:<span class="nv">$PATH</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
+
+<h2>4. Download the EC2 API tools</h2>
+
+<p>A similar process to step 3.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+</span><span class='line'>sudo unzip ec2-api-tools.zip -d /usr/local/ec2
+</span><span class='line'>sudo apt-get install -y openjdk-7-jre
+</span><span class='line'><span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-7-openjdk-amd64/jre/
+</span><span class='line'><span class="nb">export </span><span class="nv">EC2_HOME</span><span class="o">=</span>/usr/local/ec2/ec2-api-tools-1.6.13.0/
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$EC2_HOME</span>/bin
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY</span><span class="o">=</span>YourAccessKey
+</span><span class='line'><span class="nb">export </span><span class="nv">AWS_SECRET_KEY</span><span class="o">=</span>YourSecretKey
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
+
+<h2>5. Ensure your version of GRUB is correct</h2>
+
+<p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get install -y grub gdisk kpartx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+
+<h2>6. Stop all services</h2>
+
+<p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo service monit stop
+</span><span class='line'>sudo service mysql stop
+</span><span class='line'>sudo service nginx stop
+</span><span class='line'>sudo service redis stop
+</span><span class='line'>sudo service memcached stop
+</span><span class='line'>sudo service opsworks-agent stop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
+
+<h2>7. Remove instance configuration directories</h2>
+
+<p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm -rf /etc/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /opt/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /var/log/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /var/lib/aws/opsworks/ <span class="se">\</span>
+</span><span class='line'>            /etc/monit.d/opsworks-agent.monitrc <span class="se">\</span>
+</span><span class='line'>            /etc/monit/conf.d/opsworks-agent.monitrc <span class="se">\</span>
+</span><span class='line'>            /var/lib/cloud/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>8. Bundle the volume</h2>
+
+<p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-bundle-vol -k /tmp/cert/pk-X509.pem <span class="se">\</span>
+</span><span class='line'>               -c /tmp/cert/cert-X509.pem <span class="se">\</span>
+</span><span class='line'>               -u 123456789012 <span class="se">\</span>
+</span><span class='line'>               -r x86_64 <span class="se">\</span>
+</span><span class='line'>               -e /tmp/cert <span class="se">\</span>
+</span><span class='line'>               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> | tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
+
+<p>This command will probably take a long while to run.</p>
+
+<h2>9. Create and upload the volume to an S3 bucket</h2>
+
+<p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-upload-bundle -b bucket_name/image_name <span class="se">\</span>
+</span><span class='line'>                  -m /tmp/image.manifest.xml <span class="se">\</span>
+</span><span class='line'>                  --region us-east-1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
+
+<h2>10. Register the AMI</h2>
+
+<p>Only one step left, and this is an easy one! You can register the AMI with this command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Interviewing Symonds &amp; Son]]></title>
+    <link href="http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son/"/>
+    <updated>2014-03-12T23:43:18-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &mdash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
+
+<!-- more -->
+
+
+<h3>How did you start your business?</h3>
+
+<p>Rather accidentally, actually: I fell into it. I&rsquo;ve been a software developer for about a decade now, since I graduated college, and I&rsquo;ve always loved it &mdash; so much so that I couldn&rsquo;t put it down when I got home. I was always programming, either on personal projects or side gigs outside my day job. Eventually those gigs got bigger and bigger, and my friends and clients referred me to other people&hellip; for awhile, about two years ago, it almost felt like I was working a night job that was almost exactly the same as my day job. Then the startup where I was working full time ran into money problems and had to cut my hours pretty dramatically. I always intended to find another full time position, but I just got so busy with my client work that I didn&rsquo;t have the time: and that was the start of Symonds &amp; Son.</p>
+
+<h3>What did your parents say when you said you wanted to start a consulting business?</h3>
+
+<p>&ldquo;No, don&rsquo;t!&rdquo; They hated the idea. I&rsquo;d mentioned it before &mdash; I don&rsquo;t like having a boss, and I&rsquo;d frequently wondered what it would be like to work for clients, rather than managers. But for my father, consulting has always been very boom-and-bust: there were times he was so busy he was hardly home, and then times he&rsquo;d be sitting around being unhappy. My parents told me to find a stable, full-time job at a big company like Apple, or even a smaller company where I wouldn&rsquo;t have to worry so much about the future. But I had an idea to make my own company and I wanted to do it, and when they saw they couldn&rsquo;t convince me otherwise they gave me advice on how to make it work&hellip; and eventually I managed to convince them to join me!</p>
+
+<h3>Who did you bring into the business first, your mom or dad?</h3>
+
+<p>My dad.</p>
+
+<h3>Why did you decide to bring him in?</h3>
+
+<p>I&rsquo;ve always relied on my dad to help me do contract proof-reading and negotiations. He&rsquo;s had a lot of experience doing business development and his advice has always been helpful&hellip; though, to his annoyance, I haven&rsquo;t always followed it. Recently my father&rsquo;s business hasn&rsquo;t been as busy as he liked, but meanwhile mine has been growing really quickly, and I&rsquo;ve needed a lot more help than usual on the business end. Bringing him in was a natural fit.</p>
+
+<h3>When did your mom join, and what is her role?</h3>
+
+<p>Mom started helping me out during the wedding, so about six months ago &mdash; she was our wedding planner. She organized speaking with florists, tasting food, talking with photographers&hellip; and quickly I found her help (personally and professionally) indispensable. She&rsquo;s my personal assistant and helps me keep focused on my business by taking care of invoicing and whatever else the company needs.</p>
+
+<h3>Do you like owning your own business?</h3>
+
+<p>So much! It&rsquo;s really different than I thought it would be: I imagined myself programming day in and day out, but there&rsquo;s a lot of overhead involved. Running a business with employees and partners is like two jobs. In the first one, I&rsquo;m programming and making the product my clients want, and in the second, I&rsquo;m organizing, marketing, selling and negotiating. But I don&rsquo;t mind all the work&hellip; in fact, I love working with my family on a day-to-day basis. Even if Symonds &amp; Son isn&rsquo;t around in 10 years I&rsquo;ll have great memories of the amazing things we accomplished together &mdash; but I hope we&rsquo;re around even longer than that.</p>
+
+<h3>How is your working relationship with your parents?</h3>
+
+<p>On average, really good. Since college I&rsquo;ve gotten along with my parents quite well, and I think since I&rsquo;ve grown into an adult we&rsquo;ve gotten along better. Our relationship during high school and even during the beginning of college was a little bit of a mess, but now that we&rsquo;re all adults we can actually be friends, which I think works out really well.</p>
+
+<h3>Did you have any reservations bringing them into your business?</h3>
+
+<p>Yes, a thousand times yes. My father and I spent most of my high school not understanding each other and butting heads. We&rsquo;d get into arguments constantly, and I think that&rsquo;s part of the reason I don&rsquo;t listen to his advice even when I should: I spent most of high school not listening to him and it seemed to work out pretty well. And mom was always pushing me, to get better grades, to do more extracurricular activities, to practice the flute more&hellip; I think that if I told myself in high school that I would literally pay her to keep doing that to me as an adult, I would&rsquo;ve laughed until I died. But I needed help, and I knew they were competent, skilled people who could help me. So, as I said, it just seemed like a natural fit.</p>
+
+<h3>What&rsquo;s the number one complaint your parents have wth you?</h3>
+
+<p>That I don&rsquo;t listen to them! They definitely want me to communicate with them a lot more than I feel comfortable with. They&rsquo;re always calling and checking up on me and my husband, both personally and in regards to the business, but I have a very full schedule at the best of times: it can be exhausting to satisfy their demands. And from their perspective, I&rsquo;m not nearly responsive enough. I don&rsquo;t return calls promptly or deliver them the information they need to do their jobs in a timely manner.</p>
+
+<h3>How are your processes different in the family?</h3>
+
+<p>The primary process difference is between me and my father. Dad is very dramatic, as I&rsquo;ve said before: everything is a crisis, whereas with me, I&rsquo;m usually calm and collected. So when dad is yelling at me that some work must get done, I quietly tell him that it will, and he goes bananas because he thinks I&rsquo;m not taking it seriously, and I can&rsquo;t believe he&rsquo;s getting so worked up about it. Both of us get our work done in the end, but the meeting of the two processes can be a little difficult, and usually involves a lot of my father hanging up on me and swearing to my mom that he&rsquo;ll never talk to me again.</p>
+
+<h3>Des anyone in your family have a different personality, or personality traits that are different at work than when not working?</h3>
+
+<p>Our personalities are very different, though I touched on that in your last question. My mom and I have more similar dispositions, and I&rsquo;ve seen her handle my dad expertly for years. I know there&rsquo;s a lot of bluster, but it accomplishes a lot too. He&rsquo;s passionate and a really skilled negotiator: he&rsquo;s done some impressive stuff on our conference calls with the same righteous attitude that can get on my nerves. And I know I have that anger in me too &mdash; I&rsquo;ve definitely had moments where I feel like I&rsquo;ve had to channel my father to get my way. Few people can resist Steve Symonds head on.</p>
+
+<p>I also feel like I&rsquo;m much more placid at work than I am in my personal life. I try to be clear-headed and visionary in my role as president of the company, but outside the office I cut loose a lot more. I tend to act the same around my parents though, so maybe my &ldquo;president of the company&rdquo; personality and my &ldquo;son&rdquo; personality are actually pretty close.</p>
+
+<h3>How do you usually handle it when your father gives you advice? Is his advice usually unsolicited?</h3>
+
+<p>I&rsquo;d say the advice is about half solicited, half unsolicited&hellip; And I usually weigh his advice very seriously. That doesn&rsquo;t mean I take it though! Dad has been very successful in business, but I feel like I&rsquo;ve been successful too, with many great things still in my future. If I want Symonds &amp; Son to be the best company it can possibly be, I need to hear his advice, compare it to what I think the best course of action is, and then make a decision&hellip; and that&rsquo;s how I&rsquo;ve used his suggestions in the past.</p>
+
+<p>Of course this drives him bonkers, but I covered our process differences earlier.</p>
+
+<h3>What are some things your dad does that drives you nuts?</h3>
+
+<p>Calls me all the time! I have meetings all day long, and when I&rsquo;m not in meetings I&rsquo;m programming. I don&rsquo;t have time to talk on the phone. My employee, when he wants to talk to me, IMs me, which is much more convenient. I need to get my parents to start doing that too. And as I mentioned, the drama aspect.</p>
+
+<h3>What are some things your mom does that drives you nuts?</h3>
+
+<p>Nags me, which ironically is what I pay her to do! It can be very difficult for me to realize that she&rsquo;s just doing her job when she bugs me to do stuff, especially considering how she used to do it all the time for free and drive me up a wall. If I&rsquo;m already very tense, it can be difficult not to snap at her when she&rsquo;s reminding me about my obligations.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Supercharge Your Rails Development Environment]]></title>
+    <link href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/"/>
+    <updated>2014-01-22T08:55:45-06:00</updated>
+    <id>http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment</id>
+    <content type="html"><![CDATA[<p>I love trying to improve my development environment. Efficiency is important to me: I spend hours and hours a day programming, and even a 1% or 2% productivity boost would provide a massive time savings over the course of a year. Or, as xkcd so pithily put it:</p>
+
+<p><a href="http://xkcd.com/1205/"><img src="http://imgs.xkcd.com/comics/is_it_worth_the_time.png" alt="Is It Worth The Time?" /></a></p>
+
+<p>Of course, I&rsquo;ve probably obliterated any potential savings by spending so much time experimenting, but now that I&rsquo;ve done it you don&rsquo;t have to! Listed here is everything important to me to get my development environment zipping along. Hopefully you&rsquo;ll be able to find something useful here too that makes your programming experiences a little bit faster.</p>
+
+<!-- more -->
+
+
+<h2>Basics</h2>
+
+<ul>
+<li><p>Font: <strong><a href="http://store1.adobe.com/cfusion/store/html/index.cfm?event=displayFontPackage&amp;code=1960">Source Code Pro</a> (Free)</strong> A good, clean, monospaced font is extremely important. You&rsquo;ll be staring at it in your text editor and on your terminal, and it has to be easy on the eyes while still differentiating similar-looking characters (l as in llama, 1 as in the number, I as in yours truly). I&rsquo;ve used Inconsolata, Monaco, and Anonymous extensively, but found Source Code Pro to be superior in almost all respects: more readable, more beautiful, less tiring to the eyes. Realistically they&rsquo;re all pretty close though, so just find something you like and go with it.</p></li>
+<li><p>Computer: <strong><a href="http://store.apple.com/us/mac">MacBook</a> ($Lots)</strong> Ruby is cross-platform: you can develop on a Mac, Linux, or even Windows if you like. I prefer a Mac. They&rsquo;re extremely reliable, very well-designed, with rock-solid performance characteristics and extremely impressive support guarantees. They really only have one downside, but it&rsquo;s a doozy: the big price tag. See if you can get your employer to buy one for you. Some people don&rsquo;t like OSX, but in my mind it unifies a good user experience with the power of Unix under the hood. There&rsquo;s definitely some stuff about Windows I like more (I have a gaming PC that uses Windows 8), but for development, Macs can&rsquo;t be beat. They also have great, first-class tool support for anything you&rsquo;re likely to do in Rails.</p></li>
+<li><p>Shell: <strong><a href="http://www.zsh.org/">zsh</a>, specifically <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> (Free)</strong> zsh is what bash wants to be. Command completion, sharing of history between shells, spelling correction, amazing prompts&hellip; and oh-my-zsh makes it easy to set up and install. If you need some inspiration for your <code>.zshrc</code>, <a href="https://gist.github.com/Veraticus/8563408">check out mine</a>! My favorite feature is sleeping 10 seconds after you do an <code>rm</code> glob&hellip; this has saved me from my own stupidity more than once. (Lots of stuff from my <code>.zshrc</code> is taken from <a href="http://stackoverflow.com/questions/171563/whats-in-your-zshrc">this StackOverflow question</a>.)</p></li>
+</ul>
+
+
+<h2>Mac Apps</h2>
+
+<ul>
+<li><p><strong><a href="https://agilebits.com/onepassword/mac">1Password</a> ($50)</strong> Insanely expensive compared to most other software on this list, but also pretty non-negotiable. I have over 300 passwords stored in it &mdash; including six client logins to AWS, four to RackSpace, and untold multiples for my own servers: how am I supposed to keep all of that straight myself? And generate new ultra-secure passwords whenever I need? Well thankfully I don&rsquo;t have to. 1Password has bulletproof security and I&rsquo;m never concerned I&rsquo;ll lose, forget, or even care about any individual password ever again.</p></li>
+<li><p><strong><a href="http://www.alfredapp.com/">Alfred</a> (Free to try, &pound;17 to buy)</strong> I use Alfred to open nearly everything on my computer. Not just apps! Alfred can open web pages, login automatically with 1Password integration, perform calculations, run one-off terminal commands, find and open files&hellip; Alfred has enormously simplified everything I do with my Mac. Definitely a huge time-saver.</p></li>
+<li><p><strong><a href="http://asepsis.binaryage.com/">Asepsis</a> (Free)</strong> So many important files on your comptuer are dotfiles, which are hidden by default on Macs. So you turn on viewing hidden files&hellip; and suddenly, everywhere you go, you see the dreaded <code>.DS_Store</code>. I hate seeing <code>.DS_Store</code> files. They appear in every directory, they appear on your desktop, they appear in your nightmares&hellip; well Asepsis gets rid of all of them. And it&rsquo;s free.</p></li>
+<li><p><strong><a href="http://www.macbartender.com/">Bartender</a> (Free to try, $15 to buy)</strong> Look at the upper-right of your Mac. Do you see the volume icon there? The AirPlay icon? Even worse, your own name? (What, are you worried you&rsquo;ll forget it?) Banish the clutter into Bartender and clean up your menu bar: you can hide all the icons you never (or rarely) use, and even configure them to display only when their app does something important.</p></li>
+<li><p><strong><a href="http://lightheadsw.com/caffeine/">Caffeine</a> (Free)</strong> Prevent your Mac from ever falling asleep. Helpful if you&rsquo;ve ever started a long-running task, left your computer for awhile, and returned to find it had stopped to take a nap.</p></li>
+<li><p><strong><a href="http://www.getcloudapp.com/">CloudApp</a> (Free, or $4.99 a month)</strong> CloudApp gives you drag-and-drop sharing of any file you&rsquo;d desire. I love having my drops available at a vanity URL (<a href="http://veratic.us">http://veratic.us</a>) &mdash; you&rsquo;d be surprised how many developers say how cool that is, and ask how they can get one of their own. If you don&rsquo;t want the URL then the free version should suit you just fine.</p></li>
+<li><p><strong><a href="http://giantcomet.com/flint/mac/">Flint</a> (Free, then $14.99)</strong> I love Campfire and BaseCamp. Flint makes Campfire easy-to-use. Even better, it gives me a badged icon in my dock when people speak, and a growl notification when they mention my name.</p></li>
+<li><p><strong><a href="http://gistifyapp.com/">Gistify</a> ($1.99)</strong> Shameless self-promotion, but I honestly love the app I made for myself! I make gists all the time; gistify gives you drag-and-drop gisting of snippets or files, and allows you to create gists from your clipboard contents. Super convenient and super lightweight.</p></li>
+<li><p><strong><a href="http://growl.info/">Growl</a> (Free, or $3.99)</strong> The Apple Notification Center is pretty good&hellip; but Growl still seems to be the gold standard for notifications. One of the first pieces of software I install on a new computer. (That said, I have no idea what the $3.99 version does. Growl is one of the few pieces of software on this list I&rsquo;ve never bought.)</p></li>
+<li><p><strong><a href="http://hyperdock.bahoom.com/">HyperDock</a> (Free, or $9.95)</strong> Allows you to hover over your dock items and see a preview pane summarizing all of that app&rsquo;s open windows, a la Windows&#8217; default behavior when you hover over an app in the taskbar. Extremely helpful if you have a lot of files open simultaneously &mdash; for example, if you have lots of projects open at once in your text editor.</p></li>
+<li><p><strong><a href="http://www.iterm2.com/#/section/home">iTerm 2</a> (Free)</strong> The best terminal replacement ever &mdash; I don&rsquo;t know how I ever lived without, and once you start using it, you&rsquo;ll never be able to go back to the default Mac terminal. It has so many nice improvements I can&rsquo;t even list them all, and for the absurd price of &ldquo;free&rdquo; there&rsquo;s absolutely no reason not to use it.</p></li>
+<li><p><strong><a href="http://www.obdev.at/products/littlesnitch/index.html">Little Snitch</a> (Free to try, $34.95 to buy)</strong> Little Snitch is a really excellent software firewall. I&rsquo;m incredibly paranoid about network security, especially on my development machine. Little Snitch allows me to opt-out of connections I don&rsquo;t trust and really lock down my computer &mdash; not only in general, but on a network-by-network basis. As a bonus, it lets me see my network traffic so I get notified if DropBox suddenly decides to resync everything.</p></li>
+<li><p><strong><a href="https://www.monosnap.com/welcome">Monosnap</a> (Free, $4.99 to enable sharing)</strong> The best skitch replacement (since Evernote ruined it). Fast screen or window captures with built-in DropBox, CloudApp, and Evernote uploading for only $4.99. It&rsquo;ll record videos of your screen and even take selfies on your Mac&rsquo;s camera, if you&rsquo;re too lazy to grab your phone.</p></li>
+<li><p><strong><a href="http://www.sublimetext.com/3">Sublime Text 3</a> (Free, then $70(!))</strong> My favorite text editor (and I&rsquo;ve tried most of them). Expensive? Definitely. But you get what you pay for. ST3&rsquo;s best feature is its incredibly versatile package system &mdash; there&rsquo;s a package for pretty much everything, and as a bonus it supports most of TextMate&rsquo;s plugins as well. Despite its depth and power, it&rsquo;s still light-weight enough to start instantly and doesn&rsquo;t spend any time doing reindexing or otherwise chugging. ST3 is also cross-platform if you end up doing a bit of light programming on something other than your primarily development machine, which is useful for standardizing your editor everywhere.</p></li>
+<li><p><strong><a href="http://totalspaces.binaryage.com/">TotalSpaces</a> (Free to try, $18 to buy)</strong> I don&rsquo;t like Mac&rsquo;s default Spaces implementation &mdash; four desktops right next to each other means the furthest space could be two screens away, and the widgets view is totally worthless. TotalSpaces lets you stack desktops in a grid and move left, right, up, and down. Now every space is only one swipe away from any other space. As a bonus you can get rid of the widgets as well.</p></li>
+<li><p><strong><a href="http://tapbots.com/software/tweetbot/mac/">Tweetbot</a> ($19.99)</strong> Twitter is actually a valuable professional tool for me. It lets me keep on top of interesting news and developments in the tech world, contact authors of the software I use directly, and find lots of pictures of kittens. But leaving the #kittens aside, Tweetbot is the best app I&rsquo;ve used for twittering. It&rsquo;s fast, effective, and stays out of my way when I don&rsquo;t want it.</p></li>
+<li><p><strong><a href="http://www.uniboxapp.com/">Unibox</a> ($9.99)</strong> I like Unibox compared to Mail.app and Mail Pilot: it&rsquo;s speedy, it organizes mail effectively, and I feel like I have a bit more control of my inbox. That said I haven&rsquo;t yet run into the program that <em>completely</em> replaces Gmail in a browser for me&hellip; Unibox is as close as I&rsquo;ve come and I use it on a daily basis, but if I&rsquo;m searching for a specific piece of mail, I turn to gmail.</p></li>
+</ul>
+
+
+<h2>Sublime Text Packages</h2>
+
+<p>If you love Sublime Text 3, you&rsquo;ll want the best packages for it too. Here&rsquo;s what I recommend:</p>
+
+<ul>
+<li><p><a href="https://sublime.wbond.net/">Package Control</a> allows you to find, install, and update Sublime Text 3 packages. A prerequisite for installing anything else without going insane.</p></li>
+<li><p><a href="http://buymeasoda.github.io/soda-theme/">Soda</a> is a beautiful, functional theme that I really enjoy. I&rsquo;ve tried a few others and didn&rsquo;t find them nearly as compelling (<a href="http://kkga.github.io/spacegray/">SpaceGray</a> is also quite nice, though the syntax highlighting isn&rsquo;t to my taste). Because I find it easier to read light text on a dark background, I use Soda Dark specifically.</p></li>
+<li><p><a href="http://wbond.net/sublime_packages/alignment">Alignment</a> makes it easy to align everything properly and make your code nice and readable.</p></li>
+<li><p><a href="https://github.com/facelessuser/BracketHighlighter">BracketHighlighter</a> shows you if you&rsquo;re inside brackets (or a block, or HTML element) and where the start and end of said brackets are. Invaluable.</p></li>
+<li><p><a href="https://github.com/kemayo/sublime-text-git">git</a> gives you git integration right in Sublime Text 3, and works great with&hellip;</p></li>
+<li><p><a href="http://www.jisaacks.com/gitgutter">GitGutter</a>, which shows in your gutter changes that are waiting to be committed.</p></li>
+<li><p><a href="https://github.com/titoBouzout/SideBarEnhancements">SidebarEnhancements</a> gives you tons more options when you right-click anything in your sidebar, including clipboard, move to trash, reveal in finder, open in another program, and everything else you&rsquo;d expect a sidebar to reasonably contain.</p></li>
+<li><p><a href="http://sublimelinter.readthedocs.org/en/latest/">SublimeLinter</a> (and linters for your languages of choice) provides cheap and easy sanity-checking of your code. Now you&rsquo;ll know as soon as you save (or as soon as you finish typing, if you like) if you fat-fingered a variable name.</p></li>
+</ul>
+
+
+<h2>Useful Development Tools</h2>
+
+<ul>
+<li><p><a href="http://brew.sh/">homebrew</a> is the best package manager I&rsquo;ve come across. It&rsquo;ll install everything from libxml2 to postgresql from source automatically, helps you manage upgrades from one version to the next, and is fast and performant.</p></li>
+<li><p><a href="https://github.com/sstephenson/rbenv">rbenv</a> allows you to have multiple versions of Ruby on your system simultaneously, each without stepping on the others&#8217; toes. If you regularly develop in runtimes other than MRI (I have to do JRuby stuff somewhat frequently, for example) this allows you switch back and forth without going insane.</p></li>
+<li><p><a href="https://github.com/burke/zeus">zeus</a> preloads your Rails apps so that tests, the console, and the server all load lightning-fast. The milliseconds you wait for Rails to start now become microseconds, saving you entire minutes per year&hellip; And isn&rsquo;t that really the point of optimization?</p></li>
+</ul>
+
+
+<p>I&rsquo;m sure there&rsquo;s a lot that I missed and some things I don&rsquo;t even know about. If I didn&rsquo;t include your favorite app, Sublime Text plugin, or Rails development tool let me know <a href="http://twitter.com/Veraticus">@Veraticus</a> &mdash; there&rsquo;s nothing I love more than taking a new app for a spin and even adopting it if it turns out to be amazing!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Programming the New Family Business]]></title>
+    <link href="http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business/"/>
+    <updated>2014-01-16T11:28:19-06:00</updated>
+    <id>http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business</id>
+    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &mdash; specifically, <strong>my</strong> successful consulting business &mdash; actually look like?</p>
+
+<p><a href="http://symondsandson.com">Symonds &amp; Son</a> isn&rsquo;t named to sound cute and hipstery. I&rsquo;m the son; I&rsquo;m in business with my father, and I recently hired my mother to be my assistant and bookkeeper. The company&rsquo;s name is intended to evoke images of traditional, reliable family businesses, where trust, excellence, and a reputation for quality products are their cornerstones. These companies, traditionally centered around carpentry and other hand-made professions, are my models for how to run Symonds &amp; Son. We are, if you&rsquo;ll forgive me using the phrase, a bespoke development shop, where our great output and superb relationship with our clients are our highest priorities.</p>
+
+<p>But building my profession into a company &mdash; and a company with my parents, no less &mdash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
+
+<!-- more -->
+
+
+<h2>Parents Are the Worst</h2>
+
+<p>Let me be perfectly honest here: I was not a model child. Quite the opposite, in fact &mdash; I was the picture of a rebellious teenager. I was surly, I hated authority, I refused to leave the basement and I would play computer games constantly in lieu of doing homework. My parents and I would have huge fights that would last for hours, typically centered around my grades, and I would go screeching off into the night (in their car, of course) to hang out with my friends at Dunkin Donuts and whine about the many injustices of life, parents, and school.</p>
+
+<p>(I was not a great student.)</p>
+
+<p>My relationship with my parents really did not improve until after college. Though I never liked school, I found my niche in the workplace: arbitrary grades meant little to me, but performance tied to money? Now that was a formula I could understand! As my career flourished my relationship with my parents got better. I like to think that they gradually grew to respect my skills and ambition, but more realistically I think they were just happy that I had launched successfully when so many of my peers had been burned and left un- or under-employed by the poor job market.</p>
+
+<h2>But Then So Are Children</h2>
+
+<p>My father, a successful consultant in his own right, always advised me never to consult. Every time I eyed doing hourly work, he told me to firmly refocus my sights on a full-time job. He&rsquo;d speak to the benefits, the retirement account, the possibilities for advancement big companies could offer &mdash; and, of course, I completely disregarded his advice. I found employment first with startups (not exactly bastions of job security or big 401ks) and then freelancing.</p>
+
+<p>So if you want to take one piece of advice from my post, it&rsquo;s this: if you want to go into business with your parents, ruthlessly ignore their recommendations at every turn!</p>
+
+<p>My father&rsquo;s niche had always been contracts, contacts, and business development, areas in which I am admittedly weak. He&rsquo;s helped multi-million dollar companies divide and conquer their industries, and find partners to allow them to do so. When I told him I was dead set on making this consulting shindig work, he responded that he&rsquo;d be available if I needed his help. Thus I found myself relying on him more and more&hellip; first to read contracts, then to perform light business development, and finally to properly structure my own growing business and best serve my clientele. In the end I suggested we just incorporate together. He agreed, and thus Symonds &amp; Son was born.</p>
+
+<h2>Big Egos, Big Problems</h2>
+
+<p>Neither my father nor I are accustomed to knuckling under in arguments, and so our new business relationship has hardly been problem-free. We have some very different perspectives on the proper ways to interact with clients, communicate on a daily basis, and turn single contracts into recurring revenue. For example, I hate answering the phone during the day, as I&rsquo;m usually busy coding &mdash; but he can&rsquo;t stand getting directed to voicemail when he knows that I&rsquo;m around and just not picking up.</p>
+
+<p>Our solution for that particular problem is better communication and faster turnarounds. He knows he can get ahold of me if there&rsquo;s an emergency, and otherwise that I&rsquo;ll return his call as soon as possible&hellip; and in return, he texts me a lot more, which allows me to respond when I&rsquo;m available and in my own time.</p>
+
+<p>But definitely the most important lesson I&rsquo;ve learned is that my father is indeed an expert in what he does, and generally knows what he&rsquo;s doing &mdash; and that&rsquo;s the same lesson I try to impose on him when he starts stepping on my toes too much. It can be difficult to give him the reins during delicate business operations, but I actually find it helpful as well. Like most entrepreneurial people, I love being in control and feel most comfortable when I&rsquo;m managing as many of the aspects of any situation as I can. But other people are great at what they do too, and they can only prove it when given the chance to shine.</p>
+
+<p>Or, more pithily, if I&rsquo;m to succeed personally, I have step back and let the people I trust succeed. Only if I allow it to happen can it happen.</p>
+
+<h2>Love, Trust, Respect, Nagging</h2>
+
+<p>As my business expanded, I found I had less and less time for simple business tasks &mdash; invoicing, talking to my accountant, setting up and managing a corporate bank account&hellip; My to-do list was growing longer and longer with absolutely no hope of me ever breaking free to accomplish any of it. After all, if I stopped coding then I stopped getting paid, and consulting is not exactly a business that lets one rest on their laurels.</p>
+
+<p>I needed an assistant.</p>
+
+<p>My mother had handled all our scheduling, accounts, and priorities growing up: she was a successful businesswoman in her own right as well, though she left the corporate world and went into non-profit when my sister was born. That changed in the beginning of 2013 when my parents moved. Mom suddenly found herself with less on her plate than when she lived in Connecticut, and it was difficult for her to translate her great non-profit experience in the suburbs of Connecticut to the non-profits in the heart of Chicago.</p>
+
+<p>Growing up, I hated being nagged. But I realized what I needed was an incredibly prioritized, driven person to help me with the day-to-day operations of my business&hellip; and my mother had time to spare and thirty years of experience managing me and my time. As much as I hated to admit it, I needed her to really make Symonds &amp; Son a success.</p>
+
+<p>And so far it&rsquo;s been working out really well &mdash; almost scarily well. My mother is an efficient woman, and when I give her a list she turns it around in a timeframe I find just astounding. For my part, I&rsquo;ve learned to respect her gentle nagging: not only does she have my best interests at heart, but the best interests of our company. She&rsquo;s working on behalf of the company to make it more efficient. If I stood in the way of that, I would be a bad employer, and while I might not have been the best son in the entire world, I at least want to be a pretty good boss.</p>
+
+<h2>Thankshannukah with the Symondses</h2>
+
+<p>I never turned to my parents with charity. They are successful, independent people in their own right, and I am lucky they&rsquo;ve decided to invest their time and energy in my consultancy. But there are lots of people out there who would want the opportunity to draw a paycheck from Symonds &amp; Son, some potentially even more qualified than mom and dad. So why did I decide to go into business with them?</p>
+
+<p>Partly it&rsquo;s where they were in their lives: they had the time and energy to dedicate to a new venture. But more than that, it&rsquo;s that I already know, respect, and trust them. I want the values of my company to reflect the values of my family: a firm commitment to client work can only really be achieved if I&rsquo;m not constantly watching my back for a dagger, or if I&rsquo;m free from worries about the honesty and priorities of my employees.</p>
+
+<p>I could have gone out, interviewed candidates, selected potentials, hired a few, and eventually learned to trust and respect them. But I had excellent, well-qualified, trustworthy and experienced candidates I already had a good relationship with. To answer my earlier rhetorical question with another, why should I go searching for what I already had?</p>
+
+<h2>But What Happens If&hellip;?</h2>
+
+<p>Of course, I would be disingenuous if I said I was never concerned. What if I had to have some sort of Serious Conversation&trade; with mom and dad about their performance, or salaries, or any of the other number of difficult conversations any company might have to have with its employees? Or, to get to the heart of the matter: could I really fire my own parents if I had to?</p>
+
+<p>I like to think it&rsquo;ll never come to that. Symonds &amp; Son is a family business, and we&rsquo;ll succeed (or fail) as a unit. If the worst comes and I&rsquo;m forced to close up shop, then it means unemployment for all of us &mdash; at least temporarily. It won&rsquo;t be the end of any of our careers. I&rsquo;ll land somewhere else doing Rails, most likely, and my father will pick up other clients, and my mom will find a non-profit. It&rsquo;ll be another chapter in our lives closed, but hopefully an overall positive one.</p>
+
+<p>Certainly working together as a family has been a challenging experience, but it&rsquo;s brought me closer to my parents in a way I wouldn&rsquo;t have imagined even a few years ago. I&rsquo;ve learned to respect them for their talents and abilities, rather than as caregivers with the patience to raise me and my sister. I&rsquo;m not saying this kind of business is for everyone &mdash; maybe it works only for us, and even then, who knows if it&rsquo;ll work forever? But in trying to model Symonds &amp; Son after traditional, family-run businesses, I&rsquo;ve found capable, competent employees right under my nose: and my clients seem to enjoy working with us, so we must be doing something right.</p>
+
+<p>And I would be remiss if I didn&rsquo;t include at least a little advertising here! If you&rsquo;re interested in seeing <a href="http://symondsandson.com">Symonds &amp; Son</a> work for you, we make amazing software products and scalable Rails solutions. <a href="mailto:josh@joshsymonds.com">Get in touch</a> and see what a family business can do for you. You might just be surprised at how efficient and effective the new family business can be.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Consulting for Fun and Profit]]></title>
@@ -97,7 +715,12 @@
     <id>http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles</id>
     <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
 
-<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
+<p>So I decided to make it.</p>
+
+<!-- more -->
+
+
+<p><a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
 
 <ul>
 <li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
@@ -1080,628 +1703,6 @@
 <p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist &mdash; your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn&rsquo;t change its fate. The only measure of a company&rsquo;s success is whether or not it makes money. The rest is just icing on the cake.</p>
 
 <p>Can your company do that? Despite my tone, I believe it can. You&rsquo;ve poured your heart and soul into it and you&rsquo;ve done so because you believe you&rsquo;re working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn&rsquo;t enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Perils of Overengineering]]></title>
-    <link href="http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering/"/>
-    <updated>2013-04-23T13:19:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering</id>
-    <content type="html"><![CDATA[<p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
-
-<!-- more -->
-
-
-<h2>Don&rsquo;t Overthink It</h2>
-
-<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &mdash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
-
-<p>Chances are the answer is &ldquo;no.&rdquo; You&rsquo;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
-
-<p>This goes for any technology. Coco Chanel infamously stated, &ldquo;Before you leave the house, look in the mirror and take one thing off.&rdquo; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&rsquo;re included? Did you make the best choices? If you&rsquo;re not sure, do some research. It&rsquo;ll save you a boatload of trouble down the river.</p>
-
-<h2>Respect The Majority</h2>
-
-<p>Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$d</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="ss">:a</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It takes half a millisecond &mdash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
-
-<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &mdash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
-
-<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&rsquo;ll save everyone involved a lot of money and trouble. No, you won&rsquo;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&rsquo;ll never have to hand off.</p>
-
-<h2>Less is Best</h2>
-
-<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &mdash; both cases &mdash; is to ruthlessly cull what you&rsquo;ve got.</p>
-
-<p>Success, for code, isn&rsquo;t bigger and better. It&rsquo;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&rsquo;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
-
-<p>The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn&rsquo;t need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.</p>
-
-<p>Don&rsquo;t be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won&rsquo;t be used that way anyway, and then you&rsquo;ll look like a genius (in addition to actually being one for following sound advice).</p>
-
-<h2>New IS Cool</h2>
-
-<p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
-
-<p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
-    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
-    <updated>2013-04-17T18:16:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
-
-<!-- more -->
-
-
-<h2>Comparisons</h2>
-
-<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
-
-<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
-
-<p>So let&rsquo;s get down to the details!</p>
-
-<h3>Amazon Web Services</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$277.00</td>
-    <td>$30.74</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
-    </td>
-    <td>$500.00</td>
-    <td>$40.26</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      10 hours setup<br />
-      5 hours maintenance
-    </td>
-    <td>$1500.00</td>
-    <td>$750.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$2277.00</th>
-    <th>$821.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$12129.00</th>
-  </tr>
-</table>
-
-
-<p>No surprises here: if you&rsquo;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&rsquo;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&rsquo;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
-
-<h3>RackSpace</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB managed cloud instance</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$0.00</td>
-    <td>$262.80</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud database instance</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$321.20</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      10 hours setup<br />
-      2 hours maintenance
-    </td>
-    <td>$750.00</td>
-    <td>$300.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$750.00</th>
-    <th>$884.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$11358.00</th>
-  </tr>
-</table>
-
-
-<p>RackSpace&rsquo;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&rsquo;ll keep services running and your servers themselves operational) and that&rsquo;s reflected in a lowered monthly devops cost. They don&rsquo;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&rsquo;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
-
-<h3>BlueBox</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud instance</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$0.00</td>
-    <td>$385.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud database instance</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$385.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      0 hours setup<br />
-      0 hours maintenance
-    </td>
-    <td>$0.00</td>
-    <td>$0.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$0.00</th>
-    <th>$770.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$9240.00</th>
-  </tr>
-</table>
-
-
-<p>BlueBox&rsquo;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&rsquo;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&rsquo;s product is easily the most expensive. You&rsquo;re paying for their expertise much more than their hardware.</p>
-
-<h3>Heroku</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>4 dynos</h4>
-      12 unicorn workers<br/>
-    </td>
-    <td>$0.00</td>
-    <td>$143.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>memcached addon (500 MB)</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$40.00</td>
-  </tr>
-  <tr>
-    <td><h4>Fugu database instance</h4></td>
-    <td>$0.00</td>
-    <td>$400.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      2 hours setup<br />
-      0 hours maintenance
-    </td>
-    <td>$300.00</td>
-    <td>$0.00</td>
-  </tr>
-    <tr class='highlighted'>
-    <th>Total</th>
-    <th>$300.00</th>
-    <th>$583.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$7296.00</th>
-  </tr>
-</table>
-
-
-<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
-
-<h2>Conclusions</h2>
-
-<p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why I'm Not Applying to 37Signals (But Why You Should)]]></title>
-    <link href="http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/"/>
-    <updated>2013-03-19T13:16:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should</id>
-    <content type="html"><![CDATA[<p>In case you haven&rsquo;t heard&hellip;</p>
-
-<p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
-
-<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &mdash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
-
-<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &mdash; either way, you&rsquo;ll have an opinion!</p>
-
-<!-- more -->
-
-
-<h2>Why You Should Apply</h2>
-
-<ol>
-<li><h3>They&rsquo;ve literally written books about how great it is to work there.</h3>
-
-<p>If you haven&rsquo;t read <a href="http://www.amazon.com/Rework-Jason-Fried/dp/0307463745">Rework</a> you probably should. 37signals is immune to typical corporate bullshit: you won&rsquo;t find stupid meetings, outside investors, or anyone burning the midnight oil here. You&rsquo;ll find work. Great, meaningful, empowering work. When you get right down to it, isn&rsquo;t that what people actually want out of their jobs? And you know 37signals is 100% dedicated to keeping it that way, since, well, as I said, they literally wrote the book on their business practices. They&rsquo;re committed not only to the customer experience, but the employee experience. And that counts for a lot.</p></li>
-<li><h3><a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">The Man Himself</a>.</h3>
-
-<p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&rsquo;ve been lobbying so hard for them to make. He&rsquo;s the inventor of Rails, he&rsquo;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&rsquo;s not to like? I imagine that, if you announced to a room of programmers, &ldquo;I work with DHH,&rdquo; there would be a brief hush and then everyone would be talking over each other. One would say, &ldquo;That man is a crazy person!&rdquo; And another, &ldquo;He&rsquo;s the greatest programmer to ever draw breath!&rdquo; There&rsquo;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
-<li><h3>Fame &amp; fortune await.</h3>
-
-<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&rsquo;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&rsquo;ll talk to will know where you work. Your title and position will be meaningful &mdash; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&rsquo;re a 37signals alum (unless you intend to be a lifer), having &ldquo;Programmer at 37signals&rdquo; on your resume will look even more stellar than all those follower numbers.</p></li>
-<li><h3>Work with the best &mdash; and be the best.</h3>
-
-<p>37signals&#8217; programming team is the crème de la crème of the Rails world. You&rsquo;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &mdash; doesn&rsquo;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&rsquo;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
-</ol>
-
-
-<h2>Why You Shouldn&rsquo;t</h2>
-
-<ol>
-<li><h3>You&rsquo;re not the best.</h3>
-
-<p>But in a team of greats, even being great is not enough &mdash; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&rsquo;ll be just another programmer. For some, the knowledge that they&rsquo;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&rsquo;t yet have the fame and reach of 37signals. It&rsquo;s up to you to find them!</p></li>
-<li><h3>While it&rsquo;s a great company, it&rsquo;s still a company.</h3>
-
-<p>I love startups. In a startup I&rsquo;m not just a programmer: I do lots and lots of work with computers, it&rsquo;s true, and most of that is programming. But I&rsquo;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&rsquo;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&rsquo;s not an easy question to answer, but I would bet not a whole lot &mdash; or, at least, less than you would somewhere else.</p></li>
-<li><h3>Go do it yourself.</h3>
-
-<p>While 37signals is a great company, there&rsquo;s nothing inherently special about it. They make CRM software, and while that&rsquo;s an interesting problem space, there&rsquo;s tons of fascinating questions to answer out there &mdash; questions that can only be answered through excellent software! The point of Rework is that there&rsquo;s no real magic in 37signals that people who are smart and dedicated can&rsquo;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&rsquo;d be joining his company, but ultimately, if you&rsquo;re so great, why aren&rsquo;t you out there making a name of your own, rather than riding on someone else&rsquo;s coattails? Even if they&rsquo;re his.</p></li>
-<li><h3>Fame &amp; fortune await!</h3>
-
-<p>If you&rsquo;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&rsquo;re dramatically out of line with what the market pays. And while they&rsquo;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&rsquo;t join stars that have already risen. Do you really want fame and fortune? Then you don&rsquo;t want to join 37signals. They&rsquo;ve already arrived there, and while there&rsquo;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&hellip; regardless of how awesome they are.</p></li>
-</ol>
-
-
-<h2>In The End</h2>
-
-<p>At the point I&rsquo;m at in my career, 37signals &mdash; while incredibly appealing &mdash; isn&rsquo;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&rsquo;t picked this up already, they&rsquo;re my programming heroes: and they should be yours too, because they care about everything that&rsquo;s important in this industry. So if you&rsquo;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
-
-<p>If not, I look forward to seeing what you create in the future, because I bet it&rsquo;ll be stellar.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Existing Rails API Solutions Suck]]></title>
-    <link href="http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck/"/>
-    <updated>2013-02-22T11:00:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2013/02/22/existing-rails-api-solutions-suck</id>
-    <content type="html"><![CDATA[<p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
-
-<p>They all suck.</p>
-
-<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
-
-<ol>
-<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
-<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
-<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
-</ol>
-
-
-<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
-
-<!-- more -->
-
-
-<h2><a href="https://github.com/intridea/grape">grape</a></h2>
-
-<p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you&rsquo;re doing and what you&rsquo;re expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
-
-<p>Unfortunately that&rsquo;s where the great stuff ends. For Rails applications &mdash; assuming you actually want to use grape with Rails &mdash; it is really an unpleasant solution, since it just doesn&rsquo;t play nicely with Rails.</p>
-
-<p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don&rsquo;t want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you&rsquo;re on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
-
-<p>Second, and for those of you already gearing up to say &ldquo;but grape isn&rsquo;t FOR Rails&rdquo;, you end up duplicating a lot of Rails&#8217; structure inside it anyway, even in small applications. If you don&rsquo;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
-
-<p>Third, if you want to version your API, you get to copy and paste the entire thing. To prevent us doing this every time at Everest, I implemented a module inheritance system for the API versions, but frankly it feels hacky and was difficult to get grape to support properly.</p>
-
-<p>Fourth, its caching support is pathetic. You have to install a completely separate gem (<a href="https://github.com/artsy/garner">garner</a>) if you want any kind of caching at all. Do people who use grape not experience any sort of load? Do their APIs not engage in any sort of database querying? Why is this a tacked-on side project instead of a core feature?</p>
-
-<p>And of course it has no view support. If you want to reuse data representations, define a method in the base API and call it all over the place. It&rsquo;s like a view, but more hidden!</p>
-
-<p>I assume some people must use grape for at least as complicated an app as I do. When I was Googling how to do versioning without copy pasting, I came across numerous slideshows from various Rails conferences discussing how great it is. None of them address any of these problems, so I&rsquo;m curious how the really big players make grape work without these difficulties. (My suspicion is they don&rsquo;t use grape.)</p>
-
-<h2><a href="https://github.com/fabrik42/acts_as_api">acts_as_api</a></h2>
-
-<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &mdash; that&rsquo;s what views are for. You don&rsquo;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&rsquo;t.</p>
-
-<p>This gem leads to really horrible uses like this when you version an API:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
-</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:id</span>
-</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:first_name</span>
-</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:last_name</span>
-</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:real_name</span>
-</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:gender</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">api_accessible</span> <span class="ss">:with_timezone</span><span class="p">,</span> <span class="kp">extend</span><span class="p">:</span> <span class="ss">:public</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">add</span> <span class="ss">:timezone</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is a versioned resource. You don&rsquo;t want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
-
-<h2><a href="https://github.com/filtersquad/rocket_pants">rocket_pants</a></h2>
-
-<p>rocket_pants actually does quite a lot right (besides having a sweet name): it&rsquo;s fairly DRY and it integrates with Rails pretty well.</p>
-
-<p>That said, versioning is still a tremendous pain in the butt. Routing allows you to at least select which controller your requests are sent to, but this quickly gets complicated:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">1</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item2&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">2</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#override&#39;</span> <span class="c1"># how does this interact with the line above?</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">api</span> <span class="ss">version</span><span class="p">:</span> <span class="mi">2</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">get</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="ss">to</span><span class="p">:</span> <span class="s1">&#39;test#item3&#39;</span> <span class="c1"># x now does something different for only versions 2 and 4</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Confusing!</p>
-
-<p>Why not have a simple fallback method where you define the highest version of your API, and the router checks to see which controllers exist in that version, moving back to an earlier version until it finds a defined controller? You could even have the router detect this on application load to prevent increased loading times. Then you don&rsquo;t need any sort of fooling around with complicated routing rules. Instead you just define the basic structure of your API and your application correctly infers versions from it, and if you have specific overrides you can address them in the routing file.</p>
-
-<p>Wishing aside, rocket_pants also doesn&rsquo;t use views, instead encouraging you to use a model&rsquo;s <code>serializable_hash</code> method to instruct it how to convert the model to JSON. Let&rsquo;s hope you don&rsquo;t have more than one representation of your model.</p>
-
-<h2><a href="https://github.com/bploetz/versionist">versionist</a></h2>
-
-<p>versionist supports views correctly but it suffers from a tremendously overwhelming amount of copy/pasting. It you want to version your API, it copies not only the routes inside your routes.rb, but also:</p>
-
-<ul>
-<li>Your controllers and controller specs</li>
-<li>Your presenters and presenter specs</li>
-<li>Your helpers and helper specs</li>
-<li>Your docs</li>
-</ul>
-
-
-<p>To a new location. These are just copies: in all likelihood they&rsquo;ll end up largely exactly the same as the previous version. It provides a Rails generator that does this automatically. I&rsquo;m on the fence as to whether great support for poor design patterns is unironically helpful though.</p>
-
-<h2><a href="https://github.com/erichmenge/api-versions">api-versions</a></h2>
-
-<p>Though it&rsquo;s practically unknown, in all my searching this is the gem that really got closest to what I was looking for. By default, it uses this heretofore unseen programming concept called &ldquo;inheritance&rdquo; to prevent code duplication from one version of your API to the next.</p>
-
-<p>Unfortunately, when you use its helpfully-provided Rails generator <code>api_versions:bump</code> it still creates a new controller for each of your old controllers. While they inherit code, which is nice, why do you have an empty controller just to provide inheritance to a previous version of the API? Still, this is definitely the least amount of copy/pasting we&rsquo;ve seen up until this point, and I sincerely appreciate the author&rsquo;s attempt to remain DRY in the very wet API landscape.</p>
-
-<h2>So what should I do if I&rsquo;m making a Rails API?</h2>
-
-<p>Use <a href="https://github.com/rails/jbuilder">jbuilder</a> (or <a href="https://github.com/nesquena/rabl">rabl</a>) to create views. If you have a tremendous hatred of views, use <a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a> instead to achieve the same goal. Your controllers should be pretty much like regular Rails ActionControllers. Feel free to include an extremely low-touch library like <a href="https://github.com/bploetz/versionist">versionist</a> or <a href="https://github.com/erichmenge/api-versions">api-versions</a>. Put most of your controller code in modules and include it in the actual controllers to prevent copy and pasting everywhere for the first. For the latter, not much you can do. Suck it up and copy and paste in your routes for both. Unfortunately, that&rsquo;s the best solution I can come up with.</p>
-
-<h2>Stop whining and do something about it!</h2>
-
-<p>You know what? I think I will.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Home Automation With Phillips Hue &amp; Huey]]></title>
-    <link href="http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey/"/>
-    <updated>2013-02-20T19:32:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2013/02/20/home-automation-with-phillips-hue-and-huey</id>
-    <content type="html"><![CDATA[<p>I released v1.0.0 of <a href="https://github.com/Veraticus/huey">huey</a> today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and easily set up a light timing schedule from one of my home machines, managed with cron (through the excellent <a href="https://github.com/javan/whenever">whenever</a> gem). In case you too would like awesome automatic light magic, here&rsquo;s how to make it work.</p>
-
-<!-- more -->
-
-
-<h2>Huey v1.0.0</h2>
-
-<p>New in huey v1.0.0 are light groups: arbitrary collections of bulbs on which you can run commands simultaneously. Getting them to work is ridiculously simple:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Contains all bulbs that have &#39;Living Room&#39; in their name</span>
-</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">,</span> <span class="s1">&#39;Foyer&#39;</span><span class="p">)</span> <span class="c1"># All bulbs that have either &#39;Living Room&#39; or &#39;Foyer&#39; in their name</span>
-</span><span class='line'><span class="n">g</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># A group specifically containing bulbs 1 and 3</span>
-</span><span class='line'><span class="n">g</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;My Bulbs&#39;</span> <span class="c1"># Name your group to find it later</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Once you have a group set up, you can act on all its bulbs simultaneously as you would on any individual bulb.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;My Bulbs&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">bri</span> <span class="o">=</span> <span class="mi">200</span>
-</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">save</span> <span class="c1"># All changes you&#39;ve made are committed to all the bulbs in a group</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">group</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="ss">bri</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="ss">ct</span><span class="p">:</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># Set and save in one step</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course, you probably want to do the same actions to groups over and over again: for example, dimming all your lights at night and brightening them in the morning. For that we have a shorthand called events:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">event</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;All Lights Off&#39;</span><span class="p">,</span> <span class="ss">group</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="ss">actions</span><span class="p">:</span> <span class="p">{</span><span class="ss">on</span><span class="p">:</span> <span class="kp">false</span><span class="p">})</span>
-</span><span class='line'><span class="n">event</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># All lights turn off</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>YAML Setup</h2>
-
-<p>Huey can read your groups and events from YAML configuration files. Here&rsquo;s a sample from my setup:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># groups.yml</span>
-</span><span class='line'><span class="l-Scalar-Plain">Study</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Study</span><span class="nv"> </span><span class="s">Side&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Study</span><span class="nv"> </span><span class="s">Ceiling&quot;</span><span class="p-Indicator">]</span>
-</span><span class='line'><span class="l-Scalar-Plain">Bedroom</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Bedroom</span><span class="nv"> </span><span class="s">Left&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Bedroom</span><span class="nv"> </span><span class="s">Right&quot;</span><span class="p-Indicator">]</span>
-</span><span class='line'><span class="l-Scalar-Plain">Living Room</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Front&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Center&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Living</span><span class="nv"> </span><span class="s">Room</span><span class="nv"> </span><span class="s">Back&quot;</span><span class="p-Indicator">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># events.yml</span>
-</span><span class='line'><span class="l-Scalar-Plain">Wakeup</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">group</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Bedroom</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">actions</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="s">&quot;on&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">bri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">255</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">ct</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">200</span>
-</span><span class='line'>
-</span><span class='line'><span class="l-Scalar-Plain">Sunset</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">group</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Bedroom</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">actions</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="s">&quot;on&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">bri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">255</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">ct</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">350</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Group</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;groups.yml&#39;</span><span class="p">)</span> <span class="c1"># Import groups</span>
-</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">import</span><span class="p">(</span><span class="s1">&#39;events.yml&#39;</span><span class="p">)</span> <span class="c1"># Import events</span>
-</span><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Wakeup&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span> <span class="c1"># Run an event on a group</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I&rsquo;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&rsquo;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
-
-<h2>Whenever</h2>
-
-<p>Finally, I have it all stitched together through whenever, because who likes reading crontabs? When you set up whenever, it creates a file called config/schedule.rb that it uses to read the crontab. I altered mine to include this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">job_type</span> <span class="ss">:event</span><span class="p">,</span> <span class="sx">%Q(cd /directory/to/huey_control &amp;&amp; ruby -e &quot;require &#39;huey&#39;; Huey::Group.import(&#39;groups.yml&#39;); Huey::Event.import(&#39;events.yml&#39;); Huey::Event.find(&#39;:task&#39;).execute(true)&quot;)</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">every</span> <span class="ss">:weekday</span><span class="p">,</span> <span class="ss">at</span><span class="p">:</span> <span class="s1">&#39;9:30AM&#39;</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">event</span> <span class="s2">&quot;Wakeup&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
-
-<p>That&rsquo;s all there is to it! Now your Hue lights will work in perfect synchronization with the schedule you&rsquo;ve provided, allowing you to set up your home lighting system however you like, and alter it easily from cron.</p>
-
-<p>But there&rsquo;s a lot more you can do with huey if you&rsquo;d like. Why not make an event that&rsquo;s triggered by an incoming email or phone call? Or set your door bell to flash your lights instead of ring a chime? With events and light groups, setting up this kind of awesome automation functionality is easier than ever. So go do something cool with it!</p>
 ]]></content>
   </entry>
   

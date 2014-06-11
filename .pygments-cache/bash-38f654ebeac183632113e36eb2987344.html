@@ -1,0 +1,7 @@
+<div class="highlight"><pre>sudo apt-get install -y unzip
+wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+sudo mkdir -p /usr/local/ec2
+sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
+<span class="nb">export </span><span class="nv">EC2_AMITOOL_HOME</span><span class="o">=</span>/usr/local/ec2/ec2-ami-tools-1.5.3/
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$EC2_AMITOOL_HOME</span>/bin:<span class="nv">$PATH</span>
+</pre></div>

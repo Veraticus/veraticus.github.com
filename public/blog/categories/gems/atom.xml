@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gems | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gems/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-01-14T16:52:51-06:00</updated>
+  <updated>2014-06-11T18:11:54-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -20,7 +20,12 @@
     <id>http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles</id>
     <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
 
-<p>So I decided to make it. <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
+<p>So I decided to make it.</p>
+
+<!-- more -->
+
+
+<p><a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
 
 <ul>
 <li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>

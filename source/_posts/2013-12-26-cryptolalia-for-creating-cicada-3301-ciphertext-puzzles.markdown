@@ -7,7 +7,11 @@ categories: [gems, cryptolalia]
 ---
 After reading yet another article on [Cicada 3301](http://en.wikipedia.org/wiki/Cicada_3301) on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for -- well, for some unknown goal -- apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn't was a good way to generate all the sorts of codes that Cicada 3301 employed.
 
-So I decided to make it. [cryptolalia](https://github.com/Veraticus/cryptolalia) is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:
+So I decided to make it.
+
+<!-- more -->
+
+[cryptolalia](https://github.com/Veraticus/cryptolalia) is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:
 
 * *atbash inversion* - an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.
 * *Beale homophonic substitution* - for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.
