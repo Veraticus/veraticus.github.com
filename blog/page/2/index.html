@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Gistify just keeps getting better! Gistify 1.2.0 is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an &hellip;">
+  <meta name="description" content="Recently I&rsquo;ve been using sprinkle a lot in a large client project. Sprinkle is server provisioning software, akin to Chef except much lighter. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,8 +26,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -93,6 +92,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/14/helper-methods-in-sprinkle/">Helper Methods in Sprinkle</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-14T16:03:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
+
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/14/helper-methods-in-sprinkle/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -509,49 +553,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/23/the-perils-of-overengineering/">The Perils of Overengineering</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-23T13:19:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
-        <span class='readtime'>Reading time 3  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/23/the-perils-of-overengineering/">More &rarr;</a>
     </footer>
   
 

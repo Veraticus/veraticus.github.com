@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-05-10T21:33:54-05:00</updated>
+  <updated>2014-06-11T18:11:54-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,219 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started With AWS OpsWorks]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks/"/>
+    <updated>2014-06-11T13:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
+
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+
+<p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
+
+<!-- more -->
+
+
+<h2>1. Setup vagrant to be compatible with OpsWorks</h2>
+
+<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &mdash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;ubuntu-precise64&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_url</span> <span class="o">=</span> <span class="s2">&quot;https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Specifies the chef version Opsworks is running</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">omnibus</span><span class="o">.</span><span class="n">chef_version</span> <span class="o">=</span> <span class="s2">&quot;11.10.0&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This requires the <code>vagrant-omnibus</code> plugin, which you can install with <code>vagrant plugin install vagrant-omnibus</code>.</p>
+
+<h2>2. Use librarian-chef</h2>
+
+<p>OpsWorks expects all of your recipes to be in one git repository that it can download. This may be bad practice for many chefs, but since it&rsquo;s required here and it&rsquo;s the cookbook repository format that <a href="https://github.com/applicationsonline/librarian-chef">librarian-chef</a> expects and supports, you&rsquo;ll want to download and configure librarian-chef.</p>
+
+<p>Just the default librarian-chef configuration works, with one exception: you&rsquo;ll want to strip <code>.git</code> directories from the checked-out sources to prevent OpsWorks from becoming confused. That&rsquo;s relatively easy to set up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>librarian-chef config install.strip-dot-git 1 --local
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I store the source of my cookbooks in one repository and use an orphan branch of that same repository for the actual cookbooks that are installed and managed by librarian. This is pretty easy to set up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Create the orphan branch</span>
+</span><span class='line'>git checkout --orphan cookbooks
+</span><span class='line'>git rm -rf .
+</span><span class='line'>git add . -A
+</span><span class='line'>git commit -m <span class="s1">&#39;Initial commit&#39;</span>
+</span><span class='line'>git push origin cookbooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then in your master branch, set up your cookbook branch as a submodule in a subdirectory that librarian-chef will install to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># .gitmodules</span>
+</span><span class='line'><span class="o">[</span>submodule <span class="s2">&quot;cookbooks&quot;</span><span class="o">]</span>
+</span><span class='line'>  <span class="nv">path</span> <span class="o">=</span> cookbooks
+</span><span class='line'>  <span class="nv">url</span> <span class="o">=</span> git@github.com:user/repository.git
+</span><span class='line'>  <span class="nv">branch</span> <span class="o">=</span> cookbooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I have a small Rakefile that allows me to run <code>rake</code> to sync my changes directly to the cookbooks branch.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;install all cookbooks and synchronize them to GitHub&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Installing cookbooks&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;librarian-chef install&quot;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Pushing cookbooks to GitHub&quot;</span>
+</span><span class='line'>  <span class="n">cd</span> <span class="s2">&quot;cookbooks&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="sx">%Q(echo &quot;gitdir: ../.git/modules/cookbooks&quot; &gt; .git)</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git add -u&quot;</span>
+</span><span class='line'>    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Cookbooks generated via librarian-chef at </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git commit -m </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git pull&quot;</span>
+</span><span class='line'>    <span class="nb">system</span> <span class="s2">&quot;git push origin cookbooks&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;## Done!&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Keep in mind this setup isn&rsquo;t ideal for collaboration: if I had a lot of people updating the cookbooks simultaneously, I would definitely set up separate repositories. But for smaller OpsWorks projects, this works perfectly well.</p>
+
+<h2>3. Don&rsquo;t bother with OpsWorks&#8217; recipe syntax</h2>
+
+<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &mdash; or bring chef recipes from elsewhere to OpsWorks &mdash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># No!</span>
+</span><span class='line'><span class="n">node</span><span class="o">[</span><span class="ss">:deploy</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">app_name</span><span class="p">,</span> <span class="n">deploy</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">template</span> <span class="s1">&#39;/etc/init/puma.conf&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">source</span> <span class="s1">&#39;puma.conf&#39;</span>
+</span><span class='line'>    <span class="n">owner</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>    <span class="n">group</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>    <span class="n">mode</span>   <span class="s1">&#39;0644&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Use the plainer, simpler:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Yes!</span>
+</span><span class='line'><span class="n">template</span> <span class="s1">&#39;/etc/init/puma.conf&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">source</span> <span class="s1">&#39;puma.conf&#39;</span>
+</span><span class='line'>  <span class="n">owner</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>  <span class="n">group</span>  <span class="s1">&#39;root&#39;</span>
+</span><span class='line'>  <span class="n">mode</span>   <span class="s1">&#39;0644&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The former syntax won&rsquo;t work properly on vagrant, just for starters, which is a great reason all by itself not to use it. You&rsquo;ll want to control what recipes get applied where through custom layers rather than OpsWorks&#8217; special syntax.</p>
+
+<h2>4. Overwrite any recipes that overlap</h2>
+
+<p>OpsWorks inserts a lot of their own recipes into your cookbooks, and you can&rsquo;t disable this behavior, even if you&rsquo;re using your own custom recipes. This can lead to naming collisions that can be frustrating to resolve. For a Rails stack, I had to manually remove the <code>unicorn</code> and <code>passenger-apache2</code> cookbooks that led to merge errors with the <code>application_ruby</code> cookbook. Thankfully, removing cookbooks in OpsWorks is pretty easy: if you have a recipe named exactly the same as an OpsWorks one, yours will replace it.</p>
+
+<p>You&rsquo;ll want to create a cookbook named after the offending cookbook (for example, <code>unicorn</code>) and replace every file in the OpsWorks cookbook with a blank one. You can find all the OpsWorks cookbook sources <a href="https://github.com/aws/opsworks-cookbooks">in their GitHub repository</a>. So, to continue the unicorn example, you&rsquo;d make a <code>unicorn</code> directory, a <code>recipes</code> subdirectory, and three files: <code>default</code>, <code>rails</code>, and <code>stop</code>. The content of all these files should be something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Prevent OpsWorks from trying to install this cookbook.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks&#8217; cookbooks.</p>
+
+<h2>4. OpsWorks is your single point of truth</h2>
+
+<p>Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You&rsquo;ll want to set up everything you can with sensible attributes in your custom application recipes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># site-cookbooks/your-app/attributes/default.rb</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;database&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;pool&#39;</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;app_database&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;password&#39;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then pass overrides in your stack JSON. Your stack JSON is where you&rsquo;ll enumerate all the settings particular to your environment: though I&rsquo;m not incredibly happy with this setup, as it&rsquo;s not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it&rsquo;s not difficult to update multiple stacks or create a new one from sensible defaults.</p>
+
+<h2>5. Use the AWS API</h2>
+
+<p>So what&rsquo;s the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can&rsquo;t achieve anywhere else. But for more details on that, you&rsquo;ll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
@@ -1490,57 +1703,6 @@
 <p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist &mdash; your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn&rsquo;t change its fate. The only measure of a company&rsquo;s success is whether or not it makes money. The rest is just icing on the cake.</p>
 
 <p>Can your company do that? Despite my tone, I believe it can. You&rsquo;ve poured your heart and soul into it and you&rsquo;ve done so because you believe you&rsquo;re working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn&rsquo;t enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Perils of Overengineering]]></title>
-    <link href="http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering/"/>
-    <updated>2013-04-23T13:19:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/04/23/the-perils-of-overengineering</id>
-    <content type="html"><![CDATA[<p>Overengineering is a special subset of the generalized problem of &ldquo;making bad choices.&rdquo; Usually overengineering is the result of one of two specific bad choices: either adding too much unnecessary bloat to something relatively simple, or creating a customized solution when many out-of-the-box alternatives already exist. After running into these problems over and over again, I&rsquo;m going to quantify and identify them so that you and your friends can avoid the perils of overengineering.</p>
-
-<!-- more -->
-
-
-<h2>Don&rsquo;t Overthink It</h2>
-
-<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &mdash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
-
-<p>Chances are the answer is &ldquo;no.&rdquo; You&rsquo;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
-
-<p>This goes for any technology. Coco Chanel infamously stated, &ldquo;Before you leave the house, look in the mirror and take one thing off.&rdquo; What she applied to fashion, I apply to code. Before you commit, look in the mirror. Do you really need everything you&rsquo;re included? Did you make the best choices? If you&rsquo;re not sure, do some research. It&rsquo;ll save you a boatload of trouble down the river.</p>
-
-<h2>Respect The Majority</h2>
-
-<p>Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$d</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="ss">:a</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It takes half a millisecond &mdash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
-
-<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &mdash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
-
-<p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&rsquo;ll save everyone involved a lot of money and trouble. No, you won&rsquo;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&rsquo;ll never have to hand off.</p>
-
-<h2>Less is Best</h2>
-
-<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &mdash; both cases &mdash; is to ruthlessly cull what you&rsquo;ve got.</p>
-
-<p>Success, for code, isn&rsquo;t bigger and better. It&rsquo;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&rsquo;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
-
-<p>The fate of an overdesigned systems is twofold. It encounters immediate obsolescence from its requirements changing, meaning it didn&rsquo;t need to be created at all, and/or the system is used only for its most simple case, wasting the time that was spent foolishly engineering the ability to make it send perfect unicoded texts in Mandarin.</p>
-
-<p>Don&rsquo;t be that person. Code for what the requirements are immediately: code for how the system will be used now, not how it will be used in a month. Because in a month it probably won&rsquo;t be used that way anyway, and then you&rsquo;ll look like a genius (in addition to actually being one for following sound advice).</p>
-
-<h2>New IS Cool</h2>
-
-<p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
-
-<p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
 ]]></content>
   </entry>
   

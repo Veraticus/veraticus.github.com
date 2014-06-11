@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It took me a long time to author this &mdash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but &hellip;">
+  <meta name="description" content="Earlier today @alan_meier pointed out that in certain circumstances, my post on dynamic error pages leads to unexpected results: namely, though most &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,8 +26,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -93,6 +92,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&rsquo;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&rsquo;t then my post on dynamic error pages won&rsquo;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/dynamic-error-pages-corrected/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -489,49 +531,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/31/moving-on/">Moving On</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-31T16:49:00-05:00" pubdate data-updated="true">May 31<span>st</span>, 2012</time>
-        <span class='readtime'>Reading time 2  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I try to keep to a schedule of a post every three days, and I&rsquo;ve definitely not been keeping on top of that &mdash; I haven&rsquo;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&rsquo;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/31/moving-on/">More &rarr;</a>
     </footer>
   
 

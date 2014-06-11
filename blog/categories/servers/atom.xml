@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-05-10T21:33:54-05:00</updated>
+  <updated>2014-06-11T18:11:54-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,175 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started With AWS OpsWorks]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks/"/>
+    <updated>2014-06-11T13:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
+
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+
+<p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
+
+<!-- more -->
+
+
+<h2>1. Setup vagrant to be compatible with OpsWorks</h2>
+
+<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &mdash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
+
+<p>```ruby
+VAGRANTFILE_API_VERSION = &ldquo;2&rdquo;</p>
+
+<p>Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = &ldquo;ubuntu-precise64&rdquo;
+  config.vm.box_url = &ldquo;<a href="https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box">https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box</a>&rdquo;</p>
+
+<p>  # Specifies the chef version Opsworks is running
+  config.omnibus.chef_version = &ldquo;11.10.0&rdquo;
+end
+```</p>
+
+<p>This requires the <code>vagrant-omnibus</code> plugin, which you can install with <code>vagrant plugin install vagrant-omnibus</code>.</p>
+
+<h2>2. Use librarian-chef</h2>
+
+<p>OpsWorks expects all of your recipes to be in one git repository that it can download. This may be bad practice for many chefs, but since it&rsquo;s required here and it&rsquo;s the cookbook repository format that <a href="https://github.com/applicationsonline/librarian-chef">librarian-chef</a> expects and supports, you&rsquo;ll want to download and configure librarian-chef.</p>
+
+<p>Just the default librarian-chef configuration works, with one exception: you&rsquo;ll want to strip <code>.git</code> directories from the checked-out sources to prevent OpsWorks from becoming confused. That&rsquo;s relatively easy to set up:</p>
+
+<p><code>bash
+librarian-chef config install.strip-dot-git 1 --local
+</code></p>
+
+<p>I store the source of my cookbooks in one repository and use an orphan branch of that same repository for the actual cookbooks that are installed and managed by librarian. This is pretty easy to set up:</p>
+
+<p>```bash</p>
+
+<h1>Create the orphan branch</h1>
+
+<p>git checkout &mdash;orphan cookbooks
+git rm -rf .
+git add . -A
+git commit -m &lsquo;Initial commit&rsquo;
+git push origin cookbooks
+```</p>
+
+<p>Then in your master branch, set up your cookbook branch as a submodule in a subdirectory that librarian-chef will install to:</p>
+
+<p>```</p>
+
+<h1>.gitmodules</h1>
+
+<p>[submodule &ldquo;cookbooks&rdquo;]
+  path = cookbooks
+  url = git@github.com:user/repository.git
+  branch = cookbooks
+```</p>
+
+<p>I have a small Rakefile that allows me to run <code>rake</code> to sync my changes directly to the cookbooks branch.</p>
+
+<p>```ruby
+desc &ldquo;install all cookbooks and synchronize them to GitHub&rdquo;
+task :default do
+  puts &ldquo;## Installing cookbooks&rdquo;
+  system &ldquo;librarian-chef install&rdquo;
+  puts &ldquo;## Pushing cookbooks to GitHub&rdquo;
+  cd &ldquo;cookbooks&rdquo; do</p>
+
+<pre><code>system %Q(echo "gitdir: ../.git/modules/cookbooks" &gt; .git)
+system "git add ."
+system "git add -u"
+message = "Cookbooks generated via librarian-chef at #{Time.now.utc}"
+system "git commit -m \"#{message}\""
+system "git pull"
+system "git push origin cookbooks"
+</code></pre>
+
+<p>  end
+  puts &ldquo;## Done!&rdquo;
+end
+```</p>
+
+<p>Keep in mind this setup isn&rsquo;t ideal for collaboration: if I had a lot of people updating the cookbooks simultaneously, I would definitely set up separate repositories. But for smaller OpsWorks projects, this works perfectly well.</p>
+
+<h2>3. Don&rsquo;t bother with OpsWorks' recipe syntax</h2>
+
+<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &mdash; or bring chef recipes from elsewhere to OpsWorks &mdash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
+
+<p>```ruby</p>
+
+<h1>No!</h1>
+
+<p>node[:deploy].each do |app_name, deploy|
+  template &lsquo;/etc/init/puma.conf&rsquo; do</p>
+
+<pre><code>source 'puma.conf'
+owner  'root'
+group  'root'
+mode   '0644'
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Use the plainer, simpler:</p>
+
+<p>```ruby</p>
+
+<h1>Yes!</h1>
+
+<p>template &lsquo;/etc/init/puma.conf&rsquo; do
+  source &lsquo;puma.conf&rsquo;
+  owner  &lsquo;root&rsquo;
+  group  &lsquo;root&rsquo;
+  mode   &lsquo;0644&rsquo;
+end
+```</p>
+
+<p>The former syntax won&rsquo;t work properly on vagrant, just for starters, which is a great reason all by itself not to use it. You&rsquo;ll want to control what recipes get applied where through custom layers rather than OpsWorks' special syntax.</p>
+
+<h2>4. Overwrite any recipes that overlap</h2>
+
+<p>OpsWorks inserts a lot of their own recipes into your cookbooks, and you can&rsquo;t disable this behavior, even if you&rsquo;re using your own custom recipes. This can lead to naming collisions that can be frustrating to resolve. For a Rails stack, I had to manually remove the <code>unicorn</code> and <code>passenger-apache2</code> cookbooks that led to merge errors with the <code>application_ruby</code> cookbook. Thankfully, removing cookbooks in OpsWorks is pretty easy: if you have a recipe named exactly the same as an OpsWorks one, yours will replace it.</p>
+
+<p>You&rsquo;ll want to create a cookbook named after the offending cookbook (for example, <code>unicorn</code>) and replace every file in the OpsWorks cookbook with a blank one. You can find all the OpsWorks cookbook sources <a href="https://github.com/aws/opsworks-cookbooks">in their GitHub repository</a>. So, to continue the unicorn example, you&rsquo;d make a <code>unicorn</code> directory, a <code>recipes</code> subdirectory, and three files: <code>default</code>, <code>rails</code>, and <code>stop</code>. The content of all these files should be something like this:</p>
+
+<p>```ruby</p>
+
+<h1>Prevent OpsWorks from trying to install this cookbook.</h1>
+
+<p>```</p>
+
+<p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks' cookbooks.</p>
+
+<h2>4. OpsWorks is your single point of truth</h2>
+
+<p>Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You&rsquo;ll want to set up everything you can with sensible attributes in your custom application recipes:</p>
+
+<p>```ruby</p>
+
+<h1>site-cookbooks/your-app/attributes/default.rb</h1>
+
+<p>default[&lsquo;database&rsquo;] = {
+  &lsquo;pool&rsquo; => 5,
+  &lsquo;host&rsquo; => &lsquo;localhost&rsquo;,
+  &lsquo;name&rsquo; => &lsquo;app_database&rsquo;,
+  &lsquo;username&rsquo; => &lsquo;username&rsquo;,
+  &lsquo;password&rsquo; => &lsquo;password&rsquo;
+}
+```</p>
+
+<p>Then pass overrides in your stack JSON. Your stack JSON is where you&rsquo;ll enumerate all the settings particular to your environment: though I&rsquo;m not incredibly happy with this setup, as it&rsquo;s not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it&rsquo;s not difficult to update multiple stacks or create a new one from sensible defaults.</p>
+
+<h2>5. Use the AWS API</h2>
+
+<p>So what&rsquo;s the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can&rsquo;t achieve anywhere else. But for more details on that, you&rsquo;ll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
@@ -527,60 +696,6 @@ end
 <h2>Final Word on Chef vs. Puppet</h2>
 
 <p>Doesn&rsquo;t matter, choose whichever you like more.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[My Love/Hate Relationship with Heroku]]></title>
-    <link href="http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/"/>
-    <updated>2012-06-03T22:43:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku</id>
-    <content type="html"><![CDATA[<p>There&rsquo;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&rsquo;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&rsquo;t decide whether or not I like the web&rsquo;s premier platform-as-a-service or not. Every now and again I&rsquo;ll gnash my teeth in frustration over it, and then other times I&rsquo;ll sigh dreamily and think of all the wonderful things Heroku has done for me &mdash; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&rsquo;s right for you.</p>
-
-<!-- more -->
-
-
-<h2>Pros</h2>
-
-<h3>Lets Me Sleep At Night</h3>
-
-<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons &mdash; an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
-
-<p>Heroku&rsquo;s Postgres instances also do automatic backups and have always been available whenever I&rsquo;ve needed them. Heroku doesn&rsquo;t pay their infrastructure team enough, in my opinion; I&rsquo;ve seriously never had a single outage of any sort on their service, and I have this comforting belief that if something did go horribly awry, I would be in good hands.</p>
-
-<h3>Easy &amp; Fast</h3>
-
-<p>Getting started on Heroku is ridiculously easy. You can have an app deployed there in just a minute or two, all from doing nothing more than adding a git remote and pushing to it. No matter how good your Chef recipes are, it&rsquo;ll take you at least fifteen minutes to get a bare EC2 instance provisioned from nothing to accepting HTTP connections. After you do that, of course, clever use of AMIs will get there much quicker&hellip; but still nowhere near as fast as Heroku.</p>
-
-<h3>Extensible</h3>
-
-<p>This is sort of a rider to &ldquo;easy &amp; fast,&rdquo; but I think it deserves its own bulletpoint. Heroku addons provide managed solutions for nearly every need your application might have. Email sending, Redis instances, elasticsearch searching&hellip; and it&rsquo;s really cool of Heroku to essentially provide marketing for these smaller SaaS companies. Additionally all of the addons I&rsquo;ve used have worked really well, so there&rsquo;s definitely some quality control going on.</p>
-
-<h3>Flexible</h3>
-
-<p>Heroku&rsquo;s Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons &mdash; essentially anything at all, as long as you&rsquo;re willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
-
-<h2>Cons</h2>
-
-<h3>Expensive</h3>
-
-<p>There&rsquo;s really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it&rsquo;s not just Heroku &mdash; especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost&hellip; and a big one, at that.</p>
-
-<h3>Deploys Suck</h3>
-
-<p>Deploying to Heroku is easy and fast &mdash; the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There&rsquo;s no unicorn-style rolling deployments here. For small applications this is somewhat acceptable &mdash; in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
-
-<h3>Addon Constrained</h3>
-
-<p>If you want to do something really customized or compiled on Heroku &mdash; something that needs the JRE, for example &mdash; you&rsquo;re pretty much screwed unless an addon already exists for it. You can&rsquo;t compile elasticsearch or Lucene yourself, and if you don&rsquo;t like the addons that provide those solutions you&rsquo;re essentially out of luck. You&rsquo;ll need to spool up your own EC2 instance, add Heroku&rsquo;s security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you&rsquo;re doing that, why not just manage the entire application yourself as well?</p>
-
-<h2>Conclusions</h2>
-
-<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku&rsquo;s platform-as-a-service. They&rsquo;re fast to deploy because they don&rsquo;t take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive &mdash; and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that&rsquo;s just something that Heroku can&rsquo;t provide.</p>
-
-<p>So, for a big application, I would stick to doing it by hand. Yes, you&rsquo;ll have a few more infrastructure annoyances, but you&rsquo;ll need the control.</p>
-
-<p>But! All big appliations started small. There&rsquo;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&rsquo;s ability to start lean and quick, then don&rsquo;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&rsquo;s easy and fast. And that&rsquo;s the real beauty of Heroku &mdash; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
 ]]></content>
   </entry>
   
