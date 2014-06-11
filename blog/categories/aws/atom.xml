@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: aws | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/aws/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-06-11T18:11:54-05:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started With AWS OpsWorks]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks/"/>
+    <updated>2014-06-11T13:59:00-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
+
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+
+<p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
+
+<!-- more -->
+
+
+<h2>1. Setup vagrant to be compatible with OpsWorks</h2>
+
+<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &mdash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
+
+<p>```ruby
+VAGRANTFILE_API_VERSION = &ldquo;2&rdquo;</p>
+
+<p>Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = &ldquo;ubuntu-precise64&rdquo;
+  config.vm.box_url = &ldquo;<a href="https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box">https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box</a>&rdquo;</p>
+
+<p>  # Specifies the chef version Opsworks is running
+  config.omnibus.chef_version = &ldquo;11.10.0&rdquo;
+end
+```</p>
+
+<p>This requires the <code>vagrant-omnibus</code> plugin, which you can install with <code>vagrant plugin install vagrant-omnibus</code>.</p>
+
+<h2>2. Use librarian-chef</h2>
+
+<p>OpsWorks expects all of your recipes to be in one git repository that it can download. This may be bad practice for many chefs, but since it&rsquo;s required here and it&rsquo;s the cookbook repository format that <a href="https://github.com/applicationsonline/librarian-chef">librarian-chef</a> expects and supports, you&rsquo;ll want to download and configure librarian-chef.</p>
+
+<p>Just the default librarian-chef configuration works, with one exception: you&rsquo;ll want to strip <code>.git</code> directories from the checked-out sources to prevent OpsWorks from becoming confused. That&rsquo;s relatively easy to set up:</p>
+
+<p><code>bash
+librarian-chef config install.strip-dot-git 1 --local
+</code></p>
+
+<p>I store the source of my cookbooks in one repository and use an orphan branch of that same repository for the actual cookbooks that are installed and managed by librarian. This is pretty easy to set up:</p>
+
+<p>```bash</p>
+
+<h1>Create the orphan branch</h1>
+
+<p>git checkout &mdash;orphan cookbooks
+git rm -rf .
+git add . -A
+git commit -m &lsquo;Initial commit&rsquo;
+git push origin cookbooks
+```</p>
+
+<p>Then in your master branch, set up your cookbook branch as a submodule in a subdirectory that librarian-chef will install to:</p>
+
+<p>```</p>
+
+<h1>.gitmodules</h1>
+
+<p>[submodule &ldquo;cookbooks&rdquo;]
+  path = cookbooks
+  url = git@github.com:user/repository.git
+  branch = cookbooks
+```</p>
+
+<p>I have a small Rakefile that allows me to run <code>rake</code> to sync my changes directly to the cookbooks branch.</p>
+
+<p>```ruby
+desc &ldquo;install all cookbooks and synchronize them to GitHub&rdquo;
+task :default do
+  puts &ldquo;## Installing cookbooks&rdquo;
+  system &ldquo;librarian-chef install&rdquo;
+  puts &ldquo;## Pushing cookbooks to GitHub&rdquo;
+  cd &ldquo;cookbooks&rdquo; do</p>
+
+<pre><code>system %Q(echo "gitdir: ../.git/modules/cookbooks" &gt; .git)
+system "git add ."
+system "git add -u"
+message = "Cookbooks generated via librarian-chef at #{Time.now.utc}"
+system "git commit -m \"#{message}\""
+system "git pull"
+system "git push origin cookbooks"
+</code></pre>
+
+<p>  end
+  puts &ldquo;## Done!&rdquo;
+end
+```</p>
+
+<p>Keep in mind this setup isn&rsquo;t ideal for collaboration: if I had a lot of people updating the cookbooks simultaneously, I would definitely set up separate repositories. But for smaller OpsWorks projects, this works perfectly well.</p>
+
+<h2>3. Don&rsquo;t bother with OpsWorks' recipe syntax</h2>
+
+<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &mdash; or bring chef recipes from elsewhere to OpsWorks &mdash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
+
+<p>```ruby</p>
+
+<h1>No!</h1>
+
+<p>node[:deploy].each do |app_name, deploy|
+  template &lsquo;/etc/init/puma.conf&rsquo; do</p>
+
+<pre><code>source 'puma.conf'
+owner  'root'
+group  'root'
+mode   '0644'
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Use the plainer, simpler:</p>
+
+<p>```ruby</p>
+
+<h1>Yes!</h1>
+
+<p>template &lsquo;/etc/init/puma.conf&rsquo; do
+  source &lsquo;puma.conf&rsquo;
+  owner  &lsquo;root&rsquo;
+  group  &lsquo;root&rsquo;
+  mode   &lsquo;0644&rsquo;
+end
+```</p>
+
+<p>The former syntax won&rsquo;t work properly on vagrant, just for starters, which is a great reason all by itself not to use it. You&rsquo;ll want to control what recipes get applied where through custom layers rather than OpsWorks' special syntax.</p>
+
+<h2>4. Overwrite any recipes that overlap</h2>
+
+<p>OpsWorks inserts a lot of their own recipes into your cookbooks, and you can&rsquo;t disable this behavior, even if you&rsquo;re using your own custom recipes. This can lead to naming collisions that can be frustrating to resolve. For a Rails stack, I had to manually remove the <code>unicorn</code> and <code>passenger-apache2</code> cookbooks that led to merge errors with the <code>application_ruby</code> cookbook. Thankfully, removing cookbooks in OpsWorks is pretty easy: if you have a recipe named exactly the same as an OpsWorks one, yours will replace it.</p>
+
+<p>You&rsquo;ll want to create a cookbook named after the offending cookbook (for example, <code>unicorn</code>) and replace every file in the OpsWorks cookbook with a blank one. You can find all the OpsWorks cookbook sources <a href="https://github.com/aws/opsworks-cookbooks">in their GitHub repository</a>. So, to continue the unicorn example, you&rsquo;d make a <code>unicorn</code> directory, a <code>recipes</code> subdirectory, and three files: <code>default</code>, <code>rails</code>, and <code>stop</code>. The content of all these files should be something like this:</p>
+
+<p>```ruby</p>
+
+<h1>Prevent OpsWorks from trying to install this cookbook.</h1>
+
+<p>```</p>
+
+<p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks' cookbooks.</p>
+
+<h2>4. OpsWorks is your single point of truth</h2>
+
+<p>Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You&rsquo;ll want to set up everything you can with sensible attributes in your custom application recipes:</p>
+
+<p>```ruby</p>
+
+<h1>site-cookbooks/your-app/attributes/default.rb</h1>
+
+<p>default[&lsquo;database&rsquo;] = {
+  &lsquo;pool&rsquo; => 5,
+  &lsquo;host&rsquo; => &lsquo;localhost&rsquo;,
+  &lsquo;name&rsquo; => &lsquo;app_database&rsquo;,
+  &lsquo;username&rsquo; => &lsquo;username&rsquo;,
+  &lsquo;password&rsquo; => &lsquo;password&rsquo;
+}
+```</p>
+
+<p>Then pass overrides in your stack JSON. Your stack JSON is where you&rsquo;ll enumerate all the settings particular to your environment: though I&rsquo;m not incredibly happy with this setup, as it&rsquo;s not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it&rsquo;s not difficult to update multiple stacks or create a new one from sensible defaults.</p>
+
+<h2>5. Use the AWS API</h2>
+
+<p>So what&rsquo;s the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can&rsquo;t achieve anywhere else. But for more details on that, you&rsquo;ll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
+    <link href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/"/>
+    <updated>2014-05-09T13:00:45-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+<!-- more -->
+
+
+<h2>0. Get your chef recipes working in OpsWorks</h2>
+
+<p>Don&rsquo;t do any of this until you have a fully-provisioned server working exactly as you&rsquo;d expect. Make sure <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html">auto healing</a> is disabled for the layer. The rest of the steps assume you have such a properly set-up instance, a well configured layer, and that the original image was Ubuntu 12.04.</p>
+
+<h2>1. Download your X.509 certificates</h2>
+
+<p>Amazon has a pretty good <a href="http://docs.aws.amazon.com/AmazonDevPay/latest/DevPayDeveloperGuide/X509Certificates.html">checklist</a> for how to do this. You need X.509 certificates so only you and Amazon can access your AMI, which for most layers is a sensible security precaution. For this walkthrough I&rsquo;ll assume you have the private key downloaded to ~/certs/pk-X509.pem and the the certificate downloaded to ~/certs/cert-X509.pem.</p>
+
+<h2>2. Transfer your certs to the server</h2>
+
+<p>On the server itself:</p>
+
+<p><code>bash
+mkdir -p /tmp/cert/
+</code></p>
+
+<p>On your local computer:</p>
+
+<p><code>
+scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
+</code></p>
+
+<p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
+
+<h2>3. Download the EC2 AMI tools</h2>
+
+<p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
+
+<p><code>bash
+sudo apt-get install -y unzip
+wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+sudo mkdir -p /usr/local/ec2
+sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
+export EC2_AMITOOL_HOME=/usr/local/ec2/ec2-ami-tools-1.5.3/
+export PATH=$EC2_AMITOOL_HOME/bin:$PATH
+</code></p>
+
+<p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
+
+<h2>4. Download the EC2 API tools</h2>
+
+<p>A similar process to step 3.</p>
+
+<p><code>bash
+wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+sudo unzip ec2-api-tools.zip -d /usr/local/ec2
+sudo apt-get install -y openjdk-7-jre
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre/
+export EC2_HOME=/usr/local/ec2/ec2-api-tools-1.6.13.0/
+export PATH=$PATH:$EC2_HOME/bin
+export AWS_ACCESS_KEY=YourAccessKey
+export AWS_SECRET_KEY=YourSecretKey
+</code></p>
+
+<p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
+
+<h2>5. Ensure your version of GRUB is correct</h2>
+
+<p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
+
+<p><code>bash
+sudo apt-get install -y grub gdisk kpartx
+</code></p>
+
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+
+<h2>6. Stop all services</h2>
+
+<p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
+
+<p><code>bash
+sudo service monit stop
+sudo service mysql stop
+sudo service nginx stop
+sudo service redis stop
+sudo service memcached stop
+sudo service opsworks-agent stop
+</code></p>
+
+<p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
+
+<h2>7. Remove instance configuration directories</h2>
+
+<p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
+
+<p>```bash
+sudo rm -rf /etc/aws/opsworks/ \</p>
+
+<pre><code>        /opt/aws/opsworks/ \
+        /var/log/aws/opsworks/ \
+        /var/lib/aws/opsworks/ \
+        /etc/monit.d/opsworks-agent.monitrc \
+        /etc/monit/conf.d/opsworks-agent.monitrc \
+        /var/lib/cloud/
+</code></pre>
+
+<p>```</p>
+
+<h2>8. Bundle the volume</h2>
+
+<p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
+
+<p>```bash
+ec2-bundle-vol -k /tmp/cert/pk-X509.pem \</p>
+
+<pre><code>           -c /tmp/cert/cert-X509.pem \
+           -u 123456789012 \
+           -r x86_64 \
+           -e /tmp/cert \
+           -i $(find /etc /usr /opt -name '*.pem' -o -name '*.crt' -o -name '*.gpg' | tr '\n' ',')
+</code></pre>
+
+<p>```</p>
+
+<p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
+
+<p>This command will probably take a long while to run.</p>
+
+<h2>9. Create and upload the volume to an S3 bucket</h2>
+
+<p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
+
+<p>```bash
+ec2-upload-bundle -b bucket_name/image_name \</p>
+
+<pre><code>              -m /tmp/image.manifest.xml \
+              --region us-east-1
+</code></pre>
+
+<p>```</p>
+
+<p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
+
+<h2>10. Register the AMI</h2>
+
+<p>Only one step left, and this is an easy one! You can register the AMI with this command:</p>
+
+<p><code>bash
+ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
+</code></p>
+
+<p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
+]]></content>
+  </entry>
+  
+</feed>

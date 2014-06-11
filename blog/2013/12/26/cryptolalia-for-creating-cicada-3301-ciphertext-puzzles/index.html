@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>cryptolalia, for creating Cicada 3301 ciphertext puzzles - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="After reading yet another article on Cicada 3301 on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="http://google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cryptolalia, for Creating Cicada 3301 Ciphertext Puzzles</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-26T10:31:00-06:00" pubdate data-updated="true">Dec 26<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
+
+<p>So I decided to make it.</p>
+
+<!-- more -->
+
+
+<p><a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
+
+<ul>
+<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
+<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
+<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
+<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
+<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
+<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
+</ul>
+
+
+<p>You&rsquo;ve probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!</p>
+
+<h2>Cryptolalia In Action</h2>
+
+<p>Taken from the <a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> README:</p>
+
+<p><img src="http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png" alt="Rainbows" /></p>
+
+<p>The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:</p>
+
+<p>The plaintext (&ldquo;secrets are fun&rdquo;) was transformed with a Pollux Morse code cipher:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rainbow.png&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># true, see the file above</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Don&rsquo;t believe me? You can decode it yourself, also using cryptolalia:</p>
+
+<p>Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
+</span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Insert the numbers of the Beale homophonic substitution cipher back in:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
+</span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And finally, plug it right back into the Pollux cipher:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">seperator</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;secretsarefun&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='http://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/14/dont-code-defensively/" title="Previous Post: Don't Code Defensively">&laquo; Don't Code Defensively</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/01/14/rails-consulting-for-fun-and-profit/" title="Next Post: Rails Consulting for Fun and Profit">Rails Consulting for Fun and Profit &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2014 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
