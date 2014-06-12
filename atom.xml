@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-06-11T21:38:24-05:00</updated>
+  <updated>2014-06-12T18:32:22-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,311 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Shell Awesomeness with Prezto]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto/"/>
+    <updated>2014-06-12T16:56:11-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto</id>
+    <content type="html"><![CDATA[<p>As developers, we spend a lot of time in our shells: making them fast and responsive improves our productivity. I play around with a lot of development tools (as I mentioned in <a href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/">a previous post</a>) trying to find the best combination of intelligence, responsiveness, and fun. Recently I was investigating alternatives to <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, which is a wonderful set of Zsh packages but suffers from weird slowdowns and, unfortunately, requires a lot of configuration. I stumbled upon <a href="https://github.com/sorin-ionescu/prezto">prezto</a> and I love it &mdash; originally an optimized fork of oh-my-zsh, it&rsquo;s now its own project, and it is fast, beautiful, and leverages the full power of Zsh. It looks like this:</p>
+
+<p><img src="http://veratic.us/image/300y2o0a3t03/screenie.png" alt="Terminal" /></p>
+
+<p>You should get it. And when you do, use these configuration settings to make your experience even better.</p>
+
+<!-- more -->
+
+
+<h2>Customize your .zpreztorc</h2>
+
+<p>You&rsquo;ll want to enable a bunch of modules in your <code>.zpreztorc</code>, which is the configuration file for everything prezto. Here&rsquo;s my modules:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># Set the Prezto modules to load (browse modules).</span>
+</span><span class='line'><span class="c"># The order matters.</span>
+</span><span class='line'>zstyle <span class="s1">&#39;:prezto:load&#39;</span> pmodule <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;environment&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;terminal&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;editor&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;history&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;directory&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;spectrum&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;utility&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;ssh&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;completion&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;homebrew&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;osx&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;ruby&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;rails&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;git&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;syntax-highlighting&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;history-substring-search&#39;</span> <span class="se">\</span>
+</span><span class='line'>  <span class="s1">&#39;prompt&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>They&rsquo;re not kidding when they say the order matters: <code>prompt</code> must come last, <code>history-substring-search</code> must come before it, and <code>syntax-highlighting</code> must come before that. The result of messing this up will likely be a ton of Zsh errors output to your shell after every command.</p>
+
+<p>Some highlights from this list:</p>
+
+<ul>
+<li><p><code>history</code> and <code>history-substring-search</code> work together to bring you one of the most awesome features of zprezto: when you type in a command and press up and down, you&rsquo;ll only get history results of you typing that command. Super helpful for typing in ssh, then going back in time to see your previous ssh servers.</p></li>
+<li><p><code>syntax-highlighting</code> gives you some <a href="http://fishshell.com/">fish</a>-style highlights. Executable commands will turn blue, incomplete or unrecognized commands will turn red, folders get underlined&hellip; it provides immediate and visceral visual feedback to what you&rsquo;re entering.</p></li>
+<li><p><code>directory</code> gives you some awesome shortcuts for the directory stack: <code>d</code> to see all the directories you&rsquo;ve entered, then the numbers <code>1</code> to <code>9</code> to jump to a previous directory you&rsquo;ve visited.</p></li>
+</ul>
+
+
+<p>And that&rsquo;s just a start. Visit the <a href="https://github.com/sorin-ionescu/prezto/tree/master/modules">prezto modules list</a> and view each individual module&rsquo;s README to learn more about them.</p>
+
+<p>After modules are done, get your identities into the SSH agent! There&rsquo;s a configuration block for that later:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># Set the SSH identities to load into the agent.</span>
+</span><span class='line'>zstyle <span class="s1">&#39;:prezto:module:ssh:load&#39;</span> identities <span class="s1">&#39;id_rsa&#39;</span> <span class="s1">&#39;id_rsa.github&#39;</span> <span class="s1">&#39;id_rsa.client1&#39;</span> <span class="s1">&#39;id_rsa.client2&#39;</span> <span class="c"># all the rest of your identities</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I also set up a custom theme for myself, the source of which I&rsquo;ll include below. If you want to enable that theme (or a different one), you&rsquo;ll also need to specify it in your <code>.zpreztorc</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># Set the prompt theme to load.</span>
+</span><span class='line'><span class="c"># Setting it to &#39;random&#39; loads a random theme.</span>
+</span><span class='line'><span class="c"># Auto set to &#39;off&#39; on dumb terminals.</span>
+</span><span class='line'>zstyle <span class="s1">&#39;:prezto:module:prompt&#39;</span> theme <span class="s1">&#39;josh&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can find the full text of my <code>.zpreztorc</code> <a href="https://gist.github.com/Veraticus/a1b5204d8f922de5ea88">as a gist</a>.</p>
+
+<h2>Customize your .zshrc</h2>
+
+<p><code>.zshrc</code> is loaded in every interactive shell: use it to set up your Ruby switcher, important aliases, and anything else you need for maximum awesomeness. Mine is fairly self-explanatory:</p>
+
+<div><script src='https://gist.github.com/79ab3d262305ae2c5aeb.js?file=zshrc.zsh'></script>
+<noscript><pre><code>#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu &lt;sorin.ionescu@gmail.com&gt;
+#
+
+# Source Prezto.
+if [[ -s &quot;${ZDOTDIR:-$HOME}/.zprezto/init.zsh&quot; ]]; then
+  source &quot;${ZDOTDIR:-$HOME}/.zprezto/init.zsh&quot;
+fi
+
+# Customize to your needs...
+
+# Start rbenv
+export PATH=&quot;$HOME/.rbenv/bin:$PATH&quot;
+eval &quot;$(rbenv init -)&quot;
+
+# Add homebrew to the completion path
+fpath=(&quot;/usr/local/bin/&quot; $fpath)
+
+# why would you type &#39;cd dir&#39; if you could just type &#39;dir&#39;?
+setopt AUTO_CD
+
+# Now we can pipe to multiple outputs!
+setopt MULTIOS
+
+# This makes cd=pushd
+setopt AUTO_PUSHD
+
+# This will use named dirs when possible
+setopt AUTO_NAME_DIRS
+
+# If we have a glob this will expand it
+setopt GLOB_COMPLETE
+setopt PUSHD_MINUS
+
+# No more annoying pushd messages...
+# setopt PUSHD_SILENT
+
+# blank pushd goes to home
+setopt PUSHD_TO_HOME
+
+# this will ignore multiple directories for the stack.  Useful?  I dunno.
+setopt PUSHD_IGNORE_DUPS
+
+# 10 second wait if you do something that will delete everything.  I wish I&#39;d had this before...
+setopt RM_STAR_WAIT
+
+# use magic (this is default, but it can&#39;t hurt!)
+setopt ZLE
+
+setopt NO_HUP
+
+# only fools wouldn&#39;t do this ;-)
+export EDITOR=&quot;subl -n -w&quot;
+
+setopt IGNORE_EOF
+
+# If I could disable Ctrl-s completely I would!
+setopt NO_FLOW_CONTROL
+
+# Keep echo &quot;station&quot; &gt; station from clobbering station
+setopt NO_CLOBBER
+
+# Case insensitive globbing
+setopt NO_CASE_GLOB
+
+# Be Reasonable!
+setopt NUMERIC_GLOB_SORT
+
+# I don&#39;t know why I never set this before.
+setopt EXTENDED_GLOB
+
+# hows about arrays be awesome?  (that is, frew${cool}frew has frew surrounding all the variables, not just first and last
+setopt RC_EXPAND_PARAM
+
+# Who doesn&#39;t want home and end to work?
+bindkey &#39;\e[1~&#39; beginning-of-line
+bindkey &#39;\e[4~&#39; end-of-line
+
+# Incremental search is elite!
+bindkey -M vicmd &quot;/&quot; history-incremental-search-backward
+bindkey -M vicmd &quot;?&quot; history-incremental-search-forward
+
+# Search based on what you typed in already
+bindkey -M vicmd &quot;//&quot; history-beginning-search-backward
+bindkey -M vicmd &quot;??&quot; history-beginning-search-forward
+
+bindkey &quot;\eOP&quot; run-help
+
+# oh wow!  This is killer...  try it!
+bindkey -M vicmd &quot;q&quot; push-line
+
+# it&#39;s like, space AND completion.  Gnarlbot.
+bindkey -M viins &#39; &#39; magic-space
+</code></pre></noscript></div>
+
+
+<h2>Select your theme</h2>
+
+<p>There are a lot of cool themes out there. But I was pretty used to my old Zsh theme, which was simple, clean, and had an obvious indicator when your last command failed. For an example of what it looks like, see the screenshot at the start of this post.</p>
+
+<p>The arrow on the left shows green when your last exit code was 0, and red when it was 1. It includes the branch you&rsquo;re on, with an indicator of whether you have uncommitted files on the right-hand side. It does a ton more as well, and here&rsquo;s the source for your use:</p>
+
+<div><script src='https://gist.github.com/1b30a6b6cbe8dae57e9f.js?file=prompt_josh_setup.zsh'></script>
+<noscript><pre><code>#
+# A stripped-down sorin theme.
+#
+# Authors:
+#   Sorin Ionescu &lt;sorin.ionescu@gmail.com&gt;
+#   Josh Symonds &lt;josh@joshsymonds.com&gt;
+#
+# Screenshots:
+#   http://i.imgur.com/nBEEZ.png
+#
+
+# Load dependencies.
+pmodload &#39;helper&#39;
+
+function prompt_josh_pwd {
+  local pwd=&quot;${PWD/#$HOME/~}&quot;
+
+  if [[ &quot;$pwd&quot; == (#m)[/~] ]]; then
+    _prompt_josh_pwd=&quot;$MATCH&quot;
+    unset MATCH
+  else
+    _prompt_josh_pwd=&quot;${${${(@j:/:M)${(@s:/:)pwd}##.#?}:h}%/}/${pwd:t}&quot;
+  fi
+}
+
+function prompt_josh_precmd {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+
+  # Format PWD.
+  prompt_josh_pwd
+
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+
+  # Get ruby information
+  if (( $+functions[ruby-info] )); then
+    ruby-info
+  fi
+}
+
+function prompt_josh_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  # Load required functions.
+  autoload -Uz add-zsh-hook
+
+  # Add hook for calling git-info before each command.
+  add-zsh-hook precmd prompt_josh_precmd
+
+  # Set editor-info parameters.
+  zstyle &#39;:prezto:module:editor:info:completing&#39; format &#39;%B%F{red}...%f%b&#39;
+  zstyle &#39;:prezto:module:editor:info:keymap:primary&#39; format &#39;%B%(?;%{%F{green}%} ;%{%F{red}%} )❯%f%b&#39;
+  zstyle &#39;:prezto:module:editor:info:keymap:primary:overwrite&#39; format &#39; %F{red}♺%f&#39;
+  zstyle &#39;:prezto:module:editor:info:keymap:alternate&#39; format &#39; %B%F{green}❮%F{yellow}❮%F{red}❮%f%b&#39;
+
+  # Set git-info parameters.
+  zstyle &#39;:prezto:module:git:info&#39; verbose &#39;yes&#39;
+  zstyle &#39;:prezto:module:git:info:action&#39; format &#39;:%%B%F{yellow}%s%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:added&#39; format &#39; %%B%F{green}✚%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:ahead&#39; format &#39; %%B%F{yellow}⬆%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:behind&#39; format &#39; %%B%F{yellow}⬇%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:branch&#39; format &#39;%F{green}%b%f&#39;
+  zstyle &#39;:prezto:module:git:info:commit&#39; format &#39;:%F{green}%.7c%f&#39;
+  zstyle &#39;:prezto:module:git:info:deleted&#39; format &#39; %%B%F{red}✖%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:modified&#39; format &#39; %%B%F{blue}✱%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:position&#39; format &#39;:%F{red}%p%f&#39;
+  zstyle &#39;:prezto:module:git:info:renamed&#39; format &#39; %%B%F{magenta}➜%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:stashed&#39; format &#39; %%B%F{cyan}✭%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:unmerged&#39; format &#39; %%B%F{yellow}═%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:untracked&#39; format &#39; %%B%F{white}◼%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:keys&#39; format \
+    &#39;prompt&#39; &#39; $(coalesce &quot;%b&quot; &quot;%p&quot; &quot;%c&quot;)%s&#39; \
+    &#39;rprompt&#39; &#39;%A%B%S%a%d%m%r%U%u&#39;
+
+  # Define prompts.
+  PROMPT=&#39;%F{cyan}${_prompt_josh_pwd}%f${git_info:+${(e)git_info[prompt]}}%(!. %B%F{red}#%f%b.)${editor_info[keymap]} &#39;
+  RPROMPT=&#39;${editor_info[overwrite]}${VIM:+&quot; %B%F{green}V%f%b&quot;}${git_info[rprompt]}&#39;
+  SPROMPT=&#39;zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? &#39;
+}
+
+prompt_josh_setup &quot;$@&quot;
+
+</code></pre></noscript></div>
+
+
+<p>Place this in <code>~/.zprezto/modules/prompt/functions/prompt_josh_setup</code> and then select it in your <code>.zpretorc</code> for best results.</p>
+
+<p>prezto is easy to configure and presents a lot of powerful options: you&rsquo;ll want to spend some time getting used to it. But it&rsquo;s also really enjoyable. Once you start learning the power behind your shell and how easy it becomes to access, I guarantee that you&rsquo;ll never look back.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Getting Started With AWS OpsWorks]]></title>
@@ -1600,109 +1905,6 @@
 <p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
 
 <p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why Your Startup Is Failing (And How To Fix It)]]></title>
-    <link href="http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/"/>
-    <updated>2013-04-30T02:49:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it</id>
-    <content type="html"><![CDATA[<p>The title of this post might be somewhat misleading: it&rsquo;s probably pretty obvious to you why your startup is failing. The same reason any business fails &mdash; you&rsquo;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&rsquo;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &ldquo;When will I see a return on my investment?&rdquo; and &ldquo;How can you possibly be spending so much of my money without making any in return?&rdquo;</p>
-
-<p>Shortly afterwards they stop giving you money and then you know it isn&rsquo;t long until the end.</p>
-
-<p>Maybe you&rsquo;re there right now, or staring down the barrel of that gun. I&rsquo;ve seen it before; I know what it looks like. You&rsquo;re not alone. If you haven&rsquo;t gone off the cliff yet, it&rsquo;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&rsquo;ll be making one of those &ldquo;What I Learned As An Ex-CEO&rdquo; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&rsquo;re failing at all. Afterwards, we can move on to fixing it.</p>
-
-<!-- more -->
-
-
-<h1>Why You&rsquo;re Failing</h1>
-
-<p>Keep in mind the bottom line here: ultimately you&rsquo;re failing because you&rsquo;re spending more money than you make. Discovering the reason behind this is the most important part of understanding how to correct it. Here, then, are the reasons your startup is failing.</p>
-
-<h2>4. You Hired the Wrong People</h2>
-
-<p>This is an especially easy pitfall for people to fall into. Back when you started your company, you were all excited about your vision, and unfortunately the brightness of said vision blinded you into hiring your old college roommate, or Cousin Mickey, or your sister&rsquo;s wedding photographer. They&rsquo;re really nice people, positive attitude, always on time&hellip; but they just aren&rsquo;t great.</p>
-
-<p>The Wrong People can fall anywhere on the &ldquo;not great&rdquo; spectrum. Some add literally nothing to your company &mdash; their most important skill is having a thousand Twitter followers. Others ostensibly have skills, but they&rsquo;re bad at them. These people are even worse than their do-nothing colleagues, since you&rsquo;ll be spending time correcting their screw-ups in addition to doing your own work.</p>
-
-<p>If you want your startup to be a success, you don&rsquo;t have time to teach anyone the ropes or take on charity cases. You need stellar performers in every position you&rsquo;re hiring for, and that goes double for engineers, since, as a tech startup, they&rsquo;re the ones in the trenches making your product. Anyone in your company that isn&rsquo;t out-and-out amazing is a waste of your money.</p>
-
-<p>If you&rsquo;re not knowledgeable enough to judge whether or not you hired the wrong people, you need to immediately hire someone who can competently make that assessment and include them in your decision-making processes.</p>
-
-<h2>3. You Have Too Many Warm Bodies</h2>
-
-<p>Your startup has four C-level executives, two managers, and two engineers. What&rsquo;s wrong with this picture?</p>
-
-<p>That&rsquo;s a gimmie, obviously, but you might be surprised how often situations like this occur. (Or if you&rsquo;re as bitter and jaded as I am, you won&rsquo;t be surprised at all.) There are only two kinds of people you need in your startup: people who make your product &mdash; usually your engineers and designers &mdash; and people who sell it. Or, instead of selling it, people responsible for figuring out how to make it profitable, like advertising experts or investment gurus. Everyone else is extraneous.</p>
-
-<p>You don&rsquo;t need managers if you&rsquo;ve hired competent engineers. You probably don&rsquo;t need half of your C-level team either. Yes, they&rsquo;re busy all the time and claim their work is integral to the proper functioning of your company. But you wouldn&rsquo;t be staring into the inky abyss of bankruptcy if that were true.</p>
-
-<p>People are truly amazing at generating work for themselves. It&rsquo;s not a testament to the importance of their job, it&rsquo;s a sad reflection on the nature of human existence. Everyone wants to feel important and special, even if they&rsquo;re not really bringing anything to the party. Don&rsquo;t let people waste your rapidly-dwindling money doing this.</p>
-
-<h2>2. You&rsquo;re Wasting Your Time</h2>
-
-<p>There&rsquo;s a lot of ways you can be doing this. Here&rsquo;s a quick list:</p>
-
-<ul>
-<li><strong>Meetings</strong>: You should go into every meeting knowing exactly what that meeting is intended to accomplish. When it&rsquo;s accomplished, the meeting is over. Meetings that don&rsquo;t have a clear agenda do not deserve to occur.</li>
-<li><strong>Process</strong>: Making your product must be fun and easy for your engineers (if they&rsquo;re good engineers, the fun part will come naturally &mdash; supplying the easy is up to you). If it becomes tiresome and unpleasant because of a ridiculous process then you&rsquo;re wasting time.</li>
-<li><strong>Priorities</strong>: Bugs that affect only one customer should be prioritized below bugs affecting fifty customers. Features that no one wants should be slated behind those that customers are clamoring for.</li>
-</ul>
-
-
-<p>Ultimately, if you&rsquo;re not doing something directly applicable to building your application, ensuring its continued success, or selling it, you&rsquo;re wasting your time. Be ruthless here. If you need to constantly remind yourself why what you&rsquo;re doing is valuable&hellip; chances are it probably isn&rsquo;t.</p>
-
-<h2>1. No One Wants Your Product</h2>
-
-<p>The only way for you to make money is to sell something (or give it away and sell something related). If the people aren&rsquo;t buying, then you aren&rsquo;t making money, and, well, here you are.</p>
-
-<p>Don&rsquo;t delude yourself by thinking you don&rsquo;t want users yet. That&rsquo;s like saying you don&rsquo;t want money yet. You want money right now, and you want users right now. You want everyone in the world to be clamoring to use your product, and damn the consequences. It might melt your servers into tiny puddles of liquid metal or bring your system to a screeching halt, but who the fuck cares? You can fix those problems. You need users and you need them immediately.</p>
-
-<p>If your initial bunch of users love what you&rsquo;re doing, they&rsquo;ll recommend it to their friends. That&rsquo;s how you get those clamoring masses beating down your door. If people aren&rsquo;t recommending your product to their networks, there&rsquo;s a reason. Find out what it is and fix it. (Hint: it&rsquo;s because of the same issues you run into when you give a tech demo.)</p>
-
-<p>Getting into TechCrunch doesn&rsquo;t count as people wanting your product. Your customers don&rsquo;t read TechCrunch.</p>
-
-<h1>How To Fix It</h1>
-
-<p>Ultimately, your investors don&rsquo;t care about your clever ideas, neat slideshows, your team or even your tech. They care about making money. Why? Because investors are pragmatists. They know that if they bet a million dollars on twenty startups, they&rsquo;ll lose nineteen million dollars on nineteen failures &mdash; and make a hundred million dollars on one success.</p>
-
-<p>You want to be a pragmatist as well. If you make them money, you&rsquo;ll make money for yourself as well. The way to fix your problems, then, is to reduce costs and raise profits. Easy to say, right? Well, here&rsquo;s the specifics.</p>
-
-<h2>3. BRING ME THE AXE</h2>
-
-<p><img src="http://i.qkme.me/3ox4qa.jpg" alt="TINA! BRING ME THE AXE!!" /></p>
-
-<p>It&rsquo;s time to start firing your employees.</p>
-
-<p>This isn&rsquo;t easy. Most of these people have probably become your friends. Perhaps some of them started as your bosom-buddies. Well, too bad. Maybe you can hire them again later when you&rsquo;re more profitable. But if you don&rsquo;t start trimming now, then in a few months you&rsquo;ll be cutting all of them.</p>
-
-<p>First, get rid of all the people that aren&rsquo;t truly, stunningly great at their jobs, whatever their job is. If that&rsquo;s not enough, next flatten your corporate structure. This usually involves firing middle-management. And finally, start getting rid of C-level executives.</p>
-
-<p>Grab your org chart right now and stare at it. For every box on that piece of paper, ask yourself, &ldquo;Does this person make my company money?&rdquo; If the answer is no, then you know what to do.</p>
-
-<h2>2. Cultivate Elitism</h2>
-
-<p>People should speak of your company and its hiring practices in hushed, awed tones. You want to be the startup that&rsquo;s snatching up all the great talent &mdash; making the best people in the industry offers that they just can&rsquo;t refuse. People talk about 10X engineers, and you want to be entirely composed of those, but not just for engineers: for everything! Get amazing designers, fantastic QA people, the best of the best. If you want to turn your venture around, this is where you should blow your remaining money.</p>
-
-<p>Once that&rsquo;s done, for God&rsquo;s sake, get out of their way. You hired these amazing people to be dynamic forces of change and save your company &mdash; let them do it! Managing great people is hard: you want to pave the road in front of them almost without them realizing you&rsquo;ve done it. Smooth the way, ease the process, and I guarantee that the results will astound you.</p>
-
-<p>You never want to hire anyone that doesn&rsquo;t elicit respect from the other employees of your company. Foster this culture of elitism. Oh, and don&rsquo;t hire until it becomes literally painful that you&rsquo;re short a person. Even then be very very picky. The wrong skills or a bad attitude can send you right back to the &ldquo;firing&rdquo; step of this process again, and you don&rsquo;t want to do that more than once.</p>
-
-<h2>1. Double Down on What Makes You Money</h2>
-
-<p>Whatever your value proposition is, you need to clarify it and refocus your entire company around achieving it. At this point, there&rsquo;s been enough pivoting and more than enough money spent trying to find the money in your initial idea. If there isn&rsquo;t any, then it&rsquo;s time to pack up and go home &mdash; but if there is, it&rsquo;s time to pursue it doggedly and relentlessly.</p>
-
-<p>If a VC offered you a million dollars, no strings attached, this very day, you should refuse. Why? Because you should have been either marginally profitable or marginally popular on your <strong>PREVIOUS</strong> million dollars. If you&rsquo;ve burnt through all that money and there&rsquo;s still not hordes of people beating down your doors, it is time to do some soul-searching.</p>
-
-<p>Why don&rsquo;t more people find my app popular? Why aren&rsquo;t they spending their money on me? These aren&rsquo;t academic questions to be answered at your leisure: these thoughts should be the burning cores of your very being. If you&rsquo;re in the unenviable position of being a failing startup, you must do everything in your power to answer these two questions. Do so and then double down on what you discover. It&rsquo;s your only prayer.</p>
-
-<h1>Afterwards</h1>
-
-<p>I hope this missive is helpful to someone. That helpfulness might be stark realization: ultimately, no company deserves to exist &mdash; your failing startup might be destined for the rubbish heap. Having a great idea, friendly employees, or lots of buzz in San Francisco doesn&rsquo;t change its fate. The only measure of a company&rsquo;s success is whether or not it makes money. The rest is just icing on the cake.</p>
-
-<p>Can your company do that? Despite my tone, I believe it can. You&rsquo;ve poured your heart and soul into it and you&rsquo;ve done so because you believe you&rsquo;re working on a tremendous success. That said, what I hope you take away from my ramblings is that belief alone isn&rsquo;t enough. You need to calmly and steadily (some might say callously and ruthlessly) refocus your company on the most promising aspects of your employees and product. Only by doing so can you fix the problems in your startup, right the listing ship, and eventually put these unfortunate problems behind you.</p>
 ]]></content>
   </entry>
   

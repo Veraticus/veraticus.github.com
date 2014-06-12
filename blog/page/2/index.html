@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Recently I&rsquo;ve been using sprinkle a lot in a large client project. Sprinkle is server provisioning software, akin to Chef except much lighter. &hellip;">
+  <meta name="description" content="Three months ago, I wrote Sidekiq + Houston: Persistent Apple Connection Pooling. The code I included there initially worked great but over time all &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,7 +74,7 @@
     
   </ul>
     
-  <form action="http://google.com/search" method="get">
+  <form action="https://www.google.com/search" method="get">
     <fieldset role="search">
       <input type="hidden" name="q" value="site:joshsymonds.com" />
       <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -92,6 +92,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">Sidekiq + Houston: Production Ready</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-17T12:13:00-05:00" pubdate data-updated="true">Oct 17<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Three months ago, I wrote <a href="http://joshsymonds.com/blog/2013/07/01/sidekiq-plus-houston-persistent-apple-connection-pooling/">Sidekiq + Houston: Persistent Apple Connection Pooling</a>. The code I included there initially worked great but over time all the APN connections I had established would break and not restart themselves appropriately. To correct this issue, I wrapped the APN connection itself in a class that was more resistant to failure. To help those who are using Sidekiq and Houston together in production, here&rsquo;s the code I used to do so.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/17/sidekiq-plus-houston-production-ready/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -507,53 +550,6 @@
 <p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">Why Your Startup Is Failing (and How to Fix It)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-30T02:49:00-05:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
-        <span class='readtime'>Reading time 7  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The title of this post might be somewhat misleading: it&rsquo;s probably pretty obvious to you why your startup is failing. The same reason any business fails &mdash; you&rsquo;re spending more money than you make. For some tech startups, though, living in the red is (perplexingly) a desirable state of existence. Still, you can&rsquo;t stay forever in an unprofitable limbo. Eventually investors start asking awkward questions like, &ldquo;When will I see a return on my investment?&rdquo; and &ldquo;How can you possibly be spending so much of my money without making any in return?&rdquo;</p>
-
-<p>Shortly afterwards they stop giving you money and then you know it isn&rsquo;t long until the end.</p>
-
-<p>Maybe you&rsquo;re there right now, or staring down the barrel of that gun. I&rsquo;ve seen it before; I know what it looks like. You&rsquo;re not alone. If you haven&rsquo;t gone off the cliff yet, it&rsquo;s not too late to save your tech startup. You will have to make some hard decisions, though. Whether or not you can do that will determine if your company is salvageable, or if you&rsquo;ll be making one of those &ldquo;What I Learned As An Ex-CEO&rdquo; Hacker News posts that are all the rage these days. So how do you fix your failing startup? Good question! First, we have to understand why you&rsquo;re failing at all. Afterwards, we can move on to fixing it.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/30/why-your-startup-is-failing-and-how-to-fix-it/">More &rarr;</a>
-    </footer>
   
 
 
