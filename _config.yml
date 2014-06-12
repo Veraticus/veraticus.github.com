@@ -6,7 +6,7 @@ url: http://joshsymonds.com
 title: "Hi, I'm Josh Symonds"
 subtitle: "I blog about Ruby on Rails, coding, and servers"
 author: Josh Symonds
-simple_search: http://google.com/search
+simple_search: https://www.google.com/search
 description: Josh Symonds discusses the exciting world of Ruby on Rails, servers, and coding
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
