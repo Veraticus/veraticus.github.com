@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Ran into some annoying problems with redis and resque recently that couldn&rsquo;t be immediately solved through judicious Googling, so figured I& &hellip;">
+  <meta name="description" content="rapnd is a gem I developed to create a persistent connection through which to pass messages to Apple&rsquo;s Push Notification servers. It&rsquo;s &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,6 +92,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/21/rapnd-redis-apn-daemon/">Rapnd: Redis APN Daemon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://github.com/Veraticus/rapnd">rapnd</a> is a gem I developed to create a persistent connection through which to pass messages to Apple&rsquo;s Push Notification servers. It&rsquo;s pretty neat and you should check it out.</p>
+
+<h2>Why another push notification gem?</h2>
+
+<p>The existing ones just didn&rsquo;t do what I wanted. There were some that created persistent daemon connections&hellip; but they were only usable with one app, and we have two apps we want to send push notifications for. There were some with multiple app support, but they didn&rsquo;t have daemons or they assumed the existence of ActiveRecord. And in my opinion using ActiveRecord to store notifications is pretty dumb.</p>
+
+<h2>Whoa! ActiveRecord is just fine, bro.</h2>
+
+<p>Yeah, I love ActiveRecord. But it&rsquo;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&rsquo;t care less about the content or whether or not it was actually delivered &mdash; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&rsquo;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
+
+<h2>Why a daemon?</h2>
+
+<p>Well, Apple tells you to do it. But for a more important reason, Apple claims that constantly established and dropped connections to their servers will result in IP blacklisting. I&rsquo;ve never actually seen this in practice, but&hellip; well&hellip; why chance it? rapnd uses one connection per daemon and tries to keep it open as long as possible.</p>
+
+<p>So yeah, it&rsquo;s pretty cool. Go check out <a href="http://github.com/Veraticus/rapnd">the rapnd github page</a> to see the deets.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-06-12T18:32:22-05:00</updated>
+  <updated>2014-06-15T01:45:17-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,32 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Your Job Is To Code]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/"/>
+    <updated>2014-06-15T00:47:57-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code</id>
+    <content type="html"><![CDATA[<p>I don&rsquo;t usually call out articles on Hacker News for being exceptionally silly &mdash; if I did I wouldn&rsquo;t have the time to write about anything else &mdash; but I saw one in particular tonight that bugged me, titled <a href="http://www.andresosinski.com/you-job-is-not-to-code.html">Your Job Is Not To Code</a>. It was filled with the sort of engineering platitudes that one can reliably expect from HN: you must be an engineering ambassador to your company from the strange and incomprehensible Codingverse. It&rsquo;s up to you to interpret and reinterpret the requirements of your project, hopefully better than its stakeholders, and tell them what they&rsquo;re doing wrong. Your technical skills must be married to the sort of interpersonal skills that would make ambassadors and diplomats blush.</p>
+
+<p>This is all bunk.</p>
+
+<p>If you&rsquo;re an engineer, then your job is to code. Your job is to be good at it. No, more than that: your job is to be <strong>great</strong> at it. Anything less is a disservice to the people who&rsquo;ve hired you and a disservice to yourself. You should work constantly to succeed at your job. Working towards anything else is a distraction.</p>
+
+<!-- more -->
+
+
+<p>I find the point of view that creating code is the least of our concerns particularly troubling, since the skill our profession provides is so unique and valuable. Usually you don&rsquo;t see agile coaches, salespeople, or business development professionals jumping in and coding. And when they do, they&rsquo;re not great at it. Why should they be? Their talents are of a different sort. So why do we constantly receive exhortations to do their jobs? Does having the ability to code make us great at marketing? Or leading a team? Or being a chef?</p>
+
+<p>I&rsquo;ll tell you what coding does make us great at: creating computer programs. I mean this unironically. Our applied skills produce amazing products, save hundred of hours of human labor, and make people laugh or cry. The knowledge that enables this is, for most of us, hard won. Retaining our engineering position is a lifelong process of learning, changing, and growing. It&rsquo;s the <a href="http://en.wikipedia.org/wiki/Red_Queen's_race">Red Queen&rsquo;s Race</a> to keep up with our peers and our changing world. The fastest we can run will result in us merely standing still&hellip; and if you don&rsquo;t run as fast as you can, you&rsquo;ll be left behind.</p>
+
+<p>Of course we must communicate what we&rsquo;re doing to our bosses, our clients, and our process managers. But this doesn&rsquo;t make you a boss, a client, or a process manager. If they don&rsquo;t understand what you&rsquo;re doing, despite your communication, then that doesn&rsquo;t make you bad at your job. It makes them bad at theirs. This is a hard spot to be in, and while the solution might be to try to do their job for them, that doesn&rsquo;t change what your job is. (To reiterate: your job is to code.) If you&rsquo;ve taken their responsibilities on top of yours, that doesn&rsquo;t make you great. It means something has gone very wrong indeed.</p>
+
+<p>Coding is a form of communication. As you become better at coding, hopefully your communication skills will follow &mdash; and this allows you to better interact with others. And while there&rsquo;s nothing wrong with using new skills, don&rsquo;t become distracted by them. You have a talent, a knowledge, a skill that others in your organization lack. Your job is to employ that skill as efficaciously, as completely as possible. And that should be taking up 99% of your time in any given day.</p>
+
+<p>Leave the strategy to the generals and the garbage collecting to the janitors. Do what you do best, do what you love. That way lies success, self-actualization, and happiness. Become distracted and soon you will be a general or a janitor: there&rsquo;s nothing wrong with that, but their jobs aren&rsquo;t coding. And if you were hired to code, if you want to code, then your job is to code. It&rsquo;s as simple as that.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Shell Awesomeness with Prezto]]></title>
@@ -1883,28 +1909,6 @@ prompt_josh_setup &quot;$@&quot;
 <p>So what are you waiting for? Get over to the Mac App store and buy <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>!</p>
 
 <p>(Oh, and if you like the icon, it&rsquo;s by the super amazing <a href="http://twitter.com/lukesbeard">Luke Beard</a>.)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Huey 2.0.0]]></title>
-    <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
-    <updated>2013-05-09T11:18:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
-    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &mdash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">hue_ip</span> <span class="o">=</span> <span class="s1">&#39;123.456.789.012&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
-
-<p>SSDP is still easily enabled if you prefer that over this new method, or find that the Hue bridge discovery API is problematic. Huey just keeps getting better, but let me know if you run into an issues with it <a href="https://github.com/Veraticus/huey">at the repository</a>. Happy Hueing!</p>
 ]]></content>
   </entry>
   
