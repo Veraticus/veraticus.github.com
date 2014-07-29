@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Today, I&rsquo;d like to announce the official release of my first RubyMotion app &mdash; Kinotify! Kinotify is a simple app with a lofty goal: to &hellip;">
+  <meta name="description" content="It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,6 +92,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins With Rack Middleware</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true">Oct 10<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &ldquo;post&rdquo; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&rsquo;s not logged in presses the button? In most Rails applications, they&rsquo;d be logged in, redirected back to the page they were referred from, and they&rsquo;d have to click the thumbs-up again.</p>
+
+<p>That sort of sucks. They already clicked it once. Why can&rsquo;t we remember that?</p>
+
+<p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -489,51 +536,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-20T22:29:00-05:00" pubdate data-updated="true">Jun 20<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 4  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been looking about two weeks now for a really fantastic designer for GirlsGuideTo &mdash; a designer that&rsquo;s as fabulous as the site itself. Somewhat surprisingly, given how many people are unemployed or underemployed, my search has been really difficult. And not because of a dearth of responses: in fact, quite the opposite. I estimate I&rsquo;ve received more than a hundred resumes in response to Craigslist postings, LinkedIn listings, and advertising in Dribbbble. And most surprising to me is the fact that the vast majority of these responses just aren&rsquo;t very good.</p>
-
-<p>I&rsquo;m sure that many of these resumes and coverletters come from experienced, seasoned professionals with a genuine and burning desire to be paid &mdash; a desire that is equally matched by my hunger to pay them for the amazing work they can do. But frankly, you wouldn&rsquo;t know it from reading their letters. 99.9% of them are just&hellip; <em>bad</em>. So, I&rsquo;ve taken the time to distill the mountain of resumes in my inbox into three succinct lessons. If you&rsquo;re going to apply for a job, please take them to heart before writing your potential employer. Not only will you increase the chances you&rsquo;ll actually be hired, but they will definitely thank you for breaking the tide of mediocrity that is surely washing over them. If you&rsquo;re the one to stand out, believe me&hellip; you&rsquo;ll get noticed.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/20/how-not-to-apply-for-a-job/">More &rarr;</a>
     </footer>
   
 

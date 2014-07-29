@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It&rsquo;s never easy to decide to move on, particularly when you&rsquo;re a cofounder. It definitely feels less like a business shakeup and more &hellip;">
+  <meta name="description" content="One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,6 +92,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">Why I Chose Chef Over Rubber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/18/why-i-chose-chef-over-rubber/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -499,53 +542,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins With Rack Middleware</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true">Oct 10<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 6  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &ldquo;post&rdquo; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&rsquo;s not logged in presses the button? In most Rails applications, they&rsquo;d be logged in, redirected back to the page they were referred from, and they&rsquo;d have to click the thumbs-up again.</p>
-
-<p>That sort of sucks. They already clicked it once. Why can&rsquo;t we remember that?</p>
-
-<p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">More &rarr;</a>
     </footer>
   
 
