@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to &hellip;">
+  <meta name="description" content="I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&rsquo;t have &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,6 +92,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&rsquo;t have JavaScript, they&rsquo;d still see something sensible&hellip; but if they did, they&rsquo;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&rsquo;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn&rsquo;t find anything, so I took a crack at creating it myself. This is the result.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -487,55 +532,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 2  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
-
-<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&rsquo;s generally pretty awesome.</p>
-
-<p>But it&rsquo;d be even awesomer if actual errors in your application referenced this UUID, wouldn&rsquo;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &ldquo;I encountered error 123xyz,&rdquo; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
-
-<p>Happily, you can do just this!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">More &rarr;</a>
     </footer>
   
 
