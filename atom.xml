@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-09-04T20:20:29-05:00</updated>
+  <updated>2014-10-21T17:47:15-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,77 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Continuous Deployments with Consul]]></title>
+    <link href="http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul/"/>
+    <updated>2014-10-21T17:13:30-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &mdash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
+
+<!-- more -->
+
+
+<h2>Your servers</h2>
+
+<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &mdash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
+
+<h2>consul</h2>
+
+<p>First, you need to <a href="http://www.consul.io/intro/getting-started/install.html">install consul</a> on your servers and get them <a href="http://www.consul.io/intro/getting-started/join.html">communicating together properly</a>. As you can tell from my links, the consul documentation is extremely well-equipped to get you a fully functional consul cluster: just follow it and you&rsquo;ll be fine. Once it&rsquo;s all installed, you&rsquo;ll want to drop a watch like this in your app server&rsquo;s consul config directory:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;run-deploy&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;handler&quot;</span><span class="p">:</span> <span class="s2">&quot;sudo /usr/bin/chef-client&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;event&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note the sudo above: chef-client must be run as root, but this shouldn&rsquo;t be too big of a concern. Just make sure that your consul service is running as a sudoer that can execute only that one command and you&rsquo;ll be fine.</p>
+
+<h2>CircleCI</h2>
+
+<p>Getting CircleCI set up properly with your GitHub repository is covered in great detail <a href="https://circleci.com/docs/configuration">at CircleCI&rsquo;s documentation</a>. Make sure your tests pass on CircleCI before you continue.</p>
+
+<p>In order for this to work, CircleCI will have to be able to propagate that event to all your servers. The easiest way for it to do this is to have it SSH into one server and run the <code>consul event</code> command. From there, consul takes over to make sure all the appropriate servers receive the message. So let&rsquo;s create an SSH key for our CircleCI user.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ssh-keygen -t rsa -C <span class="s2">&quot;continuous_deployment@example.com&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add the resulting private key to CircleCI and create a corresponding user on one of the central servers of your cluster. In my setup, I have three separate instances all running consul in server mode: I assigned one of them the DNS <code>consul.example.com</code> and created a user there to accept Circle&rsquo;s SSH key. Notably this user does not need any sort of permissions at all, so leave them off the sudoers.</p>
+
+<h2>Your project</h2>
+
+<p>Now you need to change your circle.yml in your project, so that after a build CircleCI will initiate the deploy. This is pretty simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">deployment</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">branch</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">production</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">commands</span><span class="p-Indicator">:</span>
+</span><span class='line'>      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ssh jj-deployer@54.165.244.10 &quot;consul event -node &lt;app_name&gt; -name run-deploy&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note the <code>&lt;app_name&gt;</code> filter there for nodes. I find it a good practice to name a node after the application running on it; so I might have one called <code>app1-web</code> and another <code>app2-worker</code>. This is helpful for performing consul node filtering: by providing <code>-node &lt;app_name&gt;</code>, you&rsquo;re ensuring that the consul event is only propagated to servers that actually run the targeted application.</p>
+
+<p>The next time you push a commit, CircleCI will automatically SSH into your server and execute that event. Your application servers with the watches on them will run <code>chef-client</code> and pull down the latest code, automatically deploying the most recent version of your application.</p>
+
+<p>This is obviously a fairly simple application of consul, but I found it extremely easy to setup and drop into my existing application provisioning and deployment process. consul provides a lot of automation and power, however, and you&rsquo;ll find it perfect for helping to bridge the small gaps in your provisioning system.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Windy City Rails, Day One]]></title>
@@ -2113,57 +2184,6 @@ prompt_josh_setup &quot;$@&quot;
 <p>While I&rsquo;ve personally experienced these RubyMotion memory problems myself, I never thought they were part of a bigger problem: I don&rsquo;t regularly go to meetups or watch the bug tracker, and was startled to discover that the issues were endemic to the community. People have been trying to raise visibility of these problems but so far there&rsquo;s been little said about them outside of the issue tracker and a few isolated posts in the community group.</p>
 
 <p>While I think RubyMotion is a great project and I love using it, it&rsquo;s inarguable that these memory-management issues are serious, fundamental flaws in the framework. They prevent the creation of stable, reliable code through no fault of the developer&rsquo;s, leading to random crashes and poor user experience. Thus I cannot recommend anyone use RubyMotion for applications that users will touch until these issues are sorted out &mdash; which I hope they will be, and very soon.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Big Brother is Both Savvy and Incompetent]]></title>
-    <link href="http://joshsymonds.com/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent/"/>
-    <updated>2013-06-10T12:40:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/06/10/big-brother-is-both-savvy-and-incompetent</id>
-    <content type="html"><![CDATA[<p>I heard an argument recently that the data collected by <a href="http://en.wikipedia.org/wiki/PRISM_(surveillance_program)">PRISM</a> was safe from abuse because if the government had the technical expertise to gather the data, it had the competency to secure it as well. While on the face of it this statement is flatly absurd, its derivatives can seem plausible:</p>
-
-<ul>
-<li>&ldquo;The data is only used if a court approves.&rdquo; (The fallacious assumption being that the government can reasonably control access to the PRISM data.)</li>
-<li>&ldquo;The government is trying to protect us by safeguarding this information in one place.&rdquo; (Of course, the idea that this centralized database&rsquo;s existence has made said data <strong>more</strong> secure is preposterous.)</li>
-<li>&ldquo;You had no assurance of privacy on the Internet anyway, so why should this bother you?&rdquo; (Because while I can take reasonable steps to make my own data secure, once it&rsquo;s in the government&rsquo;s hands it&rsquo;s their responsibility, and, as should be abundantly obvious, leaks happen.)</li>
-</ul>
-
-
-<p>It&rsquo;s easy to believe that a government agency capable of collecting this information and then keeping its existence a secret for so long must have a way of keeping it safe. Unfortunately, the access that was given to the NSA to take this information has no correlation to the skills necessary to secure it; and the very fact of PRISM&rsquo;s existence will probably prove too enticing a target to remain secure for very long.</p>
-
-<p>Essentially, the argument as I heard it can be expressed as a simple question: if the government is savvy enough to gather the data, surely they&rsquo;re not incompetent enough to lose it? Unfortunately, big brother can indeed be both savvy and incompetent. I think this is the greatest danger to the data PRISM allows access to &mdash; not improper use or excessive domestic surveillance, but complete and outright theft.</p>
-
-<!-- more -->
-
-
-<h2>Savvy Through Access</h2>
-
-<p>Why does the act of collecting this information have no bearing on said information&rsquo;s security?</p>
-
-<p>Consider a child visiting the Library of Congress. He has an enormous storehouse of human knowledge at his fingertips: would you say then that this child would make a reasonable gatekeeper of that knowledge? Certainly not &mdash; just because the child has access to this repository doesn&rsquo;t mean he should be director of it. He&rsquo;d lend books out without properly tracking them, he wouldn&rsquo;t be able to adequately secure the premises, and before you know it instead of a great Library of Congress you&rsquo;d have a tremendous auditorium empty of books.</p>
-
-<p>The US Government found itself in a similar position. Through the unique and regrettable powers offered it through the Patriot Act, it could visit the library (in this case, the storehouses of data on the Internet) whenever it wanted to. So of course it decided that this meant it should be the director of that library. The government has no particular skills or capabilities that make it uniquely suited to the administration of the knowledge it&rsquo;s gathered: it seems savvy enough to have gathered it when, in fact, anyone with access similar to the NSA&rsquo;s could have done so and would have had just as much of a &ldquo;right&rdquo; to it.</p>
-
-<p>This analogy is somewhat troublesome. After all, prior to the NSA&rsquo;s intervention, there wasn&rsquo;t one library for personal information on the Internet at all. If you wanted to know someone&rsquo;s Google searches, you&rsquo;d presumably have to hack Google. And if you wanted their bank account information, you&rsquo;d have to compromise their bank. That brings me to my next point: that assembling this single unified source of information represents a catastrophic single point of failure, and simultaneously provides a tremendous motive for theft.</p>
-
-<h2>Eventually Incompetent</h2>
-
-<p>My primary concern isn&rsquo;t that the data will be misused by the government (though it seems inevitable it will be). It&rsquo;s the security of the data itself. One point of access with all this information is akin to storing all gold in the entire world in one bank. Regardless of how well the bank is guarded, a lot of people are going to be very interested indeed in finding a way in &mdash; and it seems inevitable that, due to the fact that there are so few guards relative to potential criminals, and the incentive to break in is so motivating, a way will eventually be found.</p>
-
-<p>When my email, my online orders, my telephone conversations were stored separately in different servers, the barrier to assembling a complete profile of my online activity was rather high &mdash; a potential hacker would have to compromise numerous services and some incredibly tight security multiple times to really get a clear picture of my habits. But the NSA has done all of this hackers&#8217; work for him: all he must do is hack into one incredibly secure system, instead of a plethora of them.</p>
-
-<p>And while hacking the NSA sounds nearly impossible, there are security flaws discovered all the time in software, even software widely considered extremely secure. And now that the existence of PRISM is well-known, all of those flaws (and the newest ones discovered, before there&rsquo;s even an opportunity to fix them) will be tried on the NSA. Both by hacker groups and foreign governments.</p>
-
-<p>Does anyone really believe this new treasure trove of knowledge will remain secret for long?</p>
-
-<h2>What Can We Do?</h2>
-
-<p>Unfortunately, at this point, not much can be done about the situation. As should be abundantly clear it&rsquo;s really only a matter of time until PRISM is compromised. There are too many people who want the information it contains, and eventually they&rsquo;ll hit on some means to acquire it.</p>
-
-<p>The only really safe thing to do, now that PRISM is public knowledge, is to destroy the data it contains and stop the program. Regrettably it seems that the government really does believe that, because it had the savvy to acquire the knowledge, it&rsquo;s somehow competent enough to keep it safe from everyone else on the planet. In the end, it isn&rsquo;t the government that will pay the price for this hubris, but instead us citizens who were monitored: our secrets will be the ones to be released, because we trusted our government to allow us some privacy.</p>
-
-<p>Going forward, everyone should start encrypting their emails and conversations. The <a href="https://ssd.eff.org/">EFF&rsquo;s surveillance self-defense site</a> is a good read that gives some helpful tips. But ultimately, if you don&rsquo;t want your information to available on PRISM, it might be time to set up your own personal cloud or VPN and stop using big data and social networking sites. If that&rsquo;s not possible, then at least consider what you post to them &mdash; now we truly know that not only is everything we do on the Internet public, but there are people dumb enough to gather it all in one place so that it can easily be stolen.</p>
 ]]></content>
   </entry>
   

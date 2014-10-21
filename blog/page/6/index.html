@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="This post has been superseded by Dynamic Error Pages, Corrected. Check that out first. One of the coolest features of Rails 3.2 is tagged logging. &hellip;">
+  <meta name="description" content="Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns a lot in the new Basecamp, and it&rsquo;s easy to see why: separation &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,6 +92,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting With Redcarpet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&rsquo;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&rsquo;t only for code refuse &mdash; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&rsquo;s where all the functionality for shipping lies&hellip; whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I&rsquo;ve been using concerns extensively in GirlsGuideTo&rsquo;s upcoming application, and I figured it&rsquo;d be an interesting read if I shared the ones I&rsquo;ve made so far. They&rsquo;re not too complicated (this first one I&rsquo;m posting mostly just to illustrate the concept), but but don&rsquo;t let that fool you. They can be super complicated and really involved &mdash; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -482,53 +527,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2012/05/07/rubymotion-tips-and-tricks/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion Is Better Than Objective-C</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-04T02:14:00-05:00" pubdate data-updated="true">May 4<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 12  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Generally speaking I try to stay away from inflammatory posts. But the release of <a href="http://www.rubymotion.com/">RubyMotion</a> has been a revelation to me. I&rsquo;ve done iOS programming before, but I&rsquo;ve always found it unpleasant next to programming in other languages. Don&rsquo;t get me wrong, Objective-C is better than C or C++, but I don&rsquo;t think that&rsquo;s saying a whole lot.</p>
-
-<p>I&rsquo;ve spent the better part of yesterday and last night (since RubyMotion was released) giving it a try. After converting two existing projects from Objective-C into RubyMotion, and spending some time developing one of those further using RubyMotion alone, I&rsquo;ve come to a number of conclusions about RubyMotion and Objective-C. Ultimately, RubyMotion is superior to Objective-C in almost every way, and <a href="https://twitter.com/#!/lrz">Laurent Sansonetti</a> must be some kind of mythical otherworldly genius to have developed something at once so usable and so powerful.</p>
-
-<p>Why do I believe this? What makes RubyMotion so superior to straight-up Objective-C?</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">More &rarr;</a>
     </footer>
   
 
