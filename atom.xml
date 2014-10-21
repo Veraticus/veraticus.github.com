@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:47:15-05:00</updated>
+  <updated>2014-10-21T17:48:18-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -72,7 +72,7 @@
 </span><span class='line'>  <span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
 </span><span class='line'>    <span class="l-Scalar-Plain">branch</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">production</span>
 </span><span class='line'>    <span class="l-Scalar-Plain">commands</span><span class="p-Indicator">:</span>
-</span><span class='line'>      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ssh jj-deployer@54.165.244.10 &quot;consul event -node &lt;app_name&gt; -name run-deploy&quot;</span>
+</span><span class='line'>      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ssh example@ip &quot;consul event -node &lt;app_name&gt; -name run-deploy&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 

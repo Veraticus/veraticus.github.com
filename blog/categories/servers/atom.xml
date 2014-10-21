@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:47:15-05:00</updated>
+  <updated>2014-10-21T17:48:18-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -63,7 +63,7 @@ deployment:
 
 <pre><code>branch: production
 commands:
-  - ssh jj-deployer@54.165.244.10 "consul event -node &lt;app_name&gt; -name run-deploy"
+  - ssh example@ip "consul event -node &lt;app_name&gt; -name run-deploy"
 </code></pre>
 
 <p>```</p>
