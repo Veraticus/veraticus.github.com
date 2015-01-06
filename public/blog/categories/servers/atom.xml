@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-06-11T21:38:24-05:00</updated>
+  <updated>2014-10-21T17:48:18-05:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Continuous Deployments with Consul]]></title>
+    <link href="http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul/"/>
+    <updated>2014-10-21T17:13:30-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &mdash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
+
+<!-- more -->
+
+
+<h2>Your servers</h2>
+
+<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &mdash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
+
+<h2>consul</h2>
+
+<p>First, you need to <a href="http://www.consul.io/intro/getting-started/install.html">install consul</a> on your servers and get them <a href="http://www.consul.io/intro/getting-started/join.html">communicating together properly</a>. As you can tell from my links, the consul documentation is extremely well-equipped to get you a fully functional consul cluster: just follow it and you&rsquo;ll be fine. Once it&rsquo;s all installed, you&rsquo;ll want to drop a watch like this in your app server&rsquo;s consul config directory:</p>
+
+<p><code>json
+{
+  "name": "run-deploy",
+  "handler": "sudo /usr/bin/chef-client",
+  "type": "event"
+}
+</code></p>
+
+<p>Note the sudo above: chef-client must be run as root, but this shouldn&rsquo;t be too big of a concern. Just make sure that your consul service is running as a sudoer that can execute only that one command and you&rsquo;ll be fine.</p>
+
+<h2>CircleCI</h2>
+
+<p>Getting CircleCI set up properly with your GitHub repository is covered in great detail <a href="https://circleci.com/docs/configuration">at CircleCI&rsquo;s documentation</a>. Make sure your tests pass on CircleCI before you continue.</p>
+
+<p>In order for this to work, CircleCI will have to be able to propagate that event to all your servers. The easiest way for it to do this is to have it SSH into one server and run the <code>consul event</code> command. From there, consul takes over to make sure all the appropriate servers receive the message. So let&rsquo;s create an SSH key for our CircleCI user.</p>
+
+<p><code>bash
+ssh-keygen -t rsa -C "continuous_deployment@example.com"
+</code></p>
+
+<p>Add the resulting private key to CircleCI and create a corresponding user on one of the central servers of your cluster. In my setup, I have three separate instances all running consul in server mode: I assigned one of them the DNS <code>consul.example.com</code> and created a user there to accept Circle&rsquo;s SSH key. Notably this user does not need any sort of permissions at all, so leave them off the sudoers.</p>
+
+<h2>Your project</h2>
+
+<p>Now you need to change your circle.yml in your project, so that after a build CircleCI will initiate the deploy. This is pretty simple:</p>
+
+<p>```yaml
+deployment:
+  production:</p>
+
+<pre><code>branch: production
+commands:
+  - ssh example@ip "consul event -node &lt;app_name&gt; -name run-deploy"
+</code></pre>
+
+<p>```</p>
+
+<p>Note the <code>&lt;app_name&gt;</code> filter there for nodes. I find it a good practice to name a node after the application running on it; so I might have one called <code>app1-web</code> and another <code>app2-worker</code>. This is helpful for performing consul node filtering: by providing <code>-node &lt;app_name&gt;</code>, you&rsquo;re ensuring that the consul event is only propagated to servers that actually run the targeted application.</p>
+
+<p>The next time you push a commit, CircleCI will automatically SSH into your server and execute that event. Your application servers with the watches on them will run <code>chef-client</code> and pull down the latest code, automatically deploying the most recent version of your application.</p>
+
+<p>This is obviously a fairly simple application of consul, but I found it extremely easy to setup and drop into my existing application provisioning and deployment process. consul provides a lot of automation and power, however, and you&rsquo;ll find it perfect for helping to bridge the small gaps in your provisioning system.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Getting Started With AWS OpsWorks]]></title>
@@ -652,50 +715,6 @@ end
 <h2>Conclusions</h2>
 
 <p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why I Chose Chef Over Rubber]]></title>
-    <link href="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/"/>
-    <updated>2013-01-18T14:34:00-06:00</updated>
-    <id>http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber</id>
-    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
-
-<!-- more -->
-
-
-<h2>Collaboration</h2>
-
-<p>One of rubber&rsquo;s weaknesses is it is not a particularly great collaborative tool. If both you and someone else are provisioning a new server simultaneously, you&rsquo;ll get a merge conflict in your server yaml file: you really don&rsquo;t want to make a mistake resolving <em>that</em> merge conflict.</p>
-
-<p>By contrast, it&rsquo;s really easy for multiple people to work together in Chef. You can be working in the same cookbook, even, and just altering different recipes. Bootstrapping several servers simultaneously couldn&rsquo;t be easier. And treating the Chef server as the central authority for cookbooks is also extremely helpful for keeping everyone on the same page with regards to what&rsquo;s actually going into the servers.</p>
-
-<p>Chef is just a better tool for teams of people.</p>
-
-<h2>Extensibility &amp; Community Support</h2>
-
-<p>For the tools that rubber provides in its stack &mdash; and it provides a lot &mdash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
-
-<p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&rsquo;re not precisely what you&rsquo;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
-
-<p>We&rsquo;re using the excellent <a href="https://github.com/applicationsonline/librarian">librarian</a> gem to manage our external cookbooks and the source cookbooks I&rsquo;ve been developing internally for us. It&rsquo;s a great way to treat cookbooks like any other dependency to resolve, and will save you a lot of time in git cloning repositories.</p>
-
-<h2>More Granularity</h2>
-
-<p>rubber allows you to control a lot, on a per-server basis. But it has no real equivalent to data bags or even environments. Adding a user&rsquo;s SSH key to my deploy recipe used to be an unpleasant process. Now I can just update the users data bag with a new entry and instruct my servers to pull it: tada, new user on the servers.</p>
-
-<p>Similarly changing postfix configuration on a per-environment basis is a snap.</p>
-
-<h1>But Rubber is a Great Tool</h1>
-
-<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &mdash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
-
-<p>Why? It&rsquo;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&rsquo;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&rsquo;ll go far, but trying to work against its defaults will be really painful.</p>
-
-<h2>Final Word on Chef vs. Puppet</h2>
-
-<p>Doesn&rsquo;t matter, choose whichever you like more.</p>
 ]]></content>
   </entry>
   

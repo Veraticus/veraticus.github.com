@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: shell | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/shell/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-10-21T17:48:18-05:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Shell Awesomeness with Prezto]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto/"/>
+    <updated>2014-06-12T16:56:11-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto</id>
+    <content type="html"><![CDATA[<p>As developers, we spend a lot of time in our shells: making them fast and responsive improves our productivity. I play around with a lot of development tools (as I mentioned in <a href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/">a previous post</a>) trying to find the best combination of intelligence, responsiveness, and fun. Recently I was investigating alternatives to <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, which is a wonderful set of Zsh packages but suffers from weird slowdowns and, unfortunately, requires a lot of configuration. I stumbled upon <a href="https://github.com/sorin-ionescu/prezto">prezto</a> and I love it &mdash; originally an optimized fork of oh-my-zsh, it&rsquo;s now its own project, and it is fast, beautiful, and leverages the full power of Zsh. It looks like this:</p>
+
+<p><img src="http://veratic.us/image/300y2o0a3t03/screenie.png" alt="Terminal" /></p>
+
+<p>You should get it. And when you do, use these configuration settings to make your experience even better.</p>
+
+<!-- more -->
+
+
+<h2>Customize your .zpreztorc</h2>
+
+<p>You&rsquo;ll want to enable a bunch of modules in your <code>.zpreztorc</code>, which is the configuration file for everything prezto. Here&rsquo;s my modules:</p>
+
+<p>```sh</p>
+
+<h1>Set the Prezto modules to load (browse modules).</h1>
+
+<h1>The order matters.</h1>
+
+<p>zstyle &lsquo;:prezto:load&rsquo; pmodule \
+  &lsquo;environment&rsquo; \
+  &lsquo;terminal&rsquo; \
+  &lsquo;editor&rsquo; \
+  &lsquo;history&rsquo; \
+  &lsquo;directory&rsquo; \
+  &lsquo;spectrum&rsquo; \
+  &lsquo;utility&rsquo; \
+  &lsquo;ssh&rsquo; \
+  &lsquo;completion&rsquo; \
+  &lsquo;homebrew&rsquo; \
+  &lsquo;osx&rsquo; \
+  &lsquo;ruby&rsquo; \
+  &lsquo;rails&rsquo; \
+  &lsquo;git&rsquo; \
+  &lsquo;syntax-highlighting&rsquo; \
+  &lsquo;history-substring-search&rsquo; \
+  &lsquo;prompt&rsquo;
+```</p>
+
+<p>They&rsquo;re not kidding when they say the order matters: <code>prompt</code> must come last, <code>history-substring-search</code> must come before it, and <code>syntax-highlighting</code> must come before that. The result of messing this up will likely be a ton of Zsh errors output to your shell after every command.</p>
+
+<p>Some highlights from this list:</p>
+
+<ul>
+<li><p><code>history</code> and <code>history-substring-search</code> work together to bring you one of the most awesome features of zprezto: when you type in a command and press up and down, you&rsquo;ll only get history results of you typing that command. Super helpful for typing in ssh, then going back in time to see your previous ssh servers.</p></li>
+<li><p><code>syntax-highlighting</code> gives you some <a href="http://fishshell.com/">fish</a>-style highlights. Executable commands will turn blue, incomplete or unrecognized commands will turn red, folders get underlined&hellip; it provides immediate and visceral visual feedback to what you&rsquo;re entering.</p></li>
+<li><p><code>directory</code> gives you some awesome shortcuts for the directory stack: <code>d</code> to see all the directories you&rsquo;ve entered, then the numbers <code>1</code> to <code>9</code> to jump to a previous directory you&rsquo;ve visited.</p></li>
+</ul>
+
+
+<p>And that&rsquo;s just a start. Visit the <a href="https://github.com/sorin-ionescu/prezto/tree/master/modules">prezto modules list</a> and view each individual module&rsquo;s README to learn more about them.</p>
+
+<p>After modules are done, get your identities into the SSH agent! There&rsquo;s a configuration block for that later:</p>
+
+<p>```sh</p>
+
+<h1>Set the SSH identities to load into the agent.</h1>
+
+<p>zstyle &lsquo;:prezto:module:ssh:load&rsquo; identities &lsquo;id_rsa&rsquo; &lsquo;id_rsa.github&rsquo; &lsquo;id_rsa.client1&rsquo; &lsquo;id_rsa.client2&rsquo; # all the rest of your identities
+```</p>
+
+<p>I also set up a custom theme for myself, the source of which I&rsquo;ll include below. If you want to enable that theme (or a different one), you&rsquo;ll also need to specify it in your <code>.zpreztorc</code>:</p>
+
+<p>```sh</p>
+
+<h1>Set the prompt theme to load.</h1>
+
+<h1>Setting it to &lsquo;random&rsquo; loads a random theme.</h1>
+
+<h1>Auto set to &lsquo;off&rsquo; on dumb terminals.</h1>
+
+<p>zstyle &lsquo;:prezto:module:prompt&rsquo; theme &lsquo;josh&rsquo;
+```</p>
+
+<p>You can find the full text of my <code>.zpreztorc</code> <a href="https://gist.github.com/Veraticus/a1b5204d8f922de5ea88">as a gist</a>.</p>
+
+<h2>Customize your .zshrc</h2>
+
+<p><code>.zshrc</code> is loaded in every interactive shell: use it to set up your Ruby switcher, important aliases, and anything else you need for maximum awesomeness. Mine is fairly self-explanatory:</p>
+
+<p><div><script src='https://gist.github.com/79ab3d262305ae2c5aeb.js?file=zshrc.zsh'></script>
+<noscript><pre><code>#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu &lt;sorin.ionescu@gmail.com&gt;
+#
+
+# Source Prezto.
+if [[ -s &quot;${ZDOTDIR:-$HOME}/.zprezto/init.zsh&quot; ]]; then
+  source &quot;${ZDOTDIR:-$HOME}/.zprezto/init.zsh&quot;
+fi
+
+# Customize to your needs...
+
+# Start rbenv
+export PATH=&quot;$HOME/.rbenv/bin:$PATH&quot;
+eval &quot;$(rbenv init -)&quot;
+
+# Add homebrew to the completion path
+fpath=(&quot;/usr/local/bin/&quot; $fpath)
+
+# why would you type &#39;cd dir&#39; if you could just type &#39;dir&#39;?
+setopt AUTO_CD
+
+# Now we can pipe to multiple outputs!
+setopt MULTIOS
+
+# This makes cd=pushd
+setopt AUTO_PUSHD
+
+# This will use named dirs when possible
+setopt AUTO_NAME_DIRS
+
+# If we have a glob this will expand it
+setopt GLOB_COMPLETE
+setopt PUSHD_MINUS
+
+# No more annoying pushd messages...
+# setopt PUSHD_SILENT
+
+# blank pushd goes to home
+setopt PUSHD_TO_HOME
+
+# this will ignore multiple directories for the stack.  Useful?  I dunno.
+setopt PUSHD_IGNORE_DUPS
+
+# 10 second wait if you do something that will delete everything.  I wish I&#39;d had this before...
+setopt RM_STAR_WAIT
+
+# use magic (this is default, but it can&#39;t hurt!)
+setopt ZLE
+
+setopt NO_HUP
+
+# only fools wouldn&#39;t do this ;-)
+export EDITOR=&quot;subl -n -w&quot;
+
+setopt IGNORE_EOF
+
+# If I could disable Ctrl-s completely I would!
+setopt NO_FLOW_CONTROL
+
+# Keep echo &quot;station&quot; &gt; station from clobbering station
+setopt NO_CLOBBER
+
+# Case insensitive globbing
+setopt NO_CASE_GLOB
+
+# Be Reasonable!
+setopt NUMERIC_GLOB_SORT
+
+# I don&#39;t know why I never set this before.
+setopt EXTENDED_GLOB
+
+# hows about arrays be awesome?  (that is, frew${cool}frew has frew surrounding all the variables, not just first and last
+setopt RC_EXPAND_PARAM
+
+# Who doesn&#39;t want home and end to work?
+bindkey &#39;\e[1~&#39; beginning-of-line
+bindkey &#39;\e[4~&#39; end-of-line
+
+# Incremental search is elite!
+bindkey -M vicmd &quot;/&quot; history-incremental-search-backward
+bindkey -M vicmd &quot;?&quot; history-incremental-search-forward
+
+# Search based on what you typed in already
+bindkey -M vicmd &quot;//&quot; history-beginning-search-backward
+bindkey -M vicmd &quot;??&quot; history-beginning-search-forward
+
+bindkey &quot;\eOP&quot; run-help
+
+# oh wow!  This is killer...  try it!
+bindkey -M vicmd &quot;q&quot; push-line
+
+# it&#39;s like, space AND completion.  Gnarlbot.
+bindkey -M viins &#39; &#39; magic-space
+</code></pre></noscript></div>
+</p>
+
+<h2>Select your theme</h2>
+
+<p>There are a lot of cool themes out there. But I was pretty used to my old Zsh theme, which was simple, clean, and had an obvious indicator when your last command failed. For an example of what it looks like, see the screenshot at the start of this post.</p>
+
+<p>The arrow on the left shows green when your last exit code was 0, and red when it was 1. It includes the branch you&rsquo;re on, with an indicator of whether you have uncommitted files on the right-hand side. It does a ton more as well, and here&rsquo;s the source for your use:</p>
+
+<p><div><script src='https://gist.github.com/1b30a6b6cbe8dae57e9f.js?file=prompt_josh_setup.zsh'></script>
+<noscript><pre><code>#
+# A stripped-down sorin theme.
+#
+# Authors:
+#   Sorin Ionescu &lt;sorin.ionescu@gmail.com&gt;
+#   Josh Symonds &lt;josh@joshsymonds.com&gt;
+#
+# Screenshots:
+#   http://i.imgur.com/nBEEZ.png
+#
+
+# Load dependencies.
+pmodload &#39;helper&#39;
+
+function prompt_josh_pwd {
+  local pwd=&quot;${PWD/#$HOME/~}&quot;
+
+  if [[ &quot;$pwd&quot; == (#m)[/~] ]]; then
+    _prompt_josh_pwd=&quot;$MATCH&quot;
+    unset MATCH
+  else
+    _prompt_josh_pwd=&quot;${${${(@j:/:M)${(@s:/:)pwd}##.#?}:h}%/}/${pwd:t}&quot;
+  fi
+}
+
+function prompt_josh_precmd {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+
+  # Format PWD.
+  prompt_josh_pwd
+
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+
+  # Get ruby information
+  if (( $+functions[ruby-info] )); then
+    ruby-info
+  fi
+}
+
+function prompt_josh_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  # Load required functions.
+  autoload -Uz add-zsh-hook
+
+  # Add hook for calling git-info before each command.
+  add-zsh-hook precmd prompt_josh_precmd
+
+  # Set editor-info parameters.
+  zstyle &#39;:prezto:module:editor:info:completing&#39; format &#39;%B%F{red}...%f%b&#39;
+  zstyle &#39;:prezto:module:editor:info:keymap:primary&#39; format &#39;%B%(?;%{%F{green}%} ;%{%F{red}%} )❯%f%b&#39;
+  zstyle &#39;:prezto:module:editor:info:keymap:primary:overwrite&#39; format &#39; %F{red}♺%f&#39;
+  zstyle &#39;:prezto:module:editor:info:keymap:alternate&#39; format &#39; %B%F{green}❮%F{yellow}❮%F{red}❮%f%b&#39;
+
+  # Set git-info parameters.
+  zstyle &#39;:prezto:module:git:info&#39; verbose &#39;yes&#39;
+  zstyle &#39;:prezto:module:git:info:action&#39; format &#39;:%%B%F{yellow}%s%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:added&#39; format &#39; %%B%F{green}✚%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:ahead&#39; format &#39; %%B%F{yellow}⬆%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:behind&#39; format &#39; %%B%F{yellow}⬇%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:branch&#39; format &#39;%F{green}%b%f&#39;
+  zstyle &#39;:prezto:module:git:info:commit&#39; format &#39;:%F{green}%.7c%f&#39;
+  zstyle &#39;:prezto:module:git:info:deleted&#39; format &#39; %%B%F{red}✖%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:modified&#39; format &#39; %%B%F{blue}✱%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:position&#39; format &#39;:%F{red}%p%f&#39;
+  zstyle &#39;:prezto:module:git:info:renamed&#39; format &#39; %%B%F{magenta}➜%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:stashed&#39; format &#39; %%B%F{cyan}✭%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:unmerged&#39; format &#39; %%B%F{yellow}═%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:untracked&#39; format &#39; %%B%F{white}◼%f%%b&#39;
+  zstyle &#39;:prezto:module:git:info:keys&#39; format \
+    &#39;prompt&#39; &#39; $(coalesce &quot;%b&quot; &quot;%p&quot; &quot;%c&quot;)%s&#39; \
+    &#39;rprompt&#39; &#39;%A%B%S%a%d%m%r%U%u&#39;
+
+  # Define prompts.
+  PROMPT=&#39;%F{cyan}${_prompt_josh_pwd}%f${git_info:+${(e)git_info[prompt]}}%(!. %B%F{red}#%f%b.)${editor_info[keymap]} &#39;
+  RPROMPT=&#39;${editor_info[overwrite]}${VIM:+&quot; %B%F{green}V%f%b&quot;}${git_info[rprompt]}&#39;
+  SPROMPT=&#39;zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? &#39;
+}
+
+prompt_josh_setup &quot;$@&quot;
+
+</code></pre></noscript></div>
+</p>
+
+<p>Place this in <code>~/.zprezto/modules/prompt/functions/prompt_josh_setup</code> and then select it in your <code>.zpretorc</code> for best results.</p>
+
+<p>prezto is easy to configure and presents a lot of powerful options: you&rsquo;ll want to spend some time getting used to it. But it&rsquo;s also really enjoyable. Once you start learning the power behind your shell and how easy it becomes to access, I guarantee that you&rsquo;ll never look back.</p>
+]]></content>
+  </entry>
+  
+</feed>

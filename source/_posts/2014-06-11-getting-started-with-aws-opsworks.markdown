@@ -128,7 +128,7 @@ You'll want to create a cookbook named after the offending cookbook (for example
 
 Obviously you should only do this if you're definitely not using OpsWorks' cookbooks.
 
-## 4. OpsWorks is your single point of truth
+## 5. OpsWorks is your single point of truth
 
 Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You'll want to set up everything you can with sensible attributes in your custom application recipes:
 
@@ -145,7 +145,7 @@ default['database'] = {
 
 Then pass overrides in your stack JSON. Your stack JSON is where you'll enumerate all the settings particular to your environment: though I'm not incredibly happy with this setup, as it's not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it's not difficult to update multiple stacks or create a new one from sensible defaults.
 
-## 5. Use the AWS API
+## 6. Use the AWS API
 
 So what's the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can't achieve anywhere else. But for more details on that, you'll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.
 
