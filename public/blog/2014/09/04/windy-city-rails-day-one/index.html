@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Windy City Rails, Day One - Hi, I'm Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="It&rsquo;s been a few years since I last went to Windy City Rails, despite the fact that it&rsquo;s oh-so-convenient and there are so many high- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2014/09/04/windy-city-rails-day-one">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Windy City Rails, Day One</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-04T09:34:52-05:00" pubdate data-updated="true">Sep 4<span>th</span>, 2014</time>
+        <span class='readtime'>Reading time 10  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been a few years since I last went to Windy City Rails, despite the fact that it&rsquo;s oh-so-convenient and there are so many high-quality Ruby and Rails developers in Chicago. I decided to go this year and, for those not able to come, provide small synopses of the presentations. So, without further ado, I present: Windy City Rails 2014, Day One.</p>
+
+<!-- more -->
+
+
+<h2>1. Rubinius X by <a href="https://twitter.com/brixen">Brian Shirai</a></h2>
+
+<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &mdash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
+
+<p>It&rsquo;s no secret that Ruby is old now. The question is, how do we keep it relevant even in its increasing age? Brian&rsquo;s hedge against winding up in a programmer nursing home is Rubinius X, which has a lot of interesting features:</p>
+
+<ul>
+<li>First-class network support, including better concurrency and easier communications. No more global interpreter lock problems! (Though whether any ordinary user of Ruby would ever really run into GIL issues is an open question&hellip;) No more shared memory! No more mutable strings! Wait, what was that last one? Well, we should ask ourselves, why is there a difference between strings and symbols at all? A reasonable question ask, and symbols vs. strings are certainly one of the first conceptual stumbling blocks to understanding Ruby. This led to this great line:</li>
+</ul>
+
+
+<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. &ndash; Brian Shirai</p></blockquote>
+
+<ul>
+<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &mdash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
+<li>Capturing the program&rsquo;s runtime experience. Rubinius X allows us to see what lines of code were actually invoked, what arguments were passed to methods, and in general grants a really granular view on what code is actually being run in production.</li>
+<li>Functional programming paradigms, including real functions as first-class citizens (not just <a href="http://apidock.com/ruby/Module/module_function">module_function</a>). You can declare dynamic or static types for these functions with type assertion checking.</li>
+</ul>
+
+
+<p>The claim is that Rubinius (and Rubinius X) are usable today, immediately, in your MRI app with only minor changes to your Gemfile.</p>
+
+<p>As exciting as all this is, I am personally a little skeptical. Rubinius X promises the moon and stars but we saw little actual code demoed, so I&rsquo;m not sure how many of these features are actually available or how best to use them. I would be interested in performance comparisons to MRI and seeing an example of how this would improve my existing code and simplify my app&rsquo;s design patterns before I&rsquo;m totally sold.</p>
+
+<h2>2. Recommendation Engines with Redis and Ruby by <a href="https://twitter.com/elight">Evan Light</a></h2>
+
+<p>By comparison to the previous, this session was quite light. Extremely helpful for the Rubyist not yet familiar with <a href="https://github.com/resque/resque">resque</a> or <a href="redis.io">redis</a>, Recommendation Engines with Redis and Ruby focused on a specific case study for implementing a recommendation engine in redis.</p>
+
+<p>While the talk was quite fascinating, I was personally hopeful it would focus on the statistical methods of recommendation (using something like k-clustering), which it did not. Instead, the case study discussed implementing a solid and performant recommendation engine taking advantage of redis&#8217; native features: inverted indexes, clever key TTL tricks, sorted sets, and queues, queues, queues!</p>
+
+<p>resque workers performed the actual recommendation work, which was based purely on the relative apparent interest of users in tags, and bubbling up posts and users based on the users&#8217; own tagging behavior.</p>
+
+<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &mdash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
+
+<h2>3. What Devise Does When You&rsquo;re Not Looking by <a href="https://twitter.com/lucasmazza">Lucas Mazza</a></h2>
+
+<p><a href="https://github.com/plataformatec/devise">Devise</a> is the most popular Rails authentication framework, and this was a very useful presentation on what Devise actually does and how it does it. Significantly more interesting than just a read-through of the Devise README, this presentation was simply a walkthrough of the gem and how to customize it.</p>
+
+<p>The foundation of Devise is <a href="https://github.com/hassox/warden">Warden</a>. If Rack is HTTP infrastructure or ActiveModel is ORM infrastructure, Warden is authentication infrastructure. Warden is Rails middleware that provides user session management, failure handling, and lifecycle callbacks. Devise integrates Warden&rsquo;s magic seamlessly with Rails, providing model, router, and controller/view patterns to handle almost all common authentication cases.</p>
+
+<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &mdash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
+
+<p>Devise is a set of reusable, extensible shortcuts for getting authentication cleanly and seamlessly into a Rails app, and honestly everyone should be using it in their app if they aren&rsquo;t already. This session was a concise overview of how best to implement it and configure it.</p>
+
+<h2>4. Let&rsquo;s Do Some Upfront Design by <a href="https://twitter.com/mark_menard">Mark Menard</a></h2>
+
+<p>Initially I was concerned this would be a session about visual design, but actually this was a very cogent presentation on code design, refactoring, and the proper way to structure code. That said, it started with a rather controversial question: who likes TDD? Who doesn&rsquo;t like it? Hands were raised and responses mixed, with most people falling somewhere in between.</p>
+
+<p>Though doing upfront design has a reputation for not being particularly agile, <em>Let&rsquo;s Do Some Upfront Design</em> argued quite clearly that planning before starting a project can reap immense rewards down the road. Particularly using sequence diagrams and separating the coordinators (the what) from the processors (the how) can simplify your thinking about a system and lead to better abstractions and inheritance hierarchies.</p>
+
+<p>While this was a really helpful talk from a design perspective, the focus on testing quickly became very abstract, disappearing into the realm of mock objects far too rapidly for my tastes. (What exactly is the value of tests if they&rsquo;re all testing mocks?) Still, for illustrative purposes the tests were very well-written, and seeing the value in both clear tests and clear models went a long way to showing the value of early planning.</p>
+
+<p>The overall value that the upfront design achieved is undeniable, and the talk itself quite clearly illustrated that with many examples and clearly argued points.</p>
+
+<h2>5. Protect Your Code by <a href="https://twitter.com/SaperLaw">Daliah Saper</a></h2>
+
+<p>Of all the sessions on the first day, this was the one I was looking forward to most! My consulting business, <a href="https://symondsandson.com">Symonds &amp; Son</a>, has been quite successful, but success brings with it the reality of contract negotiations and the potential for legal difficulties, areas I am not yet too familiar with.</p>
+
+<p>Though taking only half an hour, <em>Protect Your Code</em> summarized the main legal issues facing developers: copyright law, licensing, open source software, work for hire, licensing and assignment, trademarks, and contract law.</p>
+
+<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &mdash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &mdash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
+
+<p>And that led naturally into a discussion of licensing with open source software, particularly the tainting nature of the Gnu Public License. When used for hobbyist projects it&rsquo;s quite acceptable, but the fact that everything it touches becomes open-source can be quite a nuisance for enterprise-grade software.</p>
+
+<p>While fascinating through and through, this presentation make me concerned to review the contracts I use in my business. Probably this is a sensible warning to all consultants: have a good lawyer look over your agreements. Hopefully it&rsquo;ll be wasted money, but if it&rsquo;s not, it&rsquo;ll have been a very worthwhile exercise.</p>
+
+<h2>6. Domain Driven Rails by <a href="https://twitter.com/skwp">Yan Pritzker</a></h2>
+
+<p><em>Domain Driven Rails</em> started with a boxing match between DHH and Uncle Bob.</p>
+
+<p>Throughout the first day as a whole, there was definite tension between the simple, CRUD-based applications DHH advocates and the complicated, enterprise logic of Uncle Bob&rsquo;s hexagonal architecture. (To anyone who&rsquo;s been to Ruby conferences before this will probably come as no surprise.) Of course there&rsquo;s no resolution to be found between the two, and happily, this talk took a very sensible middle-ground.</p>
+
+<p>It also included lots of actual code and many interesting statistics from Code Climate on a real, actual project: <a href="https://reverb.com/">reverb</a>, a guitar marketplace. Though the reverb app is monolithic by any definition of the word, with a thousand classes and a hundred models, it still manages to have low churn, high code quality, and quick development iterations. Indeed, they defended their huge application with a very sensible quote from Martin Fowler about the trend towards separating apps into distinct services:</p>
+
+<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. &ndash; Martin Fowler</p></blockquote>
+
+<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &mdash; say, a ReturnOrderMailer or a ProcessUserCreditCard &mdash; that can decorate models but are not necessarily part of them.</p>
+
+<p>This definitely takes the better parts of DHH&rsquo;s philosophy of simple POROs while rejecting MVC as the be-all, end-all of Rails application design. Decorators, combined with events and event listeners, helped to significantly lower the architectural complexity of reverb without having to break it out into many disparate parts.</p>
+
+<p>Overall a very solid argument, though I&rsquo;m still not completely on-board with the idea of hundreds of classes each controlling a minute part of a model&rsquo;s behavior. It clearly works for reverb, though.</p>
+
+<h2>7. Go for Rubyists by <a href="https://twitter.com/lostghost">Ken Walters</a></h2>
+
+<p>Providing a straightforward, sensible introduction to Go, <em>Go for Rubyists</em> gave us a glance at Go, complete with code samples and helpful walkthroughs. Once again, the keywords for this presentation were &ldquo;performance&rdquo; and &ldquo;concurrency,&rdquo; which should be no surprise to anyone who&rsquo;s even slightly familiar with Go.</p>
+
+<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &mdash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
+
+<p>Concurrency is a first-class citizen in Go, based on routines and channels. A routine is sort of like a very, very lightweight thread. Routines communicate not by sharing memory, but by transferring data over channels. A very clear separation that makes it easy to reason about multi-threaded applications.</p>
+
+<p>It&rsquo;s always interesting to see other perspectives and different languages. This was a well-done presentation filled with demos and language samples, so it was clear and obvious what the benefits of Go would be for a Rubyist. If you also find Go interesting, you should go to <a href="http://golang.org/">golang.org</a> and check it out yourself.</p>
+
+<h2>8. Resolved: Your Local Government Runs on Rails by <a href="https://twitter.com/tiffani">Tiffani Bell</a></h2>
+
+<p>A fascinating discussion about using software in the public sector, <em>Resolved</em> dealt mainly with the experience of programming for large government entities. Spoiler alert: it sounds pretty difficult.</p>
+
+<p>Though governments make use of many of the same Rails tools any of us would find familiar &mdash; Heroku, postgres, jQuery &mdash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
+
+<p>The presentation had some code samples on how to do this via OCR with Google&rsquo;s Tesseract, falling back on Mechanical Turk in the case of ambiguity. Overall a clever solution that would probably prove extremely helpful for the (likely many) governments with legacy scanned data.</p>
+
+<p>It&rsquo;s rare to hear about the use of Rails (or just software development in general) outside of the isolated bubbles of startups and the larger but still isolated bubbles of large corporations. <em>Resolved</em> had a lot of great insight into this underreported facet of Ruby usage.</p>
+
+<h2>9. The Functional Web by <a href="https://twitter.com/sgrif">Sean Griffin</a></h2>
+
+<p><em>The Functional Web</em> argued that Rails must evolve to meet the needs of a changing Internet: web sockets, streaming responses, and event-based connections all cry out for a Rails solution that ActionController and Rack cannot easily provide. While it&rsquo;s easy to agree that these are all things Rails is terrible at, I&rsquo;m not sure if Rails will ever be a great tool for solving these sorts of problems.</p>
+
+<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &mdash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
+
+<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &mdash; like serving huge files or processing tons of data.</p>
+
+<p>And as if to illustrate that the presentation started discussing the best way to spawn a thread in a Rails controller to do both those things. This is a pretty significant anti-pattern for the reasons the talk itself described; it&rsquo;s semantically unpleasant, incredibly slow, and generally just the wrong place to do this.</p>
+
+<p>Criticism aside, <em>the Functional Web</em> sensibly pointed out that Ruby needs better thread implementation and support. But if Rails is ever going to be a sensible server for web sockets and streaming responses, it&rsquo;ll have to look very, very different than it does today&hellip; and I&rsquo;m not sure that&rsquo;s such a good thing, when excellent tools to accomplish these goals exist already.</p>
+
+<h2>Side Thoughts</h2>
+
+<ul>
+<li>BrainTree&rsquo;s CryptoHunt is a cute idea, but I&rsquo;m willing to bet the prize is an employment offer from BrainTree. I would&rsquo;ve been more excited by a year of free credit card processing or something.</li>
+<li>People seem to generally think DHH was very inflammatory at RailsConf with the whole &ldquo;TDD is dead&rdquo; keynote, though almost everyone agrees TDD should only be used when it makes sense.</li>
+<li>VenueOne is actually pretty swanky and the food was reasonably good. Hors d&#8217;oeuvres during cocktails were tasty.</li>
+<li>Everyone thinks concurrency is a big pain point for Rails. I find this point of view mysterious.</li>
+<li><a href="https://twitter.com/RayHightower">Ray Hightower</a> is a super duper friendly guy.</li>
+</ul>
+
+
+<p>And that&rsquo;s all I have for day one of the conference! Tune in tomorrow though, there are a lot more presentations and I&rsquo;m quite excited about a few of them.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='http://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2014/09/04/windy-city-rails-day-one/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2014/09/04/windy-city-rails-day-one/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/07/29/how-to-turn-yourself-into-a-programmer/" title="Previous Post: How To Turn Yourself Into a Programmer">&laquo; How To Turn Yourself Into a Programmer</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/10/21/continuous-deployments-with-consul/" title="Next Post: Continuous Deployments with Consul">Continuous Deployments with Consul &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2015 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+<div class="highlight"><pre><span class="l-Scalar-Plain">deployment</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">branch</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">production</span>
+    <span class="l-Scalar-Plain">commands</span><span class="p-Indicator">:</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ssh jj-deployer@54.165.244.10 &quot;consul event -node &lt;app_name&gt; -name run-deploy&quot;</span>
+</pre></div>

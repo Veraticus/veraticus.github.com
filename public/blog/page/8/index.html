@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Over the weekend I spent some time getting Fnordmetric set up in an application. On the surface it looks really cool and quite nifty, but I ran into &hellip;">
+  <meta name="description" content="Rails provides a really awesome ability to avoid Law of Demeter violations &mdash; the Module#delegate method. The Law of Demeter is an informal &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,7 +74,7 @@
     
   </ul>
     
-  <form action="http://google.com/search" method="get">
+  <form action="https://www.google.com/search" method="get">
     <fieldset role="search">
       <input type="hidden" name="q" value="site:joshsymonds.com" />
       <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -92,6 +92,251 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/">Delegation When Delegate Just Won&#8217;t Work</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-28T15:37:00-05:00" pubdate data-updated="true">Mar 28<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails provides a really awesome ability to avoid <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a> violations &mdash; the <a href="http://apidock.com/rails/Module/delegate">Module#delegate</a> method. The Law of Demeter is an informal programming guideline, intended to make your code more obvious and more reusable: objects should only call methods on other objects, not objects of those objects. To provide a more concrete example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Law of Demeter violation: @user should not reach into address!</span>
+</span><span class='line'>  <span class="vi">@user</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># So much better...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Rails, because it&rsquo;s cool, provides a quick and easy pattern for making this work:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_one</span> <span class="ss">:address</span>
+</span><span class='line'>  <span class="n">delegate</span> <span class="ss">:street_address</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="ss">:address</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">street_address</span> <span class="c1"># Calls address.street_address</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check out the <a href="http://apidock.com/rails/Module/delegate">delegate documentation</a> for more information on how this functionality works. But <a href="http://stackoverflow.com/questions/9914400/delegate-all-method-calls-on-a-model-to-an-association">a question I came across on Stack Overflow</a> today asked: what do you when you want to delegate all methods? I do <a href="https://github.com/Veraticus/Dynamoid/blob/master/lib/dynamoid/adapter.rb#L122">something similar in Dynamoid</a> and wanted to talk about how to make this pattern sensible and performant.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/28/delegation-when-delegate-just-wont-work/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">Elasticsearch and Percolation in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-25T11:39:00-05:00" pubdate data-updated="true">Mar 25<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Hipstamatic uses the pretty awesome Family Album feature for people to like and react to each others&#8217; photos. You can create either a magic album &mdash; an album that matches to a combination of criteria including accounts, geolocation, tags and descriptions &mdash; or a curated album, selecting photos directly that you want to include. The latter is a pretty straight-forward association and isn&rsquo;t very interesting to talk about, but I wanted to discuss briefly the methods we used to implement magic albums and what we finally settled on. It involved a lot of setting up elasticsearch and percolation, and ultimately I think it&rsquo;s a very durable, excellent solution for anyone wanting to index a lot of data and retrieve it extremely quickly.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/22/why-i-dont-use-haml/">Why I Don&#8217;t Use Haml</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-22T13:19:00-05:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2012</time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I initially thought of titling this post something more inflammatory, like &ldquo;Why Haml Sucks&rdquo; or &ldquo;Only Losers Use Haml.&rdquo; But the truth is <a href="http://haml-lang.com/">Haml</a> does anything but suck. It&rsquo;s actually quite elegant; the syntax is clean, not needing closing tags is just really cool, and it&rsquo;s very fast to read. It seems like it would be an ideal language to replace HTML, just like SASS and CoffeeScript are abstractions of and (to a certain extent) replacements for CSS and JavaScript, respectively.</p>
+
+<p>So why do I bang my head against my desk every time I see someone using it in a view?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/22/why-i-dont-use-haml/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/">Sweeping Caches From Resque (or Anywhere Really)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-19T10:29:00-05:00" pubdate data-updated="true">Mar 19<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Phil Karlton, someone I can only presume is a pretty smart programmer, said <a href="http://martinfowler.com/bliki/TwoHardThings.html">&ldquo;there are only two hard things in Computer Science: cache invalidation and naming things.&rdquo;</a> He&rsquo;s totally right; cache invalidation is one of the biggest headaches when designing highly usable, highly available websites and is something that I&rsquo;m sure every Rails programmer worth their salt has struggled with. (Naming things is also a pain but not the focus of this post.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/19/sweeping-caches-from-resque-or-anywhere-really/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/16/classifying-and-refactoring-your-code/">Classifying and Refactoring Your Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T00:39:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Outside of the guiding framework of Rails, it can be difficult to manage your own Ruby code, as I&rsquo;ve discovered in the process of creating <a href="https://github.com/Veraticus/Dynamoid">Dynamoid</a>. MVC provides a clear and concise framework that encapsulates the functionality of most web applications really well; but outside of web applications, exactly where and how to put your code is a lot less clear. I thought I&rsquo;d share some of my experiences and thoughts on doing this in my own Gem in the hopes that the lessons I&rsquo;ve learned will aid others.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/16/classifying-and-refactoring-your-code/">More &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -318,263 +563,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting Up Unicorn in a Production Environment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-27T10:20:00-06:00" pubdate data-updated="true">Feb 27<span>th</span>, 2012</time>
-        <span class='readtime'>Reading time 2  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Configuring unicorn for your Rails servers is as much an art as it is a science.</p>
-
-<p>That said, there are some things that make the configuration and setup a lot easier that I wish I had known before I had taken the unicorn plunge.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">More &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/23/why-i-like-rubber/">Why I Like Rubber</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
-        <span class='readtime'>Reading time 1  minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When I was analyzing tools to deploy applications into Amazon&rsquo;s elastic cloud, I settled on <a href="https://github.com/wr0ngway/rubber">rubber</a> as our EC2 provisioner of choice.</p>
-
-<p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&rsquo;s super easy to start a server with nothing more than:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:create <span class="nv">ALIAS</span><span class="o">=</span>fluttershy <span class="nv">ROLES</span><span class="o">=</span>unicorn
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And bootstrap it with all the software needed for that role with:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cap rubber:bootstrap <span class="nv">FILTER</span><span class="o">=</span>fluttershy
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course, looking at command line magic doesn&rsquo;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
-
-<p>It&rsquo;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&rsquo;m sure. The good part &mdash; for me at least &mdash; is how close it is to the servers and how well it ties in with Capistrano. There&rsquo;s no magic going on and there&rsquo;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&hellip; but if you know what you&rsquo;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
-
-<p>rubber isn&rsquo;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&rsquo;s deployed on a per-application basis, it can&rsquo;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/22/dynamoid-an-orm-for-amazons-dynamodb/">Dynamoid: An ORM for Amazon&#8217;s DynamoDB</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
-        <span class='readtime'>Reading time less than 1 minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&rsquo;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&rsquo;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
-
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &mdash; it&rsquo;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&rsquo;t really do a whole lot of exciting stuff yet&hellip;</p>
-
-<p>But it will soon! The TODO list is particularly exciting:</p>
-
-<ul>
-<li>Association magic: The standard fare like belongs_to, has_many, habtm.</li>
-<li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
-<li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&rsquo;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
-<li>Not-gimpy finders: Criteria like you&rsquo;re used to with ActiveRecord, so that you can do User.where(:name => &lsquo;Josh&rsquo;) rather than User.find_by_name(&lsquo;Josh&rsquo;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now &ndash; 1.day)</li>
-</ul>
-
-
-<p>I hope to have time over the next few days and the weekend to continue improving Dynamoid. Watch this space for further updates.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/21/rapnd-redis-apn-daemon/">Rapnd: Redis APN Daemon</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-        <span class='readtime'>Reading time 1  minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://github.com/Veraticus/rapnd">rapnd</a> is a gem I developed to create a persistent connection through which to pass messages to Apple&rsquo;s Push Notification servers. It&rsquo;s pretty neat and you should check it out.</p>
-
-<h2>Why another push notification gem?</h2>
-
-<p>The existing ones just didn&rsquo;t do what I wanted. There were some that created persistent daemon connections&hellip; but they were only usable with one app, and we have two apps we want to send push notifications for. There were some with multiple app support, but they didn&rsquo;t have daemons or they assumed the existence of ActiveRecord. And in my opinion using ActiveRecord to store notifications is pretty dumb.</p>
-
-<h2>Whoa! ActiveRecord is just fine, bro.</h2>
-
-<p>Yeah, I love ActiveRecord. But it&rsquo;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&rsquo;t care less about the content or whether or not it was actually delivered &mdash; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&rsquo;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
-
-<h2>Why a daemon?</h2>
-
-<p>Well, Apple tells you to do it. But for a more important reason, Apple claims that constantly established and dropped connections to their servers will result in IP blacklisting. I&rsquo;ve never actually seen this in practice, but&hellip; well&hellip; why chance it? rapnd uses one connection per daemon and tries to keep it open as long as possible.</p>
-
-<p>So yeah, it&rsquo;s pretty cool. Go check out <a href="http://github.com/Veraticus/rapnd">the rapnd github page</a> to see the deets.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/21/fixing-redis-timeout-and-unexpected-token-errors/">Fixing Redis Timeout and Unexpected Token Errors</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
-        <span class='readtime'>Reading time less than 1 minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&rsquo;t be immediately solved through judicious Googling, so figured I&rsquo;d make a quick post about it.</p>
-
-<h2>Resource temporarily unavailable &ndash; Timeout reading from the socket</h2>
-
-<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &mdash; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
-
-<h2>unexpected token at &lsquo;OK&rsquo; (Resque::Helpers::DecodeException)</h2>
-
-<p>This one took a bit more tracking down to fix.</p>
-
-<p>The newest versions of resque (I&rsquo;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &mdash; for example, returning &ldquo;OK.&rdquo; Upgrading your redis server handily fixes this problem.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/9/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -587,7 +578,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

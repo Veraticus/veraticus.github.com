@@ -74,7 +74,7 @@
     
   </ul>
     
-  <form action="http://google.com/search" method="get">
+  <form action="https://www.google.com/search" method="get">
     <fieldset role="search">
       <input type="hidden" name="q" value="site:joshsymonds.com" />
       <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -297,7 +297,7 @@
 
 <p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks&#8217; cookbooks.</p>
 
-<h2>4. OpsWorks is your single point of truth</h2>
+<h2>5. OpsWorks is your single point of truth</h2>
 
 <p>Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You&rsquo;ll want to set up everything you can with sensible attributes in your custom application recipes:</p>
 
@@ -322,7 +322,7 @@
 
 <p>Then pass overrides in your stack JSON. Your stack JSON is where you&rsquo;ll enumerate all the settings particular to your environment: though I&rsquo;m not incredibly happy with this setup, as it&rsquo;s not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it&rsquo;s not difficult to update multiple stacks or create a new one from sensible defaults.</p>
 
-<h2>5. Use the AWS API</h2>
+<h2>6. Use the AWS API</h2>
 
 <p>So what&rsquo;s the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can&rsquo;t achieve anywhere else. But for more details on that, you&rsquo;ll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.</p>
 </div>
@@ -360,6 +360,8 @@
         <a class="basic-alignment left" href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/" title="Previous Post: Creating an AWS OpsWorks Instance Store AMI">&laquo; Creating an AWS OpsWorks Instance Store AMI</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/06/12/shell-awesomeness-with-prezto/" title="Next Post: Shell Awesomeness with Prezto">Shell Awesomeness with Prezto &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -370,7 +372,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

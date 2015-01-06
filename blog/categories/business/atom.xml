@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: business | Hi, I'm Josh Symonds]]></title>
+  <link href="http://joshsymonds.com/blog/categories/business/atom.xml" rel="self"/>
+  <link href="http://joshsymonds.com/"/>
+  <updated>2014-10-21T17:48:18-05:00</updated>
+  <id>http://joshsymonds.com/</id>
+  <author>
+    <name><![CDATA[Josh Symonds]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Windy City Rails, Day One]]></title>
+    <link href="http://joshsymonds.com/blog/2014/09/04/windy-city-rails-day-one/"/>
+    <updated>2014-09-04T09:34:52-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/09/04/windy-city-rails-day-one</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a few years since I last went to Windy City Rails, despite the fact that it&rsquo;s oh-so-convenient and there are so many high-quality Ruby and Rails developers in Chicago. I decided to go this year and, for those not able to come, provide small synopses of the presentations. So, without further ado, I present: Windy City Rails 2014, Day One.</p>
+
+<!-- more -->
+
+
+<h2>1. Rubinius X by <a href="https://twitter.com/brixen">Brian Shirai</a></h2>
+
+<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &mdash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
+
+<p>It&rsquo;s no secret that Ruby is old now. The question is, how do we keep it relevant even in its increasing age? Brian&rsquo;s hedge against winding up in a programmer nursing home is Rubinius X, which has a lot of interesting features:</p>
+
+<ul>
+<li>First-class network support, including better concurrency and easier communications. No more global interpreter lock problems! (Though whether any ordinary user of Ruby would ever really run into GIL issues is an open question&hellip;) No more shared memory! No more mutable strings! Wait, what was that last one? Well, we should ask ourselves, why is there a difference between strings and symbols at all? A reasonable question ask, and symbols vs. strings are certainly one of the first conceptual stumbling blocks to understanding Ruby. This led to this great line:</li>
+</ul>
+
+
+<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. &ndash; Brian Shirai</p></blockquote>
+
+<ul>
+<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &mdash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
+<li>Capturing the program&rsquo;s runtime experience. Rubinius X allows us to see what lines of code were actually invoked, what arguments were passed to methods, and in general grants a really granular view on what code is actually being run in production.</li>
+<li>Functional programming paradigms, including real functions as first-class citizens (not just <a href="http://apidock.com/ruby/Module/module_function">module_function</a>). You can declare dynamic or static types for these functions with type assertion checking.</li>
+</ul>
+
+
+<p>The claim is that Rubinius (and Rubinius X) are usable today, immediately, in your MRI app with only minor changes to your Gemfile.</p>
+
+<p>As exciting as all this is, I am personally a little skeptical. Rubinius X promises the moon and stars but we saw little actual code demoed, so I&rsquo;m not sure how many of these features are actually available or how best to use them. I would be interested in performance comparisons to MRI and seeing an example of how this would improve my existing code and simplify my app&rsquo;s design patterns before I&rsquo;m totally sold.</p>
+
+<h2>2. Recommendation Engines with Redis and Ruby by <a href="https://twitter.com/elight">Evan Light</a></h2>
+
+<p>By comparison to the previous, this session was quite light. Extremely helpful for the Rubyist not yet familiar with <a href="https://github.com/resque/resque">resque</a> or <a href="redis.io">redis</a>, Recommendation Engines with Redis and Ruby focused on a specific case study for implementing a recommendation engine in redis.</p>
+
+<p>While the talk was quite fascinating, I was personally hopeful it would focus on the statistical methods of recommendation (using something like k-clustering), which it did not. Instead, the case study discussed implementing a solid and performant recommendation engine taking advantage of redis' native features: inverted indexes, clever key TTL tricks, sorted sets, and queues, queues, queues!</p>
+
+<p>resque workers performed the actual recommendation work, which was based purely on the relative apparent interest of users in tags, and bubbling up posts and users based on the users' own tagging behavior.</p>
+
+<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &mdash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
+
+<h2>3. What Devise Does When You&rsquo;re Not Looking by <a href="https://twitter.com/lucasmazza">Lucas Mazza</a></h2>
+
+<p><a href="https://github.com/plataformatec/devise">Devise</a> is the most popular Rails authentication framework, and this was a very useful presentation on what Devise actually does and how it does it. Significantly more interesting than just a read-through of the Devise README, this presentation was simply a walkthrough of the gem and how to customize it.</p>
+
+<p>The foundation of Devise is <a href="https://github.com/hassox/warden">Warden</a>. If Rack is HTTP infrastructure or ActiveModel is ORM infrastructure, Warden is authentication infrastructure. Warden is Rails middleware that provides user session management, failure handling, and lifecycle callbacks. Devise integrates Warden&rsquo;s magic seamlessly with Rails, providing model, router, and controller/view patterns to handle almost all common authentication cases.</p>
+
+<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &mdash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
+
+<p>Devise is a set of reusable, extensible shortcuts for getting authentication cleanly and seamlessly into a Rails app, and honestly everyone should be using it in their app if they aren&rsquo;t already. This session was a concise overview of how best to implement it and configure it.</p>
+
+<h2>4. Let&rsquo;s Do Some Upfront Design by <a href="https://twitter.com/mark_menard">Mark Menard</a></h2>
+
+<p>Initially I was concerned this would be a session about visual design, but actually this was a very cogent presentation on code design, refactoring, and the proper way to structure code. That said, it started with a rather controversial question: who likes TDD? Who doesn&rsquo;t like it? Hands were raised and responses mixed, with most people falling somewhere in between.</p>
+
+<p>Though doing upfront design has a reputation for not being particularly agile, <em>Let&rsquo;s Do Some Upfront Design</em> argued quite clearly that planning before starting a project can reap immense rewards down the road. Particularly using sequence diagrams and separating the coordinators (the what) from the processors (the how) can simplify your thinking about a system and lead to better abstractions and inheritance hierarchies.</p>
+
+<p>While this was a really helpful talk from a design perspective, the focus on testing quickly became very abstract, disappearing into the realm of mock objects far too rapidly for my tastes. (What exactly is the value of tests if they&rsquo;re all testing mocks?) Still, for illustrative purposes the tests were very well-written, and seeing the value in both clear tests and clear models went a long way to showing the value of early planning.</p>
+
+<p>The overall value that the upfront design achieved is undeniable, and the talk itself quite clearly illustrated that with many examples and clearly argued points.</p>
+
+<h2>5. Protect Your Code by <a href="https://twitter.com/SaperLaw">Daliah Saper</a></h2>
+
+<p>Of all the sessions on the first day, this was the one I was looking forward to most! My consulting business, <a href="https://symondsandson.com">Symonds &amp; Son</a>, has been quite successful, but success brings with it the reality of contract negotiations and the potential for legal difficulties, areas I am not yet too familiar with.</p>
+
+<p>Though taking only half an hour, <em>Protect Your Code</em> summarized the main legal issues facing developers: copyright law, licensing, open source software, work for hire, licensing and assignment, trademarks, and contract law.</p>
+
+<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &mdash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &mdash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
+
+<p>And that led naturally into a discussion of licensing with open source software, particularly the tainting nature of the Gnu Public License. When used for hobbyist projects it&rsquo;s quite acceptable, but the fact that everything it touches becomes open-source can be quite a nuisance for enterprise-grade software.</p>
+
+<p>While fascinating through and through, this presentation make me concerned to review the contracts I use in my business. Probably this is a sensible warning to all consultants: have a good lawyer look over your agreements. Hopefully it&rsquo;ll be wasted money, but if it&rsquo;s not, it&rsquo;ll have been a very worthwhile exercise.</p>
+
+<h2>6. Domain Driven Rails by <a href="https://twitter.com/skwp">Yan Pritzker</a></h2>
+
+<p><em>Domain Driven Rails</em> started with a boxing match between DHH and Uncle Bob.</p>
+
+<p>Throughout the first day as a whole, there was definite tension between the simple, CRUD-based applications DHH advocates and the complicated, enterprise logic of Uncle Bob&rsquo;s hexagonal architecture. (To anyone who&rsquo;s been to Ruby conferences before this will probably come as no surprise.) Of course there&rsquo;s no resolution to be found between the two, and happily, this talk took a very sensible middle-ground.</p>
+
+<p>It also included lots of actual code and many interesting statistics from Code Climate on a real, actual project: <a href="https://reverb.com/">reverb</a>, a guitar marketplace. Though the reverb app is monolithic by any definition of the word, with a thousand classes and a hundred models, it still manages to have low churn, high code quality, and quick development iterations. Indeed, they defended their huge application with a very sensible quote from Martin Fowler about the trend towards separating apps into distinct services:</p>
+
+<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. &ndash; Martin Fowler</p></blockquote>
+
+<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &mdash; say, a ReturnOrderMailer or a ProcessUserCreditCard &mdash; that can decorate models but are not necessarily part of them.</p>
+
+<p>This definitely takes the better parts of DHH&rsquo;s philosophy of simple POROs while rejecting MVC as the be-all, end-all of Rails application design. Decorators, combined with events and event listeners, helped to significantly lower the architectural complexity of reverb without having to break it out into many disparate parts.</p>
+
+<p>Overall a very solid argument, though I&rsquo;m still not completely on-board with the idea of hundreds of classes each controlling a minute part of a model&rsquo;s behavior. It clearly works for reverb, though.</p>
+
+<h2>7. Go for Rubyists by <a href="https://twitter.com/lostghost">Ken Walters</a></h2>
+
+<p>Providing a straightforward, sensible introduction to Go, <em>Go for Rubyists</em> gave us a glance at Go, complete with code samples and helpful walkthroughs. Once again, the keywords for this presentation were &ldquo;performance&rdquo; and &ldquo;concurrency,&rdquo; which should be no surprise to anyone who&rsquo;s even slightly familiar with Go.</p>
+
+<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &mdash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
+
+<p>Concurrency is a first-class citizen in Go, based on routines and channels. A routine is sort of like a very, very lightweight thread. Routines communicate not by sharing memory, but by transferring data over channels. A very clear separation that makes it easy to reason about multi-threaded applications.</p>
+
+<p>It&rsquo;s always interesting to see other perspectives and different languages. This was a well-done presentation filled with demos and language samples, so it was clear and obvious what the benefits of Go would be for a Rubyist. If you also find Go interesting, you should go to <a href="http://golang.org/">golang.org</a> and check it out yourself.</p>
+
+<h2>8. Resolved: Your Local Government Runs on Rails by <a href="https://twitter.com/tiffani">Tiffani Bell</a></h2>
+
+<p>A fascinating discussion about using software in the public sector, <em>Resolved</em> dealt mainly with the experience of programming for large government entities. Spoiler alert: it sounds pretty difficult.</p>
+
+<p>Though governments make use of many of the same Rails tools any of us would find familiar &mdash; Heroku, postgres, jQuery &mdash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
+
+<p>The presentation had some code samples on how to do this via OCR with Google&rsquo;s Tesseract, falling back on Mechanical Turk in the case of ambiguity. Overall a clever solution that would probably prove extremely helpful for the (likely many) governments with legacy scanned data.</p>
+
+<p>It&rsquo;s rare to hear about the use of Rails (or just software development in general) outside of the isolated bubbles of startups and the larger but still isolated bubbles of large corporations. <em>Resolved</em> had a lot of great insight into this underreported facet of Ruby usage.</p>
+
+<h2>9. The Functional Web by <a href="https://twitter.com/sgrif">Sean Griffin</a></h2>
+
+<p><em>The Functional Web</em> argued that Rails must evolve to meet the needs of a changing Internet: web sockets, streaming responses, and event-based connections all cry out for a Rails solution that ActionController and Rack cannot easily provide. While it&rsquo;s easy to agree that these are all things Rails is terrible at, I&rsquo;m not sure if Rails will ever be a great tool for solving these sorts of problems.</p>
+
+<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &mdash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
+
+<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &mdash; like serving huge files or processing tons of data.</p>
+
+<p>And as if to illustrate that the presentation started discussing the best way to spawn a thread in a Rails controller to do both those things. This is a pretty significant anti-pattern for the reasons the talk itself described; it&rsquo;s semantically unpleasant, incredibly slow, and generally just the wrong place to do this.</p>
+
+<p>Criticism aside, <em>the Functional Web</em> sensibly pointed out that Ruby needs better thread implementation and support. But if Rails is ever going to be a sensible server for web sockets and streaming responses, it&rsquo;ll have to look very, very different than it does today&hellip; and I&rsquo;m not sure that&rsquo;s such a good thing, when excellent tools to accomplish these goals exist already.</p>
+
+<h2>Side Thoughts</h2>
+
+<ul>
+<li>BrainTree&rsquo;s CryptoHunt is a cute idea, but I&rsquo;m willing to bet the prize is an employment offer from BrainTree. I would&rsquo;ve been more excited by a year of free credit card processing or something.</li>
+<li>People seem to generally think DHH was very inflammatory at RailsConf with the whole &ldquo;TDD is dead&rdquo; keynote, though almost everyone agrees TDD should only be used when it makes sense.</li>
+<li>VenueOne is actually pretty swanky and the food was reasonably good. Hors d'oeuvres during cocktails were tasty.</li>
+<li>Everyone thinks concurrency is a big pain point for Rails. I find this point of view mysterious.</li>
+<li><a href="https://twitter.com/RayHightower">Ray Hightower</a> is a super duper friendly guy.</li>
+</ul>
+
+
+<p>And that&rsquo;s all I have for day one of the conference! Tune in tomorrow though, there are a lot more presentations and I&rsquo;m quite excited about a few of them.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How To Turn Yourself Into a Programmer]]></title>
+    <link href="http://joshsymonds.com/blog/2014/07/29/how-to-turn-yourself-into-a-programmer/"/>
+    <updated>2014-07-29T15:25:14-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/07/29/how-to-turn-yourself-into-a-programmer</id>
+    <content type="html"><![CDATA[<p>So you want to become a programmer, huh?</p>
+
+<p>Maybe it&rsquo;s because President Obama <a href="https://www.youtube.com/watch?v=6XvmhE1J9PY">told you to learn computer science</a>, and you&rsquo;re not gonna argue with the President.</p>
+
+<p>Or maybe it&rsquo;s because you hunger to make something &mdash; a product other people use &mdash; and you&rsquo;re tired of a job where, at the end of the day, you wonder what exactly you did or why it even mattered. And hey, making software is easier and cleaner than making furniture.</p>
+
+<p>But realistically it&rsquo;s probably because of the money. Glassdoor claims that <a href="http://www.glassdoor.com/Salaries/software-engineer-salary-SRCH_KO0,17.htm">software engineers make a median salary of $85,000</a>, which is nothing to sneeze at. Even the lowliest programmers can look forward to taking home about $60k, and if you have a talent and drive for programming, then the only limit to your salary is your ambition.</p>
+
+<p>All well and good. But how do you go from a casual smartphone owner and recreational computer user to actually making software? And then how do you turn making software into real money that appears in your wallet and bank account?</p>
+
+<p>After my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">article on consulting in Rails</a>, easily the most-asked question I received was: &ldquo;How do I become a programmer, and what do I do when I get there?&rdquo; No one is born with a keyboard strapped to their hands: every programmer you know learned how to do it. I did too. Here I&rsquo;ll describe what I found most helpful for getting into programming, how I&rsquo;d do it again if I had to, and what you should keep in mind if you decide to set off on the programmer&rsquo;s path.</p>
+
+<p>This post is extremely long. But hopefully by the end of it, you&rsquo;ll have some clear ideas and inspirations for how to turn yourself into a real, honest-to-goodness programmer.</p>
+
+<!-- more -->
+
+
+<h2>Before You Start</h2>
+
+<p>To become a programmer, you don&rsquo;t need a computer science degree, hipster glasses, youth, or even beauty. (You also don&rsquo;t need a particularly strong math background, in case you&rsquo;re concerned.) That said, there are some things you really do need &mdash; if you can&rsquo;t put a check-mark next to these prerequisites, you might want to seriously reconsider a journey into the realms of computer science.</p>
+
+<ol>
+<li><p><strong>A love for computers</strong>. If you can&rsquo;t see yourself working in front of a computer 8+ hours a day, happy as a clam, then I appreciate you reading this far, but this career path probably isn&rsquo;t for you.</p></li>
+<li><p><strong>Sacrifice</strong>. Most software, tools, and books to learn computer programming are free. Some of the best ones, unfortunately, aren&rsquo;t. You won&rsquo;t have to spend thousands of dollars (unless you need to buy a computer), but it&rsquo;s probably reasonable to expect an outlay of a couple hundred to purchase books and software. And that doesn&rsquo;t even factor your time into it &mdash; you have to put in the work to get out the results, so expect late nights and early mornings.</p></li>
+<li><p><strong>Drive</strong>. The going will likely get tough &mdash; really tough. When doing something outside of your comfort zone, it&rsquo;s easy to get disheartened and lose your way. How long you can stick it out and keep coming back will determine whether you end up with programming as a hobby, a mediocre skill, or a mastery. Unfortunately there&rsquo;s no shortcuts here. You just have to do it.</p></li>
+</ol>
+
+
+<h2>The Finish Line</h2>
+
+<p>Still with me? Good.</p>
+
+<p>Before you even set off on this journey, we should consider the end goal. Specifically, what do you need to know in order for a potential employer to consider you a viable candidate for a programming job?</p>
+
+<p>This prospective employer will look for three things when evaluating you for a programming job:</p>
+
+<ol>
+<li><p><strong>Actual knowledge of the programming language.</strong> Your employer will vet your technical competency by examining your existing code and asking you specific technical questions: for Ruby, the classic chestnut is &ldquo;<a href="http://awaxman11.github.io/blog/2013/08/05/what-is-the-difference-between-a-block/">what&rsquo;s the difference between a block, a proc, and a lambda?</a>&rdquo; Though you&rsquo;ll get bonus points for knowing everything 100%, no one expects you to have your language memorized offhand or even know the minute details of its operation. They&rsquo;re looking for breadth of knowledge, where you&rsquo;d go to look stuff up if you didn&rsquo;t know it, and a general feeling you&rsquo;ve been around the block at least once or twice. In your code samples, they&rsquo;ll want to see competence and fluency in the language in question.</p></li>
+<li><p><strong>Having used programming in a professional capacity.</strong> Even if you know your language, you&rsquo;re no good to anyone if you can&rsquo;t apply your skills and complete projects. An empty resume with a note at the top that you love to code won&rsquo;t get you hired anywhere. The unfortunate reality of the labor market is that everyone only wants to hire proven winners. You have to establish you are one if you want to be employable. That said, you needn&rsquo;t have created enterprise-level software as part of a twenty-person team &mdash; personal projects hosted on GitHub or Bitbucket are more than sufficient to get hired.</p></li>
+<li><p><strong>Demonstrated ability to work with other human begins.</strong> Yes, you want to be a computer programmer, not a diplomat, and yes, <a href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/">your job is to code</a>: but you&rsquo;ll probably end up talking a lot to your boss, coworkers, and possibly even customers. You have to be able to put people at ease and make them like and trust you, or else your career won&rsquo;t go anywhere at all &mdash; and you certainly won&rsquo;t make it past even a casual interview.</p></li>
+</ol>
+
+
+<h2>What Language Should I Learn?</h2>
+
+<p>Well, I like <a href="http://ruby-lang.org/">Ruby</a>. It&rsquo;s beautiful, functional, easy for beginners and powerful for experts. Professionally you&rsquo;ll use it either to create web and mobile applications (with <a href="http://rubyonrails.org/">Ruby on Rails</a> or <a href="http://www.rubymotion.com/">RubyMotion</a>, respectively). <a href="http://www.python.org/">Python</a> is also great for many of the reasons that Ruby is, and generally more popular for non-web purposes, so you can&rsquo;t go wrong with either.</p>
+
+<p>Lots of people swear by Java, and if you&rsquo;re in a big company it&rsquo;s probably much easier for you to get buy-in for a language backed by Oracle than one created by a bunch of people on the Internet.</p>
+
+<p>If you want to create graphically intensive computer games, you&rsquo;ll want to brush up your math a little bit and check out the grand-daddy of programming languages, C (and its offshoots and derivatives, C++, Objective-C, and C#, depending on your platform). C is hard to start with, though, and has a lot of complicated concepts &mdash; if you&rsquo;re just beginning, a language slightly friendlier to humans would smooth the learning curve.</p>
+
+<p>It&rsquo;s hard to go wrong with any language, though, since most of the skills you&rsquo;ll learn in one will be more or less portable to another.</p>
+
+<h2>Ready, Set, Go!</h2>
+
+<p>With no further ado, a step-by-step list to go from zero to hero! If some steps are too remedial for you, just skip ahead until you get to a point where you think it&rsquo;s reasonable to follow along.</p>
+
+<h3>1. Learn about computers</h3>
+
+<p>Yes, you might use one every day and carry one around with you in your pocket. But what do you really know about these mysterious machines that make your life easier? Probably all too little!</p>
+
+<p>Even the computer languages that look very much like English require you to know something about the interior operations of a computer: you don&rsquo;t have to be an expert, but a generalized idea of how things work will be necessary for you to get into programming. For example, if you don&rsquo;t know what files are, what memory is, or how to find your IP address, you should start doing a little research. I suggest <a href="http://en.wikibooks.org/wiki/Computers_for_Beginners">Computers for Beginners</a>, which can be dry at times but covers a lot of ground very efficiently.</p>
+
+<p>It would probably also be helpful to learn a little bit about the structure of the Internet if you intend to do web programming of any sort&hellip; and these days, almost everything seems to involve a little bit of web programming. HowStuffWorks has a <a href="http://computer.howstuffworks.com/internet/basics/internet.htm">good explanation</a> of the general structure of the Internet that isn&rsquo;t too technical.</p>
+
+<h3>2. Learn about computer programming</h3>
+
+<p>Programming languages can be very different indeed; but at their heart, they&rsquo;re just instructions for telling a computer what to do. Since computers are quite similar, most programming languages rely on many of the same concepts.</p>
+
+<p>This is where programmers start spouting jargon like recursion, iteration, and conditionals. Though those are relatively big words, the concepts underlying them are quite simple and learnable. There are a lot of great places to start learning the basics, but I have a soft spot for <a href="http://learn.code.org/hoc/1">code.org&rsquo;s basics lessons</a>. It might seem more like a game than programming&hellip; and that&rsquo;s a good thing.</p>
+
+<p>Or, if you&rsquo;d prefer disconnecting from the computer for awhile, I would recommend taking a look at the fabulously fun <a href="http://en.wikipedia.org/wiki/RoboRally">RoboRally</a>. It gives players an idea of how computers actually process instructions &mdash; and how instructions that might initially seem perfectly reasonable can lead to horrible results.</p>
+
+<h3>3. Start learning your programming language</h3>
+
+<p>Now that you have a solid foundation, it&rsquo;s time to start learning your programming language!</p>
+
+<p>There are likely a lot of extremely good resources out there already to help you. I learned from some of the classic books of Ruby programming: <a href="http://pragprog.com/book/rails4/agile-web-development-with-rails-4">Agile Web Development with Rails</a> and <a href="http://ruby-doc.com/docs/ProgrammingRuby/">Programming Ruby</a>.</p>
+
+<p>Remember to consult the documentation! Almost every modern programming language has extremely extensive documentation, and probably a dedicated online following that love making those docs easier to read and understand. A little bit of Googling on even the silliest questions will probably yield a treasure trove of information&hellip; some useful, some not. (Try, for example, &ldquo;<a href="http://en.wikipedia.org/wiki/Ruby_(programming_language)#The_name_.22Ruby.22">why is Ruby named Ruby?</a>&rdquo;.)</p>
+
+<p>And while you&rsquo;re learning programming&hellip;</p>
+
+<h3>4. Start using it</h3>
+
+<p>It&rsquo;s never too early to apply your skills, even if you feel you have no skills at all! Having a project in mind is great and will help direct and guide your learning. There&rsquo;s no such thing as &ldquo;too ambitious&rdquo; when it comes to a personal project &mdash; want to create the next Facebook, manually process credit cards, or keep track of millions of items in a warehouse? Well guess what, computers are great at almost every task imaginable and you&rsquo;re learning how to apply their incredible power to the problems of your choice. Go to it!</p>
+
+<p>Yes, your code will be completely terrible. Yes, you&rsquo;ll probably grow bored or frustrated with the project and abandon it. Yes, the mere thought of these first steps will cause you great embarrassment in the future (or possibly present).</p>
+
+<p>But using your code in a project will reveal aspects of your chosen language you&rsquo;d probably never discover through a book or a tutorial. This is the sort of battle-hardening that you only really get on the field: you have to be in the trenches to know this stuff. For a Ruby example, you might have to figure out <a href="https://github.com/mperham/sidekiq">asynchronous jobs</a> or how to <a href="http://whomwah.github.io/rqrcode/">create QR codes</a>.</p>
+
+<p>Again, Google is your best friend here. One of the greatest triumphs and most unfortunate realities about programming is that someone else has already done what you&rsquo;re trying to do. You can learn quite a lot from their experiences and whatever code they&rsquo;ve created. Don&rsquo;t steal, that&rsquo;s incredibly unethical. But feel free to <a href="https://help.github.com/articles/fork-a-repo">fork</a>!</p>
+
+<p>Finally, always keep in mind your goals. You need to prove that you know your language, you have to have a track-record of using it in the real world, and you have to show you can work reasonably and responsibly with people. This is where you start building your resume for your future career, so keep in mind your objectives and work towards them.</p>
+
+<h3>5. Use it personally</h3>
+
+<p>You might find yourself doing this as you get even slightly proficient: the adage that <a href="http://en.wikipedia.org/wiki/Law_of_the_instrument">when you have a hammer, everything looks like a nail</a> is very true. But that&rsquo;s not necessarily a bad thing!</p>
+
+<p>When you create a program for yourself, don&rsquo;t hoard it. Release it on GitHub and include excellent documentation and concise tests. This is true even for what you&rsquo;d consider really minor pieces of code &mdash; it&rsquo;d probably help someone, and having open-source code allows potential employers (and potential clients) to see what you do, what your code looks like, and your process for creating it. More than anything else, GitHub has become my go-to tool for evaluating potential candidates for a position.</p>
+
+<p>I don&rsquo;t mean to scare you away if you intend only to work on closed software, but having code out in the wild lets people get to know you and how you work. It speaks directly to the three objectives I mentioned at the beginning of this piece. You need to establish your bona fides, and using programming personally &mdash; and releasing the result into the world &mdash; will prove you know what you&rsquo;re talking about</p>
+
+<h3>6. Use it professionally</h3>
+
+<p>At this point your code still probably isn&rsquo;t anywhere near professional-caliber. Guess what? That&rsquo;s fine! As long as you can still use it to do things &mdash; even if it takes you awhile, or the result is unpleasant, or there are a lot of &ldquo;gotchas&rdquo; for your poor users &mdash; you&rsquo;re already a programmer. If you have a job, start trying to work coding into it.</p>
+
+<p>When I was in college I had an internship where I was expected to go over huge CSV files by hand. It was a ridiculously unpleasant job&hellip; but a small amount of Ruby and a really ugly <a href="http://en.wikipedia.org/wiki/Regular_expression">regular expression</a> saved me an enormous amount of manual parsing and let me drill down to the problem spots immediately. When I gave the company my program, they in turn gave me a really stellar recommendation that started my career.</p>
+
+<p>Unfortunately, right out of college, all that recommendation landed me was a job doing tech support, but I managed to use my bad programming abilities there, too! The company I was doing support for had a terrible process for dealing with data files &mdash; really big ones, gigabytes large. We&rsquo;d go on-site, burn the files we needed to a DVD, take them back to the office, analyze them there to find out what was wrong, load the fixed files back onto another DVD, then go all the way back to the client.</p>
+
+<p>I wasn&rsquo;t a great programmer: in fact, I wouldn&rsquo;t even say I was a particularly good one. But I made a little Rails site that accepted enormous file uploads, so we could just upload the file and someone at the home office would download it. It crashed all the time, it took an eternity to upload, and it had the jankiest login system you&rsquo;d ever seen. But it saved me and all my coworkers a trip back and forth to the office&hellip; and it looked great on my resume when I decided to switch jobs.</p>
+
+<h3>7. Turn it into your profession</h3>
+
+<p>As your skills wax, you&rsquo;ll likely want to start finding real, professional opportunities to exercise them. It might be time to start interviewing for a new job &mdash; or, at the very least, changing your existing role to officially incorporate more of your hard-won programming abilities.</p>
+
+<p>Once you get to this point, the only way to improve more is to shift programming from a side-project to your full-time gig. Your resume will likely be fairly scant for an engineering position. This is okay. You aren&rsquo;t looking to be a senior systems architect (yet): most likely you&rsquo;ll get something at the bottom of the coding totem pole. But this is your first step into the real world of employable programming skills! Be proud that you&rsquo;ve made it this far.</p>
+
+<p>At this point in my career I worked at a very small Rails consultancy in Chicago&rsquo;s River North neighborhood. The pay was low but the coworkers were extremely friendly, and some were even minor Rails celebrities. It was a great lily pad for a year.</p>
+
+<p>Take the opportunity to learn from your coworkers. Many of them probably won&rsquo;t be much better than you, which is also okay. Learn from their mistakes just as you learn from yours and always strive to better yourself. Keep reading books on programming, both your chosen language and general practice. For example, <a href="http://www.amazon.com/Smalltalk-Best-Practice-Patterns-Kent/dp/013476904X">Smalltalk Best Practice Patterns</a> is an invaluable programming resource even though you&rsquo;re likely to never use Smalltalk.</p>
+
+<p>And always keep in mind your goals: knowledge of your language, proof of having used it professionally, and demonstrated ability to work in a team. Consider how your work will look on your resume or what ammunition it will give you during an interview. And aalways be on the look-out for excellent opportunities for yourself. You&rsquo;re the only one looking out for your own professional development, so take it seriously.</p>
+
+<h3>8. Move up in the world</h3>
+
+<p>One of the unfortunate realities of the job market is you&rsquo;re much more likely to get a raise and better responsibilities by switching jobs. (<a href="http://www.forbes.com/sites/cameronkeng/2014/06/22/employees-that-stay-in-companies-longer-than-2-years-get-paid-50-less/">It&rsquo;s depressing but true.</a>) Once you&rsquo;ve put in your time as a beginner programmer, it&rsquo;s time to spread your wings and fly to a company that has more challenges, better opportunities, and hopefully higher pay.</p>
+
+<p>Briefly, I&rsquo;d like to mention that you&rsquo;ll probably experience some <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">imposter syndrome</a> as you interview around. Your new skills are likely to feel fairly unfinished, so doubting yourself as you look around &mdash; and wondering whether or not you can accomplish what prospective employers ask of you &mdash; is natural.</p>
+
+<p>Here&rsquo;s a little life pro tip: almost everyone suffers from the belief that they aren&rsquo;t as competent as they are. A good attitude, great ability to learn, and accomplished programming skills will get you much further than you think. Don&rsquo;t be afraid to take a chance on yourself. The likelihood you&rsquo;ll fail is very tiny, and the probability you&rsquo;ll succeed and learn a lot makes such a small risk worth it.</p>
+
+<h3>9. Challenge yourself</h3>
+
+<p>At this point this list is likely to become less useful for you, since, congratulations! You&rsquo;re pretty well a programmer. But, if you&rsquo;d like one piece of career advice from one programmer to another: continue to seek new and exciting challenges. Never rest on your laurels.</p>
+
+<p>I mean this in a very practical way. As I mentioned, switching jobs is a great way to get a raise, but also it&rsquo;ll give you new problems to tackle. Never stop building your resume and you&rsquo;ll always have job security. More than that, continuing to grow your programming skills will provide a solid foundation for whatever you want to do with your life and provide intellectual stimulation for years to come.</p>
+
+<p>And from here, your path is yours to follow. I&rsquo;d love to know how it goes though, so <a href="mailto:josh@joshsymonds.com">drop me a line as you progress</a>!
+</li>
+</ol></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Your Job Is To Code]]></title>
+    <link href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/"/>
+    <updated>2014-06-15T00:47:57-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code</id>
+    <content type="html"><![CDATA[<p>I don&rsquo;t usually call out articles on Hacker News for being exceptionally silly &mdash; if I did I wouldn&rsquo;t have the time to write about anything else &mdash; but I saw one in particular tonight that bugged me, titled <a href="http://www.andresosinski.com/you-job-is-not-to-code.html">Your Job Is Not To Code</a>. It was filled with the sort of engineering platitudes that one can reliably expect from HN: you must be an engineering ambassador to your company from the strange and incomprehensible Codingverse. It&rsquo;s up to you to interpret and reinterpret the requirements of your project, hopefully better than its stakeholders, and tell them what they&rsquo;re doing wrong. Your technical skills must be married to the sort of interpersonal skills that would make ambassadors and diplomats blush.</p>
+
+<p>This is all bunk.</p>
+
+<p>If you&rsquo;re an engineer, then your job is to code. Your job is to be good at it. No, more than that: your job is to be <strong>great</strong> at it. Anything less is a disservice to the people who&rsquo;ve hired you and a disservice to yourself. You should work constantly to succeed at your job. Working towards anything else is a distraction.</p>
+
+<!-- more -->
+
+
+<p>I find the point of view that creating code is the least of our concerns particularly troubling, since the skill our profession provides is so unique and valuable. Usually you don&rsquo;t see agile coaches, salespeople, or business development professionals jumping in and coding. And when they do, they&rsquo;re not great at it. Why should they be? Their talents are of a different sort. So why do we constantly receive exhortations to do their jobs? Does having the ability to code make us great at marketing? Or leading a team? Or being a chef?</p>
+
+<p>I&rsquo;ll tell you what coding does make us great at: creating computer programs. I mean this unironically. Our applied skills produce amazing products, save hundred of hours of human labor, and make people laugh or cry. The knowledge that enables this is, for most of us, hard won. Retaining our engineering position is a lifelong process of learning, changing, and growing. It&rsquo;s the <a href="http://en.wikipedia.org/wiki/Red_Queen's_race">Red Queen&rsquo;s Race</a> to keep up with our peers and our changing world. The fastest we can run will result in us merely standing still&hellip; and if you don&rsquo;t run as fast as you can, you&rsquo;ll be left behind.</p>
+
+<p>Of course we must communicate what we&rsquo;re doing to our bosses, our clients, and our process managers. But this doesn&rsquo;t make you a boss, a client, or a process manager. If they don&rsquo;t understand what you&rsquo;re doing, despite your communication, then that doesn&rsquo;t make you bad at your job. It makes them bad at theirs. This is a hard spot to be in, and while the solution might be to try to do their job for them, that doesn&rsquo;t change what your job is. (To reiterate: your job is to code.) If you&rsquo;ve taken their responsibilities on top of yours, that doesn&rsquo;t make you great. It means something has gone very wrong indeed.</p>
+
+<p>Coding is a form of communication. As you become better at coding, hopefully your communication skills will follow &mdash; and this allows you to better interact with others. And while there&rsquo;s nothing wrong with using new skills, don&rsquo;t become distracted by them. You have a talent, a knowledge, a skill that others in your organization lack. Your job is to employ that skill as efficaciously, as completely as possible. And that should be taking up 99% of your time in any given day.</p>
+
+<p>Leave the strategy to the generals and the garbage collecting to the janitors. Do what you do best, do what you love. That way lies success, self-actualization, and happiness. Become distracted and soon you will be a general or a janitor: there&rsquo;s nothing wrong with that, but their jobs aren&rsquo;t coding. And if you were hired to code, if you want to code, then your job is to code. It&rsquo;s as simple as that.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Interviewing Symonds &amp; Son]]></title>
+    <link href="http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son/"/>
+    <updated>2014-03-12T23:43:18-05:00</updated>
+    <id>http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &mdash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
+
+<!-- more -->
+
+
+<h3>How did you start your business?</h3>
+
+<p>Rather accidentally, actually: I fell into it. I&rsquo;ve been a software developer for about a decade now, since I graduated college, and I&rsquo;ve always loved it &mdash; so much so that I couldn&rsquo;t put it down when I got home. I was always programming, either on personal projects or side gigs outside my day job. Eventually those gigs got bigger and bigger, and my friends and clients referred me to other people&hellip; for awhile, about two years ago, it almost felt like I was working a night job that was almost exactly the same as my day job. Then the startup where I was working full time ran into money problems and had to cut my hours pretty dramatically. I always intended to find another full time position, but I just got so busy with my client work that I didn&rsquo;t have the time: and that was the start of Symonds &amp; Son.</p>
+
+<h3>What did your parents say when you said you wanted to start a consulting business?</h3>
+
+<p>&ldquo;No, don&rsquo;t!&rdquo; They hated the idea. I&rsquo;d mentioned it before &mdash; I don&rsquo;t like having a boss, and I&rsquo;d frequently wondered what it would be like to work for clients, rather than managers. But for my father, consulting has always been very boom-and-bust: there were times he was so busy he was hardly home, and then times he&rsquo;d be sitting around being unhappy. My parents told me to find a stable, full-time job at a big company like Apple, or even a smaller company where I wouldn&rsquo;t have to worry so much about the future. But I had an idea to make my own company and I wanted to do it, and when they saw they couldn&rsquo;t convince me otherwise they gave me advice on how to make it work&hellip; and eventually I managed to convince them to join me!</p>
+
+<h3>Who did you bring into the business first, your mom or dad?</h3>
+
+<p>My dad.</p>
+
+<h3>Why did you decide to bring him in?</h3>
+
+<p>I&rsquo;ve always relied on my dad to help me do contract proof-reading and negotiations. He&rsquo;s had a lot of experience doing business development and his advice has always been helpful&hellip; though, to his annoyance, I haven&rsquo;t always followed it. Recently my father&rsquo;s business hasn&rsquo;t been as busy as he liked, but meanwhile mine has been growing really quickly, and I&rsquo;ve needed a lot more help than usual on the business end. Bringing him in was a natural fit.</p>
+
+<h3>When did your mom join, and what is her role?</h3>
+
+<p>Mom started helping me out during the wedding, so about six months ago &mdash; she was our wedding planner. She organized speaking with florists, tasting food, talking with photographers&hellip; and quickly I found her help (personally and professionally) indispensable. She&rsquo;s my personal assistant and helps me keep focused on my business by taking care of invoicing and whatever else the company needs.</p>
+
+<h3>Do you like owning your own business?</h3>
+
+<p>So much! It&rsquo;s really different than I thought it would be: I imagined myself programming day in and day out, but there&rsquo;s a lot of overhead involved. Running a business with employees and partners is like two jobs. In the first one, I&rsquo;m programming and making the product my clients want, and in the second, I&rsquo;m organizing, marketing, selling and negotiating. But I don&rsquo;t mind all the work&hellip; in fact, I love working with my family on a day-to-day basis. Even if Symonds &amp; Son isn&rsquo;t around in 10 years I&rsquo;ll have great memories of the amazing things we accomplished together &mdash; but I hope we&rsquo;re around even longer than that.</p>
+
+<h3>How is your working relationship with your parents?</h3>
+
+<p>On average, really good. Since college I&rsquo;ve gotten along with my parents quite well, and I think since I&rsquo;ve grown into an adult we&rsquo;ve gotten along better. Our relationship during high school and even during the beginning of college was a little bit of a mess, but now that we&rsquo;re all adults we can actually be friends, which I think works out really well.</p>
+
+<h3>Did you have any reservations bringing them into your business?</h3>
+
+<p>Yes, a thousand times yes. My father and I spent most of my high school not understanding each other and butting heads. We&rsquo;d get into arguments constantly, and I think that&rsquo;s part of the reason I don&rsquo;t listen to his advice even when I should: I spent most of high school not listening to him and it seemed to work out pretty well. And mom was always pushing me, to get better grades, to do more extracurricular activities, to practice the flute more&hellip; I think that if I told myself in high school that I would literally pay her to keep doing that to me as an adult, I would&rsquo;ve laughed until I died. But I needed help, and I knew they were competent, skilled people who could help me. So, as I said, it just seemed like a natural fit.</p>
+
+<h3>What&rsquo;s the number one complaint your parents have wth you?</h3>
+
+<p>That I don&rsquo;t listen to them! They definitely want me to communicate with them a lot more than I feel comfortable with. They&rsquo;re always calling and checking up on me and my husband, both personally and in regards to the business, but I have a very full schedule at the best of times: it can be exhausting to satisfy their demands. And from their perspective, I&rsquo;m not nearly responsive enough. I don&rsquo;t return calls promptly or deliver them the information they need to do their jobs in a timely manner.</p>
+
+<h3>How are your processes different in the family?</h3>
+
+<p>The primary process difference is between me and my father. Dad is very dramatic, as I&rsquo;ve said before: everything is a crisis, whereas with me, I&rsquo;m usually calm and collected. So when dad is yelling at me that some work must get done, I quietly tell him that it will, and he goes bananas because he thinks I&rsquo;m not taking it seriously, and I can&rsquo;t believe he&rsquo;s getting so worked up about it. Both of us get our work done in the end, but the meeting of the two processes can be a little difficult, and usually involves a lot of my father hanging up on me and swearing to my mom that he&rsquo;ll never talk to me again.</p>
+
+<h3>Des anyone in your family have a different personality, or personality traits that are different at work than when not working?</h3>
+
+<p>Our personalities are very different, though I touched on that in your last question. My mom and I have more similar dispositions, and I&rsquo;ve seen her handle my dad expertly for years. I know there&rsquo;s a lot of bluster, but it accomplishes a lot too. He&rsquo;s passionate and a really skilled negotiator: he&rsquo;s done some impressive stuff on our conference calls with the same righteous attitude that can get on my nerves. And I know I have that anger in me too &mdash; I&rsquo;ve definitely had moments where I feel like I&rsquo;ve had to channel my father to get my way. Few people can resist Steve Symonds head on.</p>
+
+<p>I also feel like I&rsquo;m much more placid at work than I am in my personal life. I try to be clear-headed and visionary in my role as president of the company, but outside the office I cut loose a lot more. I tend to act the same around my parents though, so maybe my &ldquo;president of the company&rdquo; personality and my &ldquo;son&rdquo; personality are actually pretty close.</p>
+
+<h3>How do you usually handle it when your father gives you advice? Is his advice usually unsolicited?</h3>
+
+<p>I&rsquo;d say the advice is about half solicited, half unsolicited&hellip; And I usually weigh his advice very seriously. That doesn&rsquo;t mean I take it though! Dad has been very successful in business, but I feel like I&rsquo;ve been successful too, with many great things still in my future. If I want Symonds &amp; Son to be the best company it can possibly be, I need to hear his advice, compare it to what I think the best course of action is, and then make a decision&hellip; and that&rsquo;s how I&rsquo;ve used his suggestions in the past.</p>
+
+<p>Of course this drives him bonkers, but I covered our process differences earlier.</p>
+
+<h3>What are some things your dad does that drives you nuts?</h3>
+
+<p>Calls me all the time! I have meetings all day long, and when I&rsquo;m not in meetings I&rsquo;m programming. I don&rsquo;t have time to talk on the phone. My employee, when he wants to talk to me, IMs me, which is much more convenient. I need to get my parents to start doing that too. And as I mentioned, the drama aspect.</p>
+
+<h3>What are some things your mom does that drives you nuts?</h3>
+
+<p>Nags me, which ironically is what I pay her to do! It can be very difficult for me to realize that she&rsquo;s just doing her job when she bugs me to do stuff, especially considering how she used to do it all the time for free and drive me up a wall. If I&rsquo;m already very tense, it can be difficult not to snap at her when she&rsquo;s reminding me about my obligations.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Programming the New Family Business]]></title>
+    <link href="http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business/"/>
+    <updated>2014-01-16T11:28:19-06:00</updated>
+    <id>http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business</id>
+    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &mdash; specifically, <strong>my</strong> successful consulting business &mdash; actually look like?</p>
+
+<p><a href="http://symondsandson.com">Symonds &amp; Son</a> isn&rsquo;t named to sound cute and hipstery. I&rsquo;m the son; I&rsquo;m in business with my father, and I recently hired my mother to be my assistant and bookkeeper. The company&rsquo;s name is intended to evoke images of traditional, reliable family businesses, where trust, excellence, and a reputation for quality products are their cornerstones. These companies, traditionally centered around carpentry and other hand-made professions, are my models for how to run Symonds &amp; Son. We are, if you&rsquo;ll forgive me using the phrase, a bespoke development shop, where our great output and superb relationship with our clients are our highest priorities.</p>
+
+<p>But building my profession into a company &mdash; and a company with my parents, no less &mdash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
+
+<!-- more -->
+
+
+<h2>Parents Are the Worst</h2>
+
+<p>Let me be perfectly honest here: I was not a model child. Quite the opposite, in fact &mdash; I was the picture of a rebellious teenager. I was surly, I hated authority, I refused to leave the basement and I would play computer games constantly in lieu of doing homework. My parents and I would have huge fights that would last for hours, typically centered around my grades, and I would go screeching off into the night (in their car, of course) to hang out with my friends at Dunkin Donuts and whine about the many injustices of life, parents, and school.</p>
+
+<p>(I was not a great student.)</p>
+
+<p>My relationship with my parents really did not improve until after college. Though I never liked school, I found my niche in the workplace: arbitrary grades meant little to me, but performance tied to money? Now that was a formula I could understand! As my career flourished my relationship with my parents got better. I like to think that they gradually grew to respect my skills and ambition, but more realistically I think they were just happy that I had launched successfully when so many of my peers had been burned and left un- or under-employed by the poor job market.</p>
+
+<h2>But Then So Are Children</h2>
+
+<p>My father, a successful consultant in his own right, always advised me never to consult. Every time I eyed doing hourly work, he told me to firmly refocus my sights on a full-time job. He&rsquo;d speak to the benefits, the retirement account, the possibilities for advancement big companies could offer &mdash; and, of course, I completely disregarded his advice. I found employment first with startups (not exactly bastions of job security or big 401ks) and then freelancing.</p>
+
+<p>So if you want to take one piece of advice from my post, it&rsquo;s this: if you want to go into business with your parents, ruthlessly ignore their recommendations at every turn!</p>
+
+<p>My father&rsquo;s niche had always been contracts, contacts, and business development, areas in which I am admittedly weak. He&rsquo;s helped multi-million dollar companies divide and conquer their industries, and find partners to allow them to do so. When I told him I was dead set on making this consulting shindig work, he responded that he&rsquo;d be available if I needed his help. Thus I found myself relying on him more and more&hellip; first to read contracts, then to perform light business development, and finally to properly structure my own growing business and best serve my clientele. In the end I suggested we just incorporate together. He agreed, and thus Symonds &amp; Son was born.</p>
+
+<h2>Big Egos, Big Problems</h2>
+
+<p>Neither my father nor I are accustomed to knuckling under in arguments, and so our new business relationship has hardly been problem-free. We have some very different perspectives on the proper ways to interact with clients, communicate on a daily basis, and turn single contracts into recurring revenue. For example, I hate answering the phone during the day, as I&rsquo;m usually busy coding &mdash; but he can&rsquo;t stand getting directed to voicemail when he knows that I&rsquo;m around and just not picking up.</p>
+
+<p>Our solution for that particular problem is better communication and faster turnarounds. He knows he can get ahold of me if there&rsquo;s an emergency, and otherwise that I&rsquo;ll return his call as soon as possible&hellip; and in return, he texts me a lot more, which allows me to respond when I&rsquo;m available and in my own time.</p>
+
+<p>But definitely the most important lesson I&rsquo;ve learned is that my father is indeed an expert in what he does, and generally knows what he&rsquo;s doing &mdash; and that&rsquo;s the same lesson I try to impose on him when he starts stepping on my toes too much. It can be difficult to give him the reins during delicate business operations, but I actually find it helpful as well. Like most entrepreneurial people, I love being in control and feel most comfortable when I&rsquo;m managing as many of the aspects of any situation as I can. But other people are great at what they do too, and they can only prove it when given the chance to shine.</p>
+
+<p>Or, more pithily, if I&rsquo;m to succeed personally, I have step back and let the people I trust succeed. Only if I allow it to happen can it happen.</p>
+
+<h2>Love, Trust, Respect, Nagging</h2>
+
+<p>As my business expanded, I found I had less and less time for simple business tasks &mdash; invoicing, talking to my accountant, setting up and managing a corporate bank account&hellip; My to-do list was growing longer and longer with absolutely no hope of me ever breaking free to accomplish any of it. After all, if I stopped coding then I stopped getting paid, and consulting is not exactly a business that lets one rest on their laurels.</p>
+
+<p>I needed an assistant.</p>
+
+<p>My mother had handled all our scheduling, accounts, and priorities growing up: she was a successful businesswoman in her own right as well, though she left the corporate world and went into non-profit when my sister was born. That changed in the beginning of 2013 when my parents moved. Mom suddenly found herself with less on her plate than when she lived in Connecticut, and it was difficult for her to translate her great non-profit experience in the suburbs of Connecticut to the non-profits in the heart of Chicago.</p>
+
+<p>Growing up, I hated being nagged. But I realized what I needed was an incredibly prioritized, driven person to help me with the day-to-day operations of my business&hellip; and my mother had time to spare and thirty years of experience managing me and my time. As much as I hated to admit it, I needed her to really make Symonds &amp; Son a success.</p>
+
+<p>And so far it&rsquo;s been working out really well &mdash; almost scarily well. My mother is an efficient woman, and when I give her a list she turns it around in a timeframe I find just astounding. For my part, I&rsquo;ve learned to respect her gentle nagging: not only does she have my best interests at heart, but the best interests of our company. She&rsquo;s working on behalf of the company to make it more efficient. If I stood in the way of that, I would be a bad employer, and while I might not have been the best son in the entire world, I at least want to be a pretty good boss.</p>
+
+<h2>Thankshannukah with the Symondses</h2>
+
+<p>I never turned to my parents with charity. They are successful, independent people in their own right, and I am lucky they&rsquo;ve decided to invest their time and energy in my consultancy. But there are lots of people out there who would want the opportunity to draw a paycheck from Symonds &amp; Son, some potentially even more qualified than mom and dad. So why did I decide to go into business with them?</p>
+
+<p>Partly it&rsquo;s where they were in their lives: they had the time and energy to dedicate to a new venture. But more than that, it&rsquo;s that I already know, respect, and trust them. I want the values of my company to reflect the values of my family: a firm commitment to client work can only really be achieved if I&rsquo;m not constantly watching my back for a dagger, or if I&rsquo;m free from worries about the honesty and priorities of my employees.</p>
+
+<p>I could have gone out, interviewed candidates, selected potentials, hired a few, and eventually learned to trust and respect them. But I had excellent, well-qualified, trustworthy and experienced candidates I already had a good relationship with. To answer my earlier rhetorical question with another, why should I go searching for what I already had?</p>
+
+<h2>But What Happens If&hellip;?</h2>
+
+<p>Of course, I would be disingenuous if I said I was never concerned. What if I had to have some sort of Serious Conversation&trade; with mom and dad about their performance, or salaries, or any of the other number of difficult conversations any company might have to have with its employees? Or, to get to the heart of the matter: could I really fire my own parents if I had to?</p>
+
+<p>I like to think it&rsquo;ll never come to that. Symonds &amp; Son is a family business, and we&rsquo;ll succeed (or fail) as a unit. If the worst comes and I&rsquo;m forced to close up shop, then it means unemployment for all of us &mdash; at least temporarily. It won&rsquo;t be the end of any of our careers. I&rsquo;ll land somewhere else doing Rails, most likely, and my father will pick up other clients, and my mom will find a non-profit. It&rsquo;ll be another chapter in our lives closed, but hopefully an overall positive one.</p>
+
+<p>Certainly working together as a family has been a challenging experience, but it&rsquo;s brought me closer to my parents in a way I wouldn&rsquo;t have imagined even a few years ago. I&rsquo;ve learned to respect them for their talents and abilities, rather than as caregivers with the patience to raise me and my sister. I&rsquo;m not saying this kind of business is for everyone &mdash; maybe it works only for us, and even then, who knows if it&rsquo;ll work forever? But in trying to model Symonds &amp; Son after traditional, family-run businesses, I&rsquo;ve found capable, competent employees right under my nose: and my clients seem to enjoy working with us, so we must be doing something right.</p>
+
+<p>And I would be remiss if I didn&rsquo;t include at least a little advertising here! If you&rsquo;re interested in seeing <a href="http://symondsandson.com">Symonds &amp; Son</a> work for you, we make amazing software products and scalable Rails solutions. <a href="mailto:josh@joshsymonds.com">Get in touch</a> and see what a family business can do for you. You might just be surprised at how efficient and effective the new family business can be.</p>
+]]></content>
+  </entry>
+  
+</feed>

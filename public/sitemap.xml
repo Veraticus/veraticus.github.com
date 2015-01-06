@@ -370,7 +370,27 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks/</loc>
-        <lastmod>2014-06-11T18:10:46-05:00</lastmod>
+        <lastmod>2014-06-11T21:37:11-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto/</loc>
+        <lastmod>2014-06-12T18:30:58-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/</loc>
+        <lastmod>2014-06-15T01:42:43-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/07/29/how-to-turn-yourself-into-a-programmer/</loc>
+        <lastmod>2014-07-29T14:59:39-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/09/04/windy-city-rails-day-one/</loc>
+        <lastmod>2014-09-04T20:20:14-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul/</loc>
+        <lastmod>2014-10-21T17:48:11-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/404.html</loc>
@@ -378,11 +398,11 @@
     </url>
     <url>
         <loc>http://joshsymonds.com/blog/archives/</loc>
-        <lastmod>2014-06-11T18:10:46-05:00</lastmod>
+        <lastmod>2014-10-21T17:48:11-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/</loc>
-        <lastmod>2014-06-11T18:10:46-05:00</lastmod>
+        <lastmod>2014-10-21T17:48:11-05:00</lastmod>
     </url>
     <url>
         <loc>http://joshsymonds.com/resume/</loc>
