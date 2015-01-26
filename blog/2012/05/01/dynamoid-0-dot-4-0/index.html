@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamoid 0.4.0 - Hi, I'm Josh Symonds</title>
+  <title>Dynamoid 0.4.0 - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-05-01T00:04:00-05:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
+<time datetime="2012-05-01T00:04:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 3  minutes</span>
 
         
@@ -120,7 +121,7 @@
   </header>
 
 
-  <div class="entry-content"><p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&rsquo;t worked &mdash; they&rsquo;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&rsquo;s DynamoDB.</p>
+  <div class="entry-content"><p><a href="https://github.com/Veraticus/Dynamoid">Dynamoid 0.4.0</a> is a pretty significant improvement over previous iterations of Dynamoid. While the project has obviously always been my hobby, 0.4.0 represents what I would consider one of the first iterations I would use in a real production application. Not because the previous version haven&rsquo;t worked &ndash; they&rsquo;ve all done exactly what they should do. But now it has the flexibility and options to really allow an application to thrive in Amazon&rsquo;s DynamoDB.</p>
 
 <p>What do I mean by that?</p>
 
@@ -139,14 +140,14 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Tweet</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Dynamoid</span><span class="p">:</span><span class="ss">:Document</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Dynamoid</span><span class="o">::</span><span class="no">Document</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="n">table</span> <span class="nb">name</span><span class="p">:</span> <span class="ss">:twitters</span><span class="p">,</span> <span class="ss">key</span><span class="p">:</span> <span class="ss">:tweet_id</span><span class="p">,</span> <span class="n">read_capacity</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">write_capacity</span><span class="p">:</span> <span class="mi">200</span>
+</span><span class='line'>  <span class="n">table</span> <span class="nb">name</span><span class="p">:</span> <span class="ss">:twitters</span><span class="p">,</span> <span class="ss">key</span><span class="p">:</span> <span class="ss">:tweet_id</span><span class="p">,</span> <span class="ss">read_capacity</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="ss">write_capacity</span><span class="p">:</span> <span class="mi">200</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &mdash; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
+<p>As a bonus you can also change the hash key and even the table name. Though the table name will still be placed in your namespace &ndash; so if your namespace is <code>dynamoid</code>, your table will be <code>dynamoid_twitters</code>, in the above example.</p>
 
 <h3>Consistent Querying</h3>
 
@@ -165,7 +166,7 @@
 
 <h3>Future Functionality</h3>
 
-<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&rsquo;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &mdash; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&hellip; but we already perform indexing, so it wouldn&rsquo;t be that bad.</p>
+<p>I had a suggestion from <a href="http://twitter.com/aaronnamba">Aaron Namba</a> to implement a rake task that would create tables. I think that&rsquo;s a great idea; expanding on it, a task to reprovision existing tables would also be pretty cool. Also, Mongoid offers embedded relations &ndash; it should be no problem to offer those in DynamoDB through Dynamoid as well. The only issue, of course, is indexing the children IDs from inside their parents&hellip; but we already perform indexing, so it wouldn&rsquo;t be that bad.</p>
 
 <p>Speaking of indexing, being able to index an association attribute would be pretty keen. So then you could go <code>user.addresses.where(:city =&gt; 'Chicago').all</code> and have it perform a quick lookup on a denormalized index table, rather than manually find all addresses for the user and then use Ruby to filter them. I&rsquo;m not sure about this functionality, though, for the same reason that I&rsquo;m unsure about adding geolocation.</p>
 
@@ -221,7 +222,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

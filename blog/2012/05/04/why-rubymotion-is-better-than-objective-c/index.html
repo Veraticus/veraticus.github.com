@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Why RubyMotion Is Better Than Objective-C - Hi, I'm Josh Symonds</title>
+  <title>Why RubyMotion Is Better Than Objective-C - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-05-04T02:14:00-05:00" pubdate data-updated="true">May 4<span>th</span>, 2012</time>
+<time datetime="2012-05-04T02:14:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 12  minutes</span>
 
         
@@ -151,7 +152,7 @@
 
 <p>Xcode&rsquo;s user interface is nightmarishly complicated. Clutter doesn&rsquo;t even begin to describe it.</p>
 
-<p>Put simply, Xcode takes all the build options possible for the Objective-C compiler, organizes them into unhelpful menus and buttons, and succeeds in obfuscating the few that are really important &mdash; the most important settings for your project are hidden behind layers of unintuitive navigation. For example, to enable Zombie Objects, a common debug option for finding and correcting bad access errors, you have to go down one menu, select a navigation option, and then select a tab. That&rsquo;s three layers of menus between you and a useful checkbox! How on Earth would anyone find that without the help of Google?</p>
+<p>Put simply, Xcode takes all the build options possible for the Objective-C compiler, organizes them into unhelpful menus and buttons, and succeeds in obfuscating the few that are really important &ndash; the most important settings for your project are hidden behind layers of unintuitive navigation. For example, to enable Zombie Objects, a common debug option for finding and correcting bad access errors, you have to go down one menu, select a navigation option, and then select a tab. That&rsquo;s three layers of menus between you and a useful checkbox! How on Earth would anyone find that without the help of Google?</p>
 
 <p>I think the plethora of menus and tabs are intended to make projects approachable and easy for beginners. However, the layers of abstraction make windows cluttered and unhelpful for experienced developers, while being utterly incomprehensible for new ones. As another example, witness the dreaded Project file (the root of any Objective-C application). Click on it and go to your build targets and be assaulted by five tabs, many of them multiple pages long. There are important settings that you should change here. Good luck finding them.</p>
 
@@ -165,12 +166,12 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">firstColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">thirdColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">fourthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">fifthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="k">static</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">sixthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">static</span> <span class="bp">UIColor</span> <span class="o">*</span><span class="n">firstColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">static</span> <span class="bp">UIColor</span> <span class="o">*</span><span class="n">secondColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">static</span> <span class="bp">UIColor</span> <span class="o">*</span><span class="n">thirdColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">static</span> <span class="bp">UIColor</span> <span class="o">*</span><span class="n">fourthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">static</span> <span class="bp">UIColor</span> <span class="o">*</span><span class="n">fifthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">static</span> <span class="bp">UIColor</span> <span class="o">*</span><span class="n">sixthColor</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -198,7 +199,7 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
 </span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;TestApp&#39;</span>
 </span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">interface_orientations</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:portrait</span><span class="o">]</span>
 </span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;.com.TestCompany.TestApp&#39;</span>
@@ -229,10 +230,10 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier:</span><span class="n">CellID</span><span class="p">];</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="bp">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="n">CellID</span><span class="p">];</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier:</span><span class="n">MyCellIdentifier</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier</span><span class="p">:</span><span class="n">MyCellIdentifier</span><span class="p">];</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -300,7 +301,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>That would have taken forever and involved a lot of copying and pasting in Objective-C. As you can see, you can call any Objective-C methods from Ruby itself, because all Ruby classes are implemented on top of Objective-C classes &mdash; with the traditional Ruby methods you&rsquo;ve grown to know and love baked right on top. Of course, because Ruby is Ruby, there&rsquo;s significant room for improvement here. Why not a class to create these labels?</p>
+<p>That would have taken forever and involved a lot of copying and pasting in Objective-C. As you can see, you can call any Objective-C methods from Ruby itself, because all Ruby classes are implemented on top of Objective-C classes &ndash; with the traditional Ruby methods you&rsquo;ve grown to know and love baked right on top. Of course, because Ruby is Ruby, there&rsquo;s significant room for improvement here. Why not a class to create these labels?</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -474,7 +475,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This isn&rsquo;t all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what&rsquo;s happening. As a rule you don&rsquo;t have to do that nearly as much, though &mdash; or at least I haven&rsquo;t so far. Finally, there&rsquo;s no great way to get logging output from the application other than outputting directly to stdout. When I want to log stuff, I end up having lines like this:</p>
+<p>This isn&rsquo;t all sweetness and light, though. Without breakpoints, it can be a little difficult to stop and step through code to see exactly what&rsquo;s happening. As a rule you don&rsquo;t have to do that nearly as much, though &ndash; or at least I haven&rsquo;t so far. Finally, there&rsquo;s no great way to get logging output from the application other than outputting directly to stdout. When I want to log stuff, I end up having lines like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Received response: </span><span class="si">#{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -487,7 +488,7 @@
 
 <p>As you&rsquo;ve just gathered, RubyMotion has room for improvement. I know I&rsquo;ll miss tab completion from Xcode. Method names never seemed so long as when you have to type them. dequeueReusableCellWithIdentifier, ugh. Without tab completion, you do a lot of copying and pasting from the documentation when you find a method name you like, just to ensure you don&rsquo;t accidentally typo it.</p>
 
-<p>I&rsquo;ve definitely run into errors with no backtrace at all &mdash; just a straight simulator crash along with no output on the commandline. So there&rsquo;s still some ironing out around the whole process that needs to be done. And Cocoapods, for all its awesomeness, won&rsquo;t compile JSONKit for some reason. Or I&rsquo;m doing something wrong, one of the two.</p>
+<p>I&rsquo;ve definitely run into errors with no backtrace at all &ndash; just a straight simulator crash along with no output on the commandline. So there&rsquo;s still some ironing out around the whole process that needs to be done. And Cocoapods, for all its awesomeness, won&rsquo;t compile JSONKit for some reason. Or I&rsquo;m doing something wrong, one of the two.</p>
 
 <p>These are minor implementation errors, though; the overall philosophy and integration is, well&hellip;</p>
 
@@ -541,7 +542,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

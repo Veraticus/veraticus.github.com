@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Hi, I'm Josh Symonds</title>
+  <title>Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Configuring unicorn for your Rails servers is as much an art as it is a science. That said, there are some things that make the configuration and &hellip;">
+  <meta name="description" content="I&rsquo;ve been giving a lot of thought recently to working around DynamoDB&rsquo;s built-in limitations. Like most good web products (and I do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,12 +18,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joshsymonds.com/blog/page/9">
+  <link rel="canonical" href="http://joshsymonds.com/posts/9">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -98,6 +99,51 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Working Around DynamoDB&#8217;s Limitations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T12:54:00-06:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been giving a lot of thought recently to working around DynamoDB&rsquo;s built-in limitations. Like most good web products (and I do believe DynamoDB is good), it uses a <a href="http://uxmag.com/articles/less-is-better">less is better</a> approach: but in a database, less is surprising and can make it difficult for people to transition from their existing, fully-featured solutions to a cheaper, faster, but simpler product.</p>
+
+<p>Nevertheless, I think you can still do a lot with DynamoDB, and I think the key is using tools targeted specifically towards its shortcomings: lack of indexing and transactional support. Today I&rsquo;ll talk a little about overcoming the indexing problem, since I&rsquo;m still noodling around the transaction issue.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/01/working-around-dynamodbs-limitations/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Setting Up Unicorn in a Production Environment</a></h1>
     
     
@@ -114,7 +160,7 @@
   
 
 
-<time datetime="2012-02-27T10:20:00-06:00" pubdate data-updated="true">Feb 27<span>th</span>, 2012</time>
+<time datetime="2012-02-27T10:20:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -131,7 +177,7 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">More &rarr;</a>
+      <a rel="full-article" href="/blog/2012/02/27/setting-up-unicorn-in-a-production-environment/">Read on &rarr;</a>
     </footer>
   
 
@@ -159,7 +205,7 @@
   
 
 
-<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+<time datetime="2012-02-23T13:30:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 1  minute</span>
 
         
@@ -186,7 +232,7 @@
 
 <p>Of course, looking at command line magic doesn&rsquo;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
 
-<p>It&rsquo;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&rsquo;m sure. The good part &mdash; for me at least &mdash; is how close it is to the servers and how well it ties in with Capistrano. There&rsquo;s no magic going on and there&rsquo;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&hellip; but if you know what you&rsquo;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
+<p>It&rsquo;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&rsquo;m sure. The good part &ndash; for me at least &ndash; is how close it is to the servers and how well it ties in with Capistrano. There&rsquo;s no magic going on and there&rsquo;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&hellip; but if you know what you&rsquo;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
 
 <p>rubber isn&rsquo;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&rsquo;s deployed on a per-application basis, it can&rsquo;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
 </div>
@@ -217,7 +263,7 @@
   
 
 
-<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2012</time>
+<time datetime="2012-02-22T15:00:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time less than 1 minute</span>
 
         
@@ -228,7 +274,7 @@
 
   <div class="entry-content"><p><a href="http://github.com/Veraticus/Dynamoid">Dynamoid</a> is (another) gem I developed, but I think it&rsquo;s a lot more exciting than <a href="http://github.com/Veraticus/rapnd">rapnd</a>! I started work on it over Christmas but didn&rsquo;t really get a lot of opportunity to focus on it again until recently, when work become relatively less busy.</p>
 
-<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &mdash; it&rsquo;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&rsquo;t really do a whole lot of exciting stuff yet&hellip;</p>
+<p>Dynamoid owes a lot to <a href="https://github.com/mongoid/mongoid">Mongoid</a> &ndash; it&rsquo;s essentially trying to be for DynamoDB what Mongoid is for MongoDB. Unfortunately, it doesn&rsquo;t really do a whole lot of exciting stuff yet&hellip;</p>
 
 <p>But it will soon! The TODO list is particularly exciting:</p>
 
@@ -237,7 +283,7 @@
 <li>Automatic value separation and joining: Values for DynamoDB keys are limited to 64KB, but with a clever framework we can get around that constraint with multiple keys conjoined together.</li>
 <li>Automatic key distribution: As per <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/BestPractices.html">Amazon&rsquo;s provisioned throughput guidelines</a>, keys that are frequently accessed incur a throughput penalty due to traffic concentration. Dynamoid will distribute keys that you specify across a number of duplicated keys, and will concatenate them together when read.</li>
 <li>Not-gimpy finders: Criteria like you&rsquo;re used to with ActiveRecord, so that you can do User.where(:name => &lsquo;Josh&rsquo;) rather than User.find_by_name(&lsquo;Josh&rsquo;).</li>
-<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now &ndash; 1.day)</li>
+<li>Range keys for models and indexes: To support queries like User.where(:created_at.gt => DateTime.now - 1.day)</li>
 </ul>
 
 
@@ -270,7 +316,7 @@
   
 
 
-<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+<time datetime="2012-02-21T13:21:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 1  minute</span>
 
         
@@ -287,7 +333,7 @@
 
 <h2>Whoa! ActiveRecord is just fine, bro.</h2>
 
-<p>Yeah, I love ActiveRecord. But it&rsquo;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&rsquo;t care less about the content or whether or not it was actually delivered &mdash; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&rsquo;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
+<p>Yeah, I love ActiveRecord. But it&rsquo;s clearly the wrong storage solution for push notifications. For every single push notification we send, we couldn&rsquo;t care less about the content or whether or not it was actually delivered &ndash; so storing them in the database just built a huge table that we ended up not needing at all. Redis is the perfect solution: it can handle arbitrarily-sized lists, but doesn&rsquo;t bother with any significant kind of persistence. Also, blpop made the programming a breeze.</p>
 
 <h2>Why a daemon?</h2>
 
@@ -322,7 +368,7 @@
   
 
 
-<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+<time datetime="2012-02-21T12:41:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time less than 1 minute</span>
 
         
@@ -333,15 +379,15 @@
 
   <div class="entry-content"><p>Ran into some annoying problems with redis and resque recently that couldn&rsquo;t be immediately solved through judicious Googling, so figured I&rsquo;d make a quick post about it.</p>
 
-<h2>Resource temporarily unavailable &ndash; Timeout reading from the socket</h2>
+<h2>Resource temporarily unavailable - Timeout reading from the socket</h2>
 
-<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &mdash; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
+<p>If you installed redis-rb and hiredis by following the <a href="https://github.com/ezmobius/redis-rb">instructions at the redis-rb github page</a> then you might start running into this problem. Essentially, the version of hiredis they specify (and that you probably installed) is out of date &ndash; 0.3.1 has a known bug with socket disconnects when reading from redis. So happily, the solution to this is pretty simple: just upgrade your version of hiredis. We use 0.4.4 now.</p>
 
 <h2>unexpected token at &lsquo;OK&rsquo; (Resque::Helpers::DecodeException)</h2>
 
 <p>This one took a bit more tracking down to fix.</p>
 
-<p>The newest versions of resque (I&rsquo;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &mdash; for example, returning &ldquo;OK.&rdquo; Upgrading your redis server handily fixes this problem.</p>
+<p>The newest versions of resque (I&rsquo;m using 1.20.0) rely on versions greater than 2.4 of redis. Versions below that respond differently to certainly redis commands &ndash; for example, returning &ldquo;OK.&rdquo; Upgrading your redis server handily fixes this problem.</p>
 </div>
   
   
@@ -353,7 +399,7 @@
     
     <a href="/blog/archives">Blog Archives</a>
     
-    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    <a class="next" href="8">Newer &rarr;</a>
     
   </div>
 </div>
@@ -362,7 +408,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: unicorn | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/unicorn/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -47,44 +47,36 @@
 
 <p>We had an issue where unicorn wouldn&rsquo;t pick up our Gemfile correctly. Turns out that it doesn&rsquo;t understand symlinked directories for reading gemfiles, so we had to employ this dazzling bit of code to get new gems into our bundle when the unicorns restarted:</p>
 
-<p><code>ruby
-before_exec do |server|
+<pre><code class="ruby">before_exec do |server|
   ENV['BUNDLE_GEMFILE'] = '/mnt/Hipstaweb-&lt;%= RUBBER_ENV %&gt;/current/Gemfile'
 end
-</code></p>
+</code></pre>
 
 <h2>before_fork and after_fork magic</h2>
 
 <p>If you&rsquo;re seriously considering unicorn, I&rsquo;m sure you&rsquo;ve seen the following gisted:</p>
 
-<p>```ruby
-before_fork do |server, worker|
-  defined?(ActiveRecord::Base) and</p>
+<pre><code class="ruby">before_fork do |server, worker|
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.connection.disconnect!
 
-<pre><code>ActiveRecord::Base.connection.disconnect!
-</code></pre>
-
-<p>  old_pid = &ldquo;#{server.config[:pid]}.oldbin&rdquo;
-  if File.exists?(old_pid) &amp;&amp; server.pid != old_pid</p>
-
-<pre><code>begin
-  Process.kill("QUIT", File.read(old_pid).to_i)
-rescue Errno::ENOENT, Errno::ESRCH
+  old_pid = "#{server.config[:pid]}.oldbin"
+  if File.exists?(old_pid) &amp;&amp; server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+    end
+  end
 end
 </code></pre>
 
-<p>  end
-end
-```ruby</p>
+<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn&rsquo;s biggest selling points &ndash; zero downtime deploys.</p>
 
-<p>But just to reinforce how awesome it is: this configuration is awesome. It allows your new unicorn to gracefully kill the old master while a new one seamlessly reloads. This is the key to one of unicorn&rsquo;s biggest selling points &mdash; zero downtime deploys.</p>
-
-<p><code>ruby
-after_fork do |server, worker|
+<pre><code class="ruby">after_fork do |server, worker|
   ActiveRecord::Base.establish_connection
   ActiveRecord::Base.verify_active_connections!
 end
-</code></p>
+</code></pre>
 
 <p>If you include the <code>connection.disconnect!</code> line in your before_fork, make sure you reestablish the connection in your after_fork. This prevents stale database connections and ensures each worker is always correctly connected to the database.</p>
 

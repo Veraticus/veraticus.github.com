@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Continuous Deployments with Consul - Hi, I'm Josh Symonds</title>
+  <title>Continuous Deployments with Consul - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&rsquo;ve fallen in love with consul. At first glance, it&rsquo;s a bit like zookeeper or etcd &mdash; it handles service discovery, health checking &hellip;">
+  <meta name="description" content="I&rsquo;ve fallen in love with consul. At first glance, it&rsquo;s a bit like zookeeper or etcd &ndash; it handles service discovery, health checking &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2014-10-21T17:13:30-05:00" pubdate data-updated="true">Oct 21<span>st</span>, 2014</time>
+<time datetime="2014-10-21T17:13:30-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 3  minutes</span>
 
         
@@ -120,14 +121,14 @@
   </header>
 
 
-  <div class="entry-content"><p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &mdash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
+  <div class="entry-content"><p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &ndash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
 
 <!-- more -->
 
 
 <h2>Your servers</h2>
 
-<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &mdash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
+<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &ndash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
 
 <h2>consul</h2>
 
@@ -218,6 +219,8 @@
         <a class="basic-alignment left" href="/blog/2014/09/04/windy-city-rails-day-one/" title="Previous Post: Windy City Rails, Day One">&laquo; Windy City Rails, Day One</a>
       
       
+        <a class="basic-alignment right" href="/blog/2015/01/06/the-numbers-behind-consulting-in-2014/" title="Next Post: The Numbers Behind Consulting in 2014">The Numbers Behind Consulting in 2014 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -228,7 +231,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hi, I&#8217;m Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="For the second part of my series on Rails concerns (following part one earlier this week), I&rsquo;ll be dissecting a tagging system and how to make &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/posts/6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/04/rails-concerns-ii-taggable/">Rails Concerns II: Taggable</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-04T15:31:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For the second part of my series on Rails concerns (following <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">part one earlier this week</a>), I&rsquo;ll be dissecting a tagging system and how to make it concerned. Of course, you have great gems like <a href="https://github.com/mbleigh/acts-as-taggable-on/">acts-as-taggable-on</a>, but if you want significant customized functionality in either your Tag class or the taggables, you&rsquo;re going to have to roll your own solution. That&rsquo;s what I&rsquo;m doing for GirlsGuideTo, and this is how I implemented it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/04/rails-concerns-ii-taggable/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Rails Concerns I: Starting With Redcarpet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&rsquo;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&rsquo;t only for code refuse &ndash; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&rsquo;s where all the functionality for shipping lies&hellip; whereas a newcomer to your application would have to search through the order model to find it.</p>
+
+<p>I&rsquo;ve been using concerns extensively in GirlsGuideTo&rsquo;s upcoming application, and I figured it&rsquo;d be an interesting read if I shared the ones I&rsquo;ve made so far. They&rsquo;re not too complicated (this first one I&rsquo;m posting mostly just to illustrate the concept), but but don&rsquo;t let that fool you. They can be super complicated and really involved &ndash; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/28/dynamic-error-pages/">Dynamic Error Pages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p><strong>This post has been superseded by <a href="http://joshsymonds.com/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a>. Check that out first.</strong></p></blockquote>
+
+<p>One of the coolest features of Rails 3.2 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">tagged logging</a>. Using the UUID tagged logger, you can give each individual request a UUID reference number in order to track individual errors, find them, and smoosh them. It&rsquo;s generally pretty awesome.</p>
+
+<p>But it&rsquo;d be even awesomer if actual errors in your application referenced this UUID, wouldn&rsquo;t it? Maybe even emailed it to you in exception_notification? Presented it to your users so they could say directly, &ldquo;I encountered error 123xyz,&rdquo; rather than force you to look through a huge amount of backlog to find their specific exception?</p>
+
+<p>Happily, you can do just this!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/28/dynamic-error-pages/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/20/how-not-to-apply-for-a-job/">How Not to Apply for a Job</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-20T22:29:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been looking about two weeks now for a really fantastic designer for GirlsGuideTo &ndash; a designer that&rsquo;s as fabulous as the site itself. Somewhat surprisingly, given how many people are unemployed or underemployed, my search has been really difficult. And not because of a dearth of responses: in fact, quite the opposite. I estimate I&rsquo;ve received more than a hundred resumes in response to Craigslist postings, LinkedIn listings, and advertising in Dribbbble. And most surprising to me is the fact that the vast majority of these responses just aren&rsquo;t very good.</p>
+
+<p>I&rsquo;m sure that many of these resumes and coverletters come from experienced, seasoned professionals with a genuine and burning desire to be paid &ndash; a desire that is equally matched by my hunger to pay them for the amazing work they can do. But frankly, you wouldn&rsquo;t know it from reading their letters. 99.9% of them are just&hellip; <em>bad</em>. So, I&rsquo;ve taken the time to distill the mountain of resumes in my inbox into three succinct lessons. If you&rsquo;re going to apply for a job, please take them to heart before writing your potential employer. Not only will you increase the chances you&rsquo;ll actually be hired, but they will definitely thank you for breaking the tide of mediocrity that is surely washing over them. If you&rsquo;re the one to stand out, believe me&hellip; you&rsquo;ll get noticed.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/20/how-not-to-apply-for-a-job/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/17/designing-sites-for-users/">Designing Sites for Users</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-17T17:52:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Designing a new site from scratch can be difficult &ndash; not technically, but from a usability perspective. What color will your users like best? How big should your buttons be? Where should advertising be placed? Of course, there are <a href="http://www.amazon.com/Dont-Make-Me-Think-Usability/dp/0321344758">amazing usability books</a> out there, but there are some questions you can only answer through experience. Of course, designing for usability should be one of our top priorities &ndash; and here are three cute little libraries that will help you make your sites awesome, beautiful, and most importantly, usable for your users.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/17/designing-sites-for-users/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">My Love/Hate Relationship With Heroku</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-03T22:43:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There&rsquo;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&rsquo;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&rsquo;t decide whether or not I like the web&rsquo;s premier platform-as-a-service or not. Every now and again I&rsquo;ll gnash my teeth in frustration over it, and then other times I&rsquo;ll sigh dreamily and think of all the wonderful things Heroku has done for me &ndash; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&rsquo;s right for you.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/03/my-love-slash-hate-relationship-with-heroku/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/31/moving-on/">Moving On</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-31T16:49:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I try to keep to a schedule of a post every three days, and I&rsquo;ve definitely not been keeping on top of that &ndash; I haven&rsquo;t posted for almost a week and a half now. I apologize for the lack of content; in my defense, I&rsquo;ve been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/05/31/moving-on/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/22/dynamic-routing-with-rails/">Dynamic Routing With Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T23:08:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I love Rails&#8217; routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we&rsquo;re ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/05/22/dynamic-routing-with-rails/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/">Quick &amp; Easy User Preferences in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-16T18:11:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>My first RubyMotion application is rapidly nearing completion. As it involves user preferences that have to be stored both locally and remotely, I was investigating the available Rails gems for user preferences and really didn&rsquo;t like what was presently out there. I don&rsquo;t really have time to maintain another gem, but maybe someone else has run into this problem and wants a quick and easy solution for creating user preferences. If so, then this code&rsquo;s for you.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/">From the RubyMotion Simulator to Your Friend&#8217;s iPhone</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-10T19:13:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been spending a lot of time talking about RubyMotion recently, and I was intending to post the second in my <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming</a> series today to give the whole Motion thing a break. But I spent far too long on Tuesday getting an app correctly deploying through Testflight, and it was a really painful process. I took copious notes while making it happen, though, so in the interest of saving someone else&rsquo;s time, here is my step-by-step guide to successfully getting an app from your RubyMotion simulator onto someone else&rsquo;s device.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/05/10/from-the-rubymotion-simulator-to-your-friends-iphone/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="7">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="5">Newer &rarr;</a>
+    
+  </div>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2015 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

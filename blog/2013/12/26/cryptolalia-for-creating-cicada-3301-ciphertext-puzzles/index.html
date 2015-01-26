@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>cryptolalia, for creating Cicada 3301 ciphertext puzzles - Hi, I'm Josh Symonds</title>
+  <title>cryptolalia, for creating Cicada 3301 ciphertext puzzles - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2013-12-26T10:31:00-06:00" pubdate data-updated="true">Dec 26<span>th</span>, 2013</time>
+<time datetime="2013-12-26T10:31:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 4  minutes</span>
 
         
@@ -120,7 +121,7 @@
   </header>
 
 
-  <div class="entry-content"><p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
+  <div class="entry-content"><p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &ndash; well, for some unknown goal &ndash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
 
 <p>So I decided to make it.</p>
 
@@ -130,12 +131,12 @@
 <p><a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
 
 <ul>
-<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
-<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
-<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
-<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
-<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
-<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
+<li><em>atbash inversion</em> - an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
+<li><em>Beale homophonic substitution</em> - for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
+<li><em>Caesar</em> - the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
+<li><em>Pollux</em> - translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
+<li><em>PNG Steganography</em> - encode your plaintext in an image, either in its comments or least-significant bits.</li>
+<li><em>Vigenere</em> - a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
 </ul>
 
 
@@ -157,7 +158,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
@@ -172,7 +173,7 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
@@ -187,7 +188,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
@@ -204,7 +205,7 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
@@ -217,7 +218,7 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
@@ -232,7 +233,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
@@ -272,7 +273,7 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/11/14/dont-code-defensively/" title="Previous Post: Don't Code Defensively">&laquo; Don't Code Defensively</a>
+        <a class="basic-alignment left" href="/blog/2013/11/14/dont-code-defensively/" title="Previous Post: Don't Code Defensively">&laquo; Don&#8217;t Code Defensively</a>
       
       
         <a class="basic-alignment right" href="/blog/2014/01/14/rails-consulting-for-fun-and-profit/" title="Next Post: Rails Consulting for Fun and Profit">Rails Consulting for Fun and Profit &raquo;</a>
@@ -287,7 +288,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

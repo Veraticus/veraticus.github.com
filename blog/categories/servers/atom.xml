@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,26 +18,25 @@
     <link href="http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul/"/>
     <updated>2014-10-21T17:13:30-05:00</updated>
     <id>http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &mdash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &ndash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
 
 <!-- more -->
 
 
 <h2>Your servers</h2>
 
-<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &mdash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
+<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &ndash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
 
 <h2>consul</h2>
 
 <p>First, you need to <a href="http://www.consul.io/intro/getting-started/install.html">install consul</a> on your servers and get them <a href="http://www.consul.io/intro/getting-started/join.html">communicating together properly</a>. As you can tell from my links, the consul documentation is extremely well-equipped to get you a fully functional consul cluster: just follow it and you&rsquo;ll be fine. Once it&rsquo;s all installed, you&rsquo;ll want to drop a watch like this in your app server&rsquo;s consul config directory:</p>
 
-<p><code>json
-{
+<pre><code class="json">{
   "name": "run-deploy",
   "handler": "sudo /usr/bin/chef-client",
   "type": "event"
 }
-</code></p>
+</code></pre>
 
 <p>Note the sudo above: chef-client must be run as root, but this shouldn&rsquo;t be too big of a concern. Just make sure that your consul service is running as a sudoer that can execute only that one command and you&rsquo;ll be fine.</p>
 
@@ -47,9 +46,8 @@
 
 <p>In order for this to work, CircleCI will have to be able to propagate that event to all your servers. The easiest way for it to do this is to have it SSH into one server and run the <code>consul event</code> command. From there, consul takes over to make sure all the appropriate servers receive the message. So let&rsquo;s create an SSH key for our CircleCI user.</p>
 
-<p><code>bash
-ssh-keygen -t rsa -C "continuous_deployment@example.com"
-</code></p>
+<pre><code class="bash">ssh-keygen -t rsa -C "continuous_deployment@example.com"
+</code></pre>
 
 <p>Add the resulting private key to CircleCI and create a corresponding user on one of the central servers of your cluster. In my setup, I have three separate instances all running consul in server mode: I assigned one of them the DNS <code>consul.example.com</code> and created a user there to accept Circle&rsquo;s SSH key. Notably this user does not need any sort of permissions at all, so leave them off the sudoers.</p>
 
@@ -57,16 +55,12 @@ ssh-keygen -t rsa -C "continuous_deployment@example.com"
 
 <p>Now you need to change your circle.yml in your project, so that after a build CircleCI will initiate the deploy. This is pretty simple:</p>
 
-<p>```yaml
-deployment:
-  production:</p>
-
-<pre><code>branch: production
-commands:
-  - ssh example@ip "consul event -node &lt;app_name&gt; -name run-deploy"
+<pre><code class="yaml">deployment:
+  production:
+    branch: production
+    commands:
+      - ssh example@ip "consul event -node &lt;app_name&gt; -name run-deploy"
 </code></pre>
-
-<p>```</p>
 
 <p>Note the <code>&lt;app_name&gt;</code> filter there for nodes. I find it a good practice to name a node after the application running on it; so I might have one called <code>app1-web</code> and another <code>app2-worker</code>. This is helpful for performing consul node filtering: by providing <code>-node &lt;app_name&gt;</code>, you&rsquo;re ensuring that the consul event is only propagated to servers that actually run the targeted application.</p>
 
@@ -83,7 +77,7 @@ commands:
     <id>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
 
-<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &ndash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
 
 <p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
 
@@ -92,19 +86,18 @@ commands:
 
 <h2>1. Setup vagrant to be compatible with OpsWorks</h2>
 
-<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &mdash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
+<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &ndash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
 
-<p>```ruby
-VAGRANTFILE_API_VERSION = &ldquo;2&rdquo;</p>
+<pre><code class="ruby">VAGRANTFILE_API_VERSION = "2"
 
-<p>Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = &ldquo;ubuntu-precise64&rdquo;
-  config.vm.box_url = &ldquo;<a href="https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box">https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box</a>&rdquo;</p>
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "ubuntu-precise64"
+  config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box"
 
-<p>  # Specifies the chef version Opsworks is running
-  config.omnibus.chef_version = &ldquo;11.10.0&rdquo;
+  # Specifies the chef version Opsworks is running
+  config.omnibus.chef_version = "11.10.0"
 end
-```</p>
+</code></pre>
 
 <p>This requires the <code>vagrant-omnibus</code> plugin, which you can install with <code>vagrant plugin install vagrant-omnibus</code>.</p>
 
@@ -114,97 +107,77 @@ end
 
 <p>Just the default librarian-chef configuration works, with one exception: you&rsquo;ll want to strip <code>.git</code> directories from the checked-out sources to prevent OpsWorks from becoming confused. That&rsquo;s relatively easy to set up:</p>
 
-<p><code>bash
-librarian-chef config install.strip-dot-git 1 --local
-</code></p>
+<pre><code class="bash">librarian-chef config install.strip-dot-git 1 --local
+</code></pre>
 
 <p>I store the source of my cookbooks in one repository and use an orphan branch of that same repository for the actual cookbooks that are installed and managed by librarian. This is pretty easy to set up:</p>
 
-<p>```bash</p>
-
-<h1>Create the orphan branch</h1>
-
-<p>git checkout &mdash;orphan cookbooks
+<pre><code class="bash"># Create the orphan branch
+git checkout --orphan cookbooks
 git rm -rf .
 git add . -A
-git commit -m &lsquo;Initial commit&rsquo;
+git commit -m 'Initial commit'
 git push origin cookbooks
-```</p>
+</code></pre>
 
 <p>Then in your master branch, set up your cookbook branch as a submodule in a subdirectory that librarian-chef will install to:</p>
 
-<p>```</p>
-
-<h1>.gitmodules</h1>
-
-<p>[submodule &ldquo;cookbooks&rdquo;]
+<pre><code># .gitmodules
+[submodule "cookbooks"]
   path = cookbooks
   url = git@github.com:user/repository.git
   branch = cookbooks
-```</p>
+</code></pre>
 
 <p>I have a small Rakefile that allows me to run <code>rake</code> to sync my changes directly to the cookbooks branch.</p>
 
-<p>```ruby
-desc &ldquo;install all cookbooks and synchronize them to GitHub&rdquo;
+<pre><code class="ruby">desc "install all cookbooks and synchronize them to GitHub"
 task :default do
-  puts &ldquo;## Installing cookbooks&rdquo;
-  system &ldquo;librarian-chef install&rdquo;
-  puts &ldquo;## Pushing cookbooks to GitHub&rdquo;
-  cd &ldquo;cookbooks&rdquo; do</p>
-
-<pre><code>system %Q(echo "gitdir: ../.git/modules/cookbooks" &gt; .git)
-system "git add ."
-system "git add -u"
-message = "Cookbooks generated via librarian-chef at #{Time.now.utc}"
-system "git commit -m \"#{message}\""
-system "git pull"
-system "git push origin cookbooks"
-</code></pre>
-
-<p>  end
-  puts &ldquo;## Done!&rdquo;
+  puts "## Installing cookbooks"
+  system "librarian-chef install"
+  puts "## Pushing cookbooks to GitHub"
+  cd "cookbooks" do
+    system %Q(echo "gitdir: ../.git/modules/cookbooks" &gt; .git)
+    system "git add ."
+    system "git add -u"
+    message = "Cookbooks generated via librarian-chef at #{Time.now.utc}"
+    system "git commit -m \"#{message}\""
+    system "git pull"
+    system "git push origin cookbooks"
+  end
+  puts "## Done!"
 end
-```</p>
+</code></pre>
 
 <p>Keep in mind this setup isn&rsquo;t ideal for collaboration: if I had a lot of people updating the cookbooks simultaneously, I would definitely set up separate repositories. But for smaller OpsWorks projects, this works perfectly well.</p>
 
-<h2>3. Don&rsquo;t bother with OpsWorks' recipe syntax</h2>
+<h2>3. Don&rsquo;t bother with OpsWorks&#8217; recipe syntax</h2>
 
-<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &mdash; or bring chef recipes from elsewhere to OpsWorks &mdash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
+<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &ndash; or bring chef recipes from elsewhere to OpsWorks &ndash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
 
-<p>```ruby</p>
-
-<h1>No!</h1>
-
-<p>node[:deploy].each do |app_name, deploy|
-  template &lsquo;/etc/init/puma.conf&rsquo; do</p>
-
-<pre><code>source 'puma.conf'
-owner  'root'
-group  'root'
-mode   '0644'
-</code></pre>
-
-<p>  end
+<pre><code class="ruby"># No!
+node[:deploy].each do |app_name, deploy|
+  template '/etc/init/puma.conf' do
+    source 'puma.conf'
+    owner  'root'
+    group  'root'
+    mode   '0644'
+  end
 end
-```</p>
+</code></pre>
 
 <p>Use the plainer, simpler:</p>
 
-<p>```ruby</p>
-
-<h1>Yes!</h1>
-
-<p>template &lsquo;/etc/init/puma.conf&rsquo; do
-  source &lsquo;puma.conf&rsquo;
-  owner  &lsquo;root&rsquo;
-  group  &lsquo;root&rsquo;
-  mode   &lsquo;0644&rsquo;
+<pre><code class="ruby"># Yes!
+template '/etc/init/puma.conf' do
+  source 'puma.conf'
+  owner  'root'
+  group  'root'
+  mode   '0644'
 end
-```</p>
+</code></pre>
 
-<p>The former syntax won&rsquo;t work properly on vagrant, just for starters, which is a great reason all by itself not to use it. You&rsquo;ll want to control what recipes get applied where through custom layers rather than OpsWorks' special syntax.</p>
+<p>The former syntax won&rsquo;t work properly on vagrant, just for starters, which is a great reason all by itself not to use it. You&rsquo;ll want to control what recipes get applied where through custom layers rather than OpsWorks&#8217; special syntax.</p>
 
 <h2>4. Overwrite any recipes that overlap</h2>
 
@@ -212,30 +185,24 @@ end
 
 <p>You&rsquo;ll want to create a cookbook named after the offending cookbook (for example, <code>unicorn</code>) and replace every file in the OpsWorks cookbook with a blank one. You can find all the OpsWorks cookbook sources <a href="https://github.com/aws/opsworks-cookbooks">in their GitHub repository</a>. So, to continue the unicorn example, you&rsquo;d make a <code>unicorn</code> directory, a <code>recipes</code> subdirectory, and three files: <code>default</code>, <code>rails</code>, and <code>stop</code>. The content of all these files should be something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># Prevent OpsWorks from trying to install this cookbook.
+</code></pre>
 
-<h1>Prevent OpsWorks from trying to install this cookbook.</h1>
-
-<p>```</p>
-
-<p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks' cookbooks.</p>
+<p>Obviously you should only do this if you&rsquo;re definitely not using OpsWorks&#8217; cookbooks.</p>
 
 <h2>5. OpsWorks is your single point of truth</h2>
 
 <p>Get rid of your data bags, encrypted data bags, configuration yaml files: everything. Embrace OpsWorks as your centralized chef server and the primary authority on the state and setup of your application. Data bags are arguably chef smell at this point anyway, and OpsWorks continues their inexorable slide towards obsolescence. You&rsquo;ll want to set up everything you can with sensible attributes in your custom application recipes:</p>
 
-<p>```ruby</p>
-
-<h1>site-cookbooks/your-app/attributes/default.rb</h1>
-
-<p>default[&lsquo;database&rsquo;] = {
-  &lsquo;pool&rsquo; => 5,
-  &lsquo;host&rsquo; => &lsquo;localhost&rsquo;,
-  &lsquo;name&rsquo; => &lsquo;app_database&rsquo;,
-  &lsquo;username&rsquo; => &lsquo;username&rsquo;,
-  &lsquo;password&rsquo; => &lsquo;password&rsquo;
+<pre><code class="ruby"># site-cookbooks/your-app/attributes/default.rb
+default['database'] = {
+  'pool' =&gt; 5,
+  'host' =&gt; 'localhost',
+  'name' =&gt; 'app_database',
+  'username' =&gt; 'username',
+  'password' =&gt; 'password'
 }
-```</p>
+</code></pre>
 
 <p>Then pass overrides in your stack JSON. Your stack JSON is where you&rsquo;ll enumerate all the settings particular to your environment: though I&rsquo;m not incredibly happy with this setup, as it&rsquo;s not versioned, AWS makes it easy to copy stack and layer setups really easily, so in practice it&rsquo;s not difficult to update multiple stacks or create a new one from sensible defaults.</p>
 
@@ -267,15 +234,13 @@ end
 
 <p>On the server itself:</p>
 
-<p><code>bash
-mkdir -p /tmp/cert/
-</code></p>
+<pre><code class="bash">mkdir -p /tmp/cert/
+</code></pre>
 
 <p>On your local computer:</p>
 
-<p><code>
-scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
-</code></p>
+<pre><code>scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
+</code></pre>
 
 <p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
 
@@ -283,14 +248,13 @@ scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:
 
 <p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
 
-<p><code>bash
-sudo apt-get install -y unzip
+<pre><code class="bash">sudo apt-get install -y unzip
 wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
 sudo mkdir -p /usr/local/ec2
 sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
 export EC2_AMITOOL_HOME=/usr/local/ec2/ec2-ami-tools-1.5.3/
 export PATH=$EC2_AMITOOL_HOME/bin:$PATH
-</code></p>
+</code></pre>
 
 <p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
 
@@ -298,8 +262,7 @@ export PATH=$EC2_AMITOOL_HOME/bin:$PATH
 
 <p>A similar process to step 3.</p>
 
-<p><code>bash
-wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+<pre><code class="bash">wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
 sudo unzip ec2-api-tools.zip -d /usr/local/ec2
 sudo apt-get install -y openjdk-7-jre
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre/
@@ -307,7 +270,7 @@ export EC2_HOME=/usr/local/ec2/ec2-api-tools-1.6.13.0/
 export PATH=$PATH:$EC2_HOME/bin
 export AWS_ACCESS_KEY=YourAccessKey
 export AWS_SECRET_KEY=YourSecretKey
-</code></p>
+</code></pre>
 
 <p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
 
@@ -315,24 +278,22 @@ export AWS_SECRET_KEY=YourSecretKey
 
 <p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
 
-<p><code>bash
-sudo apt-get install -y grub gdisk kpartx
-</code></p>
+<pre><code class="bash">sudo apt-get install -y grub gdisk kpartx
+</code></pre>
 
-<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &ndash; following it should correct any boot issues you experience on your AMI.</p>
 
 <h2>6. Stop all services</h2>
 
 <p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
 
-<p><code>bash
-sudo service monit stop
+<pre><code class="bash">sudo service monit stop
 sudo service mysql stop
 sudo service nginx stop
 sudo service redis stop
 sudo service memcached stop
 sudo service opsworks-agent stop
-</code></p>
+</code></pre>
 
 <p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
 
@@ -340,34 +301,26 @@ sudo service opsworks-agent stop
 
 <p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
 
-<p>```bash
-sudo rm -rf /etc/aws/opsworks/ \</p>
-
-<pre><code>        /opt/aws/opsworks/ \
-        /var/log/aws/opsworks/ \
-        /var/lib/aws/opsworks/ \
-        /etc/monit.d/opsworks-agent.monitrc \
-        /etc/monit/conf.d/opsworks-agent.monitrc \
-        /var/lib/cloud/
+<pre><code class="bash">sudo rm -rf /etc/aws/opsworks/ \
+            /opt/aws/opsworks/ \
+            /var/log/aws/opsworks/ \
+            /var/lib/aws/opsworks/ \
+            /etc/monit.d/opsworks-agent.monitrc \
+            /etc/monit/conf.d/opsworks-agent.monitrc \
+            /var/lib/cloud/
 </code></pre>
-
-<p>```</p>
 
 <h2>8. Bundle the volume</h2>
 
 <p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
 
-<p>```bash
-ec2-bundle-vol -k /tmp/cert/pk-X509.pem \</p>
-
-<pre><code>           -c /tmp/cert/cert-X509.pem \
-           -u 123456789012 \
-           -r x86_64 \
-           -e /tmp/cert \
-           -i $(find /etc /usr /opt -name '*.pem' -o -name '*.crt' -o -name '*.gpg' | tr '\n' ',')
+<pre><code class="bash">ec2-bundle-vol -k /tmp/cert/pk-X509.pem \
+               -c /tmp/cert/cert-X509.pem \
+               -u 123456789012 \
+               -r x86_64 \
+               -e /tmp/cert \
+               -i $(find /etc /usr /opt -name '*.pem' -o -name '*.crt' -o -name '*.gpg' | tr '\n' ',')
 </code></pre>
-
-<p>```</p>
 
 <p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
 
@@ -377,14 +330,10 @@ ec2-bundle-vol -k /tmp/cert/pk-X509.pem \</p>
 
 <p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
 
-<p>```bash
-ec2-upload-bundle -b bucket_name/image_name \</p>
-
-<pre><code>              -m /tmp/image.manifest.xml \
-              --region us-east-1
+<pre><code class="bash">ec2-upload-bundle -b bucket_name/image_name \
+                  -m /tmp/image.manifest.xml \
+                  --region us-east-1
 </code></pre>
-
-<p>```</p>
 
 <p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
 
@@ -392,9 +341,8 @@ ec2-upload-bundle -b bucket_name/image_name \</p>
 
 <p>Only one step left, and this is an easy one! You can register the AMI with this command:</p>
 
-<p><code>bash
-ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
-</code></p>
+<pre><code class="bash">ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
+</code></pre>
 
 <p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
 ]]></content>
@@ -407,91 +355,71 @@ ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us
     <id>http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle</id>
     <content type="html"><![CDATA[<p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
 
-<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &ndash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
 
 <!-- more -->
 
 
 <p>Let&rsquo;s say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># sprinkle/config/helpers.rb
 
-<h1>sprinkle/config/helpers.rb</h1>
+module Sprinkle
+  module Helpers
 
-<p>module Sprinkle
-  module Helpers</p>
+    def templates
+      path = File.expand_path('../../', __FILE__)
+      "#{path}/templates" # sprinkle/templates/
+    end
 
-<pre><code>def templates
-  path = File.expand_path('../../', __FILE__)
-  "#{path}/templates" # sprinkle/templates/
+  end
 end
 </code></pre>
-
-<p>  end
-end
-```</p>
 
 <p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can&rsquo;t just do something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># sprinkle/policies/base.rb
 
-<h1>sprinkle/policies/base.rb</h1>
-
-<p>policy :base, roles: :web do
-  requires :build_essential if File.exists?(&ldquo;#{templates}/build_essential.txt&rdquo;)</p>
-
-<pre><code>                                         # No method error for templates
-</code></pre>
-
-<p>end</p>
-
-<p>package :build_essential do
-  file &ldquo;/etc/build_essential.txt&rdquo;,</p>
-
-<pre><code>contents: render("#{templates}/build_essential.txt"), # No method error for templates
-sudo: true
-</code></pre>
-
-<p>  verify do</p>
-
-<pre><code>has_file "/etc/build_essential.txt"
-puts "#{templates}/build_essential.txt" # Contrived example since you'd never really
-                                        # just puts something here, but this also
-                                        # throws a no method error
-</code></pre>
-
-<p>  end
+policy :base, roles: :web do
+  requires :build_essential if File.exists?("#{templates}/build_essential.txt")
+                                             # No method error for templates
 end
-```</p>
+
+package :build_essential do
+  file "/etc/build_essential.txt",
+    contents: render("#{templates}/build_essential.txt"), # No method error for templates
+    sudo: true
+
+  verify do
+    has_file "/etc/build_essential.txt"
+    puts "#{templates}/build_essential.txt" # Contrived example since you'd never really
+                                            # just puts something here, but this also
+                                            # throws a no method error
+  end
+end
+</code></pre>
 
 <p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That&rsquo;s easy enough to do. After you define your helper, do something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># sprinkle/config/helpers.rb
 
-<h1>sprinkle/config/helpers.rb</h1>
-
-<p>class Sprinkle::Policy
+class Sprinkle::Policy
   include Sprinkle::Helpers
-end</p>
-
-<p>module Sprinkle::Package
-  class Package</p>
-
-<pre><code>include Sprinkle::Helpers
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>module Sprinkle
-  class Verify</p>
-
-<pre><code>include Sprinkle::Helpers
-</code></pre>
-
-<p>  end
 end
-```</p>
+
+
+module Sprinkle::Package
+  class Package
+    include Sprinkle::Helpers
+  end
+end
+
+module Sprinkle
+  class Verify
+    include Sprinkle::Helpers
+  end
+end
+</code></pre>
 
 <p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
 
@@ -504,7 +432,7 @@ end
     <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
     <updated>2013-04-17T18:16:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &ndash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
 
 <!-- more -->
 
@@ -513,7 +441,7 @@ end
 
 <p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
 
-<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &ndash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
 
 <p>So let&rsquo;s get down to the details!</p>
 
@@ -710,7 +638,7 @@ end
 </table>
 
 
-<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &ndash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
 
 <h2>Conclusions</h2>
 

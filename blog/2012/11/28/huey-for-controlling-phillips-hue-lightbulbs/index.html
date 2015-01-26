@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Huey, for Controlling Phillips Hue Lightbulbs - Hi, I'm Josh Symonds</title>
+  <title>Huey, for Controlling Phillips Hue Lightbulbs - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-11-28T01:08:00-06:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
+<time datetime="2012-11-28T01:08:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -138,14 +139,14 @@
 </span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>  <span class="c1"># or</span>
-</span><span class='line'>  <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
+</span><span class='line'>  <span class="no">Huey</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="s1">&#39;0123456789abdcef0123456789abcdef&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>The first time you issue a request to the Hue hub, you&rsquo;ll likely see an attractive error message like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Errors</span><span class="o">::</span><span class="ss">PressLinkButton</span><span class="p">:</span> <span class="s1">&#39;Press the link button and try your request again&#39;</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">Huey</span><span class="o">::</span><span class="no">Errors</span><span class="o">::</span><span class="ss">PressLinkButton</span><span class="p">:</span> <span class="s1">&#39;Press the link button and try your request again&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -160,10 +161,10 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">all</span> <span class="c1"># Returns an array of your bulbs</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">all</span> <span class="c1"># Returns an array of your bulbs</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Finds the bulb with the ID of 1</span>
-</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="ss">Huey</span><span class="p">:</span><span class="ss">:Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Finds the bulb with the name &#39;Living Room&#39;</span>
+</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Finds the bulb with the ID of 1</span>
+</span><span class='line'><span class="n">bulb</span> <span class="o">=</span> <span class="no">Huey</span><span class="o">::</span><span class="no">Bulb</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;Living Room&#39;</span><span class="p">)</span> <span class="c1"># Finds the bulb with the name &#39;Living Room&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">alert!</span> <span class="c1"># Flashes the bulb in question once, useful for checking connectivity</span>
 </span><span class='line'><span class="n">bulb</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kp">false</span> <span class="c1"># Turn the bulb off</span>
@@ -220,7 +221,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

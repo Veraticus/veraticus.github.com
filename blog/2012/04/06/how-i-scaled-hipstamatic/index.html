@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>How I Scaled Hipstamatic - Hi, I'm Josh Symonds</title>
+  <title>How I Scaled Hipstamatic - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-04-06T10:58:00-05:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+<time datetime="2012-04-06T10:58:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 5  minutes</span>
 
         
@@ -126,7 +127,7 @@
 
 <p><img src="http://f.cl.ly/items/1H0v0C420X0a1O3Y2p3Y/Hipstaweb%20-%20New%20Relic-1.jpg" alt="Average response time - 115ms" /></p>
 
-<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&rsquo;m proud of our 115ms average response time. Proud but not satisfied &mdash; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&rsquo;s no reason we can&rsquo;t achieve 50-70ms response times with better caching and slimmer applications.</p>
+<p>Considering the web of external services Hipstamatic depends on for much of its operation, I&rsquo;m proud of our 115ms average response time. Proud but not satisfied &ndash; hence the need for the Proper Refactoring, and I am optimistic that it will lead to a net performance gain for us and our users. There&rsquo;s no reason we can&rsquo;t achieve 50-70ms response times with better caching and slimmer applications.</p>
 
 <p>Over the same time period that our response time has dropped, our user base has grown exponentially, and so too our traffic. At the beginning of my tenure at Synthetic our site was receiving close to 100,000 hits a day, and nearly all of that web traffic: now <a href="http://community.hipstamatic.com">community.hipstamatic.com</a> sees about a million requests a day, most of that API traffic generated from our iPhone applications. That&rsquo;s an enormous amount of growth, and much of that over the course of just one or two explosive months.</p>
 
@@ -151,9 +152,9 @@
 
 <p>Two years ago, we switched from a single, shared instance on A Small Orange to Amazon&rsquo;s Elastic Cloud, allowing us to scale each of our components as necessary and independently from each other. Speed gains were noticeable immediately, but even better was the fact that there was a whole bunch of excellent software easily available to help us manage and scale our cloud presence. (See my earlier post <a href="http://joshsymonds.com/blog/2012/02/23/why-i-like-rubber/">on Rubber</a>).</p>
 
-<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don&rsquo;t want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive &mdash; the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
+<p>One year ago, we migrated from Apache and Passenger to nginx and Unicorn. I don&rsquo;t want to get into software evangelism or drawn out discussions about which server software is superior; for our stack, for our requirements, nginx and Unicorn are much faster and more memory efficient than Apache and Passenger ever were. And more responsive &ndash; the ability of Unicorn to do live deploys is just amazing and has totally revolutionized our development and deployment process.</p>
 
-<p>Take the time and do the research. There&rsquo;s a best tool for you waiting out there &mdash; finding it will make your life a thousand times easier.</p>
+<p>Take the time and do the research. There&rsquo;s a best tool for you waiting out there &ndash; finding it will make your life a thousand times easier.</p>
 
 <h2>Less is More</h2>
 
@@ -171,7 +172,7 @@
 
 <p>There&rsquo;s never a part of your stack that is immune to load balancing problems. Once you correctly scale one part, another component that performed adequately will suddenly start chugging under unexpected load or new use conditions. And, unfortunately, pre-optimization can backfire; sometimes you&rsquo;ll target the wrong part of your stack for optimizations, and other times you&rsquo;ll scale something that won&rsquo;t experience a bottleneck at all.</p>
 
-<p>I recommend against trying to pre-scale unless you&rsquo;re sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act &mdash; you can guess to a limited extent where you&rsquo;ll tip after the next step, but you can never be sure until you actually take it. That&rsquo;s why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
+<p>I recommend against trying to pre-scale unless you&rsquo;re sure that a new feature will distribute existing load in new, exciting ways. Achieving balance is an ongoing tightrope act &ndash; you can guess to a limited extent where you&rsquo;ll tip after the next step, but you can never be sure until you actually take it. That&rsquo;s why being sensitive to your application after changes is so important. Use <a href="http://newrelic.com/">New Relic</a> to monitor your setup very carefully, especially after deploys, and have plans in place to scale every component of your application if necessary.</p>
 
 <p>Formal plans generally aren&rsquo;t required, but know what steps you&rsquo;d take if something started to fail. Even ten seconds of idle thought can save you agonizing minutes of unavailability.</p>
 
@@ -179,11 +180,11 @@
 
 <p>This rule applies doubly to servers on EC2. Instances that reach 100% memory or CPU utilization are instances that are very difficult to fix (and are much more prone to crashing in a shared environment). You can&rsquo;t SSH into them because they take forever to respond; you can&rsquo;t reboot them because they don&rsquo;t respond to Amazon&rsquo;s control plane. They are about to become horrible zombies in your setup, taking up space but refusing to die, and you&rsquo;ll have to route around them to keep your uptime intact.</p>
 
-<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me &mdash; not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
+<p>Try to ensure your servers never reach this stage. I try to keep my computers at either 75% CPU utilization or 75% memory utilization: achieving both simultaneously is a very difficult balancing act but if you can get there then I applaud you. (As a side note, this is why Heroku is so appealing to me &ndash; not needing to worry about maximizing your server resources sounds pretty awesome.)</p>
 
 <p>If you&rsquo;re using less than 75%, then you can likely combine services together and remove servers. And if you&rsquo;re using more&hellip; well, I have <a href="http://www.pagerduty.com/">PagerDuty</a> configured to call me if at any time a server reaches 85% resource usage, and those are calls I take very seriously.</p>
 
-<p>I&rsquo;m sure I&rsquo;ll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas &mdash; for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
+<p>I&rsquo;m sure I&rsquo;ll think of other lessons I learned while scaling Hipstamatic. Many of these ideas are shared ideas &ndash; for example, the amazing <a href="http://samsoff.es/">Sam Soffes</a> initially encouraged us to move from Apache/Passenger to Nginx/Unicorn. However, the implementation and maintenance was mine and mine alone, and boy did I learn a lot while scaling Hipstamatic.</p>
 </div>
   <div class='attribution'>
   <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
@@ -231,7 +232,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

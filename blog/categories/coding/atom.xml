@@ -4,7 +4,7 @@
   <title><![CDATA[Category: coding | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/coding/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -25,7 +25,7 @@
 
 <h2>Don&rsquo;t Overthink It</h2>
 
-<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &mdash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
+<p>Does your app really need Meteor? I&rsquo;m not arguing that Meteor (or Backbone or your complicated stateful library of choice) isn&rsquo;t super awesome or that people shouldn&rsquo;t know it &ndash; some of the most successful applications on the Internet use it and frameworks like it. But does <strong>your current project</strong> need it?</p>
 
 <p>Chances are the answer is &ldquo;no.&rdquo; You&rsquo;ll double the amount of code in your app, introduce accessibility problems, and hinder page loads. The tradeoffs for a web application that uses boatloads of JavaScript interactions are worth it. But your eeny weeny storefront? Your JS bloat will make it impossible to maintain and difficult to use. Just cut it.</p>
 
@@ -35,19 +35,18 @@
 
 <p>Your awesome, custom-designed redis/memcached database storage solution is eye-meltingly fantastic. You can fetch all users with a query like this:</p>
 
-<p><code>ruby
-  $d.u.f(:a)
-</code></p>
+<pre><code class="ruby">  $d.u.f(:a)
+</code></pre>
 
-<p>It takes half a millisecond &mdash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
+<p>It takes half a millisecond &ndash; before caches have been warmed. It&rsquo;s schemaless and uses join tables for every column. You&rsquo;re the happiest programmer on the planet.</p>
 
-<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &mdash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
+<p>And silently, the people that will have to maintain your code after your departure stare at you with smoldering hatred. Because they don&rsquo;t know how it works, and no, tests don&rsquo;t reasonably define expectations or replace documentation. Even documentation won&rsquo;t save them from the bugs hiding in your custom solution &ndash; and believe me, there will be tremendous bugs hiding there. Your client and the new developer will have to spend time fixing those problems, time that could have been spent developing useful new features.</p>
 
 <p>So next time, instead of rolling your own, pick a great solution that already works and that has a lot of open-source support. You&rsquo;ll save everyone involved a lot of money and trouble. No, you won&rsquo;t be inventing the next Rails or Node.js this way. Go invent it on your own time with a project you intend to be with forever, or at least one you&rsquo;ll never have to hand off.</p>
 
 <h2>Less is Best</h2>
 
-<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &mdash; both cases &mdash; is to ruthlessly cull what you&rsquo;ve got.</p>
+<p>To quote another famous individual with absolutely no relation to software engineering, Antoine de Saint-Exupery said, &ldquo;A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.&rdquo; And again, what he applied to design, I apply to code. The best way to fix overengineering &ndash; both cases &ndash; is to ruthlessly cull what you&rsquo;ve got.</p>
 
 <p>Success, for code, isn&rsquo;t bigger and better. It&rsquo;s smaller and cheaper. Refactor mercilessly, use external dependencies, and always consider the simplest, most direct solution to your problem. Yes, eventually you might need a message queueing system with prioritization and robust monitoring: but do you need it now? Could you get by with something simple and quick? And in the future you&rsquo;ll need to send multiple notifications for every kind of event in your system. But for the time being, will sending one email work? Or one text?</p>
 
@@ -59,7 +58,7 @@
 
 <p>I know why it&rsquo;s tempting to write code the fun way, instead of the proper way. Who wants to use the fuddy-duddy old technologies when some enterprising individual just made the coding mashup you&rsquo;ve been waiting for? But remember to keep your audience in mind. If you&rsquo;re coding for a client (and if you have a full-time job, your client is your employer) you need to make code that&rsquo;s first maintainable, second performant, and, as a distant third, ground-breaking and full of awesome tech.</p>
 
-<p>Your time to shine &mdash; your opportunity to cut yourself on the bleeding edge &mdash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
+<p>Your time to shine &ndash; your opportunity to cut yourself on the bleeding edge &ndash; is with your own private projects. And if you&rsquo;re lucky and good, and the final product is really neat, thousands of people will adopt it for their use. Then, and only then, you can use it in production projects and feel like an awesome success&hellip; and without falling into one of the pitfalls of overengineering.</p>
 ]]></content>
   </entry>
   

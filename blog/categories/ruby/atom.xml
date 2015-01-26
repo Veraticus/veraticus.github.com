@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -25,103 +25,82 @@
 
 <p>Change the <code>NotifierWorker</code> to look like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># app/workers/notifier_worker.rb
+require 'apn_connection'
 
-<h1>app/workers/notifier_worker.rb</h1>
+class NotifierWorker
+  include Sidekiq::Worker
 
-<p>require &lsquo;apn_connection&rsquo;</p>
-
-<p>class NotifierWorker
-  include Sidekiq::Worker</p>
-
-<p>  APN_POOL = ConnectionPool.new(:size => 2, :timeout => 300) do</p>
-
-<pre><code>APNConnection.new
-</code></pre>
-
-<p>  end</p>
-
-<p>  def perform(message, recipient_ids, custom_data = nil)</p>
-
-<pre><code>recipient_ids = Array(recipient_ids)
-
-APN_POOL.with do |connection|
-  tokens = User.where(id: recipient_ids).collect {|u| u.devices.collect(&amp;:token)}.flatten
-
-  tokens.each do |token|
-    notification = Houston::Notification.new(device: token)
-    notification.alert = message
-    notification.sound = 'default'
-    notification.custom_data = custom_data
-    connection.write(notification.message)
+  APN_POOL = ConnectionPool.new(:size =&gt; 2, :timeout =&gt; 300) do
+    APNConnection.new
   end
+
+  def perform(message, recipient_ids, custom_data = nil)
+    recipient_ids = Array(recipient_ids)
+
+    APN_POOL.with do |connection|
+      tokens = User.where(id: recipient_ids).collect {|u| u.devices.collect(&amp;:token)}.flatten
+
+      tokens.each do |token|
+        notification = Houston::Notification.new(device: token)
+        notification.alert = message
+        notification.sound = 'default'
+        notification.custom_data = custom_data
+        connection.write(notification.message)
+      end
+    end
+  end
+
 end
 </code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
 
 <p>Of course, the big change here is <code>require apn_connection</code> and the extraction of all the logic that had formerly established our connection with Apple. Now we do that in a new class, sensibly called <code>APNConnection</code>:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># lib/apn_connection.rb
+class APNConnection
 
-<h1>lib/apn_connection.rb</h1>
-
-<p>class APNConnection</p>
-
-<p>  def initialize</p>
-
-<pre><code>setup
-</code></pre>
-
-<p>  end</p>
-
-<p>  def setup</p>
-
-<pre><code>@uri, @certificate = if Rails.env.production?
-  [
-    Houston::APPLE_PRODUCTION_GATEWAY_URI,
-    File.read("#{Rails.root}/config/keys/production_push.pem")
-  ]
-else
-  [
-    Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
-    File.read("#{Rails.root}/config/keys/development_push.pem")
-  ]
-end
-
-@connection = Houston::Connection.new(@uri, @certificate, nil)
-@connection.open
-</code></pre>
-
-<p>  end</p>
-
-<p>  def write(data)</p>
-
-<pre><code>begin
-  raise "Connection is closed" unless @connection.open?
-  @connection.write(data)
-rescue Exception =&gt; e
-  attempts ||= 0
-  attempts += 1
-
-  if attempts &lt; 5
+  def initialize
     setup
-    retry
-  else
-    raise e
   end
+
+  def setup
+    @uri, @certificate = if Rails.env.production?
+      [
+        Houston::APPLE_PRODUCTION_GATEWAY_URI,
+        File.read("#{Rails.root}/config/keys/production_push.pem")
+      ]
+    else
+      [
+        Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
+        File.read("#{Rails.root}/config/keys/development_push.pem")
+      ]
+    end
+
+    @connection = Houston::Connection.new(@uri, @certificate, nil)
+    @connection.open
+  end
+
+  def write(data)
+    begin
+      raise "Connection is closed" unless @connection.open?
+      @connection.write(data)
+    rescue Exception =&gt; e
+      attempts ||= 0
+      attempts += 1
+
+      if attempts &lt; 5
+        setup
+        retry
+      else
+        raise e
+      end
+    end
+  end
+
 end
 </code></pre>
 
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p>The main difference here is that the <code>write</code> method will raise an error if the connection has become closed &mdash; this happens most frequently when you write a bad device token into the stream, which causes the APN service to disconnect you. Frustratingly the closure is detected on the request <em>following</em> the bad request, meaning that a perfectly good request encounters an error for no particularly good reason. The retry code here will attempt to reopen the connection to Apple five times and resend the message, until eventually it gives up.</p>
+<p>The main difference here is that the <code>write</code> method will raise an error if the connection has become closed &ndash; this happens most frequently when you write a bad device token into the stream, which causes the APN service to disconnect you. Frustratingly the closure is detected on the request <em>following</em> the bad request, meaning that a perfectly good request encounters an error for no particularly good reason. The retry code here will attempt to reopen the connection to Apple five times and resend the message, until eventually it gives up.</p>
 
 <p>Using this method I have a robust, failure-resistant push notification service in production that I (and my customers) are very pleased with indeed.</p>
 ]]></content>
@@ -134,91 +113,71 @@ end
     <id>http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle</id>
     <content type="html"><![CDATA[<p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
 
-<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &ndash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
 
 <!-- more -->
 
 
 <p>Let&rsquo;s say you have a helper method you want to include in all policies, packages, and verifiers. Make a module to contain it, something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># sprinkle/config/helpers.rb
 
-<h1>sprinkle/config/helpers.rb</h1>
+module Sprinkle
+  module Helpers
 
-<p>module Sprinkle
-  module Helpers</p>
+    def templates
+      path = File.expand_path('../../', __FILE__)
+      "#{path}/templates" # sprinkle/templates/
+    end
 
-<pre><code>def templates
-  path = File.expand_path('../../', __FILE__)
-  "#{path}/templates" # sprinkle/templates/
+  end
 end
 </code></pre>
-
-<p>  end
-end
-```</p>
 
 <p>The problem is that to use this helper method in a lot of different places requires a little bit of work. You can&rsquo;t just do something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># sprinkle/policies/base.rb
 
-<h1>sprinkle/policies/base.rb</h1>
-
-<p>policy :base, roles: :web do
-  requires :build_essential if File.exists?(&ldquo;#{templates}/build_essential.txt&rdquo;)</p>
-
-<pre><code>                                         # No method error for templates
-</code></pre>
-
-<p>end</p>
-
-<p>package :build_essential do
-  file &ldquo;/etc/build_essential.txt&rdquo;,</p>
-
-<pre><code>contents: render("#{templates}/build_essential.txt"), # No method error for templates
-sudo: true
-</code></pre>
-
-<p>  verify do</p>
-
-<pre><code>has_file "/etc/build_essential.txt"
-puts "#{templates}/build_essential.txt" # Contrived example since you'd never really
-                                        # just puts something here, but this also
-                                        # throws a no method error
-</code></pre>
-
-<p>  end
+policy :base, roles: :web do
+  requires :build_essential if File.exists?("#{templates}/build_essential.txt")
+                                             # No method error for templates
 end
-```</p>
+
+package :build_essential do
+  file "/etc/build_essential.txt",
+    contents: render("#{templates}/build_essential.txt"), # No method error for templates
+    sudo: true
+
+  verify do
+    has_file "/etc/build_essential.txt"
+    puts "#{templates}/build_essential.txt" # Contrived example since you'd never really
+                                            # just puts something here, but this also
+                                            # throws a no method error
+  end
+end
+</code></pre>
 
 <p>You need to include the <code>Helpers</code> module in each class: policy, packages, and verifiers. That&rsquo;s easy enough to do. After you define your helper, do something like this:</p>
 
-<p>```ruby</p>
+<pre><code class="ruby"># sprinkle/config/helpers.rb
 
-<h1>sprinkle/config/helpers.rb</h1>
-
-<p>class Sprinkle::Policy
+class Sprinkle::Policy
   include Sprinkle::Helpers
-end</p>
-
-<p>module Sprinkle::Package
-  class Package</p>
-
-<pre><code>include Sprinkle::Helpers
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>module Sprinkle
-  class Verify</p>
-
-<pre><code>include Sprinkle::Helpers
-</code></pre>
-
-<p>  end
 end
-```</p>
+
+
+module Sprinkle::Package
+  class Package
+    include Sprinkle::Helpers
+  end
+end
+
+module Sprinkle
+  class Verify
+    include Sprinkle::Helpers
+  end
+end
+</code></pre>
 
 <p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
 
@@ -240,46 +199,7 @@ end
 
 <p>From Houston&rsquo;s documentation, we can easily set up a persistent connection with code like this:</p>
 
-<p>```ruby
-uri, certificate = if Rails.env.production?
-  [</p>
-
-<pre><code>Houston::APPLE_PRODUCTION_GATEWAY_URI,
-File.read("/path/to/production_key.pem")
-</code></pre>
-
-<p>  ]
-else
-  [</p>
-
-<pre><code>Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
-File.read("/path/to/development_key.pem")
-</code></pre>
-
-<p>  ]
-end</p>
-
-<p>connection = Houston::Connection.new(uri, certificate, nil)
-connection.open
-```</p>
-
-<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&rsquo;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
-
-<p><code>ruby
-APN_POOL = ConnectionPool.new(:size =&gt; 2, :timeout =&gt; 300) do
-  # above code
-end
-</code></p>
-
-<p>I didn&rsquo;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
-
-<p>```ruby
-class NotifierWorker
-  include Sidekiq::Worker</p>
-
-<p>  APN_POOL = ConnectionPool.new(:size => 2, :timeout => 300) do</p>
-
-<pre><code>uri, certificate = if Rails.env.production?
+<pre><code class="ruby">uri, certificate = if Rails.env.production?
   [
     Houston::APPLE_PRODUCTION_GATEWAY_URI,
     File.read("/path/to/production_key.pem")
@@ -293,25 +213,49 @@ end
 
 connection = Houston::Connection.new(uri, certificate, nil)
 connection.open
-
-connection
 </code></pre>
 
-<p>  end</p>
+<p>Maintaining a persistent connection pool with Sidekiq workers is easy thanks to Sidekiq&rsquo;s integration with <a href="https://github.com/mperham/connection_pool">Connection Pool</a>. We can set that up fairly easily like so:</p>
 
-<p>  def perform(message, token)</p>
-
-<pre><code>APN_POOL.with do |connection|
-  notification = Houston::Notification.new(device: token)
-  notification.alert = message
-  connection.write(notification.message)
+<pre><code class="ruby">APN_POOL = ConnectionPool.new(:size =&gt; 2, :timeout =&gt; 300) do
+  # above code
 end
 </code></pre>
 
-<p>  end</p>
+<p>I didn&rsquo;t want more than two connections since that should suffice for initial load; and a timeout of 5 minutes seemed reasonable enough for me. Ultimately, my worker ended up looking like this:</p>
 
-<p>end
-```</p>
+<pre><code class="ruby">class NotifierWorker
+  include Sidekiq::Worker
+
+  APN_POOL = ConnectionPool.new(:size =&gt; 2, :timeout =&gt; 300) do
+    uri, certificate = if Rails.env.production?
+      [
+        Houston::APPLE_PRODUCTION_GATEWAY_URI,
+        File.read("/path/to/production_key.pem")
+      ]
+    else
+      [
+        Houston::APPLE_DEVELOPMENT_GATEWAY_URI,
+        File.read("/path/to/development_key.pem")
+      ]
+    end
+
+    connection = Houston::Connection.new(uri, certificate, nil)
+    connection.open
+
+    connection
+  end
+
+  def perform(message, token)
+    APN_POOL.with do |connection|
+      notification = Houston::Notification.new(device: token)
+      notification.alert = message
+      connection.write(notification.message)
+    end
+  end
+
+end
+</code></pre>
 ]]></content>
   </entry>
   
@@ -357,18 +301,17 @@ end
 
 <p>We use branching! Branching is a simple concept but very powerful. Let&rsquo;s write our second program to understand how we can use branching in Ruby.</p>
 
-<p>```ruby
-puts &ldquo;What animal do you want to hear?&rdquo;
-animal = gets.chomp</p>
+<pre><code class="ruby">puts "What animal do you want to hear?"
+animal = gets.chomp
 
-<p>if animal == &lsquo;cat&rsquo;
-  puts &ldquo;Meow!&rdquo;
-elsif animal == &lsquo;dog&rsquo;
-  puts &ldquo;Bark.&rdquo;
+if animal == 'cat'
+  puts "Meow!"
+elsif animal == 'dog'
+  puts "Bark."
 else
-  puts &ldquo;Moo&hellip;&rdquo;
+  puts "Moo..."
 end
-```</p>
+</code></pre>
 
 <p>Remember <code>puts</code> and <code>gets</code> from our last lesson, along with <code>chomp</code> to get rid of newlines? We&rsquo;re using them again: <code>puts</code> outputs information to the console, whereas <code>gets</code> gets it in. But the new and exciting stuff here is the <code>if</code> statement.</p>
 
@@ -380,7 +323,7 @@ end
 
 <p>All <code>if</code> statements have to end with an <code>end</code>. A lot of multi-line programming needs an <code>end</code> at the very end: otherwise the computer won&rsquo;t know where the <code>if</code> terminates.</p>
 
-<p>Let&rsquo;s try another new program &mdash; except this time you&rsquo;ll make it on your own. Let&rsquo;s use a new string method, called <code>capitalize</code>. Ask what the user&rsquo;s name is, and then get it from the command line. Check if what they typed is equal to what they typed, capitalized. If it is, then welcome them to Introduction to Programming. If it isn&rsquo;t, ask them to try again with a capitalized name&hellip; since the most important part of programming is correct capitalization!</p>
+<p>Let&rsquo;s try another new program &ndash; except this time you&rsquo;ll make it on your own. Let&rsquo;s use a new string method, called <code>capitalize</code>. Ask what the user&rsquo;s name is, and then get it from the command line. Check if what they typed is equal to what they typed, capitalized. If it is, then welcome them to Introduction to Programming. If it isn&rsquo;t, ask them to try again with a capitalized name&hellip; since the most important part of programming is correct capitalization!</p>
 
 <h3>Looping</h3>
 
@@ -388,11 +331,10 @@ end
 
 <p>Happily, we can fix this problem. Let&rsquo;s try another program to illustrate how easy it is to repeat stuff in Ruby.</p>
 
-<p><code>ruby
-100.times do
+<pre><code class="ruby">100.times do
   puts "I love programming!"
 end
-</code></p>
+</code></pre>
 
 <p>That should probably leave you breathless, saying &ldquo;I love programming!&rdquo; a hundred times. What exactly happened here, though?</p>
 
@@ -402,36 +344,28 @@ end
 
 <p>What if we don&rsquo;t want to repeat this merely 100 times, though? What if we want to repeat something endlessly? For that, let&rsquo;s make a completely new program.</p>
 
-<p>```ruby
-puts &ldquo;This is an endless loop! Type &lsquo;q&rsquo; to quit.&rdquo;</p>
+<pre><code class="ruby">puts "This is an endless loop! Type 'q' to quit."
 
-<p>loop do
-  response = gets.chomp</p>
+loop do
+  response = gets.chomp
 
-<p>  if response == &lsquo;q&rsquo;</p>
-
-<pre><code>break
-</code></pre>
-
-<p>  else</p>
-
-<pre><code>puts response
-</code></pre>
-
-<p>  end
+  if response == 'q'
+    break
+  else
+    puts response
+  end
 end
-```</p>
+</code></pre>
 
 <p>This program uses a block to do most of its work: but the method we&rsquo;re using to start that block is <code>loop</code>. As you probably guessed, <code>loop</code> will repeat the programming inside the block endlessly, never exiting if it can help it. The special method <code>break</code> that we use inside the block is one of only two ways to exit a loop that is permanently repeating.</p>
 
 <p>Let&rsquo;s try another loop, but this time, let&rsquo;s &ldquo;forget&rdquo; to include a break statement.</p>
 
-<p><code>ruby
-loop do
+<pre><code class="ruby">loop do
   puts "Sayonara repl.it"
   sleep(1)
 end
-</code></p>
+</code></pre>
 
 <p>That sleep method commands the computer to wait for 1 second whenever it encounters it: in this case, the computer will output &ldquo;Sayonara repl.it&rdquo;, wait one second, and then do it all again.</p>
 
@@ -441,7 +375,7 @@ end
 
 <p>Unfortunately, there&rsquo;s not a whole lot we can do&hellip; on repl.it.</p>
 
-<p>We&rsquo;ve learned about the basic types of Ruby: integers, strings, and floats. We&rsquo;ve learned how to use methods on them, and we&rsquo;ve learned about Ruby&rsquo;s basic data structures &mdash; arrays and hashes. We&rsquo;ve even learned about variables and comparisons. And through it all, repl.it has been our constant ally and friend.</p>
+<p>We&rsquo;ve learned about the basic types of Ruby: integers, strings, and floats. We&rsquo;ve learned how to use methods on them, and we&rsquo;ve learned about Ruby&rsquo;s basic data structures &ndash; arrays and hashes. We&rsquo;ve even learned about variables and comparisons. And through it all, repl.it has been our constant ally and friend.</p>
 
 <p>Now we have to abandon it.</p>
 
@@ -461,12 +395,11 @@ end
 
 <p>Now, let&rsquo;s try that last program again, this time on our own local computer.</p>
 
-<p><code>ruby
-loop do
+<pre><code class="ruby">loop do
   puts "Sayonara repl.it"
   sleep(1)
 end
-</code></p>
+</code></pre>
 
 <p>Oh no, we forgot to put in a break again! But this time we can fix our out-of-control program. Press &ldquo;Ctrl&rdquo; and &ldquo;C&rdquo; simultaneously to break the program. &ldquo;Ctrl-C&rdquo; is a shortcut for programs in the command prompt that instructs them to exit immediately. Computer programmers call this &ldquo;breaking&rdquo; or &ldquo;aborting&rdquo; the program.</p>
 
@@ -480,29 +413,19 @@ end
 
 <p>I&rsquo;ve already installed a free program called Notepad++ onto your computers. It does a lot of what I&rsquo;ve said above, and as a bonus doesn&rsquo;t cost a dime. You can find out more about it (and download it at home) at its <a href="http://notepad-plus-plus.org/">website</a>. We&rsquo;ll be using Notepad++ to program Ruby, so double click its icon on your desktop to start it up. Let&rsquo;s write a simple program to test it out.</p>
 
-<p>```ruby
-loop do
-  puts &ldquo;What&rsquo;s your name?&rdquo;
-  name = gets.chomp</p>
+<pre><code class="ruby">loop do
+  puts "What's your name?"
+  name = gets.chomp
 
-<p>  if name == &ldquo;Josh&rdquo;</p>
-
-<pre><code>puts "You're teaching a class!"
-</code></pre>
-
-<p>  elsif name == &ldquo;Alisa&rdquo;</p>
-
-<pre><code>puts "That's Josh's sister's name."
-</code></pre>
-
-<p>  else</p>
-
-<pre><code>puts "Hi, " + name.capitalize
-</code></pre>
-
-<p>  end
+  if name == "Josh"
+    puts "You're teaching a class!"
+  elsif name == "Alisa"
+    puts "That's Josh's sister's name."
+  else
+    puts "Hi, " + name.capitalize
+  end
 end
-```</p>
+</code></pre>
 
 <p>The content of this program should be fairly familiar to you by now. Save it and give it a filename of <code>name.rb</code>. .rb is the extension for Ruby programs: it tells the computer that the text file you saved is intended to be run by the Ruby interpreter. Now, just double-click the file in the location you saved it and you&rsquo;ll see it run. Magical!</p>
 
@@ -519,16 +442,16 @@ end
     <link href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/"/>
     <updated>2012-08-05T17:48:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii</id>
-    <content type="html"><![CDATA[<p>It took me a long time to author this &mdash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&rsquo;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+    <content type="html"><![CDATA[<p>It took me a long time to author this &ndash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&rsquo;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
 
-<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &mdash; I&rsquo;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&rsquo;s browser.</p>
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &ndash; I&rsquo;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&rsquo;s browser.</p>
 
 <!-- more -->
 
 
 <h2>Digging Deeper into Ruby</h2>
 
-<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &mdash; integers, strings, and floats &mdash; and we also learned what methods are and how they can be used to manipulate those objects. Today we&rsquo;ll start by learning about variables, a key concept in computer programming. Afterwards, we&rsquo;ll use variables to understand more about Ruby&rsquo;s basic objects, and then we&rsquo;ll discover how we can create and manipulate entirely new classes of objects.</p>
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &ndash; integers, strings, and floats &ndash; and we also learned what methods are and how they can be used to manipulate those objects. Today we&rsquo;ll start by learning about variables, a key concept in computer programming. Afterwards, we&rsquo;ll use variables to understand more about Ruby&rsquo;s basic objects, and then we&rsquo;ll discover how we can create and manipulate entirely new classes of objects.</p>
 
 <h3>Variables</h3>
 
@@ -563,7 +486,7 @@ end
 
 <p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
 
-<p>Now that we understand variables, the rest of Ruby&rsquo;s world opens up before us. The basic types we discussed &mdash; integers, strings, floats, and variables &mdash; form the foundation for the Ruby programming language. Now that we&rsquo;ve learned about them, we can learn about some exciting new objects&hellip; and then eventually how to create new kinds of objects of our very own!</p>
+<p>Now that we understand variables, the rest of Ruby&rsquo;s world opens up before us. The basic types we discussed &ndash; integers, strings, floats, and variables &ndash; form the foundation for the Ruby programming language. Now that we&rsquo;ve learned about them, we can learn about some exciting new objects&hellip; and then eventually how to create new kinds of objects of our very own!</p>
 
 <h3>Organizing Data</h3>
 
@@ -577,26 +500,26 @@ end
 
 <p><code>["This", "is", 'an', 'array', 123]</code></p>
 
-<p>The brackets around the array are telling you what it is &mdash; an array. The elements of the array are separated by commas. This array has five elements &mdash; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&rsquo;s as big as you need.</p>
+<p>The brackets around the array are telling you what it is &ndash; an array. The elements of the array are separated by commas. This array has five elements &ndash; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&rsquo;s as big as you need.</p>
 
 <p>Let&rsquo;s try some <strong>exercises</strong> to understand how to use arrays.</p>
 
 <ol>
 <li><p>Let&rsquo;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
 <li><p>Let&rsquo;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
-<li><p>Being friendless sucks. Let&rsquo;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &lsquo;tom&rsquo;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &mdash; without the parenthesis or the dot &mdash; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
-<li><p>Let&rsquo;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &mdash; the object to be inserted into the array &mdash; and push it onto the very end.</p></li>
+<li><p>Being friendless sucks. Let&rsquo;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &lsquo;tom&rsquo;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &ndash; without the parenthesis or the dot &ndash; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let&rsquo;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &ndash; the object to be inserted into the array &ndash; and push it onto the very end.</p></li>
 <li><p>When you count an array&rsquo;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&rsquo;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
 <li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
 <li><p>This is all well and good, but let&rsquo;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&rsquo;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
 </ol>
 
 
-<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &mdash; that is, the first element is always the first, the last element is always the last &mdash; you can encode a lot of information in them and be confident of accessing it later.</p>
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &ndash; that is, the first element is always the first, the last element is always the last &ndash; you can encode a lot of information in them and be confident of accessing it later.</p>
 
 <h3>Hashes</h3>
 
-<p>A hash is like a dictionary. In a dictionary, you look up a word &mdash; say, &lsquo;zebra&rsquo; &mdash; and read a definition (&lsquo;a big white and black striped horse-like animal&rsquo;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &lsquo;zebra&rsquo; in a dictionary: it&rsquo;s what you use to look up information in a hash. Values are the definitions: they&rsquo;re what you get back when you look up a word.</p>
+<p>A hash is like a dictionary. In a dictionary, you look up a word &ndash; say, &lsquo;zebra&rsquo; &ndash; and read a definition (&lsquo;a big white and black striped horse-like animal&rsquo;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &lsquo;zebra&rsquo; in a dictionary: it&rsquo;s what you use to look up information in a hash. Values are the definitions: they&rsquo;re what you get back when you look up a word.</p>
 
 <p>Hashes look like this:</p>
 
@@ -607,9 +530,9 @@ end
 <ol>
 <li><p>First, let&rsquo;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&rsquo;d have made a blank hash; instead we&rsquo;re starting it with an entry.</p></li>
 <li><p>Let&rsquo;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
-<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &mdash; &lsquo;peacock&rsquo; &mdash; to a new value &mdash; &lsquo;beautiful&rsquo;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
-<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &mdash; so the keys and values might not appear in the same positions you&rsquo;d expect.</p></li>
-<li><p>Keys have to be unique in a hash &mdash; if you assign a value to a key that already exists, it will replace that key&rsquo;s existing value. Let&rsquo;s change the value of &lsquo;zebra&rsquo;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &lsquo;zebra&rsquo; is &lsquo;striped&rsquo;, instead of &lsquo;animal&rsquo;.</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &ndash; &lsquo;peacock&rsquo; &ndash; to a new value &ndash; &lsquo;beautiful&rsquo;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &ndash; so the keys and values might not appear in the same positions you&rsquo;d expect.</p></li>
+<li><p>Keys have to be unique in a hash &ndash; if you assign a value to a key that already exists, it will replace that key&rsquo;s existing value. Let&rsquo;s change the value of &lsquo;zebra&rsquo;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &lsquo;zebra&rsquo; is &lsquo;striped&rsquo;, instead of &lsquo;animal&rsquo;.</p></li>
 <li><p>Finally, data structures can contain other data structures. Let&rsquo;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
 </ol>
 
@@ -624,16 +547,15 @@ end
 
 <p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&rsquo;t really covered yet. When you write code in there, and press the &lsquo;play&rsquo; button in the upper right, the code will be executed and you&rsquo;ll see the result on the right-hand side. Let&rsquo;s try entering this in to the text editor half of repl.it:</p>
 
-<p>```ruby
-scores ||= {}
-puts &lsquo;Who just scored points?&rsquo;
-name = gets.chomp
-puts &lsquo;How many more points did they get?&rsquo;
-points = gets.chomp</p>
+<pre><code class="ruby">scores ||= {}
+puts 'Who just scored points?'
+name = gets.chomp 
+puts 'How many more points did they get?'
+points = gets.chomp
 
-<p>scores[name] = points
-puts &lsquo;The current standings are: &rsquo; + scores.inspect
-```</p>
+scores[name] = points
+puts 'The current standings are: ' + scores.inspect
+</code></pre>
 
 <p>Let&rsquo;s dissect this progrma line-by-line to understand what&rsquo;s happening here.</p>
 
@@ -641,7 +563,7 @@ puts &lsquo;The current standings are: &rsquo; + scores.inspect
 
 <p>In the second line, we ask the user who scored points.</p>
 
-<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &mdash; but that return isn&rsquo;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &ndash; but that return isn&rsquo;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
 
 <p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
 

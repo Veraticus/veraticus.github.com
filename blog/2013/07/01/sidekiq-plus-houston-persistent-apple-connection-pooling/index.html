@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Sidekiq + Houston: Persistent Apple Connection Pooling - Hi, I'm Josh Symonds</title>
+  <title>Sidekiq + Houston: Persistent Apple Connection Pooling - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2013</time>
+<time datetime="2013-07-01T21:24:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -145,17 +146,17 @@
 <span class='line-number'>14</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
 </span><span class='line'>  <span class="o">[</span>
-</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>  <span class="o">]</span>
 </span><span class='line'><span class="k">else</span>
 </span><span class='line'>  <span class="o">[</span>
-</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>  <span class="o">]</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'><span class="n">connection</span><span class="o">.</span><span class="n">open</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -205,22 +206,22 @@
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
 </span><span class='line'>    <span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
 </span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>      <span class="o">]</span>
 </span><span class='line'>    <span class="k">else</span>
 </span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>      <span class="o">]</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">connection</span><span class="o">.</span><span class="n">open</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">connection</span>
@@ -228,7 +229,7 @@
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
 </span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
 </span><span class='line'>      <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
 </span><span class='line'>      <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
 </span><span class='line'>    <span class="k">end</span>
@@ -269,7 +270,7 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/" title="Previous Post: Why I'm Not Using RubyMotion in Production">&laquo; Why I'm Not Using RubyMotion in Production</a>
+        <a class="basic-alignment left" href="/blog/2013/06/26/why-im-not-using-rubymotion-in-production/" title="Previous Post: Why I'm Not Using RubyMotion in Production">&laquo; Why I&#8217;m Not Using RubyMotion in Production</a>
       
       
         <a class="basic-alignment right" href="/blog/2013/08/07/rubymotion-update-one-month-later/" title="Next Post: RubyMotion Update: One Month Later">RubyMotion Update: One Month Later &raquo;</a>
@@ -284,7 +285,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

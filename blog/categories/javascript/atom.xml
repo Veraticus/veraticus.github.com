@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -29,7 +29,7 @@
 
 <h3>Head.js</h3>
 
-<p>The first ingredient in our speed cake is <a href="http://headjs.com/">head.js</a>. While head.js has a number of components &mdash; media queries and dynamic CSS among them &mdash; the reason it initially became popular, and the reason I&rsquo;m talking about it now, is its basic, core functionality. Head.js allows you to asynchronously load your page&rsquo;s scripts. This might not sound like an enormous time savings, but consider this: do you use <a href="http://www.google.com/webfonts">Google Web Fonts</a> or <a href="https://typekit.com/">Adobe&rsquo;s TypeKit</a>? Chances are you do, since everyone loves fonts. But fonts must be downloaded by the client browser, a process that usually occurs in the page&rsquo;s head (before dom rendering has even begun), slowing down the rest of the page load while it waits.</p>
+<p>The first ingredient in our speed cake is <a href="http://headjs.com/">head.js</a>. While head.js has a number of components &ndash; media queries and dynamic CSS among them &ndash; the reason it initially became popular, and the reason I&rsquo;m talking about it now, is its basic, core functionality. Head.js allows you to asynchronously load your page&rsquo;s scripts. This might not sound like an enormous time savings, but consider this: do you use <a href="http://www.google.com/webfonts">Google Web Fonts</a> or <a href="https://typekit.com/">Adobe&rsquo;s TypeKit</a>? Chances are you do, since everyone loves fonts. But fonts must be downloaded by the client browser, a process that usually occurs in the page&rsquo;s head (before dom rendering has even begun), slowing down the rest of the page load while it waits.</p>
 
 <p>And your user sees an empty browser while they&rsquo;re waiting. That&rsquo;s unacceptable.</p>
 
@@ -37,28 +37,25 @@
 
 <p>Here&rsquo;s what the code looks like for GirlsGuideTo:</p>
 
-<p><code>javascript
-head.js( { 'application': '//girlsguideto.cloudfront.net/assets/application.js' }, { 'typekit': '//use.typekit.net/typekit.js' }, { 'ga': '//www.google-analytics.com/ga.js' }, { 'jquery.embedly-2.1.7': '//scripts.embed.ly/jquery.embedly-2.1.7.min.js' } )
-</code></p>
+<pre><code class="javascript">head.js( { 'application': '//girlsguideto.cloudfront.net/assets/application.js' }, { 'typekit': '//use.typekit.net/typekit.js' }, { 'ga': '//www.google-analytics.com/ga.js' }, { 'jquery.embedly-2.1.7': '//scripts.embed.ly/jquery.embedly-2.1.7.min.js' } )
+</code></pre>
 
 <p>Of course I didn&rsquo;t hand-code that myself, I used the super helpful <a href="https://github.com/muitocomplicado/headjs-rails">headjs-rails</a> Gem to put this in my application.html.erb&rsquo;s head:</p>
 
-<p><code>ruby
-&lt;%= javascript_include_tag "head.js" %&gt;
+<pre><code class="ruby">&lt;%= javascript_include_tag "head.js" %&gt;
 &lt;%= headjs_include_tag "application", '//use.typekit.net/typekit.js', '//www.google-analytics.com/ga.js', '//scripts.embed.ly/jquery.embedly-2.1.7.min.js' %&gt;
-</code></p>
+</code></pre>
 
 <p>Pretty easy, huh? Give it a shot and you&rsquo;ll see your page load times start really blazing.</p>
 
 <h3>Turbolinks</h3>
 
-<p>Playing off of Defunkt&rsquo;s amazing <a href="http://pjax.heroku.com/">pjax</a>, <a href="https://github.com/rails/turbolinks">Turbolinks</a> speeds up your pageloads by making every page request Ajax-y (or more accurately Pjax-y). When you click on a link, Turbolinks will fetch the page you requested and replace the existing document&rsquo;s body with its content. No CSS or JavaScript loading occurs, making each page load blazingly fast &mdash; and thanks to the magic of pushState, your back button and everything else you&rsquo;d expect on the page still work.</p>
+<p>Playing off of Defunkt&rsquo;s amazing <a href="http://pjax.heroku.com/">pjax</a>, <a href="https://github.com/rails/turbolinks">Turbolinks</a> speeds up your pageloads by making every page request Ajax-y (or more accurately Pjax-y). When you click on a link, Turbolinks will fetch the page you requested and replace the existing document&rsquo;s body with its content. No CSS or JavaScript loading occurs, making each page load blazingly fast &ndash; and thanks to the magic of pushState, your back button and everything else you&rsquo;d expect on the page still work.</p>
 
 <p>Turbolinks is ridiculously easy to install. Simply add it to your Gemfile and then, in your application.js, add this line:</p>
 
-<p><code>javascript
-//= require turbolinks
-</code></p>
+<pre><code class="javascript">//= require turbolinks
+</code></pre>
 
 <h2>Now Fix It</h2>
 
@@ -68,32 +65,27 @@ head.js( { 'application': '//girlsguideto.cloudfront.net/assets/application.js' 
 
 <p>This is the easiest thing to correct. <code>$(document).ready()</code> now fires before all your scripts have finished loading, since each script is loaded asynchronously and separately. So you&rsquo;ll either see weird behavior from it, or it won&rsquo;t execute at all (since $ will be undefined, as jQuery has yet to load). Simply replace all instances of <code>$(document).ready()</code> with <code>head()</code>. <code>head()</code> is called by head.js when your scripts have loaded. Something like this would make sense:</p>
 
-<p>```javascript
-head(function() {
+<pre><code class="javascript">head(function() {
   // Load Typekit
-  try{Typekit.load();}catch(e){}</p>
+  try{Typekit.load();}catch(e){}
 
-<p>  // Load Google Analytics
-  var <em>gaq = </em>gaq || [];
-  <em>gaq.push([&lsquo;</em>setAccount&rsquo;, &lsquo;UA-XXX-1&rsquo;]);
-  <em>gaq.push([&lsquo;</em>trackPageview&rsquo;]);
+  // Load Google Analytics
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-XXX-1']);
+  _gaq.push(['_trackPageview']);
 })
-```</p>
+</code></pre>
 
 <h3>Google Analytics</h3>
 
 <p>Google Analytics will load correctly on your initial page load, now. But unfortunately it won&rsquo;t load on any subsequent pages, since additional pages are called via Ajax. We need to hook into one of Turbolink&rsquo;s events to correctly record users visiting our site:</p>
 
-<p>```javascript
-head(function() {
-  document.addEventListener(&lsquo;page:change&rsquo;, function() {</p>
-
-<pre><code>_gaq.push(['_trackPageview']); 
-</code></pre>
-
-<p>  })
+<pre><code class="javascript">head(function() {
+  document.addEventListener('page:change', function() { 
+    _gaq.push(['_trackPageview']); 
+  })
 )}
-```</p>
+</code></pre>
 
 <p><code>page:change</code> is called every time Turbolinks fetches and renders a page: when it does so, we call Google analytics manually to inform it to track the current page view.</p>
 
@@ -101,22 +93,20 @@ head(function() {
 
 <p>This should get you 95% of the way to having pages that are incredibly fast and work very well. One last caveat is that any script that loads on <code>$(document).ready()</code> must now also load on <code>page:change</code> as well: ready is not called when the page is already loaded, after all. So if you have CoffeeScript like this:</p>
 
-<p><code>coffeescript
-$(document).ready -&gt;
+<pre><code class="coffeescript">$(document).ready -&gt;
   doExcitingThings()
-</code></p>
+</code></pre>
 
 <p>You&rsquo;ll want to add this as well:</p>
 
-<p>```coffeescript
-$(document).ready &ndash;>
-  doExcitingThings()</p>
-
-<p>document.addEventListener &lsquo;page:change&rsquo;, &ndash;>
+<pre><code class="coffeescript">$(document).ready -&gt;
   doExcitingThings()
-```</p>
 
-<p>Remember this is only for scripts that you&rsquo;re sure are loaded after jQuery &mdash; scripts loaded asynchronously need to use <code>head()</code> instead of <code>$(document).ready()</code>.</p>
+document.addEventListener 'page:change', -&gt;
+  doExcitingThings()
+</code></pre>
+
+<p>Remember this is only for scripts that you&rsquo;re sure are loaded after jQuery &ndash; scripts loaded asynchronously need to use <code>head()</code> instead of <code>$(document).ready()</code>.</p>
 
 <p>And that&rsquo;s all there is to it! With these simple tips (and simple fixes) your pages will be incredibly, ridiculously fast. The only downside to these techniques relates to Turbolinks. If you have a lot of script-specific state on your pages, clearing it out between page loads will probably be a big headache. For most of us, without highly stateful JavaScript applications, all you&rsquo;ll see are massive speed improvements. Your users won&rsquo;t believe how fast your site is, and best of all, these changes are really easy to implement. So what&rsquo;re you waiting for? Get JavaScripting!</p>
 ]]></content>

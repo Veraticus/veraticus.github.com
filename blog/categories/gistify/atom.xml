@@ -4,7 +4,7 @@
   <title><![CDATA[Category: gistify | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/gistify/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -33,11 +33,11 @@
     <link href="http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts/"/>
     <updated>2013-06-03T18:44:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/06/03/gistify-1-dot-1-0-visibility-and-accounts</id>
-    <content type="html"><![CDATA[<p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I&rsquo;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago &mdash; man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
+    <content type="html"><![CDATA[<p>Hot on the heels of my <a href="http://joshsymonds.com/blog/2013/05/29/gistify-a-mac-app-for-easy-gists/">previous announcement</a>, I&rsquo;m proud to announce the release of Gistify version 1.1.0. And after submitting only four days ago &ndash; man, the Mac App store moves incredibly fast compared to the iOS App Store!</p>
 
 <p>Anyhow, <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a>, the incredibly awesome Mac App that lets you gist quickly and easily, just got a whole lot better. Now you can sign in to your GitHub account to make gists, and set the visibility of your gists to either public or private Also the app screenshots are no longer quite so, well&hellip; drab, for lack of a better word.</p>
 
-<p>If you haven&rsquo;t downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I&rsquo;m slightly biased, I&rsquo;ve been using it all the time and I think it&rsquo;s an incredibly handy tool &mdash; after all, that&rsquo;s why I released it. But if you&rsquo;re not convinced yet, or you&rsquo;re just interested in giving it a shot without paying the $2, let me know and I&rsquo;ll be happy to hook you up.</p>
+<p>If you haven&rsquo;t downloaded <a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify</a> yet, you should. While I&rsquo;m slightly biased, I&rsquo;ve been using it all the time and I think it&rsquo;s an incredibly handy tool &ndash; after all, that&rsquo;s why I released it. But if you&rsquo;re not convinced yet, or you&rsquo;re just interested in giving it a shot without paying the $2, let me know and I&rsquo;ll be happy to hook you up.</p>
 ]]></content>
   </entry>
   
@@ -52,7 +52,7 @@
 
 <p>Gistify rather simply delivers the content of your clipboard to GitHub&rsquo;s awesome <a href="https://gist.github.com/">Gist</a> service. You can select the default format for all gists and override it on a gist-by-gist basis, and the resulting URL is appended to your clipboard so you can paste it wherever you like.</p>
 
-<p>Simple? Yes indeed, but I desperately wanted it. I made this initial version rapidly to scratch an itch I had &mdash; and perplexingly there&rsquo;s not an existing desktop app that seems to do this already. (There are competing apps that paste to other services, but for some reason none work properly that post to Gist.)</p>
+<p>Simple? Yes indeed, but I desperately wanted it. I made this initial version rapidly to scratch an itch I had &ndash; and perplexingly there&rsquo;s not an existing desktop app that seems to do this already. (There are competing apps that paste to other services, but for some reason none work properly that post to Gist.)</p>
 
 <p>In terms of future plans, I already have a new version submitted for approval to Apple! Version 1.1.0 will allow you to sign in to GitHub and create gists under your username: additionally you can toggle the visibility of gists to either public or secret. And in development is version 1.2.0, which will introduce all kinds of new mind-blowing awesomeness.</p>
 

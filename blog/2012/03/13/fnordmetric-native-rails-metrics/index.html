@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Fnordmetric: Native Rails Metrics - Hi, I'm Josh Symonds</title>
+  <title>Fnordmetric: Native Rails Metrics - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-03-13T22:05:00-05:00" pubdate data-updated="true">Mar 13<span>th</span>, 2012</time>
+<time datetime="2012-03-13T22:05:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 3  minutes</span>
 
         
@@ -127,7 +128,7 @@
 
 <h2>Engineize It</h2>
 
-<p>The Gem itself assumes you&rsquo;ll be running it on its own port, presumably redirecting nginx traffic there. But this is 2012 and Rails engines are all the rage &mdash; so why bother with a separate app? Well, I&rsquo;ll get to the reason why later, but mounting it as an engine is pretty simple.</p>
+<p>The Gem itself assumes you&rsquo;ll be running it on its own port, presumably redirecting nginx traffic there. But this is 2012 and Rails engines are all the rage &ndash; so why bother with a separate app? Well, I&rsquo;ll get to the reason why later, but mounting it as an engine is pretty simple.</p>
 
 <p>Set up an initializer or something that defines all the Fnord metrics you want, something like <code>config/initializers/fnord.rb</code></p>
 
@@ -220,7 +221,7 @@
 
 <p>I know some people hate the ternary operator, but I kind of like it. Anyway, this causes the worker to start only if there&rsquo;s an environment variable set to start it or the Rails environment is development. I set up one instance that receives this variable when it starts, and now I only have one worker. Simplicity itself!</p>
 
-<p>Ultimately, I like Fnordmetric, but I&rsquo;m not using it in my production applications. I feel like there&rsquo;s a level of abstraction to go before it&rsquo;s really usable in big production apps. It&rsquo;s much better at tracking arbitrary metrics than NewRelic &mdash; honestly, trying to shoehorn stats into their system feels silly at times &mdash; but setting up the tracking stuff is a pain, involving a lot of unnecessary repetition. I think that a Fnordmetric2.0 would be awesome, though, so I hope the project sees more love and work. And who knows, if I have some time I&rsquo;ll try contributing to it myself. That&rsquo;s the joy of open source: if you have a good idea, you make it happen.</p>
+<p>Ultimately, I like Fnordmetric, but I&rsquo;m not using it in my production applications. I feel like there&rsquo;s a level of abstraction to go before it&rsquo;s really usable in big production apps. It&rsquo;s much better at tracking arbitrary metrics than NewRelic &ndash; honestly, trying to shoehorn stats into their system feels silly at times &ndash; but setting up the tracking stuff is a pain, involving a lot of unnecessary repetition. I think that a Fnordmetric2.0 would be awesome, though, so I hope the project sees more love and work. And who knows, if I have some time I&rsquo;ll try contributing to it myself. That&rsquo;s the joy of open source: if you have a good idea, you make it happen.</p>
 </div>
   <div class='attribution'>
   <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
@@ -253,7 +254,7 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/03/10/rails-3-arel%2Carel_table%2C-and-squeel/" title="Previous Post: Rails 3: Arel, Arel_Table, and Squeel">&laquo; Rails 3: Arel, Arel_Table, and Squeel</a>
+        <a class="basic-alignment left" href="/blog/2012/03/10/rails-3-arel,arel_table,-and-squeel/" title="Previous Post: Rails 3: Arel, Arel_Table, and Squeel">&laquo; Rails 3: Arel, Arel_Table, and Squeel</a>
       
       
         <a class="basic-alignment right" href="/blog/2012/03/16/classifying-and-refactoring-your-code/" title="Next Post: Classifying and Refactoring Your Code">Classifying and Refactoring Your Code &raquo;</a>
@@ -268,7 +269,7 @@
   </div>
   <footer role="contentinfo"><div id='footer'>
   <p>
-  Copyright &copy; 2014 - Josh Symonds -
+  Copyright &copy; 2015 - Josh Symonds -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

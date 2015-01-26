@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chef | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/chef/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -25,8 +25,7 @@
 
 <h2>base</h2>
 
-<p><code>ruby
-run_list %W(
+<pre><code class="ruby">run_list %W(
   recipe[chef-client::delete_validation]
   recipe[chef-client::config]
   recipe[chef-client::service]
@@ -51,7 +50,7 @@ run_list %W(
   recipe[runit]
   recipe[rsyslog::client]
 )
-</code></p>
+</code></pre>
 
 <p>This is the run list I&rsquo;m using as the base for all the servers. I don&rsquo;t think there&rsquo;s anything surprising here, but I do want to point out a few things:</p>
 
@@ -60,21 +59,17 @@ run_list %W(
 </ul>
 
 
-<p>```ruby
-  default_attributes &lsquo;openssh&rsquo; => {</p>
-
-<pre><code>  'permit_root_login' =&gt; 'no',
-  'password_authentication' =&gt; 'no'
-}
+<pre><code class="ruby">  default_attributes 'openssh' =&gt; {
+      'permit_root_login' =&gt; 'no',
+      'password_authentication' =&gt; 'no'
+    }
 </code></pre>
-
-<p>```</p>
 
 <p>You don&rsquo;t want to allow root logins or password logins. It is also probably worthwhile to delete any preexisting sudoer for your AMI image if one exists (like ubuntu for example), using&hellip;</p>
 
 <ul>
 <li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It&rsquo;s really helpful.</p></li>
-<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &mdash; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&rsquo;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
+<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &ndash; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&rsquo;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
 <li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you&rsquo;ll get confused.</p></li>
 </ul>
 
@@ -83,8 +78,7 @@ run_list %W(
 
 <p>I&rsquo;m running Graylog2 and Graphite to compile logs and interesting statistics from our servers. This is the runlist that establishes the role dedicated to these two pieces of software, which I called <code>statistics</code>:</p>
 
-<p><code>ruby
-run_list %W(
+<pre><code class="ruby">run_list %W(
   recipe[ebs]
   recipe[apache2]
   recipe[statsd]
@@ -93,23 +87,19 @@ run_list %W(
   recipe[graylog2]
   recipe[graylog2::apache2]
 )
-</code></p>
+</code></pre>
 
 <p>I use <a href="https://github.com/titanous/chef-ebs">this EBS cookbook</a> with this configuration:</p>
 
-<p>```ruby
-default_attributes &lsquo;ebs&rsquo; => {</p>
-
-<pre><code>'volumes' =&gt; {
-  '/data' =&gt; {
-    'size' =&gt; 100,
-    'fstype' =&gt; 'xfs'
+<pre><code class="ruby">default_attributes 'ebs' =&gt; {
+    'volumes' =&gt; {
+      '/data' =&gt; {
+        'size' =&gt; 100,
+        'fstype' =&gt; 'xfs'
+      }
+    }
   }
-}
 </code></pre>
-
-<p>  }
-```</p>
 
 <p>This server saves and compiles enormous amounts of data, and in order to hold it all correctly I provision an external EBS drive to contain it. I&rsquo;m actually not even sure 100 gigs is enough space but it seems good for now. elasticsearch, mongodb, and graphite are all set up to save their data to subdirectores in /data. While I could easily have made this a RAID array instead, persistence of this data is not super important to me right now: while it would suck to lose all our analytics information, given our traffic it would rebuild into something useful very quickly anyway.</p>
 
@@ -117,26 +107,21 @@ default_attributes &lsquo;ebs&rsquo; => {</p>
 
 <h2>app</h2>
 
-<p><code>ruby
-run_list %W(
+<pre><code class="ruby">run_list %W(
   recipe[imagemagick]
   recipe[nginx]
   recipe[unicorn]
 )
-</code></p>
+</code></pre>
 
 <p>Probably among the least surprising roles. The application servers use nginx and unicorn for blazingly fast speed. Make sure to add the nginx collectd plugin to this server for additional metrics and monitoring:</p>
 
-<p>```ruby
-default_attributes &lsquo;collectd&rsquo; => {</p>
-
-<pre><code>'plugins' =&gt; {
-  'nginx' =&gt; { }
-}
+<pre><code class="ruby">default_attributes 'collectd' =&gt; {
+    'plugins' =&gt; {
+      'nginx' =&gt; { }
+    }
+  }
 </code></pre>
-
-<p>  }
-```</p>
 
 <p>And those are the basic roles I developed. Because Everest is a complicated application there are a number of roles that I don&rsquo;t discuss here, but this should be more than enough to get anyone started for some good, sensible Chef cookbooks to use with Rails.</p>
 
@@ -151,7 +136,7 @@ default_attributes &lsquo;collectd&rsquo; => {</p>
     <link href="http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber/"/>
     <updated>2013-01-18T14:34:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/01/18/why-i-chose-chef-over-rubber</id>
-    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
+    <content type="html"><![CDATA[<p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &ndash; and surprising even myself &ndash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
 
 <!-- more -->
 
@@ -166,7 +151,7 @@ default_attributes &lsquo;collectd&rsquo; => {</p>
 
 <h2>Extensibility &amp; Community Support</h2>
 
-<p>For the tools that rubber provides in its stack &mdash; and it provides a lot &mdash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
+<p>For the tools that rubber provides in its stack &ndash; and it provides a lot &ndash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
 
 <p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&rsquo;re not precisely what you&rsquo;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
 
@@ -180,7 +165,7 @@ default_attributes &lsquo;collectd&rsquo; => {</p>
 
 <h1>But Rubber is a Great Tool</h1>
 
-<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &mdash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
+<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &ndash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
 
 <p>Why? It&rsquo;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&rsquo;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&rsquo;ll go far, but trying to work against its defaults will be really painful.</p>
 

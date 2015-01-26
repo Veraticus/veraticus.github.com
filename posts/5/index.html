@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hi, I&#8217;m Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I use the wonderful elasticsearch for my searching needs. I described in previous posts how I use and test elasticsearch in general; but in my &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/posts/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Rails Concerns V: Searchable With Elasticsearch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T12:50:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I use the wonderful <a href="http://www.elasticsearch.org/">elasticsearch</a> for my searching needs. I described in <a href="http://joshsymonds.com/blog/2012/03/25/elasticsearch-and-percolation-in-rails/">previous</a> <a href="http://joshsymonds.com/blog/2012/04/15/testing-elasticsearch-in-rails-with-tire/">posts</a> how I use and test elasticsearch in general; but in my current project, I found myself using elasticsearch in a very similar way across all my models. Call me crazy, but that sounds like a concern to me!</p>
+
+<p>As a result of this concern, I ended up having a really neat abstraction that allowed me to search across all my models using elastcisearch&rsquo;s <a href="http://www.elasticsearch.org/guide/reference/api/multi-index.html">multi-index search functionality</a>. The end result of this concern was not only less duplicated code; it was a useful utility function that acted on all the models that implemented it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/25/rails-concerns-v-searchable-with-elasticsearch/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Rails Concerns IV: Class Methodable</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T14:27:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my application, seed data is an unfortunate necessity. I don&rsquo;t like it but it&rsquo;s there, and it&rsquo;s tightly integrated into many parts of the app (dropdowns, navigational links, and so on). Finding that seed data also tends to be rather ugly and long, unfortunately. Who wants to type <code>Tag.find_by_name('Health &amp; Wellness')</code> or one of the finder variations every time you&rsquo;re looking for something? Not me, that&rsquo;s for sure. I found myself aliasing these finders constantly as class methods: so, the above would be much more easily referenced as <code>Tag.health_wellness</code>.</p>
+
+<p>Once I started duplicating this functionality across models I knew I had a concern. This is the module I came up with to encapsulate it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/22/rails-concerns-iv-class-methodable/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Unobtrusive JavaScript Facebook-Style More Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 2  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent awhile yesterday Googling for a Facebook-style more button with a graceful fallback: something where, if the user didn&rsquo;t have JavaScript, they&rsquo;d still see something sensible&hellip; but if they did, they&rsquo;d get a sweet fade-in of more content appended right to the content container. Oh, and I also didn&rsquo;t want to write separate views for JSON returns, so it had to deal with HTML returns and strip out the unnecessary bits.</p>
+
+<p>I didn&rsquo;t find anything, so I took a crack at creating it myself. This is the result.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/14/unobtrusive-javascript-facebook-style-more-button/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Seamless POST Logins With Rack Middleware</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &ndash; for example, maybe you&rsquo;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &ldquo;post&rdquo; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&rsquo;s not logged in presses the button? In most Rails applications, they&rsquo;d be logged in, redirected back to the page they were referred from, and they&rsquo;d have to click the thumbs-up again.</p>
+
+<p>That sort of sucks. They already clicked it once. Why can&rsquo;t we remember that?</p>
+
+<p>I ran into this problem myself today in the context of the thumbs-up button. After doing some research and realizing there was no great Rails 3 solution to the problem, I decided I would roll one myself. The result is some complicated but awesome Rack middleware that I think would be pretty handy for most Rails developers.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/10/seamless-post-logins-with-rack-middleware/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/31/kinotify-a-rubymotion-app/">Kinotify, a RubyMotion App</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-31T20:03:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 1  minute</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today, I&rsquo;d like to announce the official release of my first RubyMotion app &ndash; <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Kinotify</a>! Kinotify is a simple app with a lofty goal: to notify you of the release of upcoming movies, either in theaters or on DVD. You can search for movies &ndash; in case you have something you really want to be notified of in the future, say a rerelease of Dirty Dancing or the future release of Avatar II &ndash; or just see all upcoming releases. Notifications you set will arrive at 2PM local time on your phone, and you can set the app to remind you of a release a month, week, three days, and/or one day in advance.</p>
+
+<p>The UI, icon, and website were all designed by my good friend and super-talented dude <a href="https://twitter.com/lukesbeard">Luke Beard</a>, so they all look totally awesome. And on the flipside, the Rails server and RubyMotion app were all done by yours truly&hellip; so any faults (and I&rsquo;m sure there are some I haven&rsquo;t found) are mine and mine alone.</p>
+
+<p>It was a long road to actually releasing this app. I started designing Kinotify with a good friend of mine (who had the original idea and inspiration for the application) way back in March, so it&rsquo;s been months of labor, testing, asset acquisition, releasing and refining and coding. But I think the results speak for themselves: Kinotify is a pretty awesome application, and even better I think it&rsquo;s a great example of what RubyMotion is capable of. It uses remote notifications, core data, Twitter/Facebook sharing, networking and reachability&hellip; and thanks to RubyMotion it was all pretty painless to get it working together.</p>
+
+<p>This week I&rsquo;ll make another blog post describing what took so long, where my time and energy were spent, and the general process of releasing a RubyMotion app on the iTunes store. But I just got the approval email from Apple so I wanted to unleash Kinotify on the world officially. So what are you waiting for? It&rsquo;s only 99 cents! <a href="http://itunes.apple.com/us/app/kinotify/id551361006">Go get Kinotify already!</a></p>
+
+<p>And if you have any problems or want new features, the best way to contact me is on <a href="https://twitter.com/Veraticus">Twitter</a>. Thanks!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/21/introduction-to-programming-iii/">Introduction to Programming III</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-21T10:56:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 10  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Another in the exciting introduction to programming series! This is looking like it&rsquo;ll be a four-part series; at least, I think I&rsquo;m running into a wall in terms of complexity that I think defines the end of &ldquo;introduction.&rdquo; Still, I hope it&rsquo;ll be helpful to someone, and it&rsquo;ll hopefully be a popular class at the Center on Halsted.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/21/introduction-to-programming-iii/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/dynamic-error-pages-corrected/">Dynamic Error Pages, Corrected</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 3  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Earlier today <a href="http://twitter.com/alain_meier">@alan_meier</a> pointed out that in certain circumstances, my post on <a href="http://joshsymonds.com/blog/2012/06/28/dynamic-error-pages/">dynamic error pages</a> leads to unexpected results: namely, though most errors are caught, 404s are not. I didn&rsquo;t experience this myself because most 404s, for me, result in an ActiveRecord::RecordNotFound error, since my application has a wildcard route at the very end. But if you don&rsquo;t then my post on dynamic error pages won&rsquo;t work for you very well. Here, then, is an explanation of the problem and how to fix it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/dynamic-error-pages-corrected/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/05/introduction-to-programming-ii/">Introduction to Programming II</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T17:48:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It took me a long time to author this &ndash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&rsquo;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &ndash; I&rsquo;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&rsquo;s browser.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/05/introduction-to-programming-ii/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Installing ShareKit With RubyMotion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-18T19:38:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
+
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&rsquo;ve done this in a better way &ndash; by extracting the changes out into a new Cocoapod spec repository &ndash; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/18/installing-sharekit-with-rubymotion/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/12/rails-concerns-iii-metatags/">Rails Concerns III: Metatags</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-12T09:48:00-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Following parts <a href="http://joshsymonds.com/blog/2012/07/01/rails-concerns-i-starting-with-redcarpet/">one</a> and <a href="http://joshsymonds.com/blog/2012/07/04/rails-concerns-ii-taggable/">two</a> of my series on Rails concerns, I&rsquo;m going to finish up with an extremely useful controller concern: automatically adding metatags to (and correctly displaying individualized titles on) your pages. Metatags, of course, are SEO-boosters that you should really be using if you aren&rsquo;t already. In addition to improving your search engine ranking, they allow your pages to appear idiomatically in Facebook&rsquo;s Open Graph. Of course, everyone wants metatags on each and every page on your site, but unfortunately it can be sort of a headache getting them there. Using the <a href="https://github.com/kpumuk/meta-tags/">meta-tags</a> gem and some good old-fashioned hard work, though, we can implement a very simple method to get metatags into every page of our application with minimal hassle.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/12/rails-concerns-iii-metatags/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="6">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="4">Newer &rarr;</a>
+    
+  </div>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2015 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

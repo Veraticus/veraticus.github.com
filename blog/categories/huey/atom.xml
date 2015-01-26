@@ -4,7 +4,7 @@
   <title><![CDATA[Category: huey | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/huey/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,13 +18,12 @@
     <link href="http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0/"/>
     <updated>2013-05-09T11:18:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/05/09/huey-2-dot-0-0</id>
-    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &mdash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
+    <content type="html"><![CDATA[<p>Today I released <a href="https://github.com/Veraticus/huey">Huey</a> version 2.0.0! Though it contains a number of small bug fixes, the biggest change is switching away from SSDP to using the Hue&rsquo;s own bridge discovery protocol. This is both faster and more extensible &ndash; now when you make the initial request for the Hue bridge IP, it takes a fraction of the time SSDP did. And you can also manually specify the IP yourself, like so:</p>
 
-<p><code>ruby
-Huey.configure do |config|
+<pre><code class="ruby">Huey.configure do |config|
   config.hue_ip = '123.456.789.012'
 end
-</code></p>
+</code></pre>
 
 <p>With some clever port forwarding on your router combined with this new option, Huey is now usable on servers outside your local network.</p>
 
@@ -46,74 +45,59 @@ end
 
 <p>New in huey v1.0.0 are light groups: arbitrary collections of bulbs on which you can run commands simultaneously. Getting them to work is ridiculously simple:</p>
 
-<p><code>ruby
-Huey::Group.new('Living Room') # Contains all bulbs that have 'Living Room' in their name
+<pre><code class="ruby">Huey::Group.new('Living Room') # Contains all bulbs that have 'Living Room' in their name
 Huey::Group.new('Living Room', 'Foyer') # All bulbs that have either 'Living Room' or 'Foyer' in their name
 g = Huey::Group.new(Huey::Bulb.find(1), Huey::Bulb.find(3)) # A group specifically containing bulbs 1 and 3
 g.name = 'My Bulbs' # Name your group to find it later
-</code></p>
+</code></pre>
 
 <p>Once you have a group set up, you can act on all its bulbs simultaneously as you would on any individual bulb.</p>
 
-<p>```ruby
-group = Huey::Group.find(&lsquo;My Bulbs&rsquo;)</p>
+<pre><code class="ruby">group = Huey::Group.find('My Bulbs')
 
-<p>group.bri = 200
+group.bri = 200
 group.on = true
-group.save # All changes you&rsquo;ve made are committed to all the bulbs in a group</p>
+group.save # All changes you've made are committed to all the bulbs in a group
 
-<p>group.update(bri: 200, ct: 500) # Set and save in one step
-```</p>
+group.update(bri: 200, ct: 500) # Set and save in one step
+</code></pre>
 
 <p>Of course, you probably want to do the same actions to groups over and over again: for example, dimming all your lights at night and brightening them in the morning. For that we have a shorthand called events:</p>
 
-<p><code>ruby
-event = Huey::Event.new(name: 'All Lights Off', group: group, actions: {on: false})
+<pre><code class="ruby">event = Huey::Event.new(name: 'All Lights Off', group: group, actions: {on: false})
 event.execute # All lights turn off
-</code></p>
+</code></pre>
 
 <h2>YAML Setup</h2>
 
 <p>Huey can read your groups and events from YAML configuration files. Here&rsquo;s a sample from my setup:</p>
 
-<p>```yaml</p>
-
-<h1>groups.yml</h1>
-
-<p>Study: [&ldquo;Study Side&rdquo;, &ldquo;Study Ceiling&rdquo;]
-Bedroom: [&ldquo;Bedroom Left&rdquo;, &ldquo;Bedroom Right&rdquo;]
-Living Room: [&ldquo;Living Room Front&rdquo;, &ldquo;Living Room Center&rdquo;, &ldquo;Living Room Back&rdquo;]
-```</p>
-
-<p>```yaml</p>
-
-<h1>events.yml</h1>
-
-<p>Wakeup:
-  group: Bedroom
-  actions:</p>
-
-<pre><code>"on": true
-bri: 255
-ct: 200
+<pre><code class="yaml"># groups.yml
+Study: ["Study Side", "Study Ceiling"]
+Bedroom: ["Bedroom Left", "Bedroom Right"]
+Living Room: ["Living Room Front", "Living Room Center", "Living Room Back"]
 </code></pre>
 
-<p>Sunset:
+<pre><code class="yaml"># events.yml
+Wakeup:
   group: Bedroom
-  actions:</p>
+  actions:
+    "on": true
+    bri: 255
+    ct: 200
 
-<pre><code>"on": true
-bri: 255
-ct: 350
+Sunset:
+  group: Bedroom
+  actions:
+    "on": true
+    bri: 255
+    ct: 350
 </code></pre>
 
-<p>```</p>
-
-<p><code>ruby
-Huey::Group.import('groups.yml') # Import groups
+<pre><code class="ruby">Huey::Group.import('groups.yml') # Import groups
 Huey::Event.import('events.yml') # Import events
 Huey::Event.find('Wakeup').execute # Run an event on a group
-</code></p>
+</code></pre>
 
 <p>I&rsquo;m setting up three groups here, called Study, Bedroom, and Living Room. I have a lot of potential events and I selected two to show here: what happens when we wake up, and the corresponding later afternoon setup. (If we end up hating this it&rsquo;s likely to change, but it gives you an idea how this is supposed to work, anyhow.) Once everything is slurped in, running an event is simple.</p>
 
@@ -121,13 +105,12 @@ Huey::Event.find('Wakeup').execute # Run an event on a group
 
 <p>Finally, I have it all stitched together through whenever, because who likes reading crontabs? When you set up whenever, it creates a file called config/schedule.rb that it uses to read the crontab. I altered mine to include this:</p>
 
-<p>```ruby
-job_type :event, %Q(cd /directory/to/huey_control &amp;&amp; ruby -e &ldquo;require &lsquo;huey&rsquo;; Huey::Group.import(&lsquo;groups.yml&rsquo;); Huey::Event.import(&lsquo;events.yml&rsquo;); Huey::Event.find(&lsquo;:task&rsquo;).execute(true)&rdquo;)</p>
+<pre><code class="ruby">job_type :event, %Q(cd /directory/to/huey_control &amp;&amp; ruby -e "require 'huey'; Huey::Group.import('groups.yml'); Huey::Event.import('events.yml'); Huey::Event.find(':task').execute(true)")
 
-<p>every :weekday, at: &lsquo;9:30AM&rsquo; do
-  event &ldquo;Wakeup&rdquo;
+every :weekday, at: '9:30AM' do
+  event "Wakeup"
 end
-```</p>
+</code></pre>
 
 <p>To install your new crontab, use <code>whenever --update-crontab</code>.</p>
 
@@ -144,7 +127,7 @@ end
     <id>http://joshsymonds.com/blog/2012/12/21/huey-gem-release</id>
     <content type="html"><![CDATA[<p>I pushed the first version of <a href="https://github.com/Veraticus/huey">Huey</a> to <a href="http://rubygems.org/gems/huey">RubyGems</a> (calling it 0.1.0).</p>
 
-<p>It&rsquo;s in a really good state right now, actually &mdash; in addition to a rather full and complete set of tests, I added a couple neat new features:</p>
+<p>It&rsquo;s in a really good state right now, actually &ndash; in addition to a rather full and complete set of tests, I added a couple neat new features:</p>
 
 <ul>
 <li><p>Now you can make as many changes as you like to a bulb, and then commit them all at once with <code>save</code> (alias as <code>commit</code> for your convenience).</p></li>
@@ -171,36 +154,30 @@ end
 
 <p>I chose a pretty boring UUID for Huey to use: <code>'0123456789abdcef0123456789abcdef'</code>. This works just fine, but if you want to change it Huey is ultra-configurable and you can do so either in a block or directly:</p>
 
-<p>```ruby
-  Huey.configure do |config|</p>
-
-<pre><code>config.uuid = '0123456789abdcef0123456789abcdef'
-</code></pre>
-
-<p>  end
+<pre><code class="ruby">  Huey.configure do |config|
+    config.uuid = '0123456789abdcef0123456789abcdef'
+  end
   # or
-  Huey::Config.uuid = &lsquo;0123456789abdcef0123456789abcdef&rsquo;
-```</p>
+  Huey::Config.uuid = '0123456789abdcef0123456789abcdef'
+</code></pre>
 
 <p>The first time you issue a request to the Hue hub, you&rsquo;ll likely see an attractive error message like this:</p>
 
-<p><code>ruby
-  Huey::Errors::PressLinkButton: 'Press the link button and try your request again'
-</code></p>
+<pre><code class="ruby">  Huey::Errors::PressLinkButton: 'Press the link button and try your request again'
+</code></pre>
 
 <p>Unfortunately, the first time any request is sent, Hue needs to validate the new client by you actually walking over and touching the link button on the hub. But once you do that, you can just resend the request and it should work fine. Then you can use the whole gamut of the Hue API:</p>
 
-<p>```ruby
-Huey::Bulb.all # Returns an array of your bulbs</p>
+<pre><code class="ruby">Huey::Bulb.all # Returns an array of your bulbs
 
-<p>bulb = Huey::Bulb.find(1) # Finds the bulb with the ID of 1
-bulb = Huey::Bulb.find(&lsquo;Living Room&rsquo;) # Finds the bulb with the name &lsquo;Living Room&rsquo;</p>
+bulb = Huey::Bulb.find(1) # Finds the bulb with the ID of 1
+bulb = Huey::Bulb.find('Living Room') # Finds the bulb with the name 'Living Room'
 
-<p>bulb.alert! # Flashes the bulb in question once, useful for checking connectivity
+bulb.alert! # Flashes the bulb in question once, useful for checking connectivity
 bulb.on = false # Turn the bulb off
 bulb.bri = 100 # Dim the bulb a little bit
-bulb.ct = 500 # Change the bulb&rsquo;s color
-```</p>
+bulb.ct = 500 # Change the bulb's color
+</code></pre>
 
 <p>I think Huey is pretty cool and I definitely intend to make a lot of use out of it. I&rsquo;ll be updating it constantly as I do so to support more and better features, so follow the repository and let me know what you think.</p>
 ]]></content>

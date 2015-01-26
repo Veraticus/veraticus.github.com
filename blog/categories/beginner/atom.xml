@@ -4,7 +4,7 @@
   <title><![CDATA[Category: beginner | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/beginner/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -55,18 +55,17 @@
 
 <p>We use branching! Branching is a simple concept but very powerful. Let&rsquo;s write our second program to understand how we can use branching in Ruby.</p>
 
-<p>```ruby
-puts &ldquo;What animal do you want to hear?&rdquo;
-animal = gets.chomp</p>
+<pre><code class="ruby">puts "What animal do you want to hear?"
+animal = gets.chomp
 
-<p>if animal == &lsquo;cat&rsquo;
-  puts &ldquo;Meow!&rdquo;
-elsif animal == &lsquo;dog&rsquo;
-  puts &ldquo;Bark.&rdquo;
+if animal == 'cat'
+  puts "Meow!"
+elsif animal == 'dog'
+  puts "Bark."
 else
-  puts &ldquo;Moo&hellip;&rdquo;
+  puts "Moo..."
 end
-```</p>
+</code></pre>
 
 <p>Remember <code>puts</code> and <code>gets</code> from our last lesson, along with <code>chomp</code> to get rid of newlines? We&rsquo;re using them again: <code>puts</code> outputs information to the console, whereas <code>gets</code> gets it in. But the new and exciting stuff here is the <code>if</code> statement.</p>
 
@@ -78,7 +77,7 @@ end
 
 <p>All <code>if</code> statements have to end with an <code>end</code>. A lot of multi-line programming needs an <code>end</code> at the very end: otherwise the computer won&rsquo;t know where the <code>if</code> terminates.</p>
 
-<p>Let&rsquo;s try another new program &mdash; except this time you&rsquo;ll make it on your own. Let&rsquo;s use a new string method, called <code>capitalize</code>. Ask what the user&rsquo;s name is, and then get it from the command line. Check if what they typed is equal to what they typed, capitalized. If it is, then welcome them to Introduction to Programming. If it isn&rsquo;t, ask them to try again with a capitalized name&hellip; since the most important part of programming is correct capitalization!</p>
+<p>Let&rsquo;s try another new program &ndash; except this time you&rsquo;ll make it on your own. Let&rsquo;s use a new string method, called <code>capitalize</code>. Ask what the user&rsquo;s name is, and then get it from the command line. Check if what they typed is equal to what they typed, capitalized. If it is, then welcome them to Introduction to Programming. If it isn&rsquo;t, ask them to try again with a capitalized name&hellip; since the most important part of programming is correct capitalization!</p>
 
 <h3>Looping</h3>
 
@@ -86,11 +85,10 @@ end
 
 <p>Happily, we can fix this problem. Let&rsquo;s try another program to illustrate how easy it is to repeat stuff in Ruby.</p>
 
-<p><code>ruby
-100.times do
+<pre><code class="ruby">100.times do
   puts "I love programming!"
 end
-</code></p>
+</code></pre>
 
 <p>That should probably leave you breathless, saying &ldquo;I love programming!&rdquo; a hundred times. What exactly happened here, though?</p>
 
@@ -100,36 +98,28 @@ end
 
 <p>What if we don&rsquo;t want to repeat this merely 100 times, though? What if we want to repeat something endlessly? For that, let&rsquo;s make a completely new program.</p>
 
-<p>```ruby
-puts &ldquo;This is an endless loop! Type &lsquo;q&rsquo; to quit.&rdquo;</p>
+<pre><code class="ruby">puts "This is an endless loop! Type 'q' to quit."
 
-<p>loop do
-  response = gets.chomp</p>
+loop do
+  response = gets.chomp
 
-<p>  if response == &lsquo;q&rsquo;</p>
-
-<pre><code>break
-</code></pre>
-
-<p>  else</p>
-
-<pre><code>puts response
-</code></pre>
-
-<p>  end
+  if response == 'q'
+    break
+  else
+    puts response
+  end
 end
-```</p>
+</code></pre>
 
 <p>This program uses a block to do most of its work: but the method we&rsquo;re using to start that block is <code>loop</code>. As you probably guessed, <code>loop</code> will repeat the programming inside the block endlessly, never exiting if it can help it. The special method <code>break</code> that we use inside the block is one of only two ways to exit a loop that is permanently repeating.</p>
 
 <p>Let&rsquo;s try another loop, but this time, let&rsquo;s &ldquo;forget&rdquo; to include a break statement.</p>
 
-<p><code>ruby
-loop do
+<pre><code class="ruby">loop do
   puts "Sayonara repl.it"
   sleep(1)
 end
-</code></p>
+</code></pre>
 
 <p>That sleep method commands the computer to wait for 1 second whenever it encounters it: in this case, the computer will output &ldquo;Sayonara repl.it&rdquo;, wait one second, and then do it all again.</p>
 
@@ -139,7 +129,7 @@ end
 
 <p>Unfortunately, there&rsquo;s not a whole lot we can do&hellip; on repl.it.</p>
 
-<p>We&rsquo;ve learned about the basic types of Ruby: integers, strings, and floats. We&rsquo;ve learned how to use methods on them, and we&rsquo;ve learned about Ruby&rsquo;s basic data structures &mdash; arrays and hashes. We&rsquo;ve even learned about variables and comparisons. And through it all, repl.it has been our constant ally and friend.</p>
+<p>We&rsquo;ve learned about the basic types of Ruby: integers, strings, and floats. We&rsquo;ve learned how to use methods on them, and we&rsquo;ve learned about Ruby&rsquo;s basic data structures &ndash; arrays and hashes. We&rsquo;ve even learned about variables and comparisons. And through it all, repl.it has been our constant ally and friend.</p>
 
 <p>Now we have to abandon it.</p>
 
@@ -159,12 +149,11 @@ end
 
 <p>Now, let&rsquo;s try that last program again, this time on our own local computer.</p>
 
-<p><code>ruby
-loop do
+<pre><code class="ruby">loop do
   puts "Sayonara repl.it"
   sleep(1)
 end
-</code></p>
+</code></pre>
 
 <p>Oh no, we forgot to put in a break again! But this time we can fix our out-of-control program. Press &ldquo;Ctrl&rdquo; and &ldquo;C&rdquo; simultaneously to break the program. &ldquo;Ctrl-C&rdquo; is a shortcut for programs in the command prompt that instructs them to exit immediately. Computer programmers call this &ldquo;breaking&rdquo; or &ldquo;aborting&rdquo; the program.</p>
 
@@ -178,29 +167,19 @@ end
 
 <p>I&rsquo;ve already installed a free program called Notepad++ onto your computers. It does a lot of what I&rsquo;ve said above, and as a bonus doesn&rsquo;t cost a dime. You can find out more about it (and download it at home) at its <a href="http://notepad-plus-plus.org/">website</a>. We&rsquo;ll be using Notepad++ to program Ruby, so double click its icon on your desktop to start it up. Let&rsquo;s write a simple program to test it out.</p>
 
-<p>```ruby
-loop do
-  puts &ldquo;What&rsquo;s your name?&rdquo;
-  name = gets.chomp</p>
+<pre><code class="ruby">loop do
+  puts "What's your name?"
+  name = gets.chomp
 
-<p>  if name == &ldquo;Josh&rdquo;</p>
-
-<pre><code>puts "You're teaching a class!"
-</code></pre>
-
-<p>  elsif name == &ldquo;Alisa&rdquo;</p>
-
-<pre><code>puts "That's Josh's sister's name."
-</code></pre>
-
-<p>  else</p>
-
-<pre><code>puts "Hi, " + name.capitalize
-</code></pre>
-
-<p>  end
+  if name == "Josh"
+    puts "You're teaching a class!"
+  elsif name == "Alisa"
+    puts "That's Josh's sister's name."
+  else
+    puts "Hi, " + name.capitalize
+  end
 end
-```</p>
+</code></pre>
 
 <p>The content of this program should be fairly familiar to you by now. Save it and give it a filename of <code>name.rb</code>. .rb is the extension for Ruby programs: it tells the computer that the text file you saved is intended to be run by the Ruby interpreter. Now, just double-click the file in the location you saved it and you&rsquo;ll see it run. Magical!</p>
 
@@ -217,16 +196,16 @@ end
     <link href="http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii/"/>
     <updated>2012-08-05T17:48:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/08/05/introduction-to-programming-ii</id>
-    <content type="html"><![CDATA[<p>It took me a long time to author this &mdash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&rsquo;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
+    <content type="html"><![CDATA[<p>It took me a long time to author this &ndash; and to update this blog in general, in fact. RubyMotion has turned out to be fun and profitable, but also exhausting; I&rsquo;m engaged in another RubyMotion project that has taken up most of the free time I used to dedicate to this blog.</p>
 
-<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &mdash; I&rsquo;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&rsquo;s browser.</p>
+<p>Still, I committed to making an entire series, starting with <a href="http://joshsymonds.com/blog/2012/04/24/introduction-to-programming-i/">Introduction to Programming I</a>, and this is the next in that line. I hope someone finds it useful! I actually made edits to the last post to remove references to sandRBox &ndash; I&rsquo;m using <a href="http://repl.it">repl.it</a> now, since that runs on the individual&rsquo;s browser.</p>
 
 <!-- more -->
 
 
 <h2>Digging Deeper into Ruby</h2>
 
-<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &mdash; integers, strings, and floats &mdash; and we also learned what methods are and how they can be used to manipulate those objects. Today we&rsquo;ll start by learning about variables, a key concept in computer programming. Afterwards, we&rsquo;ll use variables to understand more about Ruby&rsquo;s basic objects, and then we&rsquo;ll discover how we can create and manipulate entirely new classes of objects.</p>
+<p>In our last lesson, we used an online tool (<a href="http://repl.it">repl.it</a>) to understand the basics of the Ruby programming language. We learned some of the basic objects of Ruby &ndash; integers, strings, and floats &ndash; and we also learned what methods are and how they can be used to manipulate those objects. Today we&rsquo;ll start by learning about variables, a key concept in computer programming. Afterwards, we&rsquo;ll use variables to understand more about Ruby&rsquo;s basic objects, and then we&rsquo;ll discover how we can create and manipulate entirely new classes of objects.</p>
 
 <h3>Variables</h3>
 
@@ -261,7 +240,7 @@ end
 
 <p>There are shortcuts for division (<code>/=</code>) and subtraction (<code>-=</code>) reassignment as well, if you ever need those.</p>
 
-<p>Now that we understand variables, the rest of Ruby&rsquo;s world opens up before us. The basic types we discussed &mdash; integers, strings, floats, and variables &mdash; form the foundation for the Ruby programming language. Now that we&rsquo;ve learned about them, we can learn about some exciting new objects&hellip; and then eventually how to create new kinds of objects of our very own!</p>
+<p>Now that we understand variables, the rest of Ruby&rsquo;s world opens up before us. The basic types we discussed &ndash; integers, strings, floats, and variables &ndash; form the foundation for the Ruby programming language. Now that we&rsquo;ve learned about them, we can learn about some exciting new objects&hellip; and then eventually how to create new kinds of objects of our very own!</p>
 
 <h3>Organizing Data</h3>
 
@@ -275,26 +254,26 @@ end
 
 <p><code>["This", "is", 'an', 'array', 123]</code></p>
 
-<p>The brackets around the array are telling you what it is &mdash; an array. The elements of the array are separated by commas. This array has five elements &mdash; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&rsquo;s as big as you need.</p>
+<p>The brackets around the array are telling you what it is &ndash; an array. The elements of the array are separated by commas. This array has five elements &ndash; four strings and one integer. You can put any object into an array, and an array can be as big as you like. Just keep adding commas and elements inside the brackets until it&rsquo;s as big as you need.</p>
 
 <p>Let&rsquo;s try some <strong>exercises</strong> to understand how to use arrays.</p>
 
 <ol>
 <li><p>Let&rsquo;s make a new array and assign it to a variable. Try <code>friends = []</code>. The empty brackets mean this is an empty array.</p></li>
 <li><p>Let&rsquo;s learn some handy array methods. Try <code>friends.empty?</code> The sad truth is, presently we have no friends. We can verify that by trying <code>friends.count</code>, which, of course, is zero.</p></li>
-<li><p>Being friendless sucks. Let&rsquo;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &lsquo;tom&rsquo;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &mdash; without the parenthesis or the dot &mdash; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
-<li><p>Let&rsquo;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &mdash; the object to be inserted into the array &mdash; and push it onto the very end.</p></li>
+<li><p>Being friendless sucks. Let&rsquo;s add a friend to our array. Try <code>friends.&lt;&lt;('tom')</code>. Now our array is <code>['tom']</code>. It has one element, the string &lsquo;tom&rsquo;. The <code>&lt;&lt;</code> method inserts an object onto the end of an array. Because this syntax is used so frequently to add elements to an array, it has a shortcut. You can use <code>friends &lt;&lt; 'tom'</code> &ndash; without the parenthesis or the dot &ndash; in order to directly add an element to an array. This is very similar to the shortcut syntax for addition or subtraction (<code>1 + 1</code> instead of <code>1.+(1)</code>).</p></li>
+<li><p>Let&rsquo;s add another friend. Try <code>friends.push('jimmy')</code>. Our friends list is certainly filling up! <code>push</code> and <code>&lt;&lt;</code> do the exact same thing to an array. They accept one argument &ndash; the object to be inserted into the array &ndash; and push it onto the very end.</p></li>
 <li><p>When you count an array&rsquo;s elements in Ruby, you always start at zero. That is, the very first object in our array is object 0, not object 1. Let&rsquo;s see what that element is: use <code>friends[0]</code> to see the very first friend. Use <code>friends[1]</code> to see our second friend.</p></li>
 <li><p>We can also access the elements of our array, instead of using the <code>[]</code> function, by using some English-soundung methods. Try <code>friends.first</code> to see our first friend, and <code>friends.last</code> to see our last.</p></li>
 <li><p>This is all well and good, but let&rsquo;s say we have a fight with Tom and want to remove him from our friends array. Try <code>friends.delete('tom')</code>. The <code>delete</code> method removes every object that&rsquo;s identical to the provided argument, so if we had <code>'tom'</code> more than once in the array, all copies of him would be removed.</p></li>
 </ol>
 
 
-<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &mdash; that is, the first element is always the first, the last element is always the last &mdash; you can encode a lot of information in them and be confident of accessing it later.</p>
+<p>Arrays are used commonly in Ruby to organize data in list format. Because they preserve ordering of their elements &ndash; that is, the first element is always the first, the last element is always the last &ndash; you can encode a lot of information in them and be confident of accessing it later.</p>
 
 <h3>Hashes</h3>
 
-<p>A hash is like a dictionary. In a dictionary, you look up a word &mdash; say, &lsquo;zebra&rsquo; &mdash; and read a definition (&lsquo;a big white and black striped horse-like animal&rsquo;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &lsquo;zebra&rsquo; in a dictionary: it&rsquo;s what you use to look up information in a hash. Values are the definitions: they&rsquo;re what you get back when you look up a word.</p>
+<p>A hash is like a dictionary. In a dictionary, you look up a word &ndash; say, &lsquo;zebra&rsquo; &ndash; and read a definition (&lsquo;a big white and black striped horse-like animal&rsquo;). Similarly, in a hash, you look up keys and receive values in return. A key is like the word &lsquo;zebra&rsquo; in a dictionary: it&rsquo;s what you use to look up information in a hash. Values are the definitions: they&rsquo;re what you get back when you look up a word.</p>
 
 <p>Hashes look like this:</p>
 
@@ -305,9 +284,9 @@ end
 <ol>
 <li><p>First, let&rsquo;s make a new hash and assign it to a variable. Try <code>dictionary = {'zebra' =&gt; 'animal'}</code>. If we provided an empty set of curly braces (<code>{}</code>), we&rsquo;d have made a blank hash; instead we&rsquo;re starting it with an entry.</p></li>
 <li><p>Let&rsquo;s look up a value in our hash. Try <code>dictionary['zebra']</code>. The square bracket notation here is similar to what we used earlier in arrays to look up elements; but here, when we look up an element in our hash, we have to provide the key name we stored it with. If we try <code>dictionary[0]</code>,</p></li>
-<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &mdash; &lsquo;peacock&rsquo; &mdash; to a new value &mdash; &lsquo;beautiful&rsquo;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
-<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &mdash; so the keys and values might not appear in the same positions you&rsquo;d expect.</p></li>
-<li><p>Keys have to be unique in a hash &mdash; if you assign a value to a key that already exists, it will replace that key&rsquo;s existing value. Let&rsquo;s change the value of &lsquo;zebra&rsquo;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &lsquo;zebra&rsquo; is &lsquo;striped&rsquo;, instead of &lsquo;animal&rsquo;.</p></li>
+<li><p>Adding a key and value to our hash is easy. Try <code>dictionary['peacock'] = 'beautiful'</code>. This assigns a new key &ndash; &lsquo;peacock&rsquo; &ndash; to a new value &ndash; &lsquo;beautiful&rsquo;. We can look up that value by using <code>dictionary['peacock']</code>.</p></li>
+<li><p>We can see an array of the keys in our hash with <code>dictionary.keys</code>, and an array of values with <code>dictionary.values</code>. Note, as I said earlier, that the ordering of elements in a hash is not preserved &ndash; so the keys and values might not appear in the same positions you&rsquo;d expect.</p></li>
+<li><p>Keys have to be unique in a hash &ndash; if you assign a value to a key that already exists, it will replace that key&rsquo;s existing value. Let&rsquo;s change the value of &lsquo;zebra&rsquo;. Try <code>dictionary['zebra'] = 'striped'</code>. Now the value of &lsquo;zebra&rsquo; is &lsquo;striped&rsquo;, instead of &lsquo;animal&rsquo;.</p></li>
 <li><p>Finally, data structures can contain other data structures. Let&rsquo;s add an array to our hash. Try <code>dictionary['other_animals'] = ['seahorse', 'human', 'eel']</code>.</p></li>
 </ol>
 
@@ -322,16 +301,15 @@ end
 
 <p>In Ruby, you write programs in a text editor. While on repl.it, the text editor is the left-half of the screen that we haven&rsquo;t really covered yet. When you write code in there, and press the &lsquo;play&rsquo; button in the upper right, the code will be executed and you&rsquo;ll see the result on the right-hand side. Let&rsquo;s try entering this in to the text editor half of repl.it:</p>
 
-<p>```ruby
-scores ||= {}
-puts &lsquo;Who just scored points?&rsquo;
-name = gets.chomp
-puts &lsquo;How many more points did they get?&rsquo;
-points = gets.chomp</p>
+<pre><code class="ruby">scores ||= {}
+puts 'Who just scored points?'
+name = gets.chomp 
+puts 'How many more points did they get?'
+points = gets.chomp
 
-<p>scores[name] = points
-puts &lsquo;The current standings are: &rsquo; + scores.inspect
-```</p>
+scores[name] = points
+puts 'The current standings are: ' + scores.inspect
+</code></pre>
 
 <p>Let&rsquo;s dissect this progrma line-by-line to understand what&rsquo;s happening here.</p>
 
@@ -339,7 +317,7 @@ puts &lsquo;The current standings are: &rsquo; + scores.inspect
 
 <p>In the second line, we ask the user who scored points.</p>
 
-<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &mdash; but that return isn&rsquo;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
+<p>In the third, we actually get the name from the command line. Input from the command line is usually terminated by a return &ndash; but that return isn&rsquo;t helpful for us, so we use a string method called <code>chomp</code> to remove the new line from the end.</p>
 
 <p>In the fourth and fifth lines, we again query the user and chomp their input.</p>
 
@@ -364,28 +342,26 @@ puts &lsquo;The current standings are: &rsquo; + scores.inspect
     <link href="http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails/"/>
     <updated>2012-05-22T23:08:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/05/22/dynamic-routing-with-rails</id>
-    <content type="html"><![CDATA[<p>I love Rails' routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we&rsquo;re ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
+    <content type="html"><![CDATA[<p>I love Rails&#8217; routing system. Quickly and easily connecting English-readable URLs to complicated web actions is one of the joys of working in one of the coolest web frameworks on the Internet. At Synthetic, we&rsquo;re ramping up to get a new site out, and as part of the push for that I implemented some cool dynamic routing. I wanted to briefly summarize how and why I went with the routing choices I did, to illustrate using routes expressively and, hopefully, easily.</p>
 
 <!-- more -->
 
 
 <h2>The Problem</h2>
 
-<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they&rsquo;re all really similar &mdash; they all have a name, a description, some assets associated to them&hellip; And so they&rsquo;re all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
+<p>Hipstamatic has gear. Lots and lots of gear. We have over 100 lenses, flashes, and films; but from a programmatic perspective they&rsquo;re all really similar &ndash; they all have a name, a description, some assets associated to them&hellip; And so they&rsquo;re all lumped together in a single model called <code>Gear</code>. Our new application is intended to let users browse our entire gear collection, and so obviously it has a single controller that (surprise surprise) allows you to see each piece of gear. Thus we wind up with routes like this:</p>
 
-<p><code>
-  gear/alfred
+<pre><code>  gear/alfred
   gear/dreampop
   gear/stache
-</code></p>
+</code></pre>
 
 <p>And that&rsquo;s kind of tragic. Each type of gear should have its own route, even if they&rsquo;re all in the same model. Something like this would be both more readable and more expressive:</p>
 
-<p><code>
-  lenses/alfred
+<pre><code>  lenses/alfred
   flashes/dreampop
   films/stache
-</code></p>
+</code></pre>
 
 <p>Of course, having a controller for each kind of gear would be crazy. Happily, Rails provides some easy routing solutions!</p>
 
@@ -393,38 +369,32 @@ puts &lsquo;The current standings are: &rsquo; + scores.inspect
 
 <p>In our routes.rb, for each kind of resource that we&rsquo;re expecting, we create matching routes:</p>
 
-<p><code>ruby
-[:lenses, :films, :flashes, :cases].each do |gear|
+<pre><code class="ruby">[:lenses, :films, :flashes, :cases].each do |gear|
   match "#{gear}/:id", :controller =&gt; :gear, :action =&gt; :show, :type =&gt; gear, :as =&gt; gear
 end
-</code></p>
+</code></pre>
 
 <p>Let&rsquo;s dissect this routing statement in two steps. For the first, obviously, we&rsquo;re linking a route like <code>lenses/a1</code> or <code>flashes/cherry</code> to the gear controller. Importantly we&rsquo;re also passing a type: either lenses, films, flashes, or cases, instructing the controller which endpoint we want. In said controller, we should make sure that this passed type and the name of the piece of gear match. Otherwise people would go to <code>lenses/dreampop</code> or <code>flashes/alfred</code> and still see the correct resource despite specifying an invalid type and name combination. That would just be madness!</p>
 
-<p>```ruby
-class GearController &lt; ApplicationController
-  before_filter :find_gear</p>
+<pre><code class="ruby">class GearController &lt; ApplicationController
+  before_filter :find_gear
 
-<p>  private</p>
+  private
 
-<p>  def find_gear</p>
-
-<pre><code>@gear = Gear.type(params[:type].to_s.singularize).where(:reference =&gt; params[:id]).first if params[:id]
-</code></pre>
-
-<p>  end
+  def find_gear
+    @gear = Gear.type(params[:type].to_s.singularize).where(:reference =&gt; params[:id]).first if params[:id]
+  end
 end
-```</p>
+</code></pre>
 
 <p>Type is a named scope that matches the passed params[:type] to a database column storing the actual type of gear. So this will try to find a lens or flash or what have you with the appropriate reference name. Simple enough.</p>
 
 <p>For the second part of the above route, the <code>:as =&gt; gear</code> part creates named routes like lenses_path and films_url. With that in mind, it&rsquo;s easy for us to dynamically generate links based only on the gear object. This is the helper that allows us to do so:</p>
 
-<p><code>ruby
-def multi_path(obj)
+<pre><code class="ruby">def multi_path(obj)
   self.send("#{obj.type.pluralize.downcase}_path".to_sym, obj.reference)
 end
-</code></p>
+</code></pre>
 
 <p>So I can use <code>multi_path(Gear.find_by_name('Kaimal Mark II'))</code> and the route will be generated as if I had typed <code>lenses_path</code> instead of <code>multi_path</code>: similarly with any object that responds to type and reference, which happily for me is all gear. This is important because I don&rsquo;t want to have to use a switch in iterated blocks to figure out which path name I want to use. Now I can just use multi_path and be guaranteed that the correct one will be selected.</p>
 
@@ -448,9 +418,9 @@ end
 
 <p>Computer programming is the skill that allows you to make computers do what you want. Computers are excellent at menial, repetitive tasks that require little oversight and no creativity: but you can also use them to make amazing websites, games, and applications. Whether it&rsquo;s a simple program to make your day-to-day life easier, or a complicated application that gives you full-time employment, computer programming is invaluable professionally and also rewarding personally. Even better, it&rsquo;s lots of fun!</p>
 
-<p>Many people are intimidated by the idea of learning computer programming &mdash; they&rsquo;re worried you need complicated math or lots of formal training to do well. Nothing could be further from the truth. Computer programming can be learned by anyone and is very much learning a new language. All you need to succeed at computer programming is familiarity with computers, a willingness to learn, and a computer to do the programming on.</p>
+<p>Many people are intimidated by the idea of learning computer programming &ndash; they&rsquo;re worried you need complicated math or lots of formal training to do well. Nothing could be further from the truth. Computer programming can be learned by anyone and is very much learning a new language. All you need to succeed at computer programming is familiarity with computers, a willingness to learn, and a computer to do the programming on.</p>
 
-<p>You&rsquo;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&rsquo;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &mdash; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
+<p>You&rsquo;ll be learning computer programming through the computer language Ruby. Ruby was created with two goals in mind: productivity and fun. While easy to learn, it&rsquo;s also an extremely powerful programming language widely used in the professional world. Some of the most popular websites on the Internet were created with Ruby &ndash; for example, Github, Hulu, and Twitter are all implemented in Ruby.</p>
 
 <p>To learn Ruby, we&rsquo;ll be using an online tool that allows us to quickly and easily try Ruby, called <a href="http://repl.it">repl.it</a>. In our first <strong>exercise</strong>, we&rsquo;ll go to repl.it and type in an example expression.</p>
 
@@ -478,7 +448,7 @@ end
 </ol>
 
 
-<p>In Ruby, there are two kinds of numbers. There are <strong>integers</strong> &mdash; that is, whole numbers, whether positive or negative &mdash; and there are <strong>floats</strong>. Floats (short for &ldquo;floating-point numbers&rdquo;) are numbers with any kind of decimal place, even if that decimal place is zero. <code>55.123</code>, <code>-231.4</code>, <code>0.001</code>, and <code>5.0</code> are all floats.</p>
+<p>In Ruby, there are two kinds of numbers. There are <strong>integers</strong> &ndash; that is, whole numbers, whether positive or negative &ndash; and there are <strong>floats</strong>. Floats (short for &ldquo;floating-point numbers&rdquo;) are numbers with any kind of decimal place, even if that decimal place is zero. <code>55.123</code>, <code>-231.4</code>, <code>0.001</code>, and <code>5.0</code> are all floats.</p>
 
 <p>Most of the time, you&rsquo;ll be using integers. This is because most people (and thus most programs) deal in whole things: you don&rsquo;t receive 4.3 emails, or view 1.8 webpages, or listen to 5.24 of a song. Floats are used when you&rsquo;re doing more complicated mathematics, for example graphics or physics.</p>
 
@@ -517,7 +487,7 @@ end
 </ol>
 
 
-<p>The last two won&rsquo;t actually do math, like you might expect. Remember <code>'12'</code> is a string: <code>12</code> is an integer! So <code>'12'</code> is no different from <code>'sandwiches'</code> or <code>'love'</code> &mdash; it&rsquo;s a word to Ruby, not a number. If you try to use strings as numbers, Ruby won&rsquo;t understand what you mean. Here&rsquo;s a quick <strong>exercise</strong> to illustrate this point.</p>
+<p>The last two won&rsquo;t actually do math, like you might expect. Remember <code>'12'</code> is a string: <code>12</code> is an integer! So <code>'12'</code> is no different from <code>'sandwiches'</code> or <code>'love'</code> &ndash; it&rsquo;s a word to Ruby, not a number. If you try to use strings as numbers, Ruby won&rsquo;t understand what you mean. Here&rsquo;s a quick <strong>exercise</strong> to illustrate this point.</p>
 
 <ol>
 <li><p>Try <code>'14' + 14</code>.</p></li>
@@ -542,9 +512,9 @@ end
 </ol>
 
 
-<p>There are dozens of possible methods for strings and numbers. Learning Ruby is very much like learning a new language &mdash; while you will learn the grammar and the most commonly-used words in this class, you&rsquo;ll eventually want to grab a dictionary and look up more words yourself. Ruby&rsquo;s documentation contains a simple, complete, easy-to-read list of methods and is free online. There are instructions for finding it at the end of this handout.</p>
+<p>There are dozens of possible methods for strings and numbers. Learning Ruby is very much like learning a new language &ndash; while you will learn the grammar and the most commonly-used words in this class, you&rsquo;ll eventually want to grab a dictionary and look up more words yourself. Ruby&rsquo;s documentation contains a simple, complete, easy-to-read list of methods and is free online. There are instructions for finding it at the end of this handout.</p>
 
-<p>Ruby tries to be as sensible as possible. Methods are named to be unsurprising and predictable. For example, if you know about <code>upcase</code>, you can guess that there&rsquo;s a similar method called <code>downcase</code> that does exactly the opposite &mdash; that is, it would convert all letters into lowercase. And you&rsquo;d be right!</p>
+<p>Ruby tries to be as sensible as possible. Methods are named to be unsurprising and predictable. For example, if you know about <code>upcase</code>, you can guess that there&rsquo;s a similar method called <code>downcase</code> that does exactly the opposite &ndash; that is, it would convert all letters into lowercase. And you&rsquo;d be right!</p>
 
 <p>Because Ruby tries very hard to be unsurprising, there are many methods with the same name between different kinds of objects. These methods generally do the same sorts of things. For example, strings and numbers both have a method that might look very familiar to you: the method <code>+</code>! Yes, you were already using methods without even realizing what they were. Try a quick <strong>exercise</strong> to prove it.</p>
 
@@ -582,8 +552,8 @@ end
 <p>Remember earlier how we thought it&rsquo;d be nice if you could add <code>'14'</code> and <code>14</code> together to get 28? We now have all the ingredients to make this happen. Ruby has methods that convert one kind of object into another kind of object. In this <strong>exercise</strong>, we&rsquo;ll do some exciting conversions!</p>
 
 <ol>
-<li><p>Try <code>1.to_s</code>. to_s means &ldquo;to string.&rdquo; Notice that the result comes back with quotation marks &mdash; this isn&rsquo;t the number 1 anymore, but instead the word &ldquo;1&rdquo;!</p></li>
-<li><p>Try <code>1.to_f</code>. to_f means &ldquo;to float.&rdquo; The result is the number 1 as a float &mdash; that is, 1.0.</p></li>
+<li><p>Try <code>1.to_s</code>. to_s means &ldquo;to string.&rdquo; Notice that the result comes back with quotation marks &ndash; this isn&rsquo;t the number 1 anymore, but instead the word &ldquo;1&rdquo;!</p></li>
+<li><p>Try <code>1.to_f</code>. to_f means &ldquo;to float.&rdquo; The result is the number 1 as a float &ndash; that is, 1.0.</p></li>
 <li><p>Try <code>2.3.to_i</code>. to_i means &ldquo;to integer.&rdquo; Because integers can only be whole numbers, the trailing .3 is dropped, converting the number to 2.</p></li>
 <li><p>Try <code>'3'.to_i</code>. The word &ldquo;3&rdquo; is now the number 3.</p></li>
 <li><p>Try <code>'14'.to_i + 14</code>. Pretty convenient, huh?</p></li>
@@ -604,7 +574,7 @@ end
     <link href="http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox/"/>
     <updated>2012-03-31T11:19:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2012/03/31/ruby-in-the-sandbox-sandrbox</id>
-    <content type="html"><![CDATA[<p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They&rsquo;re always looking for people to teach new classes, so I figured I would teach an introduction to programming class &mdash; an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner&rsquo;s language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it&rsquo;s super fun.</p>
+    <content type="html"><![CDATA[<p>I volunteer in the cyber center at the <a href="http://www.centeronhalsted.org/">Center on Halsted</a>. They&rsquo;re always looking for people to teach new classes, so I figured I would teach an introduction to programming class &ndash; an introduction through Ruby. Besides being my favorite computer language, I think Ruby makes a great beginner&rsquo;s language: it has none of the strange, computer-oriented concepts that make most programming languages difficult to learn, and it even reads like pure, simple English. Instead of pointers and variable typing, you have sensible enumerators and object orientation. And also it&rsquo;s super fun.</p>
 
 <p>Unfortunately, getting stuff installed on the computers at the cyber center is kind of a headache. Like most chronically underfunded but well-meaning institutions, there are about three levels of bureaucracy between you and getting anything done. And teaching Ruby without the aid of irb would be next to impossible. So what&rsquo;s a guy to do?</p>
 
@@ -617,37 +587,33 @@ end
 
 <p><a href="https://github.com/Veraticus/Sandrbox">Turns out I was right</a>. Sandrbox is a simple project that I&rsquo;m actually pretty proud of; it makes use of some very edge-case metaprogramming concepts to create as secure an irb environment as I could whip up. In addition to removing dangerous methods on classes (and their metaclasses), it has some really nice syntactical sugar that makes it easy to understand where you are in a block. And when the execution of your secure code is done, it restores all the classes and methods that were missing while removing any new ones that were added, guaranteeing that your environment will be exactly the same as before you started executing code.</p>
 
-<p>This is obviously important if you intend to run that code on a server somewhere &mdash; after all, you can&rsquo;t have someone doing something like:</p>
+<p>This is obviously important if you intend to run that code on a server somewhere &ndash; after all, you can&rsquo;t have someone doing something like:</p>
 
-<p><code>ruby
-`killall -9 thin` # bad
+<pre><code class="ruby">`killall -9 thin` # bad
 Kernel.exec("rm -rf /") # worse
-</code></p>
+</code></pre>
 
 <p>These methods when executed in Sandrbox are instead gently sanitized:</p>
 
-<p><code>ruby
-Sandrbox.perform(['`killall -9 thin`']).output # =&gt; ["NameError: undefined local variable or method ``' for Kernel:Module"]
+<pre><code class="ruby">Sandrbox.perform(['`killall -9 thin`']).output # =&gt; ["NameError: undefined local variable or method ``' for Kernel:Module"]
 Sandrbox.perform(['Kernel.exec("rm -rf /")']).output # =&gt; ["NameError: undefined local variable or method `exec' for Kernel:Module"]
-</code></p>
+</code></pre>
 
 <p>While still allowing you to retain the power and complexity of Ruby:</p>
 
-<p><code>ruby
-Sandrbox.perform(['class Foo', 'def test', '"Hi!"', 'end', 'end', 'Foo.new.test']).output # =&gt; [nil, '"Hi!"']
-</code></p>
+<pre><code class="ruby">Sandrbox.perform(['class Foo', 'def test', '"Hi!"', 'end', 'end', 'Foo.new.test']).output # =&gt; [nil, '"Hi!"']
+</code></pre>
 
 <p>Even cooler is that it automatically does some parsing for you, so that you know when code can be executed or the user is probably not done yet typing:</p>
 
-<p><code>ruby
-response = Sandrbox.perform(['class Foo', 'def test'])
+<pre><code class="ruby">response = Sandrbox.perform(['class Foo', 'def test'])
 response.output # []
 response.complete? # false
 response.indent_level # 2
 response.indent_character # 'def'
-</code></p>
+</code></pre>
 
-<p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course &mdash; it&rsquo;ll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can&rsquo;t destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can&rsquo;t say that it&rsquo;s totally secure yet, but it&rsquo;s a damn sight better than uncensored irb, and after a week or two of work I bet I&rsquo;ll be able to get it locked down pretty damn tight.</p>
+<p>I put a small Sinatra app in front of this and made a little site that I also called <a href="http://sandrbox.herokuapp.com/">Sandrbox</a>. I intend to use it in place of irb to teach this introduction to programming course &ndash; it&rsquo;ll make a great tool for putting the power of Ruby in front of people while still being relatively assured that they can&rsquo;t destroy my server (intentionally or accidentally). And the code is really pretty neat, so you should definitely <a href="https://github.com/Veraticus/Sandrbox">check out the repository</a>. I can&rsquo;t say that it&rsquo;s totally secure yet, but it&rsquo;s a damn sight better than uncensored irb, and after a week or two of work I bet I&rsquo;ll be able to get it locked down pretty damn tight.</p>
 
 <p>But until then, go ahead and try to break it!</p>
 ]]></content>

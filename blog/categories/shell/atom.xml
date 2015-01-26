@@ -4,7 +4,7 @@
   <title><![CDATA[Category: shell | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/shell/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2014-10-21T17:48:18-05:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -18,7 +18,7 @@
     <link href="http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto/"/>
     <updated>2014-06-12T16:56:11-05:00</updated>
     <id>http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto</id>
-    <content type="html"><![CDATA[<p>As developers, we spend a lot of time in our shells: making them fast and responsive improves our productivity. I play around with a lot of development tools (as I mentioned in <a href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/">a previous post</a>) trying to find the best combination of intelligence, responsiveness, and fun. Recently I was investigating alternatives to <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, which is a wonderful set of Zsh packages but suffers from weird slowdowns and, unfortunately, requires a lot of configuration. I stumbled upon <a href="https://github.com/sorin-ionescu/prezto">prezto</a> and I love it &mdash; originally an optimized fork of oh-my-zsh, it&rsquo;s now its own project, and it is fast, beautiful, and leverages the full power of Zsh. It looks like this:</p>
+    <content type="html"><![CDATA[<p>As developers, we spend a lot of time in our shells: making them fast and responsive improves our productivity. I play around with a lot of development tools (as I mentioned in <a href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/">a previous post</a>) trying to find the best combination of intelligence, responsiveness, and fun. Recently I was investigating alternatives to <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, which is a wonderful set of Zsh packages but suffers from weird slowdowns and, unfortunately, requires a lot of configuration. I stumbled upon <a href="https://github.com/sorin-ionescu/prezto">prezto</a> and I love it &ndash; originally an optimized fork of oh-my-zsh, it&rsquo;s now its own project, and it is fast, beautiful, and leverages the full power of Zsh. It looks like this:</p>
 
 <p><img src="http://veratic.us/image/300y2o0a3t03/screenie.png" alt="Terminal" /></p>
 
@@ -31,31 +31,27 @@
 
 <p>You&rsquo;ll want to enable a bunch of modules in your <code>.zpreztorc</code>, which is the configuration file for everything prezto. Here&rsquo;s my modules:</p>
 
-<p>```sh</p>
-
-<h1>Set the Prezto modules to load (browse modules).</h1>
-
-<h1>The order matters.</h1>
-
-<p>zstyle &lsquo;:prezto:load&rsquo; pmodule \
-  &lsquo;environment&rsquo; \
-  &lsquo;terminal&rsquo; \
-  &lsquo;editor&rsquo; \
-  &lsquo;history&rsquo; \
-  &lsquo;directory&rsquo; \
-  &lsquo;spectrum&rsquo; \
-  &lsquo;utility&rsquo; \
-  &lsquo;ssh&rsquo; \
-  &lsquo;completion&rsquo; \
-  &lsquo;homebrew&rsquo; \
-  &lsquo;osx&rsquo; \
-  &lsquo;ruby&rsquo; \
-  &lsquo;rails&rsquo; \
-  &lsquo;git&rsquo; \
-  &lsquo;syntax-highlighting&rsquo; \
-  &lsquo;history-substring-search&rsquo; \
-  &lsquo;prompt&rsquo;
-```</p>
+<pre><code class="sh"># Set the Prezto modules to load (browse modules).
+# The order matters.
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'ssh' \
+  'completion' \
+  'homebrew' \
+  'osx' \
+  'ruby' \
+  'rails' \
+  'git' \
+  'syntax-highlighting' \
+  'history-substring-search' \
+  'prompt'
+</code></pre>
 
 <p>They&rsquo;re not kidding when they say the order matters: <code>prompt</code> must come last, <code>history-substring-search</code> must come before it, and <code>syntax-highlighting</code> must come before that. The result of messing this up will likely be a ton of Zsh errors output to your shell after every command.</p>
 
@@ -72,25 +68,17 @@
 
 <p>After modules are done, get your identities into the SSH agent! There&rsquo;s a configuration block for that later:</p>
 
-<p>```sh</p>
-
-<h1>Set the SSH identities to load into the agent.</h1>
-
-<p>zstyle &lsquo;:prezto:module:ssh:load&rsquo; identities &lsquo;id_rsa&rsquo; &lsquo;id_rsa.github&rsquo; &lsquo;id_rsa.client1&rsquo; &lsquo;id_rsa.client2&rsquo; # all the rest of your identities
-```</p>
+<pre><code class="sh"># Set the SSH identities to load into the agent.
+zstyle ':prezto:module:ssh:load' identities 'id_rsa' 'id_rsa.github' 'id_rsa.client1' 'id_rsa.client2' # all the rest of your identities
+</code></pre>
 
 <p>I also set up a custom theme for myself, the source of which I&rsquo;ll include below. If you want to enable that theme (or a different one), you&rsquo;ll also need to specify it in your <code>.zpreztorc</code>:</p>
 
-<p>```sh</p>
-
-<h1>Set the prompt theme to load.</h1>
-
-<h1>Setting it to &lsquo;random&rsquo; loads a random theme.</h1>
-
-<h1>Auto set to &lsquo;off&rsquo; on dumb terminals.</h1>
-
-<p>zstyle &lsquo;:prezto:module:prompt&rsquo; theme &lsquo;josh&rsquo;
-```</p>
+<pre><code class="sh"># Set the prompt theme to load.
+# Setting it to 'random' loads a random theme.
+# Auto set to 'off' on dumb terminals.
+zstyle ':prezto:module:prompt' theme 'josh'
+</code></pre>
 
 <p>You can find the full text of my <code>.zpreztorc</code> <a href="https://gist.github.com/Veraticus/a1b5204d8f922de5ea88">as a gist</a>.</p>
 
