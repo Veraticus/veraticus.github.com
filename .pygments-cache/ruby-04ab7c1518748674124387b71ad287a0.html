@@ -1,4 +1,4 @@
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Album</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
 
   <span class="k">def</span> <span class="nf">elasticsearch_photos</span>
     <span class="n">finder</span> <span class="o">=</span> <span class="no">Photo</span><span class="o">.</span><span class="n">search</span> <span class="k">do</span>

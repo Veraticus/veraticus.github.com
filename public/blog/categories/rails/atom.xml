@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-06T14:07:30-06:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -25,7 +25,7 @@
 
 <h2>1. Rubinius X by <a href="https://twitter.com/brixen">Brian Shirai</a></h2>
 
-<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &mdash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
+<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &ndash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
 
 <p>It&rsquo;s no secret that Ruby is old now. The question is, how do we keep it relevant even in its increasing age? Brian&rsquo;s hedge against winding up in a programmer nursing home is Rubinius X, which has a lot of interesting features:</p>
 
@@ -34,10 +34,10 @@
 </ul>
 
 
-<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. &ndash; Brian Shirai</p></blockquote>
+<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. - Brian Shirai</p></blockquote>
 
 <ul>
-<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &mdash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
+<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &ndash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
 <li>Capturing the program&rsquo;s runtime experience. Rubinius X allows us to see what lines of code were actually invoked, what arguments were passed to methods, and in general grants a really granular view on what code is actually being run in production.</li>
 <li>Functional programming paradigms, including real functions as first-class citizens (not just <a href="http://apidock.com/ruby/Module/module_function">module_function</a>). You can declare dynamic or static types for these functions with type assertion checking.</li>
 </ul>
@@ -51,11 +51,11 @@
 
 <p>By comparison to the previous, this session was quite light. Extremely helpful for the Rubyist not yet familiar with <a href="https://github.com/resque/resque">resque</a> or <a href="redis.io">redis</a>, Recommendation Engines with Redis and Ruby focused on a specific case study for implementing a recommendation engine in redis.</p>
 
-<p>While the talk was quite fascinating, I was personally hopeful it would focus on the statistical methods of recommendation (using something like k-clustering), which it did not. Instead, the case study discussed implementing a solid and performant recommendation engine taking advantage of redis' native features: inverted indexes, clever key TTL tricks, sorted sets, and queues, queues, queues!</p>
+<p>While the talk was quite fascinating, I was personally hopeful it would focus on the statistical methods of recommendation (using something like k-clustering), which it did not. Instead, the case study discussed implementing a solid and performant recommendation engine taking advantage of redis&#8217; native features: inverted indexes, clever key TTL tricks, sorted sets, and queues, queues, queues!</p>
 
-<p>resque workers performed the actual recommendation work, which was based purely on the relative apparent interest of users in tags, and bubbling up posts and users based on the users' own tagging behavior.</p>
+<p>resque workers performed the actual recommendation work, which was based purely on the relative apparent interest of users in tags, and bubbling up posts and users based on the users&#8217; own tagging behavior.</p>
 
-<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &mdash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
+<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &ndash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
 
 <h2>3. What Devise Does When You&rsquo;re Not Looking by <a href="https://twitter.com/lucasmazza">Lucas Mazza</a></h2>
 
@@ -63,7 +63,7 @@
 
 <p>The foundation of Devise is <a href="https://github.com/hassox/warden">Warden</a>. If Rack is HTTP infrastructure or ActiveModel is ORM infrastructure, Warden is authentication infrastructure. Warden is Rails middleware that provides user session management, failure handling, and lifecycle callbacks. Devise integrates Warden&rsquo;s magic seamlessly with Rails, providing model, router, and controller/view patterns to handle almost all common authentication cases.</p>
 
-<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &mdash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
+<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &ndash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
 
 <p>Devise is a set of reusable, extensible shortcuts for getting authentication cleanly and seamlessly into a Rails app, and honestly everyone should be using it in their app if they aren&rsquo;t already. This session was a concise overview of how best to implement it and configure it.</p>
 
@@ -83,7 +83,7 @@
 
 <p>Though taking only half an hour, <em>Protect Your Code</em> summarized the main legal issues facing developers: copyright law, licensing, open source software, work for hire, licensing and assignment, trademarks, and contract law.</p>
 
-<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &mdash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &mdash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
+<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &ndash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &ndash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
 
 <p>And that led naturally into a discussion of licensing with open source software, particularly the tainting nature of the Gnu Public License. When used for hobbyist projects it&rsquo;s quite acceptable, but the fact that everything it touches becomes open-source can be quite a nuisance for enterprise-grade software.</p>
 
@@ -97,9 +97,9 @@
 
 <p>It also included lots of actual code and many interesting statistics from Code Climate on a real, actual project: <a href="https://reverb.com/">reverb</a>, a guitar marketplace. Though the reverb app is monolithic by any definition of the word, with a thousand classes and a hundred models, it still manages to have low churn, high code quality, and quick development iterations. Indeed, they defended their huge application with a very sensible quote from Martin Fowler about the trend towards separating apps into distinct services:</p>
 
-<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. &ndash; Martin Fowler</p></blockquote>
+<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. - Martin Fowler</p></blockquote>
 
-<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &mdash; say, a ReturnOrderMailer or a ProcessUserCreditCard &mdash; that can decorate models but are not necessarily part of them.</p>
+<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &ndash; say, a ReturnOrderMailer or a ProcessUserCreditCard &ndash; that can decorate models but are not necessarily part of them.</p>
 
 <p>This definitely takes the better parts of DHH&rsquo;s philosophy of simple POROs while rejecting MVC as the be-all, end-all of Rails application design. Decorators, combined with events and event listeners, helped to significantly lower the architectural complexity of reverb without having to break it out into many disparate parts.</p>
 
@@ -109,7 +109,7 @@
 
 <p>Providing a straightforward, sensible introduction to Go, <em>Go for Rubyists</em> gave us a glance at Go, complete with code samples and helpful walkthroughs. Once again, the keywords for this presentation were &ldquo;performance&rdquo; and &ldquo;concurrency,&rdquo; which should be no surprise to anyone who&rsquo;s even slightly familiar with Go.</p>
 
-<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &mdash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
+<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &ndash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
 
 <p>Concurrency is a first-class citizen in Go, based on routines and channels. A routine is sort of like a very, very lightweight thread. Routines communicate not by sharing memory, but by transferring data over channels. A very clear separation that makes it easy to reason about multi-threaded applications.</p>
 
@@ -119,7 +119,7 @@
 
 <p>A fascinating discussion about using software in the public sector, <em>Resolved</em> dealt mainly with the experience of programming for large government entities. Spoiler alert: it sounds pretty difficult.</p>
 
-<p>Though governments make use of many of the same Rails tools any of us would find familiar &mdash; Heroku, postgres, jQuery &mdash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
+<p>Though governments make use of many of the same Rails tools any of us would find familiar &ndash; Heroku, postgres, jQuery &ndash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
 
 <p>The presentation had some code samples on how to do this via OCR with Google&rsquo;s Tesseract, falling back on Mechanical Turk in the case of ambiguity. Overall a clever solution that would probably prove extremely helpful for the (likely many) governments with legacy scanned data.</p>
 
@@ -129,9 +129,9 @@
 
 <p><em>The Functional Web</em> argued that Rails must evolve to meet the needs of a changing Internet: web sockets, streaming responses, and event-based connections all cry out for a Rails solution that ActionController and Rack cannot easily provide. While it&rsquo;s easy to agree that these are all things Rails is terrible at, I&rsquo;m not sure if Rails will ever be a great tool for solving these sorts of problems.</p>
 
-<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &mdash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
+<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &ndash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
 
-<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &mdash; like serving huge files or processing tons of data.</p>
+<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &ndash; like serving huge files or processing tons of data.</p>
 
 <p>And as if to illustrate that the presentation started discussing the best way to spawn a thread in a Rails controller to do both those things. This is a pretty significant anti-pattern for the reasons the talk itself described; it&rsquo;s semantically unpleasant, incredibly slow, and generally just the wrong place to do this.</p>
 
@@ -142,7 +142,7 @@
 <ul>
 <li>BrainTree&rsquo;s CryptoHunt is a cute idea, but I&rsquo;m willing to bet the prize is an employment offer from BrainTree. I would&rsquo;ve been more excited by a year of free credit card processing or something.</li>
 <li>People seem to generally think DHH was very inflammatory at RailsConf with the whole &ldquo;TDD is dead&rdquo; keynote, though almost everyone agrees TDD should only be used when it makes sense.</li>
-<li>VenueOne is actually pretty swanky and the food was reasonably good. Hors d'oeuvres during cocktails were tasty.</li>
+<li>VenueOne is actually pretty swanky and the food was reasonably good. Hors d&#8217;oeuvres during cocktails were tasty.</li>
 <li>Everyone thinks concurrency is a big pain point for Rails. I find this point of view mysterious.</li>
 <li><a href="https://twitter.com/RayHightower">Ray Hightower</a> is a super duper friendly guy.</li>
 </ul>
@@ -178,21 +178,21 @@
 <h2>Mac Apps</h2>
 
 <ul>
-<li><p><strong><a href="https://agilebits.com/onepassword/mac">1Password</a> ($50)</strong> Insanely expensive compared to most other software on this list, but also pretty non-negotiable. I have over 300 passwords stored in it &mdash; including six client logins to AWS, four to RackSpace, and untold multiples for my own servers: how am I supposed to keep all of that straight myself? And generate new ultra-secure passwords whenever I need? Well thankfully I don&rsquo;t have to. 1Password has bulletproof security and I&rsquo;m never concerned I&rsquo;ll lose, forget, or even care about any individual password ever again.</p></li>
+<li><p><strong><a href="https://agilebits.com/onepassword/mac">1Password</a> ($50)</strong> Insanely expensive compared to most other software on this list, but also pretty non-negotiable. I have over 300 passwords stored in it &ndash; including six client logins to AWS, four to RackSpace, and untold multiples for my own servers: how am I supposed to keep all of that straight myself? And generate new ultra-secure passwords whenever I need? Well thankfully I don&rsquo;t have to. 1Password has bulletproof security and I&rsquo;m never concerned I&rsquo;ll lose, forget, or even care about any individual password ever again.</p></li>
 <li><p><strong><a href="http://www.alfredapp.com/">Alfred</a> (Free to try, &pound;17 to buy)</strong> I use Alfred to open nearly everything on my computer. Not just apps! Alfred can open web pages, login automatically with 1Password integration, perform calculations, run one-off terminal commands, find and open files&hellip; Alfred has enormously simplified everything I do with my Mac. Definitely a huge time-saver.</p></li>
 <li><p><strong><a href="http://asepsis.binaryage.com/">Asepsis</a> (Free)</strong> So many important files on your comptuer are dotfiles, which are hidden by default on Macs. So you turn on viewing hidden files&hellip; and suddenly, everywhere you go, you see the dreaded <code>.DS_Store</code>. I hate seeing <code>.DS_Store</code> files. They appear in every directory, they appear on your desktop, they appear in your nightmares&hellip; well Asepsis gets rid of all of them. And it&rsquo;s free.</p></li>
 <li><p><strong><a href="http://www.macbartender.com/">Bartender</a> (Free to try, $15 to buy)</strong> Look at the upper-right of your Mac. Do you see the volume icon there? The AirPlay icon? Even worse, your own name? (What, are you worried you&rsquo;ll forget it?) Banish the clutter into Bartender and clean up your menu bar: you can hide all the icons you never (or rarely) use, and even configure them to display only when their app does something important.</p></li>
 <li><p><strong><a href="http://lightheadsw.com/caffeine/">Caffeine</a> (Free)</strong> Prevent your Mac from ever falling asleep. Helpful if you&rsquo;ve ever started a long-running task, left your computer for awhile, and returned to find it had stopped to take a nap.</p></li>
-<li><p><strong><a href="http://www.getcloudapp.com/">CloudApp</a> (Free, or $4.99 a month)</strong> CloudApp gives you drag-and-drop sharing of any file you&rsquo;d desire. I love having my drops available at a vanity URL (<a href="http://veratic.us">http://veratic.us</a>) &mdash; you&rsquo;d be surprised how many developers say how cool that is, and ask how they can get one of their own. If you don&rsquo;t want the URL then the free version should suit you just fine.</p></li>
+<li><p><strong><a href="http://www.getcloudapp.com/">CloudApp</a> (Free, or $4.99 a month)</strong> CloudApp gives you drag-and-drop sharing of any file you&rsquo;d desire. I love having my drops available at a vanity URL (<a href="http://veratic.us">http://veratic.us</a>) &ndash; you&rsquo;d be surprised how many developers say how cool that is, and ask how they can get one of their own. If you don&rsquo;t want the URL then the free version should suit you just fine.</p></li>
 <li><p><strong><a href="http://giantcomet.com/flint/mac/">Flint</a> (Free, then $14.99)</strong> I love Campfire and BaseCamp. Flint makes Campfire easy-to-use. Even better, it gives me a badged icon in my dock when people speak, and a growl notification when they mention my name.</p></li>
 <li><p><strong><a href="http://gistifyapp.com/">Gistify</a> ($1.99)</strong> Shameless self-promotion, but I honestly love the app I made for myself! I make gists all the time; gistify gives you drag-and-drop gisting of snippets or files, and allows you to create gists from your clipboard contents. Super convenient and super lightweight.</p></li>
 <li><p><strong><a href="http://growl.info/">Growl</a> (Free, or $3.99)</strong> The Apple Notification Center is pretty good&hellip; but Growl still seems to be the gold standard for notifications. One of the first pieces of software I install on a new computer. (That said, I have no idea what the $3.99 version does. Growl is one of the few pieces of software on this list I&rsquo;ve never bought.)</p></li>
-<li><p><strong><a href="http://hyperdock.bahoom.com/">HyperDock</a> (Free, or $9.95)</strong> Allows you to hover over your dock items and see a preview pane summarizing all of that app&rsquo;s open windows, a la Windows' default behavior when you hover over an app in the taskbar. Extremely helpful if you have a lot of files open simultaneously &mdash; for example, if you have lots of projects open at once in your text editor.</p></li>
-<li><p><strong><a href="http://www.iterm2.com/#/section/home">iTerm 2</a> (Free)</strong> The best terminal replacement ever &mdash; I don&rsquo;t know how I ever lived without, and once you start using it, you&rsquo;ll never be able to go back to the default Mac terminal. It has so many nice improvements I can&rsquo;t even list them all, and for the absurd price of &ldquo;free&rdquo; there&rsquo;s absolutely no reason not to use it.</p></li>
-<li><p><strong><a href="http://www.obdev.at/products/littlesnitch/index.html">Little Snitch</a> (Free to try, $34.95 to buy)</strong> Little Snitch is a really excellent software firewall. I&rsquo;m incredibly paranoid about network security, especially on my development machine. Little Snitch allows me to opt-out of connections I don&rsquo;t trust and really lock down my computer &mdash; not only in general, but on a network-by-network basis. As a bonus, it lets me see my network traffic so I get notified if DropBox suddenly decides to resync everything.</p></li>
+<li><p><strong><a href="http://hyperdock.bahoom.com/">HyperDock</a> (Free, or $9.95)</strong> Allows you to hover over your dock items and see a preview pane summarizing all of that app&rsquo;s open windows, a la Windows&#8217; default behavior when you hover over an app in the taskbar. Extremely helpful if you have a lot of files open simultaneously &ndash; for example, if you have lots of projects open at once in your text editor.</p></li>
+<li><p><strong><a href="http://www.iterm2.com/#/section/home">iTerm 2</a> (Free)</strong> The best terminal replacement ever &ndash; I don&rsquo;t know how I ever lived without, and once you start using it, you&rsquo;ll never be able to go back to the default Mac terminal. It has so many nice improvements I can&rsquo;t even list them all, and for the absurd price of &ldquo;free&rdquo; there&rsquo;s absolutely no reason not to use it.</p></li>
+<li><p><strong><a href="http://www.obdev.at/products/littlesnitch/index.html">Little Snitch</a> (Free to try, $34.95 to buy)</strong> Little Snitch is a really excellent software firewall. I&rsquo;m incredibly paranoid about network security, especially on my development machine. Little Snitch allows me to opt-out of connections I don&rsquo;t trust and really lock down my computer &ndash; not only in general, but on a network-by-network basis. As a bonus, it lets me see my network traffic so I get notified if DropBox suddenly decides to resync everything.</p></li>
 <li><p><strong><a href="https://www.monosnap.com/welcome">Monosnap</a> (Free, $4.99 to enable sharing)</strong> The best skitch replacement (since Evernote ruined it). Fast screen or window captures with built-in DropBox, CloudApp, and Evernote uploading for only $4.99. It&rsquo;ll record videos of your screen and even take selfies on your Mac&rsquo;s camera, if you&rsquo;re too lazy to grab your phone.</p></li>
-<li><p><strong><a href="http://www.sublimetext.com/3">Sublime Text 3</a> (Free, then $70(!))</strong> My favorite text editor (and I&rsquo;ve tried most of them). Expensive? Definitely. But you get what you pay for. ST3&rsquo;s best feature is its incredibly versatile package system &mdash; there&rsquo;s a package for pretty much everything, and as a bonus it supports most of TextMate&rsquo;s plugins as well. Despite its depth and power, it&rsquo;s still light-weight enough to start instantly and doesn&rsquo;t spend any time doing reindexing or otherwise chugging. ST3 is also cross-platform if you end up doing a bit of light programming on something other than your primarily development machine, which is useful for standardizing your editor everywhere.</p></li>
-<li><p><strong><a href="http://totalspaces.binaryage.com/">TotalSpaces</a> (Free to try, $18 to buy)</strong> I don&rsquo;t like Mac&rsquo;s default Spaces implementation &mdash; four desktops right next to each other means the furthest space could be two screens away, and the widgets view is totally worthless. TotalSpaces lets you stack desktops in a grid and move left, right, up, and down. Now every space is only one swipe away from any other space. As a bonus you can get rid of the widgets as well.</p></li>
+<li><p><strong><a href="http://www.sublimetext.com/3">Sublime Text 3</a> (Free, then $70(!))</strong> My favorite text editor (and I&rsquo;ve tried most of them). Expensive? Definitely. But you get what you pay for. ST3&rsquo;s best feature is its incredibly versatile package system &ndash; there&rsquo;s a package for pretty much everything, and as a bonus it supports most of TextMate&rsquo;s plugins as well. Despite its depth and power, it&rsquo;s still light-weight enough to start instantly and doesn&rsquo;t spend any time doing reindexing or otherwise chugging. ST3 is also cross-platform if you end up doing a bit of light programming on something other than your primarily development machine, which is useful for standardizing your editor everywhere.</p></li>
+<li><p><strong><a href="http://totalspaces.binaryage.com/">TotalSpaces</a> (Free to try, $18 to buy)</strong> I don&rsquo;t like Mac&rsquo;s default Spaces implementation &ndash; four desktops right next to each other means the furthest space could be two screens away, and the widgets view is totally worthless. TotalSpaces lets you stack desktops in a grid and move left, right, up, and down. Now every space is only one swipe away from any other space. As a bonus you can get rid of the widgets as well.</p></li>
 <li><p><strong><a href="http://tapbots.com/software/tweetbot/mac/">Tweetbot</a> ($19.99)</strong> Twitter is actually a valuable professional tool for me. It lets me keep on top of interesting news and developments in the tech world, contact authors of the software I use directly, and find lots of pictures of kittens. But leaving the #kittens aside, Tweetbot is the best app I&rsquo;ve used for twittering. It&rsquo;s fast, effective, and stays out of my way when I don&rsquo;t want it.</p></li>
 <li><p><strong><a href="http://www.uniboxapp.com/">Unibox</a> ($9.99)</strong> I like Unibox compared to Mail.app and Mail Pilot: it&rsquo;s speedy, it organizes mail effectively, and I feel like I have a bit more control of my inbox. That said I haven&rsquo;t yet run into the program that <em>completely</em> replaces Gmail in a browser for me&hellip; Unibox is as close as I&rsquo;ve come and I use it on a daily basis, but if I&rsquo;m searching for a specific piece of mail, I turn to gmail.</p></li>
 </ul>
@@ -218,12 +218,12 @@
 
 <ul>
 <li><p><a href="http://brew.sh/">homebrew</a> is the best package manager I&rsquo;ve come across. It&rsquo;ll install everything from libxml2 to postgresql from source automatically, helps you manage upgrades from one version to the next, and is fast and performant.</p></li>
-<li><p><a href="https://github.com/sstephenson/rbenv">rbenv</a> allows you to have multiple versions of Ruby on your system simultaneously, each without stepping on the others' toes. If you regularly develop in runtimes other than MRI (I have to do JRuby stuff somewhat frequently, for example) this allows you switch back and forth without going insane.</p></li>
+<li><p><a href="https://github.com/sstephenson/rbenv">rbenv</a> allows you to have multiple versions of Ruby on your system simultaneously, each without stepping on the others&#8217; toes. If you regularly develop in runtimes other than MRI (I have to do JRuby stuff somewhat frequently, for example) this allows you switch back and forth without going insane.</p></li>
 <li><p><a href="https://github.com/burke/zeus">zeus</a> preloads your Rails apps so that tests, the console, and the server all load lightning-fast. The milliseconds you wait for Rails to start now become microseconds, saving you entire minutes per year&hellip; And isn&rsquo;t that really the point of optimization?</p></li>
 </ul>
 
 
-<p>I&rsquo;m sure there&rsquo;s a lot that I missed and some things I don&rsquo;t even know about. If I didn&rsquo;t include your favorite app, Sublime Text plugin, or Rails development tool let me know <a href="http://twitter.com/Veraticus">@Veraticus</a> &mdash; there&rsquo;s nothing I love more than taking a new app for a spin and even adopting it if it turns out to be amazing!</p>
+<p>I&rsquo;m sure there&rsquo;s a lot that I missed and some things I don&rsquo;t even know about. If I didn&rsquo;t include your favorite app, Sublime Text plugin, or Rails development tool let me know <a href="http://twitter.com/Veraticus">@Veraticus</a> &ndash; there&rsquo;s nothing I love more than taking a new app for a spin and even adopting it if it turns out to be amazing!</p>
 ]]></content>
   </entry>
   
@@ -232,7 +232,7 @@
     <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
     <updated>2013-04-17T18:16:00-05:00</updated>
     <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &ndash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
 
 <!-- more -->
 
@@ -241,7 +241,7 @@
 
 <p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
 
-<p>The big differentiator in my comparison (as opposed to others') is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &ndash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
 
 <p>So let&rsquo;s get down to the details!</p>
 
@@ -438,7 +438,7 @@
 </table>
 
 
-<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &ndash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
 
 <h2>Conclusions</h2>
 
@@ -455,9 +455,9 @@
 
 <p><img src="http://f.cl.ly/items/2t3d0J0z3045350b1j2d/Screenshot_3_19_13_1_23_PM.png" alt="Rails Programmer: 37Signals" /></p>
 
-<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &mdash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
+<p>Yes, it&rsquo;s true: <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">Willy Wonka</a> is going to grant one lucky golden ticket holder a tour of the chocolate factory. And then you get to stay there until you somehow get tired of working at one of the coolest companies on planet Earth &ndash; which, to carry my analogy, would probably be as likely to happen as getting bored of eating chocolate. If you&rsquo;re into Rails, you&rsquo;d have to be stupid to not at least consider such an amazing opportunity.</p>
 
-<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &mdash; either way, you&rsquo;ll have an opinion!</p>
+<p>So I did, and because I&rsquo;m a programmer I carefully enumerated my thoughts. If you&rsquo;re on the fence at all about taking the plunge, maybe my reasoning will help you. Or horrify you &ndash; either way, you&rsquo;ll have an opinion!</p>
 
 <!-- more -->
 
@@ -473,10 +473,10 @@
 <p>For those who think that intellect is at least as sexy as looks, this man would be the January pinup for the Men of 37Signals wall calendar I&rsquo;ve been lobbying so hard for them to make. He&rsquo;s the inventor of Rails, he&rsquo;s highly opinionated, and he even drives race cars! Assuming he takes a shine to you, what&rsquo;s not to like? I imagine that, if you announced to a room of programmers, &ldquo;I work with DHH,&rdquo; there would be a brief hush and then everyone would be talking over each other. One would say, &ldquo;That man is a crazy person!&rdquo; And another, &ldquo;He&rsquo;s the greatest programmer to ever draw breath!&rdquo; There&rsquo;s not a lot of people in the world you can work with who are smart, polarizing, and have invented the application framework you use in your day-to-day job. (And drive race cars.) You should jump at the opportunity to work with DHH.</p></li>
 <li><h3>Fame &amp; fortune await.</h3>
 
-<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&rsquo;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&rsquo;ll talk to will know where you work. Your title and position will be meaningful &mdash; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&rsquo;re a 37signals alum (unless you intend to be a lifer), having &ldquo;Programmer at 37signals&rdquo; on your resume will look even more stellar than all those follower numbers.</p></li>
-<li><h3>Work with the best &mdash; and be the best.</h3>
+<p>Or, well, at least fame does. I have no idea what 37signals would offer for this job, though I bet they aren&rsquo;t stingy on the paychecks. But being part of 37signals (while once again polarizing) ensures you notoriety in the world of Rails in particular and programmers in general. Most people you&rsquo;ll talk to will know where you work. Your title and position will be meaningful &ndash; and also note that your personal fame will skyrocket. If you wanted to suddenly gain a few thousand Twitter followers (without having to pay $5.00), getting this job would be a great way to do it. Keep in mind too that, when you&rsquo;re a 37signals alum (unless you intend to be a lifer), having &ldquo;Programmer at 37signals&rdquo; on your resume will look even more stellar than all those follower numbers.</p></li>
+<li><h3>Work with the best &ndash; and be the best.</h3>
 
-<p>37signals' programming team is the crème de la crème of the Rails world. You&rsquo;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &mdash; doesn&rsquo;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&rsquo;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
+<p>37signals&#8217; programming team is the crème de la crème of the Rails world. You&rsquo;ll be challenged constantly to be just as great as they are. Imagine an environment where you might be the weakest link &ndash; doesn&rsquo;t that thought thrill you? To work with the smartest, most dedicated people in the business? People who are at the apex of their field? You&rsquo;ll grow and change and learn in ways you probably never expected, all because 37signals is a team of the best. And you can also take secret joy in the thought that, since they accepted you, they must see some of the same greatness in you as well.</p></li>
 </ol>
 
 
@@ -485,13 +485,13 @@
 <ol>
 <li><h3>You&rsquo;re not the best.</h3>
 
-<p>But in a team of greats, even being great is not enough &mdash; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&rsquo;ll be just another programmer. For some, the knowledge that they&rsquo;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&rsquo;t yet have the fame and reach of 37signals. It&rsquo;s up to you to find them!</p></li>
+<p>But in a team of greats, even being great is not enough &ndash; or, to use a more colorful metaphor, in a constellation with stars as bright as 37signals, you have little hope of shining brighter. I hear Google engineers suffer from similar problems, and also University of Chicago undergraduates. Coming from places where you were the best, now you&rsquo;ll be just another programmer. For some, the knowledge that they&rsquo;re there is enough: but there are lots of places with amazing teams, and some where the teams have more room for you to stand out than in 37signals (or Google or the U of C). These places are waiting for you, though they don&rsquo;t yet have the fame and reach of 37signals. It&rsquo;s up to you to find them!</p></li>
 <li><h3>While it&rsquo;s a great company, it&rsquo;s still a company.</h3>
 
-<p>I love startups. In a startup I&rsquo;m not just a programmer: I do lots and lots of work with computers, it&rsquo;s true, and most of that is programming. But I&rsquo;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&rsquo;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&rsquo;s not an easy question to answer, but I would bet not a whole lot &mdash; or, at least, less than you would somewhere else.</p></li>
+<p>I love startups. In a startup I&rsquo;m not just a programmer: I do lots and lots of work with computers, it&rsquo;s true, and most of that is programming. But I&rsquo;m also responsible for marketing, design, number crunching, tech support, user experience, and when you get right down to it a little bit of everything else too. In a small group you must be a talented polymath, and what you don&rsquo;t know how to do you learn quickly. 37signals is 36 people big and they were founded in 1999. Personally speaking I like growing outside of my computer-walled comfort zone. How much of that would you get at 37signals? That&rsquo;s not an easy question to answer, but I would bet not a whole lot &ndash; or, at least, less than you would somewhere else.</p></li>
 <li><h3>Go do it yourself.</h3>
 
-<p>While 37signals is a great company, there&rsquo;s nothing inherently special about it. They make CRM software, and while that&rsquo;s an interesting problem space, there&rsquo;s tons of fascinating questions to answer out there &mdash; questions that can only be answered through excellent software! The point of Rework is that there&rsquo;s no real magic in 37signals that people who are smart and dedicated can&rsquo;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&rsquo;d be joining his company, but ultimately, if you&rsquo;re so great, why aren&rsquo;t you out there making a name of your own, rather than riding on someone else&rsquo;s coattails? Even if they&rsquo;re his.</p></li>
+<p>While 37signals is a great company, there&rsquo;s nothing inherently special about it. They make CRM software, and while that&rsquo;s an interesting problem space, there&rsquo;s tons of fascinating questions to answer out there &ndash; questions that can only be answered through excellent software! The point of Rework is that there&rsquo;s no real magic in 37signals that people who are smart and dedicated can&rsquo;t create themselves. In my heart, I feel like DHH would look down on you for joining a corporation instead of becoming an awesome entrepreneur yourself. Sure, you&rsquo;d be joining his company, but ultimately, if you&rsquo;re so great, why aren&rsquo;t you out there making a name of your own, rather than riding on someone else&rsquo;s coattails? Even if they&rsquo;re his.</p></li>
 <li><h3>Fame &amp; fortune await!</h3>
 
 <p>If you&rsquo;re a gainfully employed Rails programmer, most likely you make a comparable amount to what 37signals could offer you, unless they&rsquo;re dramatically out of line with what the market pays. And while they&rsquo;re famous (and you would become more so, too, if you joined them), if you want to be a programming luminary in your own right, you can&rsquo;t join stars that have already risen. Do you really want fame and fortune? Then you don&rsquo;t want to join 37signals. They&rsquo;ve already arrived there, and while there&rsquo;s money to be made and people to impress, if you want to to make it big you need to take a risk and not join an established, successful company&hellip; regardless of how awesome they are.</p></li>
@@ -500,7 +500,7 @@
 
 <h2>In The End</h2>
 
-<p>At the point I&rsquo;m at in my career, 37signals &mdash; while incredibly appealing &mdash; isn&rsquo;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&rsquo;t picked this up already, they&rsquo;re my programming heroes: and they should be yours too, because they care about everything that&rsquo;s important in this industry. So if you&rsquo;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
+<p>At the point I&rsquo;m at in my career, 37signals &ndash; while incredibly appealing &ndash; isn&rsquo;t the right choice for me. I hope to conquer the world myself, rather than join victorious conquerers. But where I was at five years ago? I would have moved heaven and earth to swing an interview there. If you haven&rsquo;t picked this up already, they&rsquo;re my programming heroes: and they should be yours too, because they care about everything that&rsquo;s important in this industry. So if you&rsquo;re at all interested in being a programmer among programmers, then 37signals is calling you.</p>
 
 <p>If not, I look forward to seeing what you create in the future, because I bet it&rsquo;ll be stellar.</p>
 ]]></content>
@@ -533,11 +533,11 @@
 
 <p>grape has some really cool features. Being able to define params and a description before an endpoint, rake-style, makes it incredibly obvious what you&rsquo;re doing and what you&rsquo;re expecting. Also it makes generating documentation quick and easy. If I were doing an incredibly small Sinatra-only API, I would choose grape to do it in every time.</p>
 
-<p>Unfortunately that&rsquo;s where the great stuff ends. For Rails applications &mdash; assuming you actually want to use grape with Rails &mdash; it is really an unpleasant solution, since it just doesn&rsquo;t play nicely with Rails.</p>
+<p>Unfortunately that&rsquo;s where the great stuff ends. For Rails applications &ndash; assuming you actually want to use grape with Rails &ndash; it is really an unpleasant solution, since it just doesn&rsquo;t play nicely with Rails.</p>
 
 <p>First, its error handling, logging, and most of its middleware stack are entirely divorced from the rest of your Rails application. I hope you don&rsquo;t want to use <a href="http://newrelic.com">NewRelic</a> or <a href="http://ratchet.io">Ratchet.io</a> with grape, because if you do you&rsquo;re on your own, buddy. Sure, you can get it in manually. Hooray for manual labor. In order to provide unified Graylog2 logging, statsd statistics, and error reporting for Rails and grape, I extracted the common bits into a middleware that sits in front of both of them. This was ugly and unpleasant, and frankly seemed really unnecessary.</p>
 
-<p>Second, and for those of you already gearing up to say &ldquo;but grape isn&rsquo;t FOR Rails&rdquo;, you end up duplicating a lot of Rails' structure inside it anyway, even in small applications. If you don&rsquo;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
+<p>Second, and for those of you already gearing up to say &ldquo;but grape isn&rsquo;t FOR Rails&rdquo;, you end up duplicating a lot of Rails&#8217; structure inside it anyway, even in small applications. If you don&rsquo;t want your API file to be two thousand lines long, you end up including endpoint modules that smell suspiciously like controllers, except with inline routing. In an actual Rails application, this separate but similar structure is by tradition hidden in the <code>lib/</code> directory, where nothing at all integral to your application ordinarily resides.</p>
 
 <p>Third, if you want to version your API, you get to copy and paste the entire thing. To prevent us doing this every time at Everest, I implemented a module inheritance system for the API versions, but frankly it feels hacky and was difficult to get grape to support properly.</p>
 
@@ -549,31 +549,24 @@
 
 <h2><a href="https://github.com/fabrik42/acts_as_api">acts_as_api</a></h2>
 
-<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &mdash; that&rsquo;s what views are for. You don&rsquo;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&rsquo;t.</p>
+<p>Who thought that putting data representations inside a model was a good idea? Data representations go inside a view &ndash; that&rsquo;s what views are for. You don&rsquo;t see rules for coercing models to HTML inside a model. Why should JSON then be allowed? Well, to answer my rhetorical question, it shouldn&rsquo;t.</p>
 
 <p>This gem leads to really horrible uses like this when you version an API:</p>
 
-<p>```ruby
-class User &lt; ActiveRecord::Base
-  api_accessible :public do |t|</p>
+<pre><code class="ruby">class User &lt; ActiveRecord::Base
+  api_accessible :public do |t|
+    t.add :id
+    t.add :first_name
+    t.add :last_name
+    t.add :real_name
+    t.add :gender
+  end
 
-<pre><code>t.add :id
-t.add :first_name
-t.add :last_name
-t.add :real_name
-t.add :gender
-</code></pre>
-
-<p>  end</p>
-
-<p>  api_accessible :with_timezone, extend: :public do |t|</p>
-
-<pre><code>t.add :timezone
-</code></pre>
-
-<p>  end
+  api_accessible :with_timezone, extend: :public do |t|
+    t.add :timezone
+  end
 end
-```</p>
+</code></pre>
 
 <p>This is a versioned resource. You don&rsquo;t want to change the existing representation and break clients that already use the API, so instead you extend it and add in a field. The old representation has to live in your model forever, a silent sentry to the history of your mistakes, bloating your model until the day you finally get fed up with lines and lines of this and switch to actually using views for their intended purpose.</p>
 
@@ -583,23 +576,22 @@ end
 
 <p>That said, versioning is still a tremendous pain in the butt. Routing allows you to at least select which controller your requests are sent to, but this quickly gets complicated:</p>
 
-<p>```ruby
-api version: 1 do
-  get &lsquo;x&rsquo;, to: &lsquo;test#item&rsquo;
-end</p>
-
-<p>api version: 1..3 do
-  get &lsquo;y&rsquo;, to: &lsquo;test#item2&rsquo;
-end</p>
-
-<p>api version: 2 do
-  get &lsquo;y&rsquo;, to: &lsquo;test#override&rsquo; # how does this interact with the line above?
-end</p>
-
-<p>api version: 2..4 do
-  get &lsquo;x&rsquo;, to: &lsquo;test#item3&rsquo; # x now does something different for only versions 2 and 4
+<pre><code class="ruby">api version: 1 do
+  get 'x', to: 'test#item'
 end
-```</p>
+
+api version: 1..3 do
+  get 'y', to: 'test#item2'
+end
+
+api version: 2 do
+  get 'y', to: 'test#override' # how does this interact with the line above?
+end
+
+api version: 2..4 do
+  get 'x', to: 'test#item3' # x now does something different for only versions 2 and 4
+end
+</code></pre>
 
 <p>Confusing!</p>
 

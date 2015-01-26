@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Windy City Rails, Day One - Hi, I'm Josh Symonds</title>
+  <title>Windy City Rails, Day One - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2014-09-04T09:34:52-05:00" pubdate data-updated="true">Sep 4<span>th</span>, 2014</time>
+<time datetime="2014-09-04T09:34:52-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 10  minutes</span>
 
         
@@ -127,7 +128,7 @@
 
 <h2>1. Rubinius X by <a href="https://twitter.com/brixen">Brian Shirai</a></h2>
 
-<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &mdash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
+<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &ndash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
 
 <p>It&rsquo;s no secret that Ruby is old now. The question is, how do we keep it relevant even in its increasing age? Brian&rsquo;s hedge against winding up in a programmer nursing home is Rubinius X, which has a lot of interesting features:</p>
 
@@ -136,10 +137,10 @@
 </ul>
 
 
-<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. &ndash; Brian Shirai</p></blockquote>
+<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. - Brian Shirai</p></blockquote>
 
 <ul>
-<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &mdash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
+<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &ndash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
 <li>Capturing the program&rsquo;s runtime experience. Rubinius X allows us to see what lines of code were actually invoked, what arguments were passed to methods, and in general grants a really granular view on what code is actually being run in production.</li>
 <li>Functional programming paradigms, including real functions as first-class citizens (not just <a href="http://apidock.com/ruby/Module/module_function">module_function</a>). You can declare dynamic or static types for these functions with type assertion checking.</li>
 </ul>
@@ -157,7 +158,7 @@
 
 <p>resque workers performed the actual recommendation work, which was based purely on the relative apparent interest of users in tags, and bubbling up posts and users based on the users&#8217; own tagging behavior.</p>
 
-<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &mdash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
+<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &ndash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
 
 <h2>3. What Devise Does When You&rsquo;re Not Looking by <a href="https://twitter.com/lucasmazza">Lucas Mazza</a></h2>
 
@@ -165,7 +166,7 @@
 
 <p>The foundation of Devise is <a href="https://github.com/hassox/warden">Warden</a>. If Rack is HTTP infrastructure or ActiveModel is ORM infrastructure, Warden is authentication infrastructure. Warden is Rails middleware that provides user session management, failure handling, and lifecycle callbacks. Devise integrates Warden&rsquo;s magic seamlessly with Rails, providing model, router, and controller/view patterns to handle almost all common authentication cases.</p>
 
-<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &mdash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
+<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &ndash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
 
 <p>Devise is a set of reusable, extensible shortcuts for getting authentication cleanly and seamlessly into a Rails app, and honestly everyone should be using it in their app if they aren&rsquo;t already. This session was a concise overview of how best to implement it and configure it.</p>
 
@@ -185,7 +186,7 @@
 
 <p>Though taking only half an hour, <em>Protect Your Code</em> summarized the main legal issues facing developers: copyright law, licensing, open source software, work for hire, licensing and assignment, trademarks, and contract law.</p>
 
-<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &mdash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &mdash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
+<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &ndash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &ndash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
 
 <p>And that led naturally into a discussion of licensing with open source software, particularly the tainting nature of the Gnu Public License. When used for hobbyist projects it&rsquo;s quite acceptable, but the fact that everything it touches becomes open-source can be quite a nuisance for enterprise-grade software.</p>
 
@@ -199,9 +200,9 @@
 
 <p>It also included lots of actual code and many interesting statistics from Code Climate on a real, actual project: <a href="https://reverb.com/">reverb</a>, a guitar marketplace. Though the reverb app is monolithic by any definition of the word, with a thousand classes and a hundred models, it still manages to have low churn, high code quality, and quick development iterations. Indeed, they defended their huge application with a very sensible quote from Martin Fowler about the trend towards separating apps into distinct services:</p>
 
-<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. &ndash; Martin Fowler</p></blockquote>
+<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. - Martin Fowler</p></blockquote>
 
-<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &mdash; say, a ReturnOrderMailer or a ProcessUserCreditCard &mdash; that can decorate models but are not necessarily part of them.</p>
+<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &ndash; say, a ReturnOrderMailer or a ProcessUserCreditCard &ndash; that can decorate models but are not necessarily part of them.</p>
 
 <p>This definitely takes the better parts of DHH&rsquo;s philosophy of simple POROs while rejecting MVC as the be-all, end-all of Rails application design. Decorators, combined with events and event listeners, helped to significantly lower the architectural complexity of reverb without having to break it out into many disparate parts.</p>
 
@@ -211,7 +212,7 @@
 
 <p>Providing a straightforward, sensible introduction to Go, <em>Go for Rubyists</em> gave us a glance at Go, complete with code samples and helpful walkthroughs. Once again, the keywords for this presentation were &ldquo;performance&rdquo; and &ldquo;concurrency,&rdquo; which should be no surprise to anyone who&rsquo;s even slightly familiar with Go.</p>
 
-<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &mdash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
+<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &ndash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
 
 <p>Concurrency is a first-class citizen in Go, based on routines and channels. A routine is sort of like a very, very lightweight thread. Routines communicate not by sharing memory, but by transferring data over channels. A very clear separation that makes it easy to reason about multi-threaded applications.</p>
 
@@ -221,7 +222,7 @@
 
 <p>A fascinating discussion about using software in the public sector, <em>Resolved</em> dealt mainly with the experience of programming for large government entities. Spoiler alert: it sounds pretty difficult.</p>
 
-<p>Though governments make use of many of the same Rails tools any of us would find familiar &mdash; Heroku, postgres, jQuery &mdash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
+<p>Though governments make use of many of the same Rails tools any of us would find familiar &ndash; Heroku, postgres, jQuery &ndash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
 
 <p>The presentation had some code samples on how to do this via OCR with Google&rsquo;s Tesseract, falling back on Mechanical Turk in the case of ambiguity. Overall a clever solution that would probably prove extremely helpful for the (likely many) governments with legacy scanned data.</p>
 
@@ -231,9 +232,9 @@
 
 <p><em>The Functional Web</em> argued that Rails must evolve to meet the needs of a changing Internet: web sockets, streaming responses, and event-based connections all cry out for a Rails solution that ActionController and Rack cannot easily provide. While it&rsquo;s easy to agree that these are all things Rails is terrible at, I&rsquo;m not sure if Rails will ever be a great tool for solving these sorts of problems.</p>
 
-<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &mdash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
+<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &ndash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
 
-<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &mdash; like serving huge files or processing tons of data.</p>
+<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &ndash; like serving huge files or processing tons of data.</p>
 
 <p>And as if to illustrate that the presentation started discussing the best way to spawn a thread in a Rails controller to do both those things. This is a pretty significant anti-pattern for the reasons the talk itself described; it&rsquo;s semantically unpleasant, incredibly slow, and generally just the wrong place to do this.</p>
 

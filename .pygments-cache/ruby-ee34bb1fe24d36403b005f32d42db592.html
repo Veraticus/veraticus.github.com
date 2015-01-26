@@ -1,4 +1,4 @@
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Preference</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Preference</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
   <span class="n">belongs_to</span> <span class="ss">:user</span>
   
   <span class="n">validates_uniqueness_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:user_id</span>

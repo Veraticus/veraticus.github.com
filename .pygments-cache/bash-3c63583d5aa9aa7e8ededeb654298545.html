@@ -1,7 +1,0 @@
-<div class="highlight"><pre>ec2-bundle-vol -k /tmp/cert/pk-X509.pem <span class="se">\</span>
-               -c /tmp/cert/cert-X509.pem <span class="se">\</span>
-               -u 123456789012<span class="se">\</span>
-               -r x86_64 <span class="se">\</span>
-               -e /tmp/cert <span class="se">\</span>
-               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> | tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
-</pre></div>

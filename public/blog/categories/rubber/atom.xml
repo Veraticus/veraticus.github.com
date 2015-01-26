@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubber | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/rubber/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-06T14:07:30-06:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -22,19 +22,17 @@
 
 <p>rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it&rsquo;s super easy to start a server with nothing more than:</p>
 
-<p><code>bash
-cap rubber:create ALIAS=fluttershy ROLES=unicorn
-</code></p>
+<pre><code class="bash">cap rubber:create ALIAS=fluttershy ROLES=unicorn
+</code></pre>
 
 <p>And bootstrap it with all the software needed for that role with:</p>
 
-<p><code>bash
-cap rubber:bootstrap FILTER=fluttershy
-</code></p>
+<pre><code class="bash">cap rubber:bootstrap FILTER=fluttershy
+</code></pre>
 
 <p>Of course, looking at command line magic doesn&rsquo;t tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.</p>
 
-<p>It&rsquo;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&rsquo;m sure. The good part &mdash; for me at least &mdash; is how close it is to the servers and how well it ties in with Capistrano. There&rsquo;s no magic going on and there&rsquo;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&hellip; but if you know what you&rsquo;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
+<p>It&rsquo;s easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I&rsquo;m sure. The good part &ndash; for me at least &ndash; is how close it is to the servers and how well it ties in with Capistrano. There&rsquo;s no magic going on and there&rsquo;s almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber&hellip; but if you know what you&rsquo;re doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.</p>
 
 <p>rubber isn&rsquo;t just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it&rsquo;s deployed on a per-application basis, it can&rsquo;t easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.</p>
 ]]></content>

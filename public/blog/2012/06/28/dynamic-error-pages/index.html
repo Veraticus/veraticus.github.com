@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamic Error Pages - Hi, I'm Josh Symonds</title>
+  <title>Dynamic Error Pages - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true">Jun 28<span>th</span>, 2012</time>
+<time datetime="2012-06-28T15:09:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -144,10 +145,10 @@
 <span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
 </span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_500</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:RoutingError</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:UnknownController</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:UnknownAction</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:RecordNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownAction</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -200,7 +201,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Dynamic error pages like what I&rsquo;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&rsquo;s pretty unlikely that&rsquo;ll happen. Just be careful when using this system &mdash; maybe even don&rsquo;t render the exception in your usual layout, but render it in an error-specific one &mdash; to reduce the chance of your error pages also erroring, and you&rsquo;ll be golden.</p>
+<p>Dynamic error pages like what I&rsquo;m suggesting are powerful but also dangerous. Static error pages are simpler and more maintainable: if the code executing your error page has an error in it, then your server process will loop until finally throwing a system stack exception. But if you keep your dynamic error pages simple and well-tested, it&rsquo;s pretty unlikely that&rsquo;ll happen. Just be careful when using this system &ndash; maybe even don&rsquo;t render the exception in your usual layout, but render it in an error-specific one &ndash; to reduce the chance of your error pages also erroring, and you&rsquo;ll be golden.</p>
 </div>
   <div class='attribution'>
   <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>

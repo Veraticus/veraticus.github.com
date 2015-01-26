@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Pricing Popular Hosting Options (With Devops Time) - Hi, I'm Josh Symonds</title>
+  <title>Pricing Popular Hosting Options (With Devops Time) - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to &hellip;">
+  <meta name="description" content="Recently I compared the major Rails hosting providers &ndash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2013-04-17T18:16:00-05:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time>
+<time datetime="2013-04-17T18:16:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 4  minutes</span>
 
         
@@ -120,7 +121,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Recently I compared the major Rails hosting providers &mdash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
+  <div class="entry-content"><p>Recently I compared the major Rails hosting providers &ndash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
 
 <!-- more -->
 
@@ -129,7 +130,7 @@
 
 <p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
 
-<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &mdash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
+<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &ndash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
 
 <p>So let&rsquo;s get down to the details!</p>
 
@@ -326,7 +327,7 @@
 </table>
 
 
-<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &mdash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
+<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &ndash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
 
 <h2>Conclusions</h2>
 
@@ -363,7 +364,7 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/" title="Previous Post: Why I'm Not Applying to 37Signals (But Why You Should)">&laquo; Why I'm Not Applying to 37Signals (But Why You Should)</a>
+        <a class="basic-alignment left" href="/blog/2013/03/19/why-im-not-applying-to-37signals-but-why-you-should/" title="Previous Post: Why I'm Not Applying to 37Signals (But Why You Should)">&laquo; Why I&#8217;m Not Applying to 37Signals (But Why You Should)</a>
       
       
         <a class="basic-alignment right" href="/blog/2013/04/23/the-perils-of-overengineering/" title="Next Post: The Perils of Overengineering">The Perils of Overengineering &raquo;</a>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Why I Chose Chef Over Rubber - Hi, I'm Josh Symonds</title>
+  <title>Why I Chose Chef Over Rubber - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+<time datetime="2013-01-18T14:34:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -120,7 +121,7 @@
   </header>
 
 
-  <div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &mdash; and surprising even myself &mdash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
+  <div class="entry-content"><p>One of my mandates at Everest has been to sanitize the server build and deploy process. Provisioning every server individually with the same bash script was not exactly the height of extensibility and maintainability, and unfortunately had resulted in an enormous cluster that was very opaque: there was nearly no visibility into what the servers were actually doing. When I evaluated options to create a better process I looked at my go-to configuration management tool, <a href="https://github.com/wr0ngway/rubber">rubber</a>, in addition to <a href="http://en.wikipedia.org/wiki/Chef_(software)">Chef</a> and <a href="http://en.wikipedia.org/wiki/Puppet_(software)">Puppet</a>. As a result of this evaluation &ndash; and surprising even myself &ndash; I ended up choosing Chef as our solution. Here&rsquo;s why.</p>
 
 <!-- more -->
 
@@ -135,7 +136,7 @@
 
 <h2>Extensibility &amp; Community Support</h2>
 
-<p>For the tools that rubber provides in its stack &mdash; and it provides a lot &mdash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
+<p>For the tools that rubber provides in its stack &ndash; and it provides a lot &ndash; it&rsquo;s an excellent solution. But adding additional facilities into rubber is a pain. You either have to come up with recipes on your own, or hope that someone has a semi-active fork with what you want in it. There&rsquo;s no real extensibility, and while it&rsquo;s easy enough to roll your own recipes, it&rsquo;d definitely be ideal not to repeat work if you&rsquo;re fairly confident someone else has already done it.</p>
 
 <p>Enter Chef cookbooks. There are a frightening amount of active cookbooks on Github for every need imaginable. Many are actively supported, and even if they&rsquo;re not precisely what you&rsquo;re looking for, they provide an excellent jumping-off point for creating your own solutions.</p>
 
@@ -149,7 +150,7 @@
 
 <h1>But Rubber is a Great Tool</h1>
 
-<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &mdash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
+<p>Don&rsquo;t get me wrong: I still really like rubber. It doesn&rsquo;t fit for Everest&rsquo;s use case, definitely &ndash; with so many servers and so much going on behind the scenes, we really needed more granularity, control, and power. But if I were provisioning just one server, or even three or four, then rubber would still be my go-to tool.</p>
 
 <p>Why? It&rsquo;s just a whole lot faster to get started with than Chef. It makes tons of sensible default decisions that simplify your life really significantly. You don&rsquo;t have to go searching for good recipes or the right way to do things. Just like Rails, rubber <strong>knows</strong> the right way to do things. As long as you take its advice you&rsquo;ll go far, but trying to work against its defaults will be really painful.</p>
 

@@ -9,6 +9,7 @@ module BacktickCodeBlock
     @lang = nil
     @url = nil
     @title = nil
+    return nil unless input
     input.gsub(/^`{3} *([^\n]+)?\n(.+?)\n`{3}/m) do
       @options = $1 || ''
       str = $2

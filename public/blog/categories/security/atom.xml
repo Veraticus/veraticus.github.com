@@ -4,7 +4,7 @@
   <title><![CDATA[Category: security | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/security/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-06T14:07:30-06:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -29,7 +29,7 @@
 
 <p>It&rsquo;s easy to believe that a government agency capable of collecting this information and then keeping its existence a secret for so long must have a way of keeping it safe. Unfortunately, the access that was given to the NSA to take this information has no correlation to the skills necessary to secure it; and the very fact of PRISM&rsquo;s existence will probably prove too enticing a target to remain secure for very long.</p>
 
-<p>Essentially, the argument as I heard it can be expressed as a simple question: if the government is savvy enough to gather the data, surely they&rsquo;re not incompetent enough to lose it? Unfortunately, big brother can indeed be both savvy and incompetent. I think this is the greatest danger to the data PRISM allows access to &mdash; not improper use or excessive domestic surveillance, but complete and outright theft.</p>
+<p>Essentially, the argument as I heard it can be expressed as a simple question: if the government is savvy enough to gather the data, surely they&rsquo;re not incompetent enough to lose it? Unfortunately, big brother can indeed be both savvy and incompetent. I think this is the greatest danger to the data PRISM allows access to &ndash; not improper use or excessive domestic surveillance, but complete and outright theft.</p>
 
 <!-- more -->
 
@@ -38,7 +38,7 @@
 
 <p>Why does the act of collecting this information have no bearing on said information&rsquo;s security?</p>
 
-<p>Consider a child visiting the Library of Congress. He has an enormous storehouse of human knowledge at his fingertips: would you say then that this child would make a reasonable gatekeeper of that knowledge? Certainly not &mdash; just because the child has access to this repository doesn&rsquo;t mean he should be director of it. He&rsquo;d lend books out without properly tracking them, he wouldn&rsquo;t be able to adequately secure the premises, and before you know it instead of a great Library of Congress you&rsquo;d have a tremendous auditorium empty of books.</p>
+<p>Consider a child visiting the Library of Congress. He has an enormous storehouse of human knowledge at his fingertips: would you say then that this child would make a reasonable gatekeeper of that knowledge? Certainly not &ndash; just because the child has access to this repository doesn&rsquo;t mean he should be director of it. He&rsquo;d lend books out without properly tracking them, he wouldn&rsquo;t be able to adequately secure the premises, and before you know it instead of a great Library of Congress you&rsquo;d have a tremendous auditorium empty of books.</p>
 
 <p>The US Government found itself in a similar position. Through the unique and regrettable powers offered it through the Patriot Act, it could visit the library (in this case, the storehouses of data on the Internet) whenever it wanted to. So of course it decided that this meant it should be the director of that library. The government has no particular skills or capabilities that make it uniquely suited to the administration of the knowledge it&rsquo;s gathered: it seems savvy enough to have gathered it when, in fact, anyone with access similar to the NSA&rsquo;s could have done so and would have had just as much of a &ldquo;right&rdquo; to it.</p>
 
@@ -46,9 +46,9 @@
 
 <h2>Eventually Incompetent</h2>
 
-<p>My primary concern isn&rsquo;t that the data will be misused by the government (though it seems inevitable it will be). It&rsquo;s the security of the data itself. One point of access with all this information is akin to storing all gold in the entire world in one bank. Regardless of how well the bank is guarded, a lot of people are going to be very interested indeed in finding a way in &mdash; and it seems inevitable that, due to the fact that there are so few guards relative to potential criminals, and the incentive to break in is so motivating, a way will eventually be found.</p>
+<p>My primary concern isn&rsquo;t that the data will be misused by the government (though it seems inevitable it will be). It&rsquo;s the security of the data itself. One point of access with all this information is akin to storing all gold in the entire world in one bank. Regardless of how well the bank is guarded, a lot of people are going to be very interested indeed in finding a way in &ndash; and it seems inevitable that, due to the fact that there are so few guards relative to potential criminals, and the incentive to break in is so motivating, a way will eventually be found.</p>
 
-<p>When my email, my online orders, my telephone conversations were stored separately in different servers, the barrier to assembling a complete profile of my online activity was rather high &mdash; a potential hacker would have to compromise numerous services and some incredibly tight security multiple times to really get a clear picture of my habits. But the NSA has done all of this hackers' work for him: all he must do is hack into one incredibly secure system, instead of a plethora of them.</p>
+<p>When my email, my online orders, my telephone conversations were stored separately in different servers, the barrier to assembling a complete profile of my online activity was rather high &ndash; a potential hacker would have to compromise numerous services and some incredibly tight security multiple times to really get a clear picture of my habits. But the NSA has done all of this hackers&#8217; work for him: all he must do is hack into one incredibly secure system, instead of a plethora of them.</p>
 
 <p>And while hacking the NSA sounds nearly impossible, there are security flaws discovered all the time in software, even software widely considered extremely secure. And now that the existence of PRISM is well-known, all of those flaws (and the newest ones discovered, before there&rsquo;s even an opportunity to fix them) will be tried on the NSA. Both by hacker groups and foreign governments.</p>
 
@@ -60,7 +60,7 @@
 
 <p>The only really safe thing to do, now that PRISM is public knowledge, is to destroy the data it contains and stop the program. Regrettably it seems that the government really does believe that, because it had the savvy to acquire the knowledge, it&rsquo;s somehow competent enough to keep it safe from everyone else on the planet. In the end, it isn&rsquo;t the government that will pay the price for this hubris, but instead us citizens who were monitored: our secrets will be the ones to be released, because we trusted our government to allow us some privacy.</p>
 
-<p>Going forward, everyone should start encrypting their emails and conversations. The <a href="https://ssd.eff.org/">EFF&rsquo;s surveillance self-defense site</a> is a good read that gives some helpful tips. But ultimately, if you don&rsquo;t want your information to available on PRISM, it might be time to set up your own personal cloud or VPN and stop using big data and social networking sites. If that&rsquo;s not possible, then at least consider what you post to them &mdash; now we truly know that not only is everything we do on the Internet public, but there are people dumb enough to gather it all in one place so that it can easily be stolen.</p>
+<p>Going forward, everyone should start encrypting their emails and conversations. The <a href="https://ssd.eff.org/">EFF&rsquo;s surveillance self-defense site</a> is a good read that gives some helpful tips. But ultimately, if you don&rsquo;t want your information to available on PRISM, it might be time to set up your own personal cloud or VPN and stop using big data and social networking sites. If that&rsquo;s not possible, then at least consider what you post to them &ndash; now we truly know that not only is everything we do on the Internet public, but there are people dumb enough to gather it all in one place so that it can easily be stolen.</p>
 ]]></content>
   </entry>
   

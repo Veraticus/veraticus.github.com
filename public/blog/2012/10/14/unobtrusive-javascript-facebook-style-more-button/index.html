@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Unobtrusive JavaScript Facebook-Style More Button - Hi, I'm Josh Symonds</title>
+  <title>Unobtrusive JavaScript Facebook-Style More Button - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true">Oct 14<span>th</span>, 2012</time>
+<time datetime="2012-10-14T21:20:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -213,7 +214,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we&rsquo;re adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the &ldquo;More&rdquo; button again &mdash; or we disable the &ldquo;More&rdquo; button if we found no content.</p>
+<p>This should be pretty straightforward: we find the URL of the next page from the href of the link itself, and also the container we&rsquo;re adding elements to and the selector. We make an AJAX request for the new page and parse it for the selector, appending each result to the container and fading them in once all the images have loaded. Afterwards, we update the URL to request the next new page of content if someone clicks on the &ldquo;More&rdquo; button again &ndash; or we disable the &ldquo;More&rdquo; button if we found no content.</p>
 
 <p>Overall pretty simple but I was satisfied with this solution. Oh, and there&rsquo;s a line there for integration into the really excellent <a href="http://masonry.desandro.com/">jQuery Masonry</a> script, if you include a data-masonry attribute on your link element.</p>
 </div>

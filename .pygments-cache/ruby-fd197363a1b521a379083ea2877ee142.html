@@ -1,5 +1,5 @@
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Searchable</span>
-  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
 
   <span class="k">module</span> <span class="nn">ClassMethods</span>
     <span class="k">def</span> <span class="nf">searchable</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
@@ -12,7 +12,7 @@
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">more_like</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
-      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="n">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+      <span class="n">searcher</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="ss">:more_like_this_field</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="p">{</span><span class="ss">min_term_freq</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">min_doc_freq</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
     <span class="k">end</span>
 
     <span class="kp">private</span>

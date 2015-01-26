@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-06T14:07:30-06:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -22,7 +22,7 @@
 
 <p>Maybe it&rsquo;s because President Obama <a href="https://www.youtube.com/watch?v=6XvmhE1J9PY">told you to learn computer science</a>, and you&rsquo;re not gonna argue with the President.</p>
 
-<p>Or maybe it&rsquo;s because you hunger to make something &mdash; a product other people use &mdash; and you&rsquo;re tired of a job where, at the end of the day, you wonder what exactly you did or why it even mattered. And hey, making software is easier and cleaner than making furniture.</p>
+<p>Or maybe it&rsquo;s because you hunger to make something &ndash; a product other people use &ndash; and you&rsquo;re tired of a job where, at the end of the day, you wonder what exactly you did or why it even mattered. And hey, making software is easier and cleaner than making furniture.</p>
 
 <p>But realistically it&rsquo;s probably because of the money. Glassdoor claims that <a href="http://www.glassdoor.com/Salaries/software-engineer-salary-SRCH_KO0,17.htm">software engineers make a median salary of $85,000</a>, which is nothing to sneeze at. Even the lowliest programmers can look forward to taking home about $60k, and if you have a talent and drive for programming, then the only limit to your salary is your ambition.</p>
 
@@ -37,12 +37,12 @@
 
 <h2>Before You Start</h2>
 
-<p>To become a programmer, you don&rsquo;t need a computer science degree, hipster glasses, youth, or even beauty. (You also don&rsquo;t need a particularly strong math background, in case you&rsquo;re concerned.) That said, there are some things you really do need &mdash; if you can&rsquo;t put a check-mark next to these prerequisites, you might want to seriously reconsider a journey into the realms of computer science.</p>
+<p>To become a programmer, you don&rsquo;t need a computer science degree, hipster glasses, youth, or even beauty. (You also don&rsquo;t need a particularly strong math background, in case you&rsquo;re concerned.) That said, there are some things you really do need &ndash; if you can&rsquo;t put a check-mark next to these prerequisites, you might want to seriously reconsider a journey into the realms of computer science.</p>
 
 <ol>
 <li><p><strong>A love for computers</strong>. If you can&rsquo;t see yourself working in front of a computer 8+ hours a day, happy as a clam, then I appreciate you reading this far, but this career path probably isn&rsquo;t for you.</p></li>
-<li><p><strong>Sacrifice</strong>. Most software, tools, and books to learn computer programming are free. Some of the best ones, unfortunately, aren&rsquo;t. You won&rsquo;t have to spend thousands of dollars (unless you need to buy a computer), but it&rsquo;s probably reasonable to expect an outlay of a couple hundred to purchase books and software. And that doesn&rsquo;t even factor your time into it &mdash; you have to put in the work to get out the results, so expect late nights and early mornings.</p></li>
-<li><p><strong>Drive</strong>. The going will likely get tough &mdash; really tough. When doing something outside of your comfort zone, it&rsquo;s easy to get disheartened and lose your way. How long you can stick it out and keep coming back will determine whether you end up with programming as a hobby, a mediocre skill, or a mastery. Unfortunately there&rsquo;s no shortcuts here. You just have to do it.</p></li>
+<li><p><strong>Sacrifice</strong>. Most software, tools, and books to learn computer programming are free. Some of the best ones, unfortunately, aren&rsquo;t. You won&rsquo;t have to spend thousands of dollars (unless you need to buy a computer), but it&rsquo;s probably reasonable to expect an outlay of a couple hundred to purchase books and software. And that doesn&rsquo;t even factor your time into it &ndash; you have to put in the work to get out the results, so expect late nights and early mornings.</p></li>
+<li><p><strong>Drive</strong>. The going will likely get tough &ndash; really tough. When doing something outside of your comfort zone, it&rsquo;s easy to get disheartened and lose your way. How long you can stick it out and keep coming back will determine whether you end up with programming as a hobby, a mediocre skill, or a mastery. Unfortunately there&rsquo;s no shortcuts here. You just have to do it.</p></li>
 </ol>
 
 
@@ -56,8 +56,8 @@
 
 <ol>
 <li><p><strong>Actual knowledge of the programming language.</strong> Your employer will vet your technical competency by examining your existing code and asking you specific technical questions: for Ruby, the classic chestnut is &ldquo;<a href="http://awaxman11.github.io/blog/2013/08/05/what-is-the-difference-between-a-block/">what&rsquo;s the difference between a block, a proc, and a lambda?</a>&rdquo; Though you&rsquo;ll get bonus points for knowing everything 100%, no one expects you to have your language memorized offhand or even know the minute details of its operation. They&rsquo;re looking for breadth of knowledge, where you&rsquo;d go to look stuff up if you didn&rsquo;t know it, and a general feeling you&rsquo;ve been around the block at least once or twice. In your code samples, they&rsquo;ll want to see competence and fluency in the language in question.</p></li>
-<li><p><strong>Having used programming in a professional capacity.</strong> Even if you know your language, you&rsquo;re no good to anyone if you can&rsquo;t apply your skills and complete projects. An empty resume with a note at the top that you love to code won&rsquo;t get you hired anywhere. The unfortunate reality of the labor market is that everyone only wants to hire proven winners. You have to establish you are one if you want to be employable. That said, you needn&rsquo;t have created enterprise-level software as part of a twenty-person team &mdash; personal projects hosted on GitHub or Bitbucket are more than sufficient to get hired.</p></li>
-<li><p><strong>Demonstrated ability to work with other human begins.</strong> Yes, you want to be a computer programmer, not a diplomat, and yes, <a href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/">your job is to code</a>: but you&rsquo;ll probably end up talking a lot to your boss, coworkers, and possibly even customers. You have to be able to put people at ease and make them like and trust you, or else your career won&rsquo;t go anywhere at all &mdash; and you certainly won&rsquo;t make it past even a casual interview.</p></li>
+<li><p><strong>Having used programming in a professional capacity.</strong> Even if you know your language, you&rsquo;re no good to anyone if you can&rsquo;t apply your skills and complete projects. An empty resume with a note at the top that you love to code won&rsquo;t get you hired anywhere. The unfortunate reality of the labor market is that everyone only wants to hire proven winners. You have to establish you are one if you want to be employable. That said, you needn&rsquo;t have created enterprise-level software as part of a twenty-person team &ndash; personal projects hosted on GitHub or Bitbucket are more than sufficient to get hired.</p></li>
+<li><p><strong>Demonstrated ability to work with other human begins.</strong> Yes, you want to be a computer programmer, not a diplomat, and yes, <a href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/">your job is to code</a>: but you&rsquo;ll probably end up talking a lot to your boss, coworkers, and possibly even customers. You have to be able to put people at ease and make them like and trust you, or else your career won&rsquo;t go anywhere at all &ndash; and you certainly won&rsquo;t make it past even a casual interview.</p></li>
 </ol>
 
 
@@ -67,7 +67,7 @@
 
 <p>Lots of people swear by Java, and if you&rsquo;re in a big company it&rsquo;s probably much easier for you to get buy-in for a language backed by Oracle than one created by a bunch of people on the Internet.</p>
 
-<p>If you want to create graphically intensive computer games, you&rsquo;ll want to brush up your math a little bit and check out the grand-daddy of programming languages, C (and its offshoots and derivatives, C++, Objective-C, and C#, depending on your platform). C is hard to start with, though, and has a lot of complicated concepts &mdash; if you&rsquo;re just beginning, a language slightly friendlier to humans would smooth the learning curve.</p>
+<p>If you want to create graphically intensive computer games, you&rsquo;ll want to brush up your math a little bit and check out the grand-daddy of programming languages, C (and its offshoots and derivatives, C++, Objective-C, and C#, depending on your platform). C is hard to start with, though, and has a lot of complicated concepts &ndash; if you&rsquo;re just beginning, a language slightly friendlier to humans would smooth the learning curve.</p>
 
 <p>It&rsquo;s hard to go wrong with any language, though, since most of the skills you&rsquo;ll learn in one will be more or less portable to another.</p>
 
@@ -89,7 +89,7 @@
 
 <p>This is where programmers start spouting jargon like recursion, iteration, and conditionals. Though those are relatively big words, the concepts underlying them are quite simple and learnable. There are a lot of great places to start learning the basics, but I have a soft spot for <a href="http://learn.code.org/hoc/1">code.org&rsquo;s basics lessons</a>. It might seem more like a game than programming&hellip; and that&rsquo;s a good thing.</p>
 
-<p>Or, if you&rsquo;d prefer disconnecting from the computer for awhile, I would recommend taking a look at the fabulously fun <a href="http://en.wikipedia.org/wiki/RoboRally">RoboRally</a>. It gives players an idea of how computers actually process instructions &mdash; and how instructions that might initially seem perfectly reasonable can lead to horrible results.</p>
+<p>Or, if you&rsquo;d prefer disconnecting from the computer for awhile, I would recommend taking a look at the fabulously fun <a href="http://en.wikipedia.org/wiki/RoboRally">RoboRally</a>. It gives players an idea of how computers actually process instructions &ndash; and how instructions that might initially seem perfectly reasonable can lead to horrible results.</p>
 
 <h3>3. Start learning your programming language</h3>
 
@@ -103,7 +103,7 @@
 
 <h3>4. Start using it</h3>
 
-<p>It&rsquo;s never too early to apply your skills, even if you feel you have no skills at all! Having a project in mind is great and will help direct and guide your learning. There&rsquo;s no such thing as &ldquo;too ambitious&rdquo; when it comes to a personal project &mdash; want to create the next Facebook, manually process credit cards, or keep track of millions of items in a warehouse? Well guess what, computers are great at almost every task imaginable and you&rsquo;re learning how to apply their incredible power to the problems of your choice. Go to it!</p>
+<p>It&rsquo;s never too early to apply your skills, even if you feel you have no skills at all! Having a project in mind is great and will help direct and guide your learning. There&rsquo;s no such thing as &ldquo;too ambitious&rdquo; when it comes to a personal project &ndash; want to create the next Facebook, manually process credit cards, or keep track of millions of items in a warehouse? Well guess what, computers are great at almost every task imaginable and you&rsquo;re learning how to apply their incredible power to the problems of your choice. Go to it!</p>
 
 <p>Yes, your code will be completely terrible. Yes, you&rsquo;ll probably grow bored or frustrated with the project and abandon it. Yes, the mere thought of these first steps will cause you great embarrassment in the future (or possibly present).</p>
 
@@ -117,23 +117,23 @@
 
 <p>You might find yourself doing this as you get even slightly proficient: the adage that <a href="http://en.wikipedia.org/wiki/Law_of_the_instrument">when you have a hammer, everything looks like a nail</a> is very true. But that&rsquo;s not necessarily a bad thing!</p>
 
-<p>When you create a program for yourself, don&rsquo;t hoard it. Release it on GitHub and include excellent documentation and concise tests. This is true even for what you&rsquo;d consider really minor pieces of code &mdash; it&rsquo;d probably help someone, and having open-source code allows potential employers (and potential clients) to see what you do, what your code looks like, and your process for creating it. More than anything else, GitHub has become my go-to tool for evaluating potential candidates for a position.</p>
+<p>When you create a program for yourself, don&rsquo;t hoard it. Release it on GitHub and include excellent documentation and concise tests. This is true even for what you&rsquo;d consider really minor pieces of code &ndash; it&rsquo;d probably help someone, and having open-source code allows potential employers (and potential clients) to see what you do, what your code looks like, and your process for creating it. More than anything else, GitHub has become my go-to tool for evaluating potential candidates for a position.</p>
 
-<p>I don&rsquo;t mean to scare you away if you intend only to work on closed software, but having code out in the wild lets people get to know you and how you work. It speaks directly to the three objectives I mentioned at the beginning of this piece. You need to establish your bona fides, and using programming personally &mdash; and releasing the result into the world &mdash; will prove you know what you&rsquo;re talking about</p>
+<p>I don&rsquo;t mean to scare you away if you intend only to work on closed software, but having code out in the wild lets people get to know you and how you work. It speaks directly to the three objectives I mentioned at the beginning of this piece. You need to establish your bona fides, and using programming personally &ndash; and releasing the result into the world &ndash; will prove you know what you&rsquo;re talking about</p>
 
 <h3>6. Use it professionally</h3>
 
-<p>At this point your code still probably isn&rsquo;t anywhere near professional-caliber. Guess what? That&rsquo;s fine! As long as you can still use it to do things &mdash; even if it takes you awhile, or the result is unpleasant, or there are a lot of &ldquo;gotchas&rdquo; for your poor users &mdash; you&rsquo;re already a programmer. If you have a job, start trying to work coding into it.</p>
+<p>At this point your code still probably isn&rsquo;t anywhere near professional-caliber. Guess what? That&rsquo;s fine! As long as you can still use it to do things &ndash; even if it takes you awhile, or the result is unpleasant, or there are a lot of &ldquo;gotchas&rdquo; for your poor users &ndash; you&rsquo;re already a programmer. If you have a job, start trying to work coding into it.</p>
 
 <p>When I was in college I had an internship where I was expected to go over huge CSV files by hand. It was a ridiculously unpleasant job&hellip; but a small amount of Ruby and a really ugly <a href="http://en.wikipedia.org/wiki/Regular_expression">regular expression</a> saved me an enormous amount of manual parsing and let me drill down to the problem spots immediately. When I gave the company my program, they in turn gave me a really stellar recommendation that started my career.</p>
 
-<p>Unfortunately, right out of college, all that recommendation landed me was a job doing tech support, but I managed to use my bad programming abilities there, too! The company I was doing support for had a terrible process for dealing with data files &mdash; really big ones, gigabytes large. We&rsquo;d go on-site, burn the files we needed to a DVD, take them back to the office, analyze them there to find out what was wrong, load the fixed files back onto another DVD, then go all the way back to the client.</p>
+<p>Unfortunately, right out of college, all that recommendation landed me was a job doing tech support, but I managed to use my bad programming abilities there, too! The company I was doing support for had a terrible process for dealing with data files &ndash; really big ones, gigabytes large. We&rsquo;d go on-site, burn the files we needed to a DVD, take them back to the office, analyze them there to find out what was wrong, load the fixed files back onto another DVD, then go all the way back to the client.</p>
 
 <p>I wasn&rsquo;t a great programmer: in fact, I wouldn&rsquo;t even say I was a particularly good one. But I made a little Rails site that accepted enormous file uploads, so we could just upload the file and someone at the home office would download it. It crashed all the time, it took an eternity to upload, and it had the jankiest login system you&rsquo;d ever seen. But it saved me and all my coworkers a trip back and forth to the office&hellip; and it looked great on my resume when I decided to switch jobs.</p>
 
 <h3>7. Turn it into your profession</h3>
 
-<p>As your skills wax, you&rsquo;ll likely want to start finding real, professional opportunities to exercise them. It might be time to start interviewing for a new job &mdash; or, at the very least, changing your existing role to officially incorporate more of your hard-won programming abilities.</p>
+<p>As your skills wax, you&rsquo;ll likely want to start finding real, professional opportunities to exercise them. It might be time to start interviewing for a new job &ndash; or, at the very least, changing your existing role to officially incorporate more of your hard-won programming abilities.</p>
 
 <p>Once you get to this point, the only way to improve more is to shift programming from a side-project to your full-time gig. Your resume will likely be fairly scant for an engineering position. This is okay. You aren&rsquo;t looking to be a senior systems architect (yet): most likely you&rsquo;ll get something at the bottom of the coding totem pole. But this is your first step into the real world of employable programming skills! Be proud that you&rsquo;ve made it this far.</p>
 
@@ -147,7 +147,7 @@
 
 <p>One of the unfortunate realities of the job market is you&rsquo;re much more likely to get a raise and better responsibilities by switching jobs. (<a href="http://www.forbes.com/sites/cameronkeng/2014/06/22/employees-that-stay-in-companies-longer-than-2-years-get-paid-50-less/">It&rsquo;s depressing but true.</a>) Once you&rsquo;ve put in your time as a beginner programmer, it&rsquo;s time to spread your wings and fly to a company that has more challenges, better opportunities, and hopefully higher pay.</p>
 
-<p>Briefly, I&rsquo;d like to mention that you&rsquo;ll probably experience some <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">imposter syndrome</a> as you interview around. Your new skills are likely to feel fairly unfinished, so doubting yourself as you look around &mdash; and wondering whether or not you can accomplish what prospective employers ask of you &mdash; is natural.</p>
+<p>Briefly, I&rsquo;d like to mention that you&rsquo;ll probably experience some <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">imposter syndrome</a> as you interview around. Your new skills are likely to feel fairly unfinished, so doubting yourself as you look around &ndash; and wondering whether or not you can accomplish what prospective employers ask of you &ndash; is natural.</p>
 
 <p>Here&rsquo;s a little life pro tip: almost everyone suffers from the belief that they aren&rsquo;t as competent as they are. A good attitude, great ability to learn, and accomplished programming skills will get you much further than you think. Don&rsquo;t be afraid to take a chance on yourself. The likelihood you&rsquo;ll fail is very tiny, and the probability you&rsquo;ll succeed and learn a lot makes such a small risk worth it.</p>
 
@@ -168,18 +168,18 @@
     <link href="http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business/"/>
     <updated>2014-01-16T11:28:19-06:00</updated>
     <id>http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &mdash; specifically, <strong>my</strong> successful consulting business &mdash; actually look like?</p>
+    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &ndash; specifically, <strong>my</strong> successful consulting business &ndash; actually look like?</p>
 
 <p><a href="http://symondsandson.com">Symonds &amp; Son</a> isn&rsquo;t named to sound cute and hipstery. I&rsquo;m the son; I&rsquo;m in business with my father, and I recently hired my mother to be my assistant and bookkeeper. The company&rsquo;s name is intended to evoke images of traditional, reliable family businesses, where trust, excellence, and a reputation for quality products are their cornerstones. These companies, traditionally centered around carpentry and other hand-made professions, are my models for how to run Symonds &amp; Son. We are, if you&rsquo;ll forgive me using the phrase, a bespoke development shop, where our great output and superb relationship with our clients are our highest priorities.</p>
 
-<p>But building my profession into a company &mdash; and a company with my parents, no less &mdash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
+<p>But building my profession into a company &ndash; and a company with my parents, no less &ndash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
 
 <!-- more -->
 
 
 <h2>Parents Are the Worst</h2>
 
-<p>Let me be perfectly honest here: I was not a model child. Quite the opposite, in fact &mdash; I was the picture of a rebellious teenager. I was surly, I hated authority, I refused to leave the basement and I would play computer games constantly in lieu of doing homework. My parents and I would have huge fights that would last for hours, typically centered around my grades, and I would go screeching off into the night (in their car, of course) to hang out with my friends at Dunkin Donuts and whine about the many injustices of life, parents, and school.</p>
+<p>Let me be perfectly honest here: I was not a model child. Quite the opposite, in fact &ndash; I was the picture of a rebellious teenager. I was surly, I hated authority, I refused to leave the basement and I would play computer games constantly in lieu of doing homework. My parents and I would have huge fights that would last for hours, typically centered around my grades, and I would go screeching off into the night (in their car, of course) to hang out with my friends at Dunkin Donuts and whine about the many injustices of life, parents, and school.</p>
 
 <p>(I was not a great student.)</p>
 
@@ -187,7 +187,7 @@
 
 <h2>But Then So Are Children</h2>
 
-<p>My father, a successful consultant in his own right, always advised me never to consult. Every time I eyed doing hourly work, he told me to firmly refocus my sights on a full-time job. He&rsquo;d speak to the benefits, the retirement account, the possibilities for advancement big companies could offer &mdash; and, of course, I completely disregarded his advice. I found employment first with startups (not exactly bastions of job security or big 401ks) and then freelancing.</p>
+<p>My father, a successful consultant in his own right, always advised me never to consult. Every time I eyed doing hourly work, he told me to firmly refocus my sights on a full-time job. He&rsquo;d speak to the benefits, the retirement account, the possibilities for advancement big companies could offer &ndash; and, of course, I completely disregarded his advice. I found employment first with startups (not exactly bastions of job security or big 401ks) and then freelancing.</p>
 
 <p>So if you want to take one piece of advice from my post, it&rsquo;s this: if you want to go into business with your parents, ruthlessly ignore their recommendations at every turn!</p>
 
@@ -195,17 +195,17 @@
 
 <h2>Big Egos, Big Problems</h2>
 
-<p>Neither my father nor I are accustomed to knuckling under in arguments, and so our new business relationship has hardly been problem-free. We have some very different perspectives on the proper ways to interact with clients, communicate on a daily basis, and turn single contracts into recurring revenue. For example, I hate answering the phone during the day, as I&rsquo;m usually busy coding &mdash; but he can&rsquo;t stand getting directed to voicemail when he knows that I&rsquo;m around and just not picking up.</p>
+<p>Neither my father nor I are accustomed to knuckling under in arguments, and so our new business relationship has hardly been problem-free. We have some very different perspectives on the proper ways to interact with clients, communicate on a daily basis, and turn single contracts into recurring revenue. For example, I hate answering the phone during the day, as I&rsquo;m usually busy coding &ndash; but he can&rsquo;t stand getting directed to voicemail when he knows that I&rsquo;m around and just not picking up.</p>
 
 <p>Our solution for that particular problem is better communication and faster turnarounds. He knows he can get ahold of me if there&rsquo;s an emergency, and otherwise that I&rsquo;ll return his call as soon as possible&hellip; and in return, he texts me a lot more, which allows me to respond when I&rsquo;m available and in my own time.</p>
 
-<p>But definitely the most important lesson I&rsquo;ve learned is that my father is indeed an expert in what he does, and generally knows what he&rsquo;s doing &mdash; and that&rsquo;s the same lesson I try to impose on him when he starts stepping on my toes too much. It can be difficult to give him the reins during delicate business operations, but I actually find it helpful as well. Like most entrepreneurial people, I love being in control and feel most comfortable when I&rsquo;m managing as many of the aspects of any situation as I can. But other people are great at what they do too, and they can only prove it when given the chance to shine.</p>
+<p>But definitely the most important lesson I&rsquo;ve learned is that my father is indeed an expert in what he does, and generally knows what he&rsquo;s doing &ndash; and that&rsquo;s the same lesson I try to impose on him when he starts stepping on my toes too much. It can be difficult to give him the reins during delicate business operations, but I actually find it helpful as well. Like most entrepreneurial people, I love being in control and feel most comfortable when I&rsquo;m managing as many of the aspects of any situation as I can. But other people are great at what they do too, and they can only prove it when given the chance to shine.</p>
 
 <p>Or, more pithily, if I&rsquo;m to succeed personally, I have step back and let the people I trust succeed. Only if I allow it to happen can it happen.</p>
 
 <h2>Love, Trust, Respect, Nagging</h2>
 
-<p>As my business expanded, I found I had less and less time for simple business tasks &mdash; invoicing, talking to my accountant, setting up and managing a corporate bank account&hellip; My to-do list was growing longer and longer with absolutely no hope of me ever breaking free to accomplish any of it. After all, if I stopped coding then I stopped getting paid, and consulting is not exactly a business that lets one rest on their laurels.</p>
+<p>As my business expanded, I found I had less and less time for simple business tasks &ndash; invoicing, talking to my accountant, setting up and managing a corporate bank account&hellip; My to-do list was growing longer and longer with absolutely no hope of me ever breaking free to accomplish any of it. After all, if I stopped coding then I stopped getting paid, and consulting is not exactly a business that lets one rest on their laurels.</p>
 
 <p>I needed an assistant.</p>
 
@@ -213,7 +213,7 @@
 
 <p>Growing up, I hated being nagged. But I realized what I needed was an incredibly prioritized, driven person to help me with the day-to-day operations of my business&hellip; and my mother had time to spare and thirty years of experience managing me and my time. As much as I hated to admit it, I needed her to really make Symonds &amp; Son a success.</p>
 
-<p>And so far it&rsquo;s been working out really well &mdash; almost scarily well. My mother is an efficient woman, and when I give her a list she turns it around in a timeframe I find just astounding. For my part, I&rsquo;ve learned to respect her gentle nagging: not only does she have my best interests at heart, but the best interests of our company. She&rsquo;s working on behalf of the company to make it more efficient. If I stood in the way of that, I would be a bad employer, and while I might not have been the best son in the entire world, I at least want to be a pretty good boss.</p>
+<p>And so far it&rsquo;s been working out really well &ndash; almost scarily well. My mother is an efficient woman, and when I give her a list she turns it around in a timeframe I find just astounding. For my part, I&rsquo;ve learned to respect her gentle nagging: not only does she have my best interests at heart, but the best interests of our company. She&rsquo;s working on behalf of the company to make it more efficient. If I stood in the way of that, I would be a bad employer, and while I might not have been the best son in the entire world, I at least want to be a pretty good boss.</p>
 
 <h2>Thankshannukah with the Symondses</h2>
 
@@ -227,9 +227,9 @@
 
 <p>Of course, I would be disingenuous if I said I was never concerned. What if I had to have some sort of Serious Conversation&trade; with mom and dad about their performance, or salaries, or any of the other number of difficult conversations any company might have to have with its employees? Or, to get to the heart of the matter: could I really fire my own parents if I had to?</p>
 
-<p>I like to think it&rsquo;ll never come to that. Symonds &amp; Son is a family business, and we&rsquo;ll succeed (or fail) as a unit. If the worst comes and I&rsquo;m forced to close up shop, then it means unemployment for all of us &mdash; at least temporarily. It won&rsquo;t be the end of any of our careers. I&rsquo;ll land somewhere else doing Rails, most likely, and my father will pick up other clients, and my mom will find a non-profit. It&rsquo;ll be another chapter in our lives closed, but hopefully an overall positive one.</p>
+<p>I like to think it&rsquo;ll never come to that. Symonds &amp; Son is a family business, and we&rsquo;ll succeed (or fail) as a unit. If the worst comes and I&rsquo;m forced to close up shop, then it means unemployment for all of us &ndash; at least temporarily. It won&rsquo;t be the end of any of our careers. I&rsquo;ll land somewhere else doing Rails, most likely, and my father will pick up other clients, and my mom will find a non-profit. It&rsquo;ll be another chapter in our lives closed, but hopefully an overall positive one.</p>
 
-<p>Certainly working together as a family has been a challenging experience, but it&rsquo;s brought me closer to my parents in a way I wouldn&rsquo;t have imagined even a few years ago. I&rsquo;ve learned to respect them for their talents and abilities, rather than as caregivers with the patience to raise me and my sister. I&rsquo;m not saying this kind of business is for everyone &mdash; maybe it works only for us, and even then, who knows if it&rsquo;ll work forever? But in trying to model Symonds &amp; Son after traditional, family-run businesses, I&rsquo;ve found capable, competent employees right under my nose: and my clients seem to enjoy working with us, so we must be doing something right.</p>
+<p>Certainly working together as a family has been a challenging experience, but it&rsquo;s brought me closer to my parents in a way I wouldn&rsquo;t have imagined even a few years ago. I&rsquo;ve learned to respect them for their talents and abilities, rather than as caregivers with the patience to raise me and my sister. I&rsquo;m not saying this kind of business is for everyone &ndash; maybe it works only for us, and even then, who knows if it&rsquo;ll work forever? But in trying to model Symonds &amp; Son after traditional, family-run businesses, I&rsquo;ve found capable, competent employees right under my nose: and my clients seem to enjoy working with us, so we must be doing something right.</p>
 
 <p>And I would be remiss if I didn&rsquo;t include at least a little advertising here! If you&rsquo;re interested in seeing <a href="http://symondsandson.com">Symonds &amp; Son</a> work for you, we make amazing software products and scalable Rails solutions. <a href="mailto:josh@joshsymonds.com">Get in touch</a> and see what a family business can do for you. You might just be surprised at how efficient and effective the new family business can be.</p>
 ]]></content>
@@ -240,24 +240,24 @@
     <link href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/"/>
     <updated>2014-01-14T13:13:58-06:00</updated>
     <id>http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit</id>
-    <content type="html"><![CDATA[<p>2013 was a great year for me specifically, and my web development shop (<a href="http://symondsandson.com">Symonds &amp; Son</a>) in general. Though I initially fell into consulting accidentally, I&rsquo;ve aggressively parlayed it into a successful business &mdash; and my only regret has not been doing so sooner! A lot of developers I know are on the fence about striking out on their own. I&rsquo;m going to lay out how 2013 changed me from a full-time employee to owner of my own business, and in doing so hopefully persuade a few people that the benefits to being in business for yourself far outweigh the risks.</p>
+    <content type="html"><![CDATA[<p>2013 was a great year for me specifically, and my web development shop (<a href="http://symondsandson.com">Symonds &amp; Son</a>) in general. Though I initially fell into consulting accidentally, I&rsquo;ve aggressively parlayed it into a successful business &ndash; and my only regret has not been doing so sooner! A lot of developers I know are on the fence about striking out on their own. I&rsquo;m going to lay out how 2013 changed me from a full-time employee to owner of my own business, and in doing so hopefully persuade a few people that the benefits to being in business for yourself far outweigh the risks.</p>
 
 <!-- more -->
 
 
 <h2>Becoming a Mercenary</h2>
 
-<p>At the start of 2013, I was a salaried employee working at a startup. The rate was fine, but I spent a lot of time working &mdash; long hours in the evening to make aggressive sprints, and many meetings during the day to discuss development priorities and investor relations. I wasn&rsquo;t happy, but it was a job, and I was satisfied with it.</p>
+<p>At the start of 2013, I was a salaried employee working at a startup. The rate was fine, but I spent a lot of time working &ndash; long hours in the evening to make aggressive sprints, and many meetings during the day to discuss development priorities and investor relations. I wasn&rsquo;t happy, but it was a job, and I was satisfied with it.</p>
 
 <p>A few months into my tenure, I was offered a salary adjustment to help make my company&rsquo;s bottom-line more attractive. Instead of taking it, I proposed an alternative arrangement: I would become a consultant at a rate very similar to my old hourly and I&rsquo;d work part-time. After some negotiation, a deal was struck, and I was officially a free agent.</p>
 
-<p>But I wasn&rsquo;t happy &mdash; indeed, quite the opposite. I spent weeks beforehand freaking out. I had the extra hours available to make up my cut income, but I&rsquo;d need clients to actually pay me for that time. Otherwise I&rsquo;d need to find another salaried position, and fast, since I didn&rsquo;t have much in the way of savings. Disaster was looming, and I spent sleepless nights trying to figure out how I&rsquo;d find a client, how I&rsquo;d convince them to actually pay me, and, if that failed, how I&rsquo;d explain a gap on my resume to future potential employers.</p>
+<p>But I wasn&rsquo;t happy &ndash; indeed, quite the opposite. I spent weeks beforehand freaking out. I had the extra hours available to make up my cut income, but I&rsquo;d need clients to actually pay me for that time. Otherwise I&rsquo;d need to find another salaried position, and fast, since I didn&rsquo;t have much in the way of savings. Disaster was looming, and I spent sleepless nights trying to figure out how I&rsquo;d find a client, how I&rsquo;d convince them to actually pay me, and, if that failed, how I&rsquo;d explain a gap on my resume to future potential employers.</p>
 
 <p>Yet almost immediately upon taking the plunge, an old client wanted me to do new work for them. They recommended me to another company, who told one of their clients about me, and very shortly after I became part-time, I was full-time working for my clients. It took me almost all of 2013 to understand what had happened.</p>
 
 <h2>Charge Them and They&rsquo;ll Thank You</h2>
 
-<p>In case you didn&rsquo;t know, Rails developers &mdash; specifically, good Rails developers with experience in modern tools, an interest in improving themselves, and an aggressive talent for development &mdash; are extremely hard to find. In fact, finding developers who are capable of programming in their chosen language <strong>at all</strong> is a challenge.</p>
+<p>In case you didn&rsquo;t know, Rails developers &ndash; specifically, good Rails developers with experience in modern tools, an interest in improving themselves, and an aggressive talent for development &ndash; are extremely hard to find. In fact, finding developers who are capable of programming in their chosen language <strong>at all</strong> is a challenge.</p>
 
 <p>But why accept a generalized statement when I can give you a specific example? I&rsquo;m presently working with a client to vet Rails engineers. The rate they&rsquo;re willing to pay is really quite good, yet the candidates their recruiter finds are just terrible. This might be a topic for a separate post, but of the dozen people I&rsquo;ve interviewed:</p>
 
@@ -269,7 +269,7 @@
 </ul>
 
 
-<p>Yet the recruiter says these people are snatched up all the time, at a rate of roughly $100 an hour. I honestly have absolutely no idea how this happens. I&rsquo;m not exaggerating even a little bit when I say I believe that none of these people can code at all &mdash; they have no GitHub profiles, no code samples, absolutely nothing to their names.</p>
+<p>Yet the recruiter says these people are snatched up all the time, at a rate of roughly $100 an hour. I honestly have absolutely no idea how this happens. I&rsquo;m not exaggerating even a little bit when I say I believe that none of these people can code at all &ndash; they have no GitHub profiles, no code samples, absolutely nothing to their names.</p>
 
 <p>(Incidentally, can you do better than these idiot candidates? <a href="mailto:josh@joshsymonds.com">Let me know, I have a pile of money with your name on it.</a>)</p>
 
@@ -281,7 +281,7 @@
 
 <p>I think a lot of it has to do with the startup culture in San Francisco presently. Weirdly, I think it has the effect of keeping engineer salaries artificially lowered.</p>
 
-<p>Our industry is dominated by talk of the tech bubble: all the press is about acquisitions, huge seed funding rounds, and successful entrepreneurs' new projects. But the amount of money in Silicon Valley is really quite limited. There are enormous industries out there that need skilled programmers but lack the sex appeal of a startup or coverage in TechCrunch &mdash; yet they have applications in Rails and backend infrastructure needs too.</p>
+<p>Our industry is dominated by talk of the tech bubble: all the press is about acquisitions, huge seed funding rounds, and successful entrepreneurs&#8217; new projects. But the amount of money in Silicon Valley is really quite limited. There are enormous industries out there that need skilled programmers but lack the sex appeal of a startup or coverage in TechCrunch &ndash; yet they have applications in Rails and backend infrastructure needs too.</p>
 
 <p>And they also have way, way more money. Most of my clients are not extremely large businesses in their fields, but the amount of capital they have dwarfs that of even established startups. And they actually have business models that have worked for them for many years, so I worry less about revenue stream issues (or, heaven forbid, them folding overnight).</p>
 
@@ -293,7 +293,7 @@
 
 <ol>
 <li><p>I nickled-and-dimed a client on change requests, alienating that client and making myself appear less professional. Said client did not have a whole lot of money, and while the initial contract amount was commensurately very low, she really didn&rsquo;t appreciate me charging additional for some very minor changes. I should have just sucked it up and done the work, leaving both of us with warm fuzzes in the end, even if I took a slight loss on the contract. Most of my clients hear about me from other satisfied clients, and I would have been better served by her loving me than making a little more money.</p></li>
-<li><p>For pricing my services, I need to start high and work my way down. I generally start client conversations on my hourly rate at what I would consider a reasonable ultimate number, and then allow myself to be driven down from there &mdash; generally because the client wants a long-term contract and expects to save on my hourly based on the length of the engagement.</p></li>
+<li><p>For pricing my services, I need to start high and work my way down. I generally start client conversations on my hourly rate at what I would consider a reasonable ultimate number, and then allow myself to be driven down from there &ndash; generally because the client wants a long-term contract and expects to save on my hourly based on the length of the engagement.</p></li>
 <li><p>More projects, less hourly. When starting as a consultant, I was really selling only my hours. Now Symonds &amp; Son is a business in its own right, and I&rsquo;ve hired designers and developers to help with my workload. Working with other talented individuals makes much more sense on a project basis, where I can package their (and my) hours together.</p></li>
 </ol>
 
@@ -302,13 +302,13 @@
 
 <p>&ldquo;Shut up already Josh, I think this is a great idea and want to become a consultant too! What&rsquo;s next?&rdquo;</p>
 
-<p>Make sure you have a good track record and established public credentials. Verify your friends (and your ex-employers) will vouch for the quality of your code and the quality of you as an individual. Go to meetups, write blog posts, have open-sourced code on GitHub &mdash; the more stuff you have on record, the better. Your clients will want to know everything about you they can before they even meet you.</p>
+<p>Make sure you have a good track record and established public credentials. Verify your friends (and your ex-employers) will vouch for the quality of your code and the quality of you as an individual. Go to meetups, write blog posts, have open-sourced code on GitHub &ndash; the more stuff you have on record, the better. Your clients will want to know everything about you they can before they even meet you.</p>
 
 <p>Have a backup plan in case everything goes wrong. Mine was &ldquo;find another full-time Rails job,&rdquo; something that I&rsquo;ve never traditionally had a problem finding. At least think about a safety net so that taking the plunge is less scary.</p>
 
 <p>And consider if you really want to be a mercenary. Many talented coders I know work for peanuts, but they do so for non-profits, amazing startups, and benefit corporations. They don&rsquo;t care that they&rsquo;re not taking home tons of money; they are making a difference in the world, which matters more to them than any paycheck ever could.</p>
 
-<p>But if the idea of consulting appeals to you, then I encourage you to take the plunge. As engineers, our services are as in-demand as ever; if you are a competent engineer, you can turn your skills from a salary into a solution, and companies pay much more handsomely for the latter. And if you try to fly and fail, you have a good chance of landing at another job anyway &mdash; so really, the risk is pretty minimal. And if you take off and soar away, let me know: I always need exciting new companies to work on big contracts with!</p>
+<p>But if the idea of consulting appeals to you, then I encourage you to take the plunge. As engineers, our services are as in-demand as ever; if you are a competent engineer, you can turn your skills from a salary into a solution, and companies pay much more handsomely for the latter. And if you try to fly and fail, you have a good chance of landing at another job anyway &ndash; so really, the risk is pretty minimal. And if you take off and soar away, let me know: I always need exciting new companies to work on big contracts with!</p>
 ]]></content>
   </entry>
   
@@ -317,13 +317,13 @@
     <link href="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively/"/>
     <updated>2013-11-14T10:30:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/11/14/dont-code-defensively</id>
-    <content type="html"><![CDATA[<p>As an engineer, we&rsquo;re responsible for creating things that people care about deeply. Whether you&rsquo;re programming something as important as a car&rsquo;s operating system or as silly as an iPhone game, our code touches lives. It&rsquo;s no wonder, then, that the people who interact with our products feel strongly about them &mdash; and possibly about us, as well.</p>
+    <content type="html"><![CDATA[<p>As an engineer, we&rsquo;re responsible for creating things that people care about deeply. Whether you&rsquo;re programming something as important as a car&rsquo;s operating system or as silly as an iPhone game, our code touches lives. It&rsquo;s no wonder, then, that the people who interact with our products feel strongly about them &ndash; and possibly about us, as well.</p>
 
 <p>This can sometimes be a good thing. It&rsquo;s always touching to receive a heartfelt letter of thanks and admiration from a customer. But much more commonly, you&rsquo;ll hear complaints, demands, and anger.</p>
 
-<p>Under a deluge like that, it&rsquo;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &mdash; if you&rsquo;re willing to take credit for the good things you&rsquo;ve done, you have to &ldquo;take credit&rdquo; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&rsquo;s problems, but to shirk responsibility.</p>
+<p>Under a deluge like that, it&rsquo;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &ndash; if you&rsquo;re willing to take credit for the good things you&rsquo;ve done, you have to &ldquo;take credit&rdquo; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&rsquo;s problems, but to shirk responsibility.</p>
 
-<p>That&rsquo;s what I call coding defensively &mdash; an entirely separate subject from <a href="http://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. Coding defensively mires you in your codebase. It&rsquo;s hard to go forward because you don&rsquo;t want more responsibility, and you can&rsquo;t go back because it would be admitting error. And it&rsquo;s a self-reinforcing cycle: once you start becoming defensive, it&rsquo;s difficult to stop.</p>
+<p>That&rsquo;s what I call coding defensively &ndash; an entirely separate subject from <a href="http://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. Coding defensively mires you in your codebase. It&rsquo;s hard to go forward because you don&rsquo;t want more responsibility, and you can&rsquo;t go back because it would be admitting error. And it&rsquo;s a self-reinforcing cycle: once you start becoming defensive, it&rsquo;s difficult to stop.</p>
 
 <p>I was a defensive coder too. I struggled to own the results of my actions: I would refuse to discuss solutions in a sensible, level-headed way. It took me a long time to change my approach, and as part of doing so I wrote a list of maxims summarizing how I wanted to think and act. When I feel myself slipping I go over them to refresh my resolve. I&rsquo;m publishing them here in the hope that they&rsquo;ll help someone else as much as they&rsquo;ve helped me.</p>
 
@@ -332,11 +332,11 @@
 
 <h2>No one gets it right all the time</h2>
 
-<p>First, you have to realize that people &mdash; even you &mdash; make mistakes. It&rsquo;s not productive to pretend that it didn&rsquo;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&rsquo;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
+<p>First, you have to realize that people &ndash; even you &ndash; make mistakes. It&rsquo;s not productive to pretend that it didn&rsquo;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&rsquo;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
 
 <p>I found that achnowledging my fault and being accepting of it removed a lot of the impetus to be defensive. I no longer felt as ashamed of what I&rsquo;d done or that I had to spend time and energy making excuses. The &ldquo;excuse&rdquo; is that mistakes happen: what matters now isn&rsquo;t that the mistake occurred, but how you&rsquo;ll go about addressing it.</p>
 
-<p>Please don&rsquo;t get me wrong &mdash; I&rsquo;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&rsquo;ll still happen, even if you&rsquo;re very good. Since you can&rsquo;t change whether or not you&rsquo;ll make mistakes, you may as well change your attitude to them.</p>
+<p>Please don&rsquo;t get me wrong &ndash; I&rsquo;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&rsquo;ll still happen, even if you&rsquo;re very good. Since you can&rsquo;t change whether or not you&rsquo;ll make mistakes, you may as well change your attitude to them.</p>
 
 <h2>Be friendly</h2>
 
@@ -354,9 +354,9 @@
 
 <p><img src="http://f.cl.ly/items/2y3x25163d0L0J1A0s14/Image%202013.11.14%209%3A38%3A06%20AM.jpeg" alt="Always Be Solving" /></p>
 
-<p>Putting your existing solutions on a pedestal isn&rsquo;t productive. There&rsquo;s no inherent value to what you have other than that it works &mdash; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
+<p>Putting your existing solutions on a pedestal isn&rsquo;t productive. There&rsquo;s no inherent value to what you have other than that it works &ndash; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
 
-<p>Dismissing solutions out of hand &mdash; particularly if you don&rsquo;t understand them or it seems like they&rsquo;d be difficult to implement &mdash; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&rsquo;t even know.</p>
+<p>Dismissing solutions out of hand &ndash; particularly if you don&rsquo;t understand them or it seems like they&rsquo;d be difficult to implement &ndash; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&rsquo;t even know.</p>
 
 <p>If it&rsquo;s still more or less perfect despite those flaws, then you have to go for it. Your responsibility is to do what&rsquo;s right, not what&rsquo;s easy.</p>
 
@@ -368,7 +368,7 @@
 
 <p>It can be helpful to remind yourself of the good things you&rsquo;ve done too, and that, in the balance, the good outweighs the bad. Doing so gives you the courage to hold your head high, and gives you the self-confidence to tackle your problems head on, instead of hiding from them.</p>
 
-<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &mdash; and the attitude you have towards action &mdash; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&rsquo;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&rsquo;re coding for them, not coding defensively.</p>
+<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &ndash; and the attitude you have towards action &ndash; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&rsquo;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&rsquo;re coding for them, not coding defensively.</p>
 ]]></content>
   </entry>
   
@@ -377,9 +377,9 @@
     <link href="http://joshsymonds.com/blog/2013/11/03/what-makes-a-good-programmer-good/"/>
     <updated>2013-11-03T13:06:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/11/03/what-makes-a-good-programmer-good</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve worked with a lot of programmers over the years &mdash; some of them super amazing, and some distinctly lackluster. As I&rsquo;ve had the pleasure of working with some very skilled individuals recently, I spent some time thinking about what I admire in them. What makes a good programmer so good, and a bad programmer so bad? Or, to mangle English a little bit, what makes a good programmer good?</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve worked with a lot of programmers over the years &ndash; some of them super amazing, and some distinctly lackluster. As I&rsquo;ve had the pleasure of working with some very skilled individuals recently, I spent some time thinking about what I admire in them. What makes a good programmer so good, and a bad programmer so bad? Or, to mangle English a little bit, what makes a good programmer good?</p>
 
-<p>Based on my experiences, being a great programmer has nothing to do with age, education, or how much money you make. It&rsquo;s all in how you act and, more deeply, how you think. I&rsquo;ve noticed a consistent set of habits in the programmers I admire. More than knowledge of their chosen language, deep understanding of data structures and algorithms, or even more than years of on-the-job experience &mdash; the way they communicate, the way they conduct themselves, and the way they approach programming speak volumes as to their amazing level of skill.</p>
+<p>Based on my experiences, being a great programmer has nothing to do with age, education, or how much money you make. It&rsquo;s all in how you act and, more deeply, how you think. I&rsquo;ve noticed a consistent set of habits in the programmers I admire. More than knowledge of their chosen language, deep understanding of data structures and algorithms, or even more than years of on-the-job experience &ndash; the way they communicate, the way they conduct themselves, and the way they approach programming speak volumes as to their amazing level of skill.</p>
 
 <p>Certainly there&rsquo;s more to being a good programmer than anyone can enumerate, and I wouldn&rsquo;t judge any programmer solely based on the presence (or lack) of these practices. But I do know wisdom when I see it, and when I see a programmer expressing these traits, I think, &ldquo;This person really knows what they&rsquo;re doing.&rdquo;</p>
 
@@ -390,13 +390,13 @@
 
 <p>Or &ldquo;measure twice, cut once.&rdquo; Or &ldquo;Google it.&rdquo;</p>
 
-<p>Whatever you call it, most programming problems you&rsquo;re likely to encounter have been solved in some form already &mdash; Ecclesiastes had it right in observing there was nothing new under the sun. In the form of libraries on GitHub, blog posts on the Internet, or just getting in touch with experienced individuals, good programmers know to do the research before they try to solve a problem.</p>
+<p>Whatever you call it, most programming problems you&rsquo;re likely to encounter have been solved in some form already &ndash; Ecclesiastes had it right in observing there was nothing new under the sun. In the form of libraries on GitHub, blog posts on the Internet, or just getting in touch with experienced individuals, good programmers know to do the research before they try to solve a problem.</p>
 
 <p>I&rsquo;ve seen even great programmers rush to solutions: but the worst programmers I&rsquo;ve worked with never consult others, and as a result do huge amounts of duplicate work or tackle issues in precisely the wrong way. And unfortunately, they end up paying for their mistakes later.</p>
 
 <h2>They read error messages (and act on them)</h2>
 
-<p>This includes desymbolicating stack traces. Yes, it&rsquo;s ugly and unfortunate &mdash; but if you&rsquo;re not willing to do it how are you going to know what&rsquo;s wrong? The most effective programmers I know aren&rsquo;t afraid to dig deep into problems. The least effective see there was an error but don&rsquo;t even bother reading the error message. (This sounds ridiculous but you&rsquo;d be surprised how frequently I run into it.)</p>
+<p>This includes desymbolicating stack traces. Yes, it&rsquo;s ugly and unfortunate &ndash; but if you&rsquo;re not willing to do it how are you going to know what&rsquo;s wrong? The most effective programmers I know aren&rsquo;t afraid to dig deep into problems. The least effective see there was an error but don&rsquo;t even bother reading the error message. (This sounds ridiculous but you&rsquo;d be surprised how frequently I run into it.)</p>
 
 <p>To take this a step further, great programmers see a problem and hunger to solve it. Reading error messages are for them just the beginning: they&rsquo;re anxious to dive deep into the issue that it represents and figure out what&rsquo;s going wrong. They&rsquo;re not interested in passing responsibility, they&rsquo;re interested in finding a solution. The buck really does stop with them.</p>
 
@@ -404,7 +404,7 @@
 
 <p>Documentation, tests, people: these things lie. Not intentionally, but if you want to know exactly how something works, then you must view the source yourself.</p>
 
-<p>Don&rsquo;t be afraid if it&rsquo;s not a language you&rsquo;re super familiar with &mdash; if you&rsquo;re primarily a Ruby programmer and you suspect there&rsquo;s an error in one of Ruby&rsquo;s C libraries, go crack it open and have a look. Yes, you might not get it. But who knows? You just might, and you stand a way better chance than if you didn&rsquo;t try at all!</p>
+<p>Don&rsquo;t be afraid if it&rsquo;s not a language you&rsquo;re super familiar with &ndash; if you&rsquo;re primarily a Ruby programmer and you suspect there&rsquo;s an error in one of Ruby&rsquo;s C libraries, go crack it open and have a look. Yes, you might not get it. But who knows? You just might, and you stand a way better chance than if you didn&rsquo;t try at all!</p>
 
 <p>If you&rsquo;re in a closed-source environment then this becomes a lot harder, unfortunately, but the principle still applies. Poor programmers have little interest in viewing source, and as a result problems flummox them much longer than those who are willing to do some research.</p>
 
@@ -412,7 +412,7 @@
 
 <p>Good programmers are driven to act. There&rsquo;s a compulsion in them that can be difficult to control: they&rsquo;re implementing a solution as soon as they identify a problem or see a new feature request, sometimes too early and sometimes too aggressively. But their instinctive response to a problem is to tackle it head-on.</p>
 
-<p>This can be troublesome at times &mdash; but their enthusiasm is a crucial part of being good at what they do. While some might stonewall or wait for the problem to go away on its own, good programmers start solving.</p>
+<p>This can be troublesome at times &ndash; but their enthusiasm is a crucial part of being good at what they do. While some might stonewall or wait for the problem to go away on its own, good programmers start solving.</p>
 
 <p>To put it more simply (and, perhaps, too obviously): if you see someone excitedly grabbing problems and acting on them, chances are you have a good programmer on your hands.</p>
 
@@ -420,11 +420,11 @@
 
 <p>This is mostly a bad programmer trait: they tend to bounce from artificial crisis to artificial crisis, never really understanding one before they move to the next. They&rsquo;ll assign blame to the wrong parts of their program and then spend hours debugging something that works perfectly well. They let their emotions get the better of them, trusting gut feelings rather than careful, explicit analysis.</p>
 
-<p>If you hurry through a problem &mdash; or even view each problem as a world-shattering catastrophe &mdash; you&rsquo;re more likely to make errors or not address the underlying issues. Great programmers take the time to understand what&rsquo;s going wrong, even when there really is a catastrophe: but more than that, they treat regular problems as issues to be solved. Thus they solve more of them more accurately, and do so without raising the tension level of your organization.</p>
+<p>If you hurry through a problem &ndash; or even view each problem as a world-shattering catastrophe &ndash; you&rsquo;re more likely to make errors or not address the underlying issues. Great programmers take the time to understand what&rsquo;s going wrong, even when there really is a catastrophe: but more than that, they treat regular problems as issues to be solved. Thus they solve more of them more accurately, and do so without raising the tension level of your organization.</p>
 
 <h2>They communicate well</h2>
 
-<p>Ultimately, programming is a form of communication. Being able to succinctly and eloquently express your thoughts is as crucial in writing code as it is in writing prose &mdash; and I&rsquo;ve always found that those who can write a pithy email, elegant status report, or even just an effective memo will also be better programmers than those who cannot.</p>
+<p>Ultimately, programming is a form of communication. Being able to succinctly and eloquently express your thoughts is as crucial in writing code as it is in writing prose &ndash; and I&rsquo;ve always found that those who can write a pithy email, elegant status report, or even just an effective memo will also be better programmers than those who cannot.</p>
 
 <p>This applies to code in addition to English. It&rsquo;s certainly possible to make a one-liner filled with parenthesis, brackets, and single-letter functions: but if no one understands it, what&rsquo;s the point? Good programmers take the time to communicate their ideas properly in whatever medium they&rsquo;re using.</p>
 
@@ -432,7 +432,7 @@
 
 <p>I think this might be the most important aspect of a good programmer (and perhaps the part of this list most generally applicable to fields other than computer science).</p>
 
-<p>If you truly care about what you&rsquo;re doing &mdash; if it&rsquo;s not just a job, but a hobby, an interest, even a fascination &mdash; then you have a major advantage over anyone else in your field. Great programmers are always programming. Their peers will clock out at eight hours a day: not out their job, but of their field in general. They don&rsquo;t have programming side projects or much interest in contributing back to the community. They&rsquo;re not constantly trying neat new methods and crazy programming languages just to see how they work.</p>
+<p>If you truly care about what you&rsquo;re doing &ndash; if it&rsquo;s not just a job, but a hobby, an interest, even a fascination &ndash; then you have a major advantage over anyone else in your field. Great programmers are always programming. Their peers will clock out at eight hours a day: not out their job, but of their field in general. They don&rsquo;t have programming side projects or much interest in contributing back to the community. They&rsquo;re not constantly trying neat new methods and crazy programming languages just to see how they work.</p>
 
 <p>When I see a programmer who&rsquo;s doing their own hobby projects on the weekends, who&rsquo;s involved in the creation of the tools that they use every day, who&rsquo;s fascinated by the new and the interesting: that&rsquo;s when I really know I&rsquo;m looking at an amazing person. Ultimately great programmers view their profession not just as a means to make money, but as a means to make a difference. I think that&rsquo;s what makes the best programmers who they are. Coding, to them, is a way of shaping the world. And that&rsquo;s what I truly respect and admire.</p>
 ]]></content>

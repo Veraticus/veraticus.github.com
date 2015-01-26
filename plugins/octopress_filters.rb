@@ -10,6 +10,7 @@ module OctopressFilters
   def self.pre_filter(page)
     if page.ext.match('html|textile|markdown|md|haml|slim|xml')
       input = BacktickCodeBlock::render_code_block(page.content)
+      return nil unless page && input
       page.content = input.gsub /(<figure.+?>.+?<\/figure>)/m do
         TemplateWrapper::safe_wrap($1)
       end

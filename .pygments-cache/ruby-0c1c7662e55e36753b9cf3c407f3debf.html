@@ -2,7 +2,7 @@
 <span class="nb">require</span> <span class="s1">&#39;apn_connection&#39;</span>
 
 <span class="k">class</span> <span class="nc">NotifierWorker</span>
-  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
 
   <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
     <span class="no">APNConnection</span><span class="o">.</span><span class="n">new</span>
@@ -15,7 +15,7 @@
       <span class="n">tokens</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">recipient_ids</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">u</span><span class="o">|</span> <span class="n">u</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:token</span><span class="p">)}</span><span class="o">.</span><span class="n">flatten</span>
 
       <span class="n">tokens</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">token</span><span class="o">|</span>
-        <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+        <span class="n">notification</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
         <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
         <span class="n">notification</span><span class="o">.</span><span class="n">sound</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
         <span class="n">notification</span><span class="o">.</span><span class="n">custom_data</span> <span class="o">=</span> <span class="n">custom_data</span>

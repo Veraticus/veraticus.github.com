@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Installing ShareKit with RubyMotion - Hi, I'm Josh Symonds</title>
+  <title>Installing ShareKit with RubyMotion - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-07-18T19:38:00-05:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
+<time datetime="2012-07-18T19:38:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 5  minutes</span>
 
         
@@ -122,7 +123,7 @@
 
   <div class="entry-content"><p>My RubyMotion app is almost complete. I spent a lot of time today getting ShareKit to work correctly in it; while Motion Cocoapods generally work pretty well out of the box, ShareKit was obstinate and unpleasant and it took me most of the day to get it working correctly. So, to save someone else some time, I documented the steps I took to get it working.</p>
 
-<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&rsquo;ve done this in a better way &mdash; by extracting the changes out into a new Cocoapod spec repository &mdash; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
+<p>Just a small caveat first, though; this is not simple and elegant like the rest of the code here. (Generally.) I could&rsquo;ve done this in a better way &ndash; by extracting the changes out into a new Cocoapod spec repository &ndash; and maybe in the future when I have some time I will. But until then, I hope this somewhat ugly hack helps out someone else!</p>
 
 <!-- more -->
 
@@ -145,7 +146,7 @@
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion-cocoapods&#39;</span>
 </span><span class='line'>
-</span><span class='line'><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
 </span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">pods</span> <span class="k">do</span>
 </span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Facebook&#39;</span>
 </span><span class='line'>    <span class="n">pod</span> <span class="s1">&#39;ShareKit/Twitter&#39;</span>
@@ -154,7 +155,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I couldn&rsquo;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&rsquo;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &mdash; and the rest of this walkthrough &mdash; I&rsquo;ll assume the only sharers you&rsquo;re using will be Facebook and Twitter.</p>
+<p>I couldn&rsquo;t get this working with ObjectiveFlickr because of BridgeSupport duplicate symbol errors; if you want Flickr sharing, you&rsquo;ll have to manually edit the conflicting symbols out of either ShareKit or ObjectiveFlickr. For my app &ndash; and the rest of this walkthrough &ndash; I&rsquo;ll assume the only sharers you&rsquo;re using will be Facebook and Twitter.</p>
 
 <h2>2. Create a ShareKit Configuration File</h2>
 
@@ -251,7 +252,7 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Pod</span><span class="p">:</span><span class="ss">:Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
 </span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;git://github.com/ShareKit/facebook-ios-sdk.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;397c0b62b116a9680035e87a07ab936e1c5dfce6&#39;</span> <span class="p">}</span>
 </span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
@@ -266,7 +267,7 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Pod</span><span class="p">:</span><span class="ss">:Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
 </span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>   <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span>  <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ShareKit/ShareKit.git&#39;</span><span class="p">,</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;a249839dde09e326b1806e22ab3ddb77d733fce9&#39;</span> <span class="p">}</span>
 </span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>

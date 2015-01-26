@@ -1,5 +1,5 @@
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
-  <span class="kp">include</span> <span class="ss">Tire</span><span class="p">:</span><span class="ss">:Model</span><span class="o">::</span><span class="no">Search</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Photo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="kp">include</span> <span class="no">Tire</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Search</span>
   
   <span class="n">mapping</span> <span class="k">do</span>
     <span class="n">indexes</span> <span class="ss">:id</span>

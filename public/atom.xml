@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-06T14:07:30-06:00</updated>
+  <updated>2015-01-26T11:14:42-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -14,18 +14,292 @@
 
   
   <entry>
+    <title type="html"><![CDATA[The Numbers Behind Consulting in 2014]]></title>
+    <link href="http://joshsymonds.com/blog/2015/01/06/the-numbers-behind-consulting-in-2014/"/>
+    <updated>2015-01-06T14:10:38-06:00</updated>
+    <id>http://joshsymonds.com/blog/2015/01/06/the-numbers-behind-consulting-in-2014</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve always loved reading behind-the-scenes articles about people&rsquo;s businesses: where their money came from, where it went, and what they learned from operating their companies. Since I recently finished closing the books on my business for 2014, I thought I&rsquo;d make that sort of post for my own company &ndash; real numbers and real thoughts from a real business.</p>
+
+<!-- more -->
+
+
+<p>My consultancy, <a href="https://symondsandson.com">Symonds &amp; Son</a>, has had a successful year. In 2014 we grossed almost quadruple what we did in 2013 &ndash; which makes sense, since it was pretty me just me and some part-time contractors back then. While I very much hope we experience similar success in 2015, I&rsquo;m not exactly projecting continued growth of that magnitude &ndash; I think it&rsquo;s likely Symonds &amp; Son will finish next year in a similar place to this one, given my clients&#8217; burn rates and my excellent client retention numbers. But I&rsquo;m getting ahead of myself&hellip; let&rsquo;s start digging into the nitty gritty of my books.</p>
+
+<h2>Expenses</h2>
+
+<p>Symonds &amp; Son has three full-time employees: me, my mother, and my father. If you&rsquo;re curious how that works I made an <a href="http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son/">earlier post about working with your family</a>. We paid twelve contractors in 2014 for work as diverse as Rails application development, devops chef help, postgresql optimizations, iOS app creation, web and app design, and lots of accounting. Almost all (more than 96%) of our 2014 expenses were payroll and contractor payments:</p>
+
+<div id="expenses_overview" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto 20px auto"></div>
+
+
+
+
+<script>
+$(function () {
+    $('#expenses_overview').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Symonds & Son 2014 Expenses'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}%',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Expenses',
+            data: [
+                {
+                  name: 'Contractors & Payroll',
+                  y: 96.5,
+                  sliced: true,
+                  selected: true
+                },
+                ['Hardware', 1.8],
+                ['Software', 0.9],
+                ['Operations', 0.7],
+                ['Marketing', 0.2]
+            ]
+        }]
+    });
+});
+</script>
+
+
+<p>Operations is how I&rsquo;ve bucketed AWS, DigitalOcean, CircleCI, RackSpace, CodeClimate and GitHub subscriptions. Software, by contrast, is one-time license payments (for Adobe Photoshop, for example), and hardware is all my visits to the nearest Apple store or authorizing hardware purchases for contractors/employees.</p>
+
+<p>See that 0.2% marketing expense? That was a very modest Google AdWords campaign. The result of that campaign was a reasonably good client lead that we were unable to follow up on, due to my inability to staff up quickly enough to satisfy it. In general, figuring out how to properly market Symonds &amp; Son has been my biggest challenge&hellip; but more on that below.</p>
+
+<p>The 96.5% contractors &amp; payroll number might initially appear surprising, but I think in a consultancy it makes sense. My entire business relies on the strength of my employees &ndash; I&rsquo;m literally converting hours into software, when you get down to it, and my clients expect excellent quality and superior craftsmanship from my company. Also there&rsquo;s a fair amount of stuff that&rsquo;s just not in my core competency: though I manage my business as best I can, I do not do our taxes or bookkeeping, and I&rsquo;m happy to pay a really excellent accountant to do it for me.</p>
+
+<p>Ultimately consultancies are about people, and I&rsquo;m proud to say that my expenses reflect the value of my contractors.</p>
+
+<p>But that sounds a little trite. This post is about showing the numbers, so let me prove how much I value the skills of those I pay. Here&rsquo;s a chart showing how my money was divided among contractors and payroll, by skill:</p>
+
+<div id="skill_expenses" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto 20px auto"></div>
+
+
+
+
+<script>
+$(function () {
+    $('#skill_expenses').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Symonds & Son 2014 Contractor/Payroll Expenses by Skill'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}%',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Expenses',
+            data: [
+                {
+                  name: 'Rails',
+                  y: 65.5,
+                  sliced: true,
+                  selected: true
+                },
+                ['chef', 18.2],
+                ['elasticsearch', 3.6],
+                ['postgresql', 4.5],
+                ['iOS', 4.5],
+                ['Design', 1.8],
+                ['Marketing', 0.9],
+                ['Accounting', 0.5],
+                ['Legal', 0.4]
+            ]
+        }]
+    });
+});
+</script>
+
+
+<p>By necessity, Rails includes a fair amount of JavaScript/HTML/CSS stuff that it would be pretty difficult to break out.</p>
+
+<p>Marketing here is a social media marketer who&rsquo;s helping me with branding and strategy &ndash; a separate expense from directly paying for advertising, and one that has been more useful anyway, in my opinion. Perhaps most surprising from a personal perspective is costs spent on chef: those expenditures are internal, buying the time of some really excellent talent from the chef community to improve and build on my infrastructure cookbooks.</p>
+
+<p>One of my goals for 2015 is to acquire new infrastructure clients and package my existing infrastructure services as a software product, which we&rsquo;re tentatively calling Cornerstone. More on that below, as well.</p>
+
+<h2>Revenue</h2>
+
+<p>We had ten clients during 2014 and an additional four client possibilities that we failed to land, giving my company a conversion rate of 71%. That&rsquo;s really good, but as you&rsquo;ll see it&rsquo;s only part of the story. Here&rsquo;s how most of those clients found Symonds &amp; Son:</p>
+
+<div id="lead_generation" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto 20px auto"></div>
+
+
+
+
+<script>
+$(function () {
+    $('#lead_generation').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Symonds & Son 2014 Client Leads'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y})'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}% ({point.y})',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Leads',
+            data: [
+                {
+                  name: 'Blog Posts',
+                  y: 10,
+                  sliced: true,
+                  selected: true
+                },
+                ['Friend Referrals', 3],
+                ['Adwords', 1]
+            ]
+        }]
+    });
+});
+</script>
+
+
+<p>Nearly all of my clients find me through the very blog you&rsquo;re reading right now. (Do you need Rails development, application scaling, or devops services? <a href="mailto:josh@joshsymonds.com?Subject=Hi&amp;nbsp;Josh!">Email me, I&rsquo;m really good!</a>)</p>
+
+<p>Of those leads, we did not convert two friend referrals, one blog post, and the only Adwords potentials. Overwhelmingly, clients find and stick with me because of my writing. I think the success of my blog as a marketing mechanic is rather self-explanatory: if someone sees something I&rsquo;ve written about that they really need help with, they&rsquo;re very likely to pursue me and almost usher themselves through my sales pipeline.</p>
+
+<p>This has downsides though &ndash; it&rsquo;s not really scalable. Increasing the reach of my blog is difficult since it&rsquo;s hard to properly advertise a (mostly) technical blog. In 2015 I hope to find more clients in need of devops and development services, particularly those I might not ordinarily reach with an article on consul or elasticsearch: say, a Vice President of Engineering or a Director of Technology who knows in general they need help, but not that they need cloud-scale chef deployments or expert Rails consulting.</p>
+
+<p>As part of this shift I&rsquo;ve spent some time redesigning and rebranding my own corporate website, trying to productize my core offerings as packages of services, rather than just services. Hopefully product clarity will allow Symonds &amp; Son to sell more of what we do best in the coming year. I&rsquo;m looking to roll out this redesign by the end of February, so that will give me 10 months to test it.</p>
+
+<p>I&rsquo;m proud to say that of my 2014 clients, all except two will be continuing into 2015 with me, giving Symonds &amp; Son an 80% yearly retention rate. The ones who I&rsquo;ve parted ways with I hope to see again; both are startups with funding issues. Considering the sample size is a bit small this doesn&rsquo;t necessarily mean anything, but I like to think that our clients appreciate the services we continue to provide to them.</p>
+
+<p>Speaking of services, here&rsquo;s a rather interesting breakdown of Symonds &amp; Son revenue by technology service:</p>
+
+<div id="technology_service" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto 20px auto"></div>
+
+
+
+
+<script>
+$(function () {
+    $('#technology_service').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Symonds & Son 2014 Revenue by Service'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}%',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Leads',
+            data: [
+                {
+                  name: 'Rails Development',
+                  y: 66.7,
+                  sliced: true,
+                  selected: true
+                },
+                ['Devops', 29.1],
+                ['iOS', 4.2]
+            ]
+        }]
+    });
+});
+</script>
+
+
+<p>Devops is always sort of a loose term &ndash; here I mean recurring and one-time revenue from customers who are enjoying our really excellent chef cookbooks and infrastructure administration, and those who paid us to set up cloud installations for them. This includes postgresql and elasticsearch design and development by experts, for example, if you&rsquo;re correlating this to the expenses by skill chart from earlier.</p>
+
+<p>And this revenue breakdown rather closely mirrors that chart, which after all makes sense: I&rsquo;m trying to match customers&#8217; needs to the skills of my organizations, and if I were paying a ton for, say, elasticsearch but didn&rsquo;t have many customers utilizing my contractors with those skills, I&rsquo;d have some expensive people sitting around doing nothing&hellip; far from optimal!</p>
+
+<p>Though I&rsquo;m really happy with the iOS apps Symonds &amp; Son developed in 2014, they unfortunately produce the least revenue of any of our services. And I&rsquo;m not sure I want to change that much: in 2015, what I&rsquo;d like to see is increased revenue from devops. I&rsquo;ve very much enjoyed the operations contracts we&rsquo;ve had, and we&rsquo;ve invested a ton in our own cookbooks and development processes around those cookbooks &ndash; a whole suite of software and processes that we&rsquo;re calling Cornerstone. Using Cornerstone more would be a tremendous victory (and would be super fun, besides).</p>
+
+<h2>Looking Back &amp; Looking Forward</h2>
+
+<p>2014 was a really great year for Symonds &amp; Son. But that sets up a certain expectation of more success and more growth, when in truth it&rsquo;s impossible to predict what the coming year will bring. I personally view our present clients as extremely stable and loyal, so hopefully there&rsquo;s nowhere to go but up &ndash; but overall I hope to chart a conservative course for my company, erring on the side of growing properly rather than overexpanding.</p>
+
+<p>And that&rsquo;s what the internals of a small consultancy looks like! Hope you&rsquo;ve found this interesting &ndash; and if you&rsquo;re looking for Rails development or devops help, don&rsquo;t be afraid to <a href="mailto:josh@joshsymonds.com?Subject=Hi&amp;nbsp;Josh!">drop us a line</a>. I think you&rsquo;ll be very pleased with our services.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Continuous Deployments with Consul]]></title>
     <link href="http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul/"/>
     <updated>2014-10-21T17:13:30-05:00</updated>
     <id>http://joshsymonds.com/blog/2014/10/21/continuous-deployments-with-consul</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &mdash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve fallen in love with <a href="http://www.consul.io/">consul</a>. At first glance, it&rsquo;s a bit like <a href="http://zookeeper.apache.org/">zookeeper</a> or <a href="https://github.com/coreos/etcd">etcd</a> &ndash; it handles service discovery, health checking, and even features a very simple k/v store. But consul does much more than merely expose a lovely DNS interface: one of its more powerful features is its ability to do cluster orchestration, efficiently and effectively propagating messages to all nodes. One of my client projects runs on a dozen servers across two applications; here&rsquo;s how I integrated CircleCI, chef, and consul together to make any GitHub commit run a deploy only to the targeted application, without needing to know any application server&rsquo;s name or IP address.</p>
 
 <!-- more -->
 
 
 <h2>Your servers</h2>
 
-<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &mdash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
+<p>This setup assumes you have your servers connect to chef for both provisioning and deployment; additionally, that your servers are named at least partially after the applications they serve. (I find this to be good practice anyway &ndash; as cute as it is to have server names themed from Teenage Mutant Ninja Turtles, in practice you just end up getting confused about what they do.) All the servers should be able to communicate together on a secure network. That&rsquo;s what you&rsquo;ll run consul on!</p>
 
 <h2>consul</h2>
 
@@ -96,7 +370,7 @@
 
 <h2>1. Rubinius X by <a href="https://twitter.com/brixen">Brian Shirai</a></h2>
 
-<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &mdash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
+<p>This was a really dense talk, as one would expect about a completely new implementation of Ruby. <a href="http://rubini.us/">Rubinius</a> aims to be a performant, compliant Ruby &ndash; Rubinius X means version 10 of Rubinius (8 versions ahead of MRI!), and has some very ambitious goals: perhaps the most interesting of which is ensuring the future of Ruby.</p>
 
 <p>It&rsquo;s no secret that Ruby is old now. The question is, how do we keep it relevant even in its increasing age? Brian&rsquo;s hedge against winding up in a programmer nursing home is Rubinius X, which has a lot of interesting features:</p>
 
@@ -105,10 +379,10 @@
 </ul>
 
 
-<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. &ndash; Brian Shirai</p></blockquote>
+<blockquote><p>The greatest trick the devil ever pulled was to convince language designers that strings are arrays of characters. - Brian Shirai</p></blockquote>
 
 <ul>
-<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &mdash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
+<li>Better performance. I rather think focusing on Ruby&rsquo;s performance is a red herring &ndash; it&rsquo;s generally fast enough for most of our purposes, and if you&rsquo;re doing scientific computing most likely you&rsquo;re optimizing C anyway. But Rubinius X has per-method compilation, allowing for significant bytecode performance increases&hellip; in addition to in-code type assertions and cost-free instrumenting. Faster is never a bad thing!</li>
 <li>Capturing the program&rsquo;s runtime experience. Rubinius X allows us to see what lines of code were actually invoked, what arguments were passed to methods, and in general grants a really granular view on what code is actually being run in production.</li>
 <li>Functional programming paradigms, including real functions as first-class citizens (not just <a href="http://apidock.com/ruby/Module/module_function">module_function</a>). You can declare dynamic or static types for these functions with type assertion checking.</li>
 </ul>
@@ -126,7 +400,7 @@
 
 <p>resque workers performed the actual recommendation work, which was based purely on the relative apparent interest of users in tags, and bubbling up posts and users based on the users&#8217; own tagging behavior.</p>
 
-<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &mdash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
+<p>Though an interesting and conversational case study, and probably very informative for a beginning Rails user, this session did not really discuss anything revolutionary &ndash; probably because the sample app seemed to be a few years old at this point. resque is old news now, and redis even older, but the design patterns discussed were still universal and helpful.</p>
 
 <h2>3. What Devise Does When You&rsquo;re Not Looking by <a href="https://twitter.com/lucasmazza">Lucas Mazza</a></h2>
 
@@ -134,7 +408,7 @@
 
 <p>The foundation of Devise is <a href="https://github.com/hassox/warden">Warden</a>. If Rack is HTTP infrastructure or ActiveModel is ORM infrastructure, Warden is authentication infrastructure. Warden is Rails middleware that provides user session management, failure handling, and lifecycle callbacks. Devise integrates Warden&rsquo;s magic seamlessly with Rails, providing model, router, and controller/view patterns to handle almost all common authentication cases.</p>
 
-<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &mdash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
+<p>Of course, Device&rsquo;s Rails opt-in model integration is great. It provides modules such as session expiration, IP tracking, and account confirmation all in your user model, if you want it. And on top of that you have routing helpers and tons of default controller actions and views. Additionally, Devise is sensibly secure by default &ndash; after all, you don&rsquo;t want to be concerned with implementing security! Security experts should be taking care of that. So Devise uses bcrypt, encrypted tokens, and prevents timing attacks by default.</p>
 
 <p>Devise is a set of reusable, extensible shortcuts for getting authentication cleanly and seamlessly into a Rails app, and honestly everyone should be using it in their app if they aren&rsquo;t already. This session was a concise overview of how best to implement it and configure it.</p>
 
@@ -154,7 +428,7 @@
 
 <p>Though taking only half an hour, <em>Protect Your Code</em> summarized the main legal issues facing developers: copyright law, licensing, open source software, work for hire, licensing and assignment, trademarks, and contract law.</p>
 
-<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &mdash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &mdash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
+<p>Perhaps the biggest take-away for me was understanding code ownership a little bit better. If you are an employee of an organization and you develop code in your day job, the company owns that code. You don&rsquo;t have to sign a piece of paper for this &ndash; it&rsquo;s just that way by default. As a private contractor, everything you create is yours &ndash; except work for hire, where you must assign copyright to the person hiring you.Either as an employee, employer, contractee or contractor it&rsquo;s vitally important to understand the ownership of created code and how contracts change that ownership.</p>
 
 <p>And that led naturally into a discussion of licensing with open source software, particularly the tainting nature of the Gnu Public License. When used for hobbyist projects it&rsquo;s quite acceptable, but the fact that everything it touches becomes open-source can be quite a nuisance for enterprise-grade software.</p>
 
@@ -168,9 +442,9 @@
 
 <p>It also included lots of actual code and many interesting statistics from Code Climate on a real, actual project: <a href="https://reverb.com/">reverb</a>, a guitar marketplace. Though the reverb app is monolithic by any definition of the word, with a thousand classes and a hundred models, it still manages to have low churn, high code quality, and quick development iterations. Indeed, they defended their huge application with a very sensible quote from Martin Fowler about the trend towards separating apps into distinct services:</p>
 
-<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. &ndash; Martin Fowler</p></blockquote>
+<blockquote><p>While small microservices are certainly simpler to reason about, I worry that this pushes complexity into the interconnections between services, where it&rsquo;s less explicit and thus harder to figure out when it goes wrong. - Martin Fowler</p></blockquote>
 
-<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &mdash; say, a ReturnOrderMailer or a ProcessUserCreditCard &mdash; that can decorate models but are not necessarily part of them.</p>
+<p>reverb&rsquo;s refactoring secret? Plain old Ruby objects! The presentation argued quite convincingly in favor of rejecting &ldquo;skinny controller, fat model&rdquo; for &ldquo;skinny controller, skinny model, and skinny domain objects sitting between the two.&rdquo; This domain layer encapsulates specific kinds of behavior &ndash; say, a ReturnOrderMailer or a ProcessUserCreditCard &ndash; that can decorate models but are not necessarily part of them.</p>
 
 <p>This definitely takes the better parts of DHH&rsquo;s philosophy of simple POROs while rejecting MVC as the be-all, end-all of Rails application design. Decorators, combined with events and event listeners, helped to significantly lower the architectural complexity of reverb without having to break it out into many disparate parts.</p>
 
@@ -180,7 +454,7 @@
 
 <p>Providing a straightforward, sensible introduction to Go, <em>Go for Rubyists</em> gave us a glance at Go, complete with code samples and helpful walkthroughs. Once again, the keywords for this presentation were &ldquo;performance&rdquo; and &ldquo;concurrency,&rdquo; which should be no surprise to anyone who&rsquo;s even slightly familiar with Go.</p>
 
-<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &mdash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
+<p>And it&rsquo;s hard not to be seduced by the allure of Go. It&rsquo;s pretty great &ndash; fast compilation, statically linked, highly opinionated, lots of tooling, and all that while still human readable.</p>
 
 <p>Concurrency is a first-class citizen in Go, based on routines and channels. A routine is sort of like a very, very lightweight thread. Routines communicate not by sharing memory, but by transferring data over channels. A very clear separation that makes it easy to reason about multi-threaded applications.</p>
 
@@ -190,7 +464,7 @@
 
 <p>A fascinating discussion about using software in the public sector, <em>Resolved</em> dealt mainly with the experience of programming for large government entities. Spoiler alert: it sounds pretty difficult.</p>
 
-<p>Though governments make use of many of the same Rails tools any of us would find familiar &mdash; Heroku, postgres, jQuery &mdash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
+<p>Though governments make use of many of the same Rails tools any of us would find familiar &ndash; Heroku, postgres, jQuery &ndash; the talk dealt a lot with the many different data formats that bureaucracies seem to inevitably accrue. If you&rsquo;re lucky, your city might have a bunch of CSVs on-hand. But if you&rsquo;re not, you&rsquo;ll have a lot of scanned documents you&rsquo;ll likely need to parse for data.</p>
 
 <p>The presentation had some code samples on how to do this via OCR with Google&rsquo;s Tesseract, falling back on Mechanical Turk in the case of ambiguity. Overall a clever solution that would probably prove extremely helpful for the (likely many) governments with legacy scanned data.</p>
 
@@ -200,9 +474,9 @@
 
 <p><em>The Functional Web</em> argued that Rails must evolve to meet the needs of a changing Internet: web sockets, streaming responses, and event-based connections all cry out for a Rails solution that ActionController and Rack cannot easily provide. While it&rsquo;s easy to agree that these are all things Rails is terrible at, I&rsquo;m not sure if Rails will ever be a great tool for solving these sorts of problems.</p>
 
-<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &mdash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
+<p>Ultimately Rails is intended to serve web applications, and thus must return a response within a reasonable period of time &ndash; as the presentation pointed out, unicorn and delayed_job (or preferentially sidekiq) can get you pretty far for both synchronous responses and asynchronous workers.</p>
 
-<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &mdash; like serving huge files or processing tons of data.</p>
+<p>Once again, that bogeyman of Rails, concurrency, was evoked. But Rails is actually quite performant even in high-load situations with the proper application optimizations and server configurations. Concurrency issues, in my experience, primarily occur if you&rsquo;re doing something that should not really be done in the request lifecycle &ndash; like serving huge files or processing tons of data.</p>
 
 <p>And as if to illustrate that the presentation started discussing the best way to spawn a thread in a Rails controller to do both those things. This is a pretty significant anti-pattern for the reasons the talk itself described; it&rsquo;s semantically unpleasant, incredibly slow, and generally just the wrong place to do this.</p>
 
@@ -232,7 +506,7 @@
 
 <p>Maybe it&rsquo;s because President Obama <a href="https://www.youtube.com/watch?v=6XvmhE1J9PY">told you to learn computer science</a>, and you&rsquo;re not gonna argue with the President.</p>
 
-<p>Or maybe it&rsquo;s because you hunger to make something &mdash; a product other people use &mdash; and you&rsquo;re tired of a job where, at the end of the day, you wonder what exactly you did or why it even mattered. And hey, making software is easier and cleaner than making furniture.</p>
+<p>Or maybe it&rsquo;s because you hunger to make something &ndash; a product other people use &ndash; and you&rsquo;re tired of a job where, at the end of the day, you wonder what exactly you did or why it even mattered. And hey, making software is easier and cleaner than making furniture.</p>
 
 <p>But realistically it&rsquo;s probably because of the money. Glassdoor claims that <a href="http://www.glassdoor.com/Salaries/software-engineer-salary-SRCH_KO0,17.htm">software engineers make a median salary of $85,000</a>, which is nothing to sneeze at. Even the lowliest programmers can look forward to taking home about $60k, and if you have a talent and drive for programming, then the only limit to your salary is your ambition.</p>
 
@@ -247,12 +521,12 @@
 
 <h2>Before You Start</h2>
 
-<p>To become a programmer, you don&rsquo;t need a computer science degree, hipster glasses, youth, or even beauty. (You also don&rsquo;t need a particularly strong math background, in case you&rsquo;re concerned.) That said, there are some things you really do need &mdash; if you can&rsquo;t put a check-mark next to these prerequisites, you might want to seriously reconsider a journey into the realms of computer science.</p>
+<p>To become a programmer, you don&rsquo;t need a computer science degree, hipster glasses, youth, or even beauty. (You also don&rsquo;t need a particularly strong math background, in case you&rsquo;re concerned.) That said, there are some things you really do need &ndash; if you can&rsquo;t put a check-mark next to these prerequisites, you might want to seriously reconsider a journey into the realms of computer science.</p>
 
 <ol>
 <li><p><strong>A love for computers</strong>. If you can&rsquo;t see yourself working in front of a computer 8+ hours a day, happy as a clam, then I appreciate you reading this far, but this career path probably isn&rsquo;t for you.</p></li>
-<li><p><strong>Sacrifice</strong>. Most software, tools, and books to learn computer programming are free. Some of the best ones, unfortunately, aren&rsquo;t. You won&rsquo;t have to spend thousands of dollars (unless you need to buy a computer), but it&rsquo;s probably reasonable to expect an outlay of a couple hundred to purchase books and software. And that doesn&rsquo;t even factor your time into it &mdash; you have to put in the work to get out the results, so expect late nights and early mornings.</p></li>
-<li><p><strong>Drive</strong>. The going will likely get tough &mdash; really tough. When doing something outside of your comfort zone, it&rsquo;s easy to get disheartened and lose your way. How long you can stick it out and keep coming back will determine whether you end up with programming as a hobby, a mediocre skill, or a mastery. Unfortunately there&rsquo;s no shortcuts here. You just have to do it.</p></li>
+<li><p><strong>Sacrifice</strong>. Most software, tools, and books to learn computer programming are free. Some of the best ones, unfortunately, aren&rsquo;t. You won&rsquo;t have to spend thousands of dollars (unless you need to buy a computer), but it&rsquo;s probably reasonable to expect an outlay of a couple hundred to purchase books and software. And that doesn&rsquo;t even factor your time into it &ndash; you have to put in the work to get out the results, so expect late nights and early mornings.</p></li>
+<li><p><strong>Drive</strong>. The going will likely get tough &ndash; really tough. When doing something outside of your comfort zone, it&rsquo;s easy to get disheartened and lose your way. How long you can stick it out and keep coming back will determine whether you end up with programming as a hobby, a mediocre skill, or a mastery. Unfortunately there&rsquo;s no shortcuts here. You just have to do it.</p></li>
 </ol>
 
 
@@ -266,8 +540,8 @@
 
 <ol>
 <li><p><strong>Actual knowledge of the programming language.</strong> Your employer will vet your technical competency by examining your existing code and asking you specific technical questions: for Ruby, the classic chestnut is &ldquo;<a href="http://awaxman11.github.io/blog/2013/08/05/what-is-the-difference-between-a-block/">what&rsquo;s the difference between a block, a proc, and a lambda?</a>&rdquo; Though you&rsquo;ll get bonus points for knowing everything 100%, no one expects you to have your language memorized offhand or even know the minute details of its operation. They&rsquo;re looking for breadth of knowledge, where you&rsquo;d go to look stuff up if you didn&rsquo;t know it, and a general feeling you&rsquo;ve been around the block at least once or twice. In your code samples, they&rsquo;ll want to see competence and fluency in the language in question.</p></li>
-<li><p><strong>Having used programming in a professional capacity.</strong> Even if you know your language, you&rsquo;re no good to anyone if you can&rsquo;t apply your skills and complete projects. An empty resume with a note at the top that you love to code won&rsquo;t get you hired anywhere. The unfortunate reality of the labor market is that everyone only wants to hire proven winners. You have to establish you are one if you want to be employable. That said, you needn&rsquo;t have created enterprise-level software as part of a twenty-person team &mdash; personal projects hosted on GitHub or Bitbucket are more than sufficient to get hired.</p></li>
-<li><p><strong>Demonstrated ability to work with other human begins.</strong> Yes, you want to be a computer programmer, not a diplomat, and yes, <a href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/">your job is to code</a>: but you&rsquo;ll probably end up talking a lot to your boss, coworkers, and possibly even customers. You have to be able to put people at ease and make them like and trust you, or else your career won&rsquo;t go anywhere at all &mdash; and you certainly won&rsquo;t make it past even a casual interview.</p></li>
+<li><p><strong>Having used programming in a professional capacity.</strong> Even if you know your language, you&rsquo;re no good to anyone if you can&rsquo;t apply your skills and complete projects. An empty resume with a note at the top that you love to code won&rsquo;t get you hired anywhere. The unfortunate reality of the labor market is that everyone only wants to hire proven winners. You have to establish you are one if you want to be employable. That said, you needn&rsquo;t have created enterprise-level software as part of a twenty-person team &ndash; personal projects hosted on GitHub or Bitbucket are more than sufficient to get hired.</p></li>
+<li><p><strong>Demonstrated ability to work with other human begins.</strong> Yes, you want to be a computer programmer, not a diplomat, and yes, <a href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/">your job is to code</a>: but you&rsquo;ll probably end up talking a lot to your boss, coworkers, and possibly even customers. You have to be able to put people at ease and make them like and trust you, or else your career won&rsquo;t go anywhere at all &ndash; and you certainly won&rsquo;t make it past even a casual interview.</p></li>
 </ol>
 
 
@@ -277,7 +551,7 @@
 
 <p>Lots of people swear by Java, and if you&rsquo;re in a big company it&rsquo;s probably much easier for you to get buy-in for a language backed by Oracle than one created by a bunch of people on the Internet.</p>
 
-<p>If you want to create graphically intensive computer games, you&rsquo;ll want to brush up your math a little bit and check out the grand-daddy of programming languages, C (and its offshoots and derivatives, C++, Objective-C, and C#, depending on your platform). C is hard to start with, though, and has a lot of complicated concepts &mdash; if you&rsquo;re just beginning, a language slightly friendlier to humans would smooth the learning curve.</p>
+<p>If you want to create graphically intensive computer games, you&rsquo;ll want to brush up your math a little bit and check out the grand-daddy of programming languages, C (and its offshoots and derivatives, C++, Objective-C, and C#, depending on your platform). C is hard to start with, though, and has a lot of complicated concepts &ndash; if you&rsquo;re just beginning, a language slightly friendlier to humans would smooth the learning curve.</p>
 
 <p>It&rsquo;s hard to go wrong with any language, though, since most of the skills you&rsquo;ll learn in one will be more or less portable to another.</p>
 
@@ -299,7 +573,7 @@
 
 <p>This is where programmers start spouting jargon like recursion, iteration, and conditionals. Though those are relatively big words, the concepts underlying them are quite simple and learnable. There are a lot of great places to start learning the basics, but I have a soft spot for <a href="http://learn.code.org/hoc/1">code.org&rsquo;s basics lessons</a>. It might seem more like a game than programming&hellip; and that&rsquo;s a good thing.</p>
 
-<p>Or, if you&rsquo;d prefer disconnecting from the computer for awhile, I would recommend taking a look at the fabulously fun <a href="http://en.wikipedia.org/wiki/RoboRally">RoboRally</a>. It gives players an idea of how computers actually process instructions &mdash; and how instructions that might initially seem perfectly reasonable can lead to horrible results.</p>
+<p>Or, if you&rsquo;d prefer disconnecting from the computer for awhile, I would recommend taking a look at the fabulously fun <a href="http://en.wikipedia.org/wiki/RoboRally">RoboRally</a>. It gives players an idea of how computers actually process instructions &ndash; and how instructions that might initially seem perfectly reasonable can lead to horrible results.</p>
 
 <h3>3. Start learning your programming language</h3>
 
@@ -313,7 +587,7 @@
 
 <h3>4. Start using it</h3>
 
-<p>It&rsquo;s never too early to apply your skills, even if you feel you have no skills at all! Having a project in mind is great and will help direct and guide your learning. There&rsquo;s no such thing as &ldquo;too ambitious&rdquo; when it comes to a personal project &mdash; want to create the next Facebook, manually process credit cards, or keep track of millions of items in a warehouse? Well guess what, computers are great at almost every task imaginable and you&rsquo;re learning how to apply their incredible power to the problems of your choice. Go to it!</p>
+<p>It&rsquo;s never too early to apply your skills, even if you feel you have no skills at all! Having a project in mind is great and will help direct and guide your learning. There&rsquo;s no such thing as &ldquo;too ambitious&rdquo; when it comes to a personal project &ndash; want to create the next Facebook, manually process credit cards, or keep track of millions of items in a warehouse? Well guess what, computers are great at almost every task imaginable and you&rsquo;re learning how to apply their incredible power to the problems of your choice. Go to it!</p>
 
 <p>Yes, your code will be completely terrible. Yes, you&rsquo;ll probably grow bored or frustrated with the project and abandon it. Yes, the mere thought of these first steps will cause you great embarrassment in the future (or possibly present).</p>
 
@@ -327,23 +601,23 @@
 
 <p>You might find yourself doing this as you get even slightly proficient: the adage that <a href="http://en.wikipedia.org/wiki/Law_of_the_instrument">when you have a hammer, everything looks like a nail</a> is very true. But that&rsquo;s not necessarily a bad thing!</p>
 
-<p>When you create a program for yourself, don&rsquo;t hoard it. Release it on GitHub and include excellent documentation and concise tests. This is true even for what you&rsquo;d consider really minor pieces of code &mdash; it&rsquo;d probably help someone, and having open-source code allows potential employers (and potential clients) to see what you do, what your code looks like, and your process for creating it. More than anything else, GitHub has become my go-to tool for evaluating potential candidates for a position.</p>
+<p>When you create a program for yourself, don&rsquo;t hoard it. Release it on GitHub and include excellent documentation and concise tests. This is true even for what you&rsquo;d consider really minor pieces of code &ndash; it&rsquo;d probably help someone, and having open-source code allows potential employers (and potential clients) to see what you do, what your code looks like, and your process for creating it. More than anything else, GitHub has become my go-to tool for evaluating potential candidates for a position.</p>
 
-<p>I don&rsquo;t mean to scare you away if you intend only to work on closed software, but having code out in the wild lets people get to know you and how you work. It speaks directly to the three objectives I mentioned at the beginning of this piece. You need to establish your bona fides, and using programming personally &mdash; and releasing the result into the world &mdash; will prove you know what you&rsquo;re talking about</p>
+<p>I don&rsquo;t mean to scare you away if you intend only to work on closed software, but having code out in the wild lets people get to know you and how you work. It speaks directly to the three objectives I mentioned at the beginning of this piece. You need to establish your bona fides, and using programming personally &ndash; and releasing the result into the world &ndash; will prove you know what you&rsquo;re talking about</p>
 
 <h3>6. Use it professionally</h3>
 
-<p>At this point your code still probably isn&rsquo;t anywhere near professional-caliber. Guess what? That&rsquo;s fine! As long as you can still use it to do things &mdash; even if it takes you awhile, or the result is unpleasant, or there are a lot of &ldquo;gotchas&rdquo; for your poor users &mdash; you&rsquo;re already a programmer. If you have a job, start trying to work coding into it.</p>
+<p>At this point your code still probably isn&rsquo;t anywhere near professional-caliber. Guess what? That&rsquo;s fine! As long as you can still use it to do things &ndash; even if it takes you awhile, or the result is unpleasant, or there are a lot of &ldquo;gotchas&rdquo; for your poor users &ndash; you&rsquo;re already a programmer. If you have a job, start trying to work coding into it.</p>
 
 <p>When I was in college I had an internship where I was expected to go over huge CSV files by hand. It was a ridiculously unpleasant job&hellip; but a small amount of Ruby and a really ugly <a href="http://en.wikipedia.org/wiki/Regular_expression">regular expression</a> saved me an enormous amount of manual parsing and let me drill down to the problem spots immediately. When I gave the company my program, they in turn gave me a really stellar recommendation that started my career.</p>
 
-<p>Unfortunately, right out of college, all that recommendation landed me was a job doing tech support, but I managed to use my bad programming abilities there, too! The company I was doing support for had a terrible process for dealing with data files &mdash; really big ones, gigabytes large. We&rsquo;d go on-site, burn the files we needed to a DVD, take them back to the office, analyze them there to find out what was wrong, load the fixed files back onto another DVD, then go all the way back to the client.</p>
+<p>Unfortunately, right out of college, all that recommendation landed me was a job doing tech support, but I managed to use my bad programming abilities there, too! The company I was doing support for had a terrible process for dealing with data files &ndash; really big ones, gigabytes large. We&rsquo;d go on-site, burn the files we needed to a DVD, take them back to the office, analyze them there to find out what was wrong, load the fixed files back onto another DVD, then go all the way back to the client.</p>
 
 <p>I wasn&rsquo;t a great programmer: in fact, I wouldn&rsquo;t even say I was a particularly good one. But I made a little Rails site that accepted enormous file uploads, so we could just upload the file and someone at the home office would download it. It crashed all the time, it took an eternity to upload, and it had the jankiest login system you&rsquo;d ever seen. But it saved me and all my coworkers a trip back and forth to the office&hellip; and it looked great on my resume when I decided to switch jobs.</p>
 
 <h3>7. Turn it into your profession</h3>
 
-<p>As your skills wax, you&rsquo;ll likely want to start finding real, professional opportunities to exercise them. It might be time to start interviewing for a new job &mdash; or, at the very least, changing your existing role to officially incorporate more of your hard-won programming abilities.</p>
+<p>As your skills wax, you&rsquo;ll likely want to start finding real, professional opportunities to exercise them. It might be time to start interviewing for a new job &ndash; or, at the very least, changing your existing role to officially incorporate more of your hard-won programming abilities.</p>
 
 <p>Once you get to this point, the only way to improve more is to shift programming from a side-project to your full-time gig. Your resume will likely be fairly scant for an engineering position. This is okay. You aren&rsquo;t looking to be a senior systems architect (yet): most likely you&rsquo;ll get something at the bottom of the coding totem pole. But this is your first step into the real world of employable programming skills! Be proud that you&rsquo;ve made it this far.</p>
 
@@ -357,7 +631,7 @@
 
 <p>One of the unfortunate realities of the job market is you&rsquo;re much more likely to get a raise and better responsibilities by switching jobs. (<a href="http://www.forbes.com/sites/cameronkeng/2014/06/22/employees-that-stay-in-companies-longer-than-2-years-get-paid-50-less/">It&rsquo;s depressing but true.</a>) Once you&rsquo;ve put in your time as a beginner programmer, it&rsquo;s time to spread your wings and fly to a company that has more challenges, better opportunities, and hopefully higher pay.</p>
 
-<p>Briefly, I&rsquo;d like to mention that you&rsquo;ll probably experience some <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">imposter syndrome</a> as you interview around. Your new skills are likely to feel fairly unfinished, so doubting yourself as you look around &mdash; and wondering whether or not you can accomplish what prospective employers ask of you &mdash; is natural.</p>
+<p>Briefly, I&rsquo;d like to mention that you&rsquo;ll probably experience some <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">imposter syndrome</a> as you interview around. Your new skills are likely to feel fairly unfinished, so doubting yourself as you look around &ndash; and wondering whether or not you can accomplish what prospective employers ask of you &ndash; is natural.</p>
 
 <p>Here&rsquo;s a little life pro tip: almost everyone suffers from the belief that they aren&rsquo;t as competent as they are. A good attitude, great ability to learn, and accomplished programming skills will get you much further than you think. Don&rsquo;t be afraid to take a chance on yourself. The likelihood you&rsquo;ll fail is very tiny, and the probability you&rsquo;ll succeed and learn a lot makes such a small risk worth it.</p>
 
@@ -378,7 +652,7 @@
     <link href="http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code/"/>
     <updated>2014-06-15T00:47:57-05:00</updated>
     <id>http://joshsymonds.com/blog/2014/06/15/your-job-is-to-code</id>
-    <content type="html"><![CDATA[<p>I don&rsquo;t usually call out articles on Hacker News for being exceptionally silly &mdash; if I did I wouldn&rsquo;t have the time to write about anything else &mdash; but I saw one in particular tonight that bugged me, titled <a href="http://www.andresosinski.com/you-job-is-not-to-code.html">Your Job Is Not To Code</a>. It was filled with the sort of engineering platitudes that one can reliably expect from HN: you must be an engineering ambassador to your company from the strange and incomprehensible Codingverse. It&rsquo;s up to you to interpret and reinterpret the requirements of your project, hopefully better than its stakeholders, and tell them what they&rsquo;re doing wrong. Your technical skills must be married to the sort of interpersonal skills that would make ambassadors and diplomats blush.</p>
+    <content type="html"><![CDATA[<p>I don&rsquo;t usually call out articles on Hacker News for being exceptionally silly &ndash; if I did I wouldn&rsquo;t have the time to write about anything else &ndash; but I saw one in particular tonight that bugged me, titled <a href="http://www.andresosinski.com/you-job-is-not-to-code.html">Your Job Is Not To Code</a>. It was filled with the sort of engineering platitudes that one can reliably expect from HN: you must be an engineering ambassador to your company from the strange and incomprehensible Codingverse. It&rsquo;s up to you to interpret and reinterpret the requirements of your project, hopefully better than its stakeholders, and tell them what they&rsquo;re doing wrong. Your technical skills must be married to the sort of interpersonal skills that would make ambassadors and diplomats blush.</p>
 
 <p>This is all bunk.</p>
 
@@ -393,7 +667,7 @@
 
 <p>Of course we must communicate what we&rsquo;re doing to our bosses, our clients, and our process managers. But this doesn&rsquo;t make you a boss, a client, or a process manager. If they don&rsquo;t understand what you&rsquo;re doing, despite your communication, then that doesn&rsquo;t make you bad at your job. It makes them bad at theirs. This is a hard spot to be in, and while the solution might be to try to do their job for them, that doesn&rsquo;t change what your job is. (To reiterate: your job is to code.) If you&rsquo;ve taken their responsibilities on top of yours, that doesn&rsquo;t make you great. It means something has gone very wrong indeed.</p>
 
-<p>Coding is a form of communication. As you become better at coding, hopefully your communication skills will follow &mdash; and this allows you to better interact with others. And while there&rsquo;s nothing wrong with using new skills, don&rsquo;t become distracted by them. You have a talent, a knowledge, a skill that others in your organization lack. Your job is to employ that skill as efficaciously, as completely as possible. And that should be taking up 99% of your time in any given day.</p>
+<p>Coding is a form of communication. As you become better at coding, hopefully your communication skills will follow &ndash; and this allows you to better interact with others. And while there&rsquo;s nothing wrong with using new skills, don&rsquo;t become distracted by them. You have a talent, a knowledge, a skill that others in your organization lack. Your job is to employ that skill as efficaciously, as completely as possible. And that should be taking up 99% of your time in any given day.</p>
 
 <p>Leave the strategy to the generals and the garbage collecting to the janitors. Do what you do best, do what you love. That way lies success, self-actualization, and happiness. Become distracted and soon you will be a general or a janitor: there&rsquo;s nothing wrong with that, but their jobs aren&rsquo;t coding. And if you were hired to code, if you want to code, then your job is to code. It&rsquo;s as simple as that.</p>
 ]]></content>
@@ -404,7 +678,7 @@
     <link href="http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto/"/>
     <updated>2014-06-12T16:56:11-05:00</updated>
     <id>http://joshsymonds.com/blog/2014/06/12/shell-awesomeness-with-prezto</id>
-    <content type="html"><![CDATA[<p>As developers, we spend a lot of time in our shells: making them fast and responsive improves our productivity. I play around with a lot of development tools (as I mentioned in <a href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/">a previous post</a>) trying to find the best combination of intelligence, responsiveness, and fun. Recently I was investigating alternatives to <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, which is a wonderful set of Zsh packages but suffers from weird slowdowns and, unfortunately, requires a lot of configuration. I stumbled upon <a href="https://github.com/sorin-ionescu/prezto">prezto</a> and I love it &mdash; originally an optimized fork of oh-my-zsh, it&rsquo;s now its own project, and it is fast, beautiful, and leverages the full power of Zsh. It looks like this:</p>
+    <content type="html"><![CDATA[<p>As developers, we spend a lot of time in our shells: making them fast and responsive improves our productivity. I play around with a lot of development tools (as I mentioned in <a href="http://joshsymonds.com/blog/2014/01/22/supercharge-your-rails-development-environment/">a previous post</a>) trying to find the best combination of intelligence, responsiveness, and fun. Recently I was investigating alternatives to <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>, which is a wonderful set of Zsh packages but suffers from weird slowdowns and, unfortunately, requires a lot of configuration. I stumbled upon <a href="https://github.com/sorin-ionescu/prezto">prezto</a> and I love it &ndash; originally an optimized fork of oh-my-zsh, it&rsquo;s now its own project, and it is fast, beautiful, and leverages the full power of Zsh. It looks like this:</p>
 
 <p><img src="http://veratic.us/image/300y2o0a3t03/screenie.png" alt="Terminal" /></p>
 
@@ -711,7 +985,7 @@ prompt_josh_setup &quot;$@&quot;
     <id>http://joshsymonds.com/blog/2014/06/11/getting-started-with-aws-opsworks</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been creating a complicated OpsWorks server setup for a client, as I mentioned in <a href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">my last post</a>, and I&rsquo;ve been really enjoying the process. OpsWorks, while still a beta service, has a lot to recommend itself: it couples the best parts of chef to the power of the impressive AWS APIs. Using OpsWorks, it&rsquo;s easy to make processes that seem almost magical.</p>
 
-<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &mdash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
+<p>How magical? Well, imagine super-fast command line deploys, seamless cookbook updates, great chatbot and application integration, then marry all those things to AWS autoscaling via elastic load balancing. One use case for my client: <a href="https://travis-ci.org/">TravisCI</a> automatically creating servers, running remote acceptance tests on them, then destroying them afterwards &ndash; all while notifying chatrooms of its progress. Now that&rsquo;s assurance your code will work in production! Really, the sky&rsquo;s the limit here for awesome integrations.</p>
 
 <p>I&rsquo;ve learned a lot in the process of implementing this setup. If you&rsquo;re looking to give OpsWorks a go for your next project, here&rsquo;s some hints and tips to make get started on the right path.</p>
 
@@ -720,7 +994,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <h2>1. Setup vagrant to be compatible with OpsWorks</h2>
 
-<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &mdash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
+<p>You&rsquo;ll want to test all of your OpsWorks recipes locally &ndash; how else can you be sure they&rsquo;ll work remotely? <a href="http://www.vagrantup.com/">Vagrant</a> is the ideal tool for making this happen. You&rsquo;ll want to download the same AMI and the same version of chef that OpsWorks is using: ubuntu 12.04 and chef 11.10 respectively, for me. Here&rsquo;s how to do that in your <code>Vagrantfile</code>:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -752,7 +1026,7 @@ prompt_josh_setup &quot;$@&quot;
 <p>Just the default librarian-chef configuration works, with one exception: you&rsquo;ll want to strip <code>.git</code> directories from the checked-out sources to prevent OpsWorks from becoming confused. That&rsquo;s relatively easy to set up:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>librarian-chef config install.strip-dot-git 1 --local
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>librarian-chef config install.strip-dot-git <span class="m">1</span> --local
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -829,7 +1103,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <h2>3. Don&rsquo;t bother with OpsWorks&#8217; recipe syntax</h2>
 
-<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &mdash; or bring chef recipes from elsewhere to OpsWorks &mdash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
+<p>Though it&rsquo;s clever that OpsWorks has their own recipe syntax they&rsquo;d like you to use, my advice is: don&rsquo;t. If you ever want to use your chef recipes somewhere else &ndash; or bring chef recipes from elsewhere to OpsWorks &ndash; you&rsquo;ll thank yourself for just using the standard recipe format. So instead of this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1008,7 +1282,7 @@ prompt_josh_setup &quot;$@&quot;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &ndash; following it should correct any boot issues you experience on your AMI.</p>
 
 <h2>6. Stop all services</h2>
 
@@ -1064,10 +1338,10 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-bundle-vol -k /tmp/cert/pk-X509.pem <span class="se">\</span>
 </span><span class='line'>               -c /tmp/cert/cert-X509.pem <span class="se">\</span>
-</span><span class='line'>               -u 123456789012 <span class="se">\</span>
+</span><span class='line'>               -u <span class="m">123456789012</span> <span class="se">\</span>
 </span><span class='line'>               -r x86_64 <span class="se">\</span>
 </span><span class='line'>               -e /tmp/cert <span class="se">\</span>
-</span><span class='line'>               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> | tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
+</span><span class='line'>               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> <span class="p">|</span> tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1108,18 +1382,18 @@ prompt_josh_setup &quot;$@&quot;
     <link href="http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son/"/>
     <updated>2014-03-12T23:43:18-05:00</updated>
     <id>http://joshsymonds.com/blog/2014/03/12/interviewing-symonds-and-son</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &mdash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &ndash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
 
 <!-- more -->
 
 
 <h3>How did you start your business?</h3>
 
-<p>Rather accidentally, actually: I fell into it. I&rsquo;ve been a software developer for about a decade now, since I graduated college, and I&rsquo;ve always loved it &mdash; so much so that I couldn&rsquo;t put it down when I got home. I was always programming, either on personal projects or side gigs outside my day job. Eventually those gigs got bigger and bigger, and my friends and clients referred me to other people&hellip; for awhile, about two years ago, it almost felt like I was working a night job that was almost exactly the same as my day job. Then the startup where I was working full time ran into money problems and had to cut my hours pretty dramatically. I always intended to find another full time position, but I just got so busy with my client work that I didn&rsquo;t have the time: and that was the start of Symonds &amp; Son.</p>
+<p>Rather accidentally, actually: I fell into it. I&rsquo;ve been a software developer for about a decade now, since I graduated college, and I&rsquo;ve always loved it &ndash; so much so that I couldn&rsquo;t put it down when I got home. I was always programming, either on personal projects or side gigs outside my day job. Eventually those gigs got bigger and bigger, and my friends and clients referred me to other people&hellip; for awhile, about two years ago, it almost felt like I was working a night job that was almost exactly the same as my day job. Then the startup where I was working full time ran into money problems and had to cut my hours pretty dramatically. I always intended to find another full time position, but I just got so busy with my client work that I didn&rsquo;t have the time: and that was the start of Symonds &amp; Son.</p>
 
 <h3>What did your parents say when you said you wanted to start a consulting business?</h3>
 
-<p>&ldquo;No, don&rsquo;t!&rdquo; They hated the idea. I&rsquo;d mentioned it before &mdash; I don&rsquo;t like having a boss, and I&rsquo;d frequently wondered what it would be like to work for clients, rather than managers. But for my father, consulting has always been very boom-and-bust: there were times he was so busy he was hardly home, and then times he&rsquo;d be sitting around being unhappy. My parents told me to find a stable, full-time job at a big company like Apple, or even a smaller company where I wouldn&rsquo;t have to worry so much about the future. But I had an idea to make my own company and I wanted to do it, and when they saw they couldn&rsquo;t convince me otherwise they gave me advice on how to make it work&hellip; and eventually I managed to convince them to join me!</p>
+<p>&ldquo;No, don&rsquo;t!&rdquo; They hated the idea. I&rsquo;d mentioned it before &ndash; I don&rsquo;t like having a boss, and I&rsquo;d frequently wondered what it would be like to work for clients, rather than managers. But for my father, consulting has always been very boom-and-bust: there were times he was so busy he was hardly home, and then times he&rsquo;d be sitting around being unhappy. My parents told me to find a stable, full-time job at a big company like Apple, or even a smaller company where I wouldn&rsquo;t have to worry so much about the future. But I had an idea to make my own company and I wanted to do it, and when they saw they couldn&rsquo;t convince me otherwise they gave me advice on how to make it work&hellip; and eventually I managed to convince them to join me!</p>
 
 <h3>Who did you bring into the business first, your mom or dad?</h3>
 
@@ -1131,11 +1405,11 @@ prompt_josh_setup &quot;$@&quot;
 
 <h3>When did your mom join, and what is her role?</h3>
 
-<p>Mom started helping me out during the wedding, so about six months ago &mdash; she was our wedding planner. She organized speaking with florists, tasting food, talking with photographers&hellip; and quickly I found her help (personally and professionally) indispensable. She&rsquo;s my personal assistant and helps me keep focused on my business by taking care of invoicing and whatever else the company needs.</p>
+<p>Mom started helping me out during the wedding, so about six months ago &ndash; she was our wedding planner. She organized speaking with florists, tasting food, talking with photographers&hellip; and quickly I found her help (personally and professionally) indispensable. She&rsquo;s my personal assistant and helps me keep focused on my business by taking care of invoicing and whatever else the company needs.</p>
 
 <h3>Do you like owning your own business?</h3>
 
-<p>So much! It&rsquo;s really different than I thought it would be: I imagined myself programming day in and day out, but there&rsquo;s a lot of overhead involved. Running a business with employees and partners is like two jobs. In the first one, I&rsquo;m programming and making the product my clients want, and in the second, I&rsquo;m organizing, marketing, selling and negotiating. But I don&rsquo;t mind all the work&hellip; in fact, I love working with my family on a day-to-day basis. Even if Symonds &amp; Son isn&rsquo;t around in 10 years I&rsquo;ll have great memories of the amazing things we accomplished together &mdash; but I hope we&rsquo;re around even longer than that.</p>
+<p>So much! It&rsquo;s really different than I thought it would be: I imagined myself programming day in and day out, but there&rsquo;s a lot of overhead involved. Running a business with employees and partners is like two jobs. In the first one, I&rsquo;m programming and making the product my clients want, and in the second, I&rsquo;m organizing, marketing, selling and negotiating. But I don&rsquo;t mind all the work&hellip; in fact, I love working with my family on a day-to-day basis. Even if Symonds &amp; Son isn&rsquo;t around in 10 years I&rsquo;ll have great memories of the amazing things we accomplished together &ndash; but I hope we&rsquo;re around even longer than that.</p>
 
 <h3>How is your working relationship with your parents?</h3>
 
@@ -1155,7 +1429,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <h3>Des anyone in your family have a different personality, or personality traits that are different at work than when not working?</h3>
 
-<p>Our personalities are very different, though I touched on that in your last question. My mom and I have more similar dispositions, and I&rsquo;ve seen her handle my dad expertly for years. I know there&rsquo;s a lot of bluster, but it accomplishes a lot too. He&rsquo;s passionate and a really skilled negotiator: he&rsquo;s done some impressive stuff on our conference calls with the same righteous attitude that can get on my nerves. And I know I have that anger in me too &mdash; I&rsquo;ve definitely had moments where I feel like I&rsquo;ve had to channel my father to get my way. Few people can resist Steve Symonds head on.</p>
+<p>Our personalities are very different, though I touched on that in your last question. My mom and I have more similar dispositions, and I&rsquo;ve seen her handle my dad expertly for years. I know there&rsquo;s a lot of bluster, but it accomplishes a lot too. He&rsquo;s passionate and a really skilled negotiator: he&rsquo;s done some impressive stuff on our conference calls with the same righteous attitude that can get on my nerves. And I know I have that anger in me too &ndash; I&rsquo;ve definitely had moments where I feel like I&rsquo;ve had to channel my father to get my way. Few people can resist Steve Symonds head on.</p>
 
 <p>I also feel like I&rsquo;m much more placid at work than I am in my personal life. I try to be clear-headed and visionary in my role as president of the company, but outside the office I cut loose a lot more. I tend to act the same around my parents though, so maybe my &ldquo;president of the company&rdquo; personality and my &ldquo;son&rdquo; personality are actually pretty close.</p>
 
@@ -1201,21 +1475,21 @@ prompt_josh_setup &quot;$@&quot;
 <h2>Mac Apps</h2>
 
 <ul>
-<li><p><strong><a href="https://agilebits.com/onepassword/mac">1Password</a> ($50)</strong> Insanely expensive compared to most other software on this list, but also pretty non-negotiable. I have over 300 passwords stored in it &mdash; including six client logins to AWS, four to RackSpace, and untold multiples for my own servers: how am I supposed to keep all of that straight myself? And generate new ultra-secure passwords whenever I need? Well thankfully I don&rsquo;t have to. 1Password has bulletproof security and I&rsquo;m never concerned I&rsquo;ll lose, forget, or even care about any individual password ever again.</p></li>
+<li><p><strong><a href="https://agilebits.com/onepassword/mac">1Password</a> ($50)</strong> Insanely expensive compared to most other software on this list, but also pretty non-negotiable. I have over 300 passwords stored in it &ndash; including six client logins to AWS, four to RackSpace, and untold multiples for my own servers: how am I supposed to keep all of that straight myself? And generate new ultra-secure passwords whenever I need? Well thankfully I don&rsquo;t have to. 1Password has bulletproof security and I&rsquo;m never concerned I&rsquo;ll lose, forget, or even care about any individual password ever again.</p></li>
 <li><p><strong><a href="http://www.alfredapp.com/">Alfred</a> (Free to try, &pound;17 to buy)</strong> I use Alfred to open nearly everything on my computer. Not just apps! Alfred can open web pages, login automatically with 1Password integration, perform calculations, run one-off terminal commands, find and open files&hellip; Alfred has enormously simplified everything I do with my Mac. Definitely a huge time-saver.</p></li>
 <li><p><strong><a href="http://asepsis.binaryage.com/">Asepsis</a> (Free)</strong> So many important files on your comptuer are dotfiles, which are hidden by default on Macs. So you turn on viewing hidden files&hellip; and suddenly, everywhere you go, you see the dreaded <code>.DS_Store</code>. I hate seeing <code>.DS_Store</code> files. They appear in every directory, they appear on your desktop, they appear in your nightmares&hellip; well Asepsis gets rid of all of them. And it&rsquo;s free.</p></li>
 <li><p><strong><a href="http://www.macbartender.com/">Bartender</a> (Free to try, $15 to buy)</strong> Look at the upper-right of your Mac. Do you see the volume icon there? The AirPlay icon? Even worse, your own name? (What, are you worried you&rsquo;ll forget it?) Banish the clutter into Bartender and clean up your menu bar: you can hide all the icons you never (or rarely) use, and even configure them to display only when their app does something important.</p></li>
 <li><p><strong><a href="http://lightheadsw.com/caffeine/">Caffeine</a> (Free)</strong> Prevent your Mac from ever falling asleep. Helpful if you&rsquo;ve ever started a long-running task, left your computer for awhile, and returned to find it had stopped to take a nap.</p></li>
-<li><p><strong><a href="http://www.getcloudapp.com/">CloudApp</a> (Free, or $4.99 a month)</strong> CloudApp gives you drag-and-drop sharing of any file you&rsquo;d desire. I love having my drops available at a vanity URL (<a href="http://veratic.us">http://veratic.us</a>) &mdash; you&rsquo;d be surprised how many developers say how cool that is, and ask how they can get one of their own. If you don&rsquo;t want the URL then the free version should suit you just fine.</p></li>
+<li><p><strong><a href="http://www.getcloudapp.com/">CloudApp</a> (Free, or $4.99 a month)</strong> CloudApp gives you drag-and-drop sharing of any file you&rsquo;d desire. I love having my drops available at a vanity URL (<a href="http://veratic.us">http://veratic.us</a>) &ndash; you&rsquo;d be surprised how many developers say how cool that is, and ask how they can get one of their own. If you don&rsquo;t want the URL then the free version should suit you just fine.</p></li>
 <li><p><strong><a href="http://giantcomet.com/flint/mac/">Flint</a> (Free, then $14.99)</strong> I love Campfire and BaseCamp. Flint makes Campfire easy-to-use. Even better, it gives me a badged icon in my dock when people speak, and a growl notification when they mention my name.</p></li>
 <li><p><strong><a href="http://gistifyapp.com/">Gistify</a> ($1.99)</strong> Shameless self-promotion, but I honestly love the app I made for myself! I make gists all the time; gistify gives you drag-and-drop gisting of snippets or files, and allows you to create gists from your clipboard contents. Super convenient and super lightweight.</p></li>
 <li><p><strong><a href="http://growl.info/">Growl</a> (Free, or $3.99)</strong> The Apple Notification Center is pretty good&hellip; but Growl still seems to be the gold standard for notifications. One of the first pieces of software I install on a new computer. (That said, I have no idea what the $3.99 version does. Growl is one of the few pieces of software on this list I&rsquo;ve never bought.)</p></li>
-<li><p><strong><a href="http://hyperdock.bahoom.com/">HyperDock</a> (Free, or $9.95)</strong> Allows you to hover over your dock items and see a preview pane summarizing all of that app&rsquo;s open windows, a la Windows&#8217; default behavior when you hover over an app in the taskbar. Extremely helpful if you have a lot of files open simultaneously &mdash; for example, if you have lots of projects open at once in your text editor.</p></li>
-<li><p><strong><a href="http://www.iterm2.com/#/section/home">iTerm 2</a> (Free)</strong> The best terminal replacement ever &mdash; I don&rsquo;t know how I ever lived without, and once you start using it, you&rsquo;ll never be able to go back to the default Mac terminal. It has so many nice improvements I can&rsquo;t even list them all, and for the absurd price of &ldquo;free&rdquo; there&rsquo;s absolutely no reason not to use it.</p></li>
-<li><p><strong><a href="http://www.obdev.at/products/littlesnitch/index.html">Little Snitch</a> (Free to try, $34.95 to buy)</strong> Little Snitch is a really excellent software firewall. I&rsquo;m incredibly paranoid about network security, especially on my development machine. Little Snitch allows me to opt-out of connections I don&rsquo;t trust and really lock down my computer &mdash; not only in general, but on a network-by-network basis. As a bonus, it lets me see my network traffic so I get notified if DropBox suddenly decides to resync everything.</p></li>
+<li><p><strong><a href="http://hyperdock.bahoom.com/">HyperDock</a> (Free, or $9.95)</strong> Allows you to hover over your dock items and see a preview pane summarizing all of that app&rsquo;s open windows, a la Windows&#8217; default behavior when you hover over an app in the taskbar. Extremely helpful if you have a lot of files open simultaneously &ndash; for example, if you have lots of projects open at once in your text editor.</p></li>
+<li><p><strong><a href="http://www.iterm2.com/#/section/home">iTerm 2</a> (Free)</strong> The best terminal replacement ever &ndash; I don&rsquo;t know how I ever lived without, and once you start using it, you&rsquo;ll never be able to go back to the default Mac terminal. It has so many nice improvements I can&rsquo;t even list them all, and for the absurd price of &ldquo;free&rdquo; there&rsquo;s absolutely no reason not to use it.</p></li>
+<li><p><strong><a href="http://www.obdev.at/products/littlesnitch/index.html">Little Snitch</a> (Free to try, $34.95 to buy)</strong> Little Snitch is a really excellent software firewall. I&rsquo;m incredibly paranoid about network security, especially on my development machine. Little Snitch allows me to opt-out of connections I don&rsquo;t trust and really lock down my computer &ndash; not only in general, but on a network-by-network basis. As a bonus, it lets me see my network traffic so I get notified if DropBox suddenly decides to resync everything.</p></li>
 <li><p><strong><a href="https://www.monosnap.com/welcome">Monosnap</a> (Free, $4.99 to enable sharing)</strong> The best skitch replacement (since Evernote ruined it). Fast screen or window captures with built-in DropBox, CloudApp, and Evernote uploading for only $4.99. It&rsquo;ll record videos of your screen and even take selfies on your Mac&rsquo;s camera, if you&rsquo;re too lazy to grab your phone.</p></li>
-<li><p><strong><a href="http://www.sublimetext.com/3">Sublime Text 3</a> (Free, then $70(!))</strong> My favorite text editor (and I&rsquo;ve tried most of them). Expensive? Definitely. But you get what you pay for. ST3&rsquo;s best feature is its incredibly versatile package system &mdash; there&rsquo;s a package for pretty much everything, and as a bonus it supports most of TextMate&rsquo;s plugins as well. Despite its depth and power, it&rsquo;s still light-weight enough to start instantly and doesn&rsquo;t spend any time doing reindexing or otherwise chugging. ST3 is also cross-platform if you end up doing a bit of light programming on something other than your primarily development machine, which is useful for standardizing your editor everywhere.</p></li>
-<li><p><strong><a href="http://totalspaces.binaryage.com/">TotalSpaces</a> (Free to try, $18 to buy)</strong> I don&rsquo;t like Mac&rsquo;s default Spaces implementation &mdash; four desktops right next to each other means the furthest space could be two screens away, and the widgets view is totally worthless. TotalSpaces lets you stack desktops in a grid and move left, right, up, and down. Now every space is only one swipe away from any other space. As a bonus you can get rid of the widgets as well.</p></li>
+<li><p><strong><a href="http://www.sublimetext.com/3">Sublime Text 3</a> (Free, then $70(!))</strong> My favorite text editor (and I&rsquo;ve tried most of them). Expensive? Definitely. But you get what you pay for. ST3&rsquo;s best feature is its incredibly versatile package system &ndash; there&rsquo;s a package for pretty much everything, and as a bonus it supports most of TextMate&rsquo;s plugins as well. Despite its depth and power, it&rsquo;s still light-weight enough to start instantly and doesn&rsquo;t spend any time doing reindexing or otherwise chugging. ST3 is also cross-platform if you end up doing a bit of light programming on something other than your primarily development machine, which is useful for standardizing your editor everywhere.</p></li>
+<li><p><strong><a href="http://totalspaces.binaryage.com/">TotalSpaces</a> (Free to try, $18 to buy)</strong> I don&rsquo;t like Mac&rsquo;s default Spaces implementation &ndash; four desktops right next to each other means the furthest space could be two screens away, and the widgets view is totally worthless. TotalSpaces lets you stack desktops in a grid and move left, right, up, and down. Now every space is only one swipe away from any other space. As a bonus you can get rid of the widgets as well.</p></li>
 <li><p><strong><a href="http://tapbots.com/software/tweetbot/mac/">Tweetbot</a> ($19.99)</strong> Twitter is actually a valuable professional tool for me. It lets me keep on top of interesting news and developments in the tech world, contact authors of the software I use directly, and find lots of pictures of kittens. But leaving the #kittens aside, Tweetbot is the best app I&rsquo;ve used for twittering. It&rsquo;s fast, effective, and stays out of my way when I don&rsquo;t want it.</p></li>
 <li><p><strong><a href="http://www.uniboxapp.com/">Unibox</a> ($9.99)</strong> I like Unibox compared to Mail.app and Mail Pilot: it&rsquo;s speedy, it organizes mail effectively, and I feel like I have a bit more control of my inbox. That said I haven&rsquo;t yet run into the program that <em>completely</em> replaces Gmail in a browser for me&hellip; Unibox is as close as I&rsquo;ve come and I use it on a daily basis, but if I&rsquo;m searching for a specific piece of mail, I turn to gmail.</p></li>
 </ul>
@@ -1246,7 +1520,7 @@ prompt_josh_setup &quot;$@&quot;
 </ul>
 
 
-<p>I&rsquo;m sure there&rsquo;s a lot that I missed and some things I don&rsquo;t even know about. If I didn&rsquo;t include your favorite app, Sublime Text plugin, or Rails development tool let me know <a href="http://twitter.com/Veraticus">@Veraticus</a> &mdash; there&rsquo;s nothing I love more than taking a new app for a spin and even adopting it if it turns out to be amazing!</p>
+<p>I&rsquo;m sure there&rsquo;s a lot that I missed and some things I don&rsquo;t even know about. If I didn&rsquo;t include your favorite app, Sublime Text plugin, or Rails development tool let me know <a href="http://twitter.com/Veraticus">@Veraticus</a> &ndash; there&rsquo;s nothing I love more than taking a new app for a spin and even adopting it if it turns out to be amazing!</p>
 ]]></content>
   </entry>
   
@@ -1255,18 +1529,18 @@ prompt_josh_setup &quot;$@&quot;
     <link href="http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business/"/>
     <updated>2014-01-16T11:28:19-06:00</updated>
     <id>http://joshsymonds.com/blog/2014/01/16/programming-the-new-family-business</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &mdash; specifically, <strong>my</strong> successful consulting business &mdash; actually look like?</p>
+    <content type="html"><![CDATA[<p>In my <a href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/">previous post</a>, I told the story of how I accidentally fell into consulting and turned it into a successful business. But what does a successful consulting business &ndash; specifically, <strong>my</strong> successful consulting business &ndash; actually look like?</p>
 
 <p><a href="http://symondsandson.com">Symonds &amp; Son</a> isn&rsquo;t named to sound cute and hipstery. I&rsquo;m the son; I&rsquo;m in business with my father, and I recently hired my mother to be my assistant and bookkeeper. The company&rsquo;s name is intended to evoke images of traditional, reliable family businesses, where trust, excellence, and a reputation for quality products are their cornerstones. These companies, traditionally centered around carpentry and other hand-made professions, are my models for how to run Symonds &amp; Son. We are, if you&rsquo;ll forgive me using the phrase, a bespoke development shop, where our great output and superb relationship with our clients are our highest priorities.</p>
 
-<p>But building my profession into a company &mdash; and a company with my parents, no less &mdash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
+<p>But building my profession into a company &ndash; and a company with my parents, no less &ndash; hasn&rsquo;t been an easy road. There have been a lot of compromises we&rsquo;ve had to make to get this ship sailing straight. Here, I&rsquo;ll speak to how I made this new parent/child relationship work&hellip; and how I hope to continue making it work for years to come.</p>
 
 <!-- more -->
 
 
 <h2>Parents Are the Worst</h2>
 
-<p>Let me be perfectly honest here: I was not a model child. Quite the opposite, in fact &mdash; I was the picture of a rebellious teenager. I was surly, I hated authority, I refused to leave the basement and I would play computer games constantly in lieu of doing homework. My parents and I would have huge fights that would last for hours, typically centered around my grades, and I would go screeching off into the night (in their car, of course) to hang out with my friends at Dunkin Donuts and whine about the many injustices of life, parents, and school.</p>
+<p>Let me be perfectly honest here: I was not a model child. Quite the opposite, in fact &ndash; I was the picture of a rebellious teenager. I was surly, I hated authority, I refused to leave the basement and I would play computer games constantly in lieu of doing homework. My parents and I would have huge fights that would last for hours, typically centered around my grades, and I would go screeching off into the night (in their car, of course) to hang out with my friends at Dunkin Donuts and whine about the many injustices of life, parents, and school.</p>
 
 <p>(I was not a great student.)</p>
 
@@ -1274,7 +1548,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <h2>But Then So Are Children</h2>
 
-<p>My father, a successful consultant in his own right, always advised me never to consult. Every time I eyed doing hourly work, he told me to firmly refocus my sights on a full-time job. He&rsquo;d speak to the benefits, the retirement account, the possibilities for advancement big companies could offer &mdash; and, of course, I completely disregarded his advice. I found employment first with startups (not exactly bastions of job security or big 401ks) and then freelancing.</p>
+<p>My father, a successful consultant in his own right, always advised me never to consult. Every time I eyed doing hourly work, he told me to firmly refocus my sights on a full-time job. He&rsquo;d speak to the benefits, the retirement account, the possibilities for advancement big companies could offer &ndash; and, of course, I completely disregarded his advice. I found employment first with startups (not exactly bastions of job security or big 401ks) and then freelancing.</p>
 
 <p>So if you want to take one piece of advice from my post, it&rsquo;s this: if you want to go into business with your parents, ruthlessly ignore their recommendations at every turn!</p>
 
@@ -1282,17 +1556,17 @@ prompt_josh_setup &quot;$@&quot;
 
 <h2>Big Egos, Big Problems</h2>
 
-<p>Neither my father nor I are accustomed to knuckling under in arguments, and so our new business relationship has hardly been problem-free. We have some very different perspectives on the proper ways to interact with clients, communicate on a daily basis, and turn single contracts into recurring revenue. For example, I hate answering the phone during the day, as I&rsquo;m usually busy coding &mdash; but he can&rsquo;t stand getting directed to voicemail when he knows that I&rsquo;m around and just not picking up.</p>
+<p>Neither my father nor I are accustomed to knuckling under in arguments, and so our new business relationship has hardly been problem-free. We have some very different perspectives on the proper ways to interact with clients, communicate on a daily basis, and turn single contracts into recurring revenue. For example, I hate answering the phone during the day, as I&rsquo;m usually busy coding &ndash; but he can&rsquo;t stand getting directed to voicemail when he knows that I&rsquo;m around and just not picking up.</p>
 
 <p>Our solution for that particular problem is better communication and faster turnarounds. He knows he can get ahold of me if there&rsquo;s an emergency, and otherwise that I&rsquo;ll return his call as soon as possible&hellip; and in return, he texts me a lot more, which allows me to respond when I&rsquo;m available and in my own time.</p>
 
-<p>But definitely the most important lesson I&rsquo;ve learned is that my father is indeed an expert in what he does, and generally knows what he&rsquo;s doing &mdash; and that&rsquo;s the same lesson I try to impose on him when he starts stepping on my toes too much. It can be difficult to give him the reins during delicate business operations, but I actually find it helpful as well. Like most entrepreneurial people, I love being in control and feel most comfortable when I&rsquo;m managing as many of the aspects of any situation as I can. But other people are great at what they do too, and they can only prove it when given the chance to shine.</p>
+<p>But definitely the most important lesson I&rsquo;ve learned is that my father is indeed an expert in what he does, and generally knows what he&rsquo;s doing &ndash; and that&rsquo;s the same lesson I try to impose on him when he starts stepping on my toes too much. It can be difficult to give him the reins during delicate business operations, but I actually find it helpful as well. Like most entrepreneurial people, I love being in control and feel most comfortable when I&rsquo;m managing as many of the aspects of any situation as I can. But other people are great at what they do too, and they can only prove it when given the chance to shine.</p>
 
 <p>Or, more pithily, if I&rsquo;m to succeed personally, I have step back and let the people I trust succeed. Only if I allow it to happen can it happen.</p>
 
 <h2>Love, Trust, Respect, Nagging</h2>
 
-<p>As my business expanded, I found I had less and less time for simple business tasks &mdash; invoicing, talking to my accountant, setting up and managing a corporate bank account&hellip; My to-do list was growing longer and longer with absolutely no hope of me ever breaking free to accomplish any of it. After all, if I stopped coding then I stopped getting paid, and consulting is not exactly a business that lets one rest on their laurels.</p>
+<p>As my business expanded, I found I had less and less time for simple business tasks &ndash; invoicing, talking to my accountant, setting up and managing a corporate bank account&hellip; My to-do list was growing longer and longer with absolutely no hope of me ever breaking free to accomplish any of it. After all, if I stopped coding then I stopped getting paid, and consulting is not exactly a business that lets one rest on their laurels.</p>
 
 <p>I needed an assistant.</p>
 
@@ -1300,7 +1574,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>Growing up, I hated being nagged. But I realized what I needed was an incredibly prioritized, driven person to help me with the day-to-day operations of my business&hellip; and my mother had time to spare and thirty years of experience managing me and my time. As much as I hated to admit it, I needed her to really make Symonds &amp; Son a success.</p>
 
-<p>And so far it&rsquo;s been working out really well &mdash; almost scarily well. My mother is an efficient woman, and when I give her a list she turns it around in a timeframe I find just astounding. For my part, I&rsquo;ve learned to respect her gentle nagging: not only does she have my best interests at heart, but the best interests of our company. She&rsquo;s working on behalf of the company to make it more efficient. If I stood in the way of that, I would be a bad employer, and while I might not have been the best son in the entire world, I at least want to be a pretty good boss.</p>
+<p>And so far it&rsquo;s been working out really well &ndash; almost scarily well. My mother is an efficient woman, and when I give her a list she turns it around in a timeframe I find just astounding. For my part, I&rsquo;ve learned to respect her gentle nagging: not only does she have my best interests at heart, but the best interests of our company. She&rsquo;s working on behalf of the company to make it more efficient. If I stood in the way of that, I would be a bad employer, and while I might not have been the best son in the entire world, I at least want to be a pretty good boss.</p>
 
 <h2>Thankshannukah with the Symondses</h2>
 
@@ -1314,9 +1588,9 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>Of course, I would be disingenuous if I said I was never concerned. What if I had to have some sort of Serious Conversation&trade; with mom and dad about their performance, or salaries, or any of the other number of difficult conversations any company might have to have with its employees? Or, to get to the heart of the matter: could I really fire my own parents if I had to?</p>
 
-<p>I like to think it&rsquo;ll never come to that. Symonds &amp; Son is a family business, and we&rsquo;ll succeed (or fail) as a unit. If the worst comes and I&rsquo;m forced to close up shop, then it means unemployment for all of us &mdash; at least temporarily. It won&rsquo;t be the end of any of our careers. I&rsquo;ll land somewhere else doing Rails, most likely, and my father will pick up other clients, and my mom will find a non-profit. It&rsquo;ll be another chapter in our lives closed, but hopefully an overall positive one.</p>
+<p>I like to think it&rsquo;ll never come to that. Symonds &amp; Son is a family business, and we&rsquo;ll succeed (or fail) as a unit. If the worst comes and I&rsquo;m forced to close up shop, then it means unemployment for all of us &ndash; at least temporarily. It won&rsquo;t be the end of any of our careers. I&rsquo;ll land somewhere else doing Rails, most likely, and my father will pick up other clients, and my mom will find a non-profit. It&rsquo;ll be another chapter in our lives closed, but hopefully an overall positive one.</p>
 
-<p>Certainly working together as a family has been a challenging experience, but it&rsquo;s brought me closer to my parents in a way I wouldn&rsquo;t have imagined even a few years ago. I&rsquo;ve learned to respect them for their talents and abilities, rather than as caregivers with the patience to raise me and my sister. I&rsquo;m not saying this kind of business is for everyone &mdash; maybe it works only for us, and even then, who knows if it&rsquo;ll work forever? But in trying to model Symonds &amp; Son after traditional, family-run businesses, I&rsquo;ve found capable, competent employees right under my nose: and my clients seem to enjoy working with us, so we must be doing something right.</p>
+<p>Certainly working together as a family has been a challenging experience, but it&rsquo;s brought me closer to my parents in a way I wouldn&rsquo;t have imagined even a few years ago. I&rsquo;ve learned to respect them for their talents and abilities, rather than as caregivers with the patience to raise me and my sister. I&rsquo;m not saying this kind of business is for everyone &ndash; maybe it works only for us, and even then, who knows if it&rsquo;ll work forever? But in trying to model Symonds &amp; Son after traditional, family-run businesses, I&rsquo;ve found capable, competent employees right under my nose: and my clients seem to enjoy working with us, so we must be doing something right.</p>
 
 <p>And I would be remiss if I didn&rsquo;t include at least a little advertising here! If you&rsquo;re interested in seeing <a href="http://symondsandson.com">Symonds &amp; Son</a> work for you, we make amazing software products and scalable Rails solutions. <a href="mailto:josh@joshsymonds.com">Get in touch</a> and see what a family business can do for you. You might just be surprised at how efficient and effective the new family business can be.</p>
 ]]></content>
@@ -1327,24 +1601,24 @@ prompt_josh_setup &quot;$@&quot;
     <link href="http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit/"/>
     <updated>2014-01-14T13:13:58-06:00</updated>
     <id>http://joshsymonds.com/blog/2014/01/14/rails-consulting-for-fun-and-profit</id>
-    <content type="html"><![CDATA[<p>2013 was a great year for me specifically, and my web development shop (<a href="http://symondsandson.com">Symonds &amp; Son</a>) in general. Though I initially fell into consulting accidentally, I&rsquo;ve aggressively parlayed it into a successful business &mdash; and my only regret has not been doing so sooner! A lot of developers I know are on the fence about striking out on their own. I&rsquo;m going to lay out how 2013 changed me from a full-time employee to owner of my own business, and in doing so hopefully persuade a few people that the benefits to being in business for yourself far outweigh the risks.</p>
+    <content type="html"><![CDATA[<p>2013 was a great year for me specifically, and my web development shop (<a href="http://symondsandson.com">Symonds &amp; Son</a>) in general. Though I initially fell into consulting accidentally, I&rsquo;ve aggressively parlayed it into a successful business &ndash; and my only regret has not been doing so sooner! A lot of developers I know are on the fence about striking out on their own. I&rsquo;m going to lay out how 2013 changed me from a full-time employee to owner of my own business, and in doing so hopefully persuade a few people that the benefits to being in business for yourself far outweigh the risks.</p>
 
 <!-- more -->
 
 
 <h2>Becoming a Mercenary</h2>
 
-<p>At the start of 2013, I was a salaried employee working at a startup. The rate was fine, but I spent a lot of time working &mdash; long hours in the evening to make aggressive sprints, and many meetings during the day to discuss development priorities and investor relations. I wasn&rsquo;t happy, but it was a job, and I was satisfied with it.</p>
+<p>At the start of 2013, I was a salaried employee working at a startup. The rate was fine, but I spent a lot of time working &ndash; long hours in the evening to make aggressive sprints, and many meetings during the day to discuss development priorities and investor relations. I wasn&rsquo;t happy, but it was a job, and I was satisfied with it.</p>
 
 <p>A few months into my tenure, I was offered a salary adjustment to help make my company&rsquo;s bottom-line more attractive. Instead of taking it, I proposed an alternative arrangement: I would become a consultant at a rate very similar to my old hourly and I&rsquo;d work part-time. After some negotiation, a deal was struck, and I was officially a free agent.</p>
 
-<p>But I wasn&rsquo;t happy &mdash; indeed, quite the opposite. I spent weeks beforehand freaking out. I had the extra hours available to make up my cut income, but I&rsquo;d need clients to actually pay me for that time. Otherwise I&rsquo;d need to find another salaried position, and fast, since I didn&rsquo;t have much in the way of savings. Disaster was looming, and I spent sleepless nights trying to figure out how I&rsquo;d find a client, how I&rsquo;d convince them to actually pay me, and, if that failed, how I&rsquo;d explain a gap on my resume to future potential employers.</p>
+<p>But I wasn&rsquo;t happy &ndash; indeed, quite the opposite. I spent weeks beforehand freaking out. I had the extra hours available to make up my cut income, but I&rsquo;d need clients to actually pay me for that time. Otherwise I&rsquo;d need to find another salaried position, and fast, since I didn&rsquo;t have much in the way of savings. Disaster was looming, and I spent sleepless nights trying to figure out how I&rsquo;d find a client, how I&rsquo;d convince them to actually pay me, and, if that failed, how I&rsquo;d explain a gap on my resume to future potential employers.</p>
 
 <p>Yet almost immediately upon taking the plunge, an old client wanted me to do new work for them. They recommended me to another company, who told one of their clients about me, and very shortly after I became part-time, I was full-time working for my clients. It took me almost all of 2013 to understand what had happened.</p>
 
 <h2>Charge Them and They&rsquo;ll Thank You</h2>
 
-<p>In case you didn&rsquo;t know, Rails developers &mdash; specifically, good Rails developers with experience in modern tools, an interest in improving themselves, and an aggressive talent for development &mdash; are extremely hard to find. In fact, finding developers who are capable of programming in their chosen language <strong>at all</strong> is a challenge.</p>
+<p>In case you didn&rsquo;t know, Rails developers &ndash; specifically, good Rails developers with experience in modern tools, an interest in improving themselves, and an aggressive talent for development &ndash; are extremely hard to find. In fact, finding developers who are capable of programming in their chosen language <strong>at all</strong> is a challenge.</p>
 
 <p>But why accept a generalized statement when I can give you a specific example? I&rsquo;m presently working with a client to vet Rails engineers. The rate they&rsquo;re willing to pay is really quite good, yet the candidates their recruiter finds are just terrible. This might be a topic for a separate post, but of the dozen people I&rsquo;ve interviewed:</p>
 
@@ -1356,7 +1630,7 @@ prompt_josh_setup &quot;$@&quot;
 </ul>
 
 
-<p>Yet the recruiter says these people are snatched up all the time, at a rate of roughly $100 an hour. I honestly have absolutely no idea how this happens. I&rsquo;m not exaggerating even a little bit when I say I believe that none of these people can code at all &mdash; they have no GitHub profiles, no code samples, absolutely nothing to their names.</p>
+<p>Yet the recruiter says these people are snatched up all the time, at a rate of roughly $100 an hour. I honestly have absolutely no idea how this happens. I&rsquo;m not exaggerating even a little bit when I say I believe that none of these people can code at all &ndash; they have no GitHub profiles, no code samples, absolutely nothing to their names.</p>
 
 <p>(Incidentally, can you do better than these idiot candidates? <a href="mailto:josh@joshsymonds.com">Let me know, I have a pile of money with your name on it.</a>)</p>
 
@@ -1368,7 +1642,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>I think a lot of it has to do with the startup culture in San Francisco presently. Weirdly, I think it has the effect of keeping engineer salaries artificially lowered.</p>
 
-<p>Our industry is dominated by talk of the tech bubble: all the press is about acquisitions, huge seed funding rounds, and successful entrepreneurs&#8217; new projects. But the amount of money in Silicon Valley is really quite limited. There are enormous industries out there that need skilled programmers but lack the sex appeal of a startup or coverage in TechCrunch &mdash; yet they have applications in Rails and backend infrastructure needs too.</p>
+<p>Our industry is dominated by talk of the tech bubble: all the press is about acquisitions, huge seed funding rounds, and successful entrepreneurs&#8217; new projects. But the amount of money in Silicon Valley is really quite limited. There are enormous industries out there that need skilled programmers but lack the sex appeal of a startup or coverage in TechCrunch &ndash; yet they have applications in Rails and backend infrastructure needs too.</p>
 
 <p>And they also have way, way more money. Most of my clients are not extremely large businesses in their fields, but the amount of capital they have dwarfs that of even established startups. And they actually have business models that have worked for them for many years, so I worry less about revenue stream issues (or, heaven forbid, them folding overnight).</p>
 
@@ -1380,7 +1654,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <ol>
 <li><p>I nickled-and-dimed a client on change requests, alienating that client and making myself appear less professional. Said client did not have a whole lot of money, and while the initial contract amount was commensurately very low, she really didn&rsquo;t appreciate me charging additional for some very minor changes. I should have just sucked it up and done the work, leaving both of us with warm fuzzes in the end, even if I took a slight loss on the contract. Most of my clients hear about me from other satisfied clients, and I would have been better served by her loving me than making a little more money.</p></li>
-<li><p>For pricing my services, I need to start high and work my way down. I generally start client conversations on my hourly rate at what I would consider a reasonable ultimate number, and then allow myself to be driven down from there &mdash; generally because the client wants a long-term contract and expects to save on my hourly based on the length of the engagement.</p></li>
+<li><p>For pricing my services, I need to start high and work my way down. I generally start client conversations on my hourly rate at what I would consider a reasonable ultimate number, and then allow myself to be driven down from there &ndash; generally because the client wants a long-term contract and expects to save on my hourly based on the length of the engagement.</p></li>
 <li><p>More projects, less hourly. When starting as a consultant, I was really selling only my hours. Now Symonds &amp; Son is a business in its own right, and I&rsquo;ve hired designers and developers to help with my workload. Working with other talented individuals makes much more sense on a project basis, where I can package their (and my) hours together.</p></li>
 </ol>
 
@@ -1389,13 +1663,13 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>&ldquo;Shut up already Josh, I think this is a great idea and want to become a consultant too! What&rsquo;s next?&rdquo;</p>
 
-<p>Make sure you have a good track record and established public credentials. Verify your friends (and your ex-employers) will vouch for the quality of your code and the quality of you as an individual. Go to meetups, write blog posts, have open-sourced code on GitHub &mdash; the more stuff you have on record, the better. Your clients will want to know everything about you they can before they even meet you.</p>
+<p>Make sure you have a good track record and established public credentials. Verify your friends (and your ex-employers) will vouch for the quality of your code and the quality of you as an individual. Go to meetups, write blog posts, have open-sourced code on GitHub &ndash; the more stuff you have on record, the better. Your clients will want to know everything about you they can before they even meet you.</p>
 
 <p>Have a backup plan in case everything goes wrong. Mine was &ldquo;find another full-time Rails job,&rdquo; something that I&rsquo;ve never traditionally had a problem finding. At least think about a safety net so that taking the plunge is less scary.</p>
 
 <p>And consider if you really want to be a mercenary. Many talented coders I know work for peanuts, but they do so for non-profits, amazing startups, and benefit corporations. They don&rsquo;t care that they&rsquo;re not taking home tons of money; they are making a difference in the world, which matters more to them than any paycheck ever could.</p>
 
-<p>But if the idea of consulting appeals to you, then I encourage you to take the plunge. As engineers, our services are as in-demand as ever; if you are a competent engineer, you can turn your skills from a salary into a solution, and companies pay much more handsomely for the latter. And if you try to fly and fail, you have a good chance of landing at another job anyway &mdash; so really, the risk is pretty minimal. And if you take off and soar away, let me know: I always need exciting new companies to work on big contracts with!</p>
+<p>But if the idea of consulting appeals to you, then I encourage you to take the plunge. As engineers, our services are as in-demand as ever; if you are a competent engineer, you can turn your skills from a salary into a solution, and companies pay much more handsomely for the latter. And if you try to fly and fail, you have a good chance of landing at another job anyway &ndash; so really, the risk is pretty minimal. And if you take off and soar away, let me know: I always need exciting new companies to work on big contracts with!</p>
 ]]></content>
   </entry>
   
@@ -1404,7 +1678,7 @@ prompt_josh_setup &quot;$@&quot;
     <link href="http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles/"/>
     <updated>2013-12-26T10:31:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/12/26/cryptolalia-for-creating-cicada-3301-ciphertext-puzzles</id>
-    <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &mdash; well, for some unknown goal &mdash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
+    <content type="html"><![CDATA[<p>After reading yet another article on <a href="http://en.wikipedia.org/wiki/Cicada_3301">Cicada 3301</a> on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for &ndash; well, for some unknown goal &ndash; apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn&rsquo;t was a good way to generate all the sorts of codes that Cicada 3301 employed.</p>
 
 <p>So I decided to make it.</p>
 
@@ -1414,12 +1688,12 @@ prompt_josh_setup &quot;$@&quot;
 <p><a href="https://github.com/Veraticus/cryptolalia">cryptolalia</a> is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:</p>
 
 <ul>
-<li><em>atbash inversion</em> &ndash; an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
-<li><em>Beale homophonic substitution</em> &ndash; for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
-<li><em>Caesar</em> &ndash; the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
-<li><em>Pollux</em> &ndash; translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
-<li><em>PNG Steganography</em> &ndash; encode your plaintext in an image, either in its comments or least-significant bits.</li>
-<li><em>Vigenere</em> &ndash; a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
+<li><em>atbash inversion</em> - an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.</li>
+<li><em>Beale homophonic substitution</em> - for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.</li>
+<li><em>Caesar</em> - the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.</li>
+<li><em>Pollux</em> - translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.</li>
+<li><em>PNG Steganography</em> - encode your plaintext in an image, either in its comments or least-significant bits.</li>
+<li><em>Vigenere</em> - a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.</li>
 </ul>
 
 
@@ -1441,7 +1715,7 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;secrets are fun&#39;</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
@@ -1456,7 +1730,7 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">encode!</span> <span class="c1"># &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
@@ -1471,7 +1745,7 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">plaintext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/sample.png&quot;</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
@@ -1488,7 +1762,7 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">steg</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Steganography</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;rainbow.png&#39;</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">encoded_in</span> <span class="o">=</span> <span class="ss">:lsb</span>
 </span><span class='line'><span class="n">steg</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># A very very long string, starting with: &quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
@@ -1501,7 +1775,7 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">beale</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Beale</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;test/fixtures/Declaration\ of\ Independence.txt&quot;</span>
 </span><span class='line'><span class="n">beale</span><span class="o">.</span><span class="n">decode!</span> <span class="c1"># &quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
@@ -1516,7 +1790,7 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="ss">Cryptolalia</span><span class="p">:</span><span class="ss">:Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pollux</span> <span class="o">=</span> <span class="no">Cryptolalia</span><span class="o">::</span><span class="no">Cipher</span><span class="o">::</span><span class="no">Pollux</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">ciphertext</span> <span class="o">=</span> <span class="s2">&quot;ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai&quot;</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dot</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="o">]</span>
 </span><span class='line'><span class="n">pollux</span><span class="o">.</span><span class="n">dash</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="o">]</span>
@@ -1532,13 +1806,13 @@ prompt_josh_setup &quot;$@&quot;
     <link href="http://joshsymonds.com/blog/2013/11/14/dont-code-defensively/"/>
     <updated>2013-11-14T10:30:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/11/14/dont-code-defensively</id>
-    <content type="html"><![CDATA[<p>As an engineer, we&rsquo;re responsible for creating things that people care about deeply. Whether you&rsquo;re programming something as important as a car&rsquo;s operating system or as silly as an iPhone game, our code touches lives. It&rsquo;s no wonder, then, that the people who interact with our products feel strongly about them &mdash; and possibly about us, as well.</p>
+    <content type="html"><![CDATA[<p>As an engineer, we&rsquo;re responsible for creating things that people care about deeply. Whether you&rsquo;re programming something as important as a car&rsquo;s operating system or as silly as an iPhone game, our code touches lives. It&rsquo;s no wonder, then, that the people who interact with our products feel strongly about them &ndash; and possibly about us, as well.</p>
 
 <p>This can sometimes be a good thing. It&rsquo;s always touching to receive a heartfelt letter of thanks and admiration from a customer. But much more commonly, you&rsquo;ll hear complaints, demands, and anger.</p>
 
-<p>Under a deluge like that, it&rsquo;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &mdash; if you&rsquo;re willing to take credit for the good things you&rsquo;ve done, you have to &ldquo;take credit&rdquo; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&rsquo;s problems, but to shirk responsibility.</p>
+<p>Under a deluge like that, it&rsquo;s easy to become disillusioned and bitter. I see it all the time: programmers who hide in their shells at the slightest provocation. They make excuses, shift blame, and refuse to own their actions. I think this attitude is ultimately cowardly &ndash; if you&rsquo;re willing to take credit for the good things you&rsquo;ve done, you have to &ldquo;take credit&rdquo; for the bad stuff too. And cowardice of this sort contributes to making bad code, since your goal is no longer to to solve your organization&rsquo;s problems, but to shirk responsibility.</p>
 
-<p>That&rsquo;s what I call coding defensively &mdash; an entirely separate subject from <a href="http://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. Coding defensively mires you in your codebase. It&rsquo;s hard to go forward because you don&rsquo;t want more responsibility, and you can&rsquo;t go back because it would be admitting error. And it&rsquo;s a self-reinforcing cycle: once you start becoming defensive, it&rsquo;s difficult to stop.</p>
+<p>That&rsquo;s what I call coding defensively &ndash; an entirely separate subject from <a href="http://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. Coding defensively mires you in your codebase. It&rsquo;s hard to go forward because you don&rsquo;t want more responsibility, and you can&rsquo;t go back because it would be admitting error. And it&rsquo;s a self-reinforcing cycle: once you start becoming defensive, it&rsquo;s difficult to stop.</p>
 
 <p>I was a defensive coder too. I struggled to own the results of my actions: I would refuse to discuss solutions in a sensible, level-headed way. It took me a long time to change my approach, and as part of doing so I wrote a list of maxims summarizing how I wanted to think and act. When I feel myself slipping I go over them to refresh my resolve. I&rsquo;m publishing them here in the hope that they&rsquo;ll help someone else as much as they&rsquo;ve helped me.</p>
 
@@ -1547,11 +1821,11 @@ prompt_josh_setup &quot;$@&quot;
 
 <h2>No one gets it right all the time</h2>
 
-<p>First, you have to realize that people &mdash; even you &mdash; make mistakes. It&rsquo;s not productive to pretend that it didn&rsquo;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&rsquo;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
+<p>First, you have to realize that people &ndash; even you &ndash; make mistakes. It&rsquo;s not productive to pretend that it didn&rsquo;t happen or that someone else is at fault: if you know in your heart that the responsibility lies with you, then don&rsquo;t try to shift blame. It was your mistake, and part of being a human is making mistakes, so own that error with all your heart!</p>
 
 <p>I found that achnowledging my fault and being accepting of it removed a lot of the impetus to be defensive. I no longer felt as ashamed of what I&rsquo;d done or that I had to spend time and energy making excuses. The &ldquo;excuse&rdquo; is that mistakes happen: what matters now isn&rsquo;t that the mistake occurred, but how you&rsquo;ll go about addressing it.</p>
 
-<p>Please don&rsquo;t get me wrong &mdash; I&rsquo;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&rsquo;ll still happen, even if you&rsquo;re very good. Since you can&rsquo;t change whether or not you&rsquo;ll make mistakes, you may as well change your attitude to them.</p>
+<p>Please don&rsquo;t get me wrong &ndash; I&rsquo;m not saying you should be making mistakes left and right flippantly. Avoid them if you can, through proactive testing, code reviews, and sensible QA. But they&rsquo;ll still happen, even if you&rsquo;re very good. Since you can&rsquo;t change whether or not you&rsquo;ll make mistakes, you may as well change your attitude to them.</p>
 
 <h2>Be friendly</h2>
 
@@ -1569,9 +1843,9 @@ prompt_josh_setup &quot;$@&quot;
 
 <p><img src="http://f.cl.ly/items/2y3x25163d0L0J1A0s14/Image%202013.11.14%209%3A38%3A06%20AM.jpeg" alt="Always Be Solving" /></p>
 
-<p>Putting your existing solutions on a pedestal isn&rsquo;t productive. There&rsquo;s no inherent value to what you have other than that it works &mdash; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
+<p>Putting your existing solutions on a pedestal isn&rsquo;t productive. There&rsquo;s no inherent value to what you have other than that it works &ndash; and sometimes, not even that! Hand-in-hand with this, concentrating only on the potential downsides of new technology blinds you to potentially tremendous upsides.</p>
 
-<p>Dismissing solutions out of hand &mdash; particularly if you don&rsquo;t understand them or it seems like they&rsquo;d be difficult to implement &mdash; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&rsquo;t even know.</p>
+<p>Dismissing solutions out of hand &ndash; particularly if you don&rsquo;t understand them or it seems like they&rsquo;d be difficult to implement &ndash; is an easy, natural reaction. But what your stakeholders are searching for might exist outside your comfort zone. It might involve using a piece of software with which you have little experience, or, in the worst case, might be implemented in a programming language you don&rsquo;t even know.</p>
 
 <p>If it&rsquo;s still more or less perfect despite those flaws, then you have to go for it. Your responsibility is to do what&rsquo;s right, not what&rsquo;s easy.</p>
 
@@ -1583,7 +1857,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>It can be helpful to remind yourself of the good things you&rsquo;ve done too, and that, in the balance, the good outweighs the bad. Doing so gives you the courage to hold your head high, and gives you the self-confidence to tackle your problems head on, instead of hiding from them.</p>
 
-<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &mdash; and the attitude you have towards action &mdash; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&rsquo;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&rsquo;re coding for them, not coding defensively.</p>
+<p>And that willingness to embrace reality is what prevents defensive coding. In the end, your willingness to act &ndash; and the attitude you have towards action &ndash; can mean more to people than what you do. By trying to be a proactive, positive force of good, you&rsquo;re telling the people who care about your code that you care about it as well. More than anything else, that will garner their respect and admiration and lead them to believe you&rsquo;re coding for them, not coding defensively.</p>
 ]]></content>
   </entry>
   
@@ -1592,9 +1866,9 @@ prompt_josh_setup &quot;$@&quot;
     <link href="http://joshsymonds.com/blog/2013/11/03/what-makes-a-good-programmer-good/"/>
     <updated>2013-11-03T13:06:00-06:00</updated>
     <id>http://joshsymonds.com/blog/2013/11/03/what-makes-a-good-programmer-good</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve worked with a lot of programmers over the years &mdash; some of them super amazing, and some distinctly lackluster. As I&rsquo;ve had the pleasure of working with some very skilled individuals recently, I spent some time thinking about what I admire in them. What makes a good programmer so good, and a bad programmer so bad? Or, to mangle English a little bit, what makes a good programmer good?</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve worked with a lot of programmers over the years &ndash; some of them super amazing, and some distinctly lackluster. As I&rsquo;ve had the pleasure of working with some very skilled individuals recently, I spent some time thinking about what I admire in them. What makes a good programmer so good, and a bad programmer so bad? Or, to mangle English a little bit, what makes a good programmer good?</p>
 
-<p>Based on my experiences, being a great programmer has nothing to do with age, education, or how much money you make. It&rsquo;s all in how you act and, more deeply, how you think. I&rsquo;ve noticed a consistent set of habits in the programmers I admire. More than knowledge of their chosen language, deep understanding of data structures and algorithms, or even more than years of on-the-job experience &mdash; the way they communicate, the way they conduct themselves, and the way they approach programming speak volumes as to their amazing level of skill.</p>
+<p>Based on my experiences, being a great programmer has nothing to do with age, education, or how much money you make. It&rsquo;s all in how you act and, more deeply, how you think. I&rsquo;ve noticed a consistent set of habits in the programmers I admire. More than knowledge of their chosen language, deep understanding of data structures and algorithms, or even more than years of on-the-job experience &ndash; the way they communicate, the way they conduct themselves, and the way they approach programming speak volumes as to their amazing level of skill.</p>
 
 <p>Certainly there&rsquo;s more to being a good programmer than anyone can enumerate, and I wouldn&rsquo;t judge any programmer solely based on the presence (or lack) of these practices. But I do know wisdom when I see it, and when I see a programmer expressing these traits, I think, &ldquo;This person really knows what they&rsquo;re doing.&rdquo;</p>
 
@@ -1605,13 +1879,13 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>Or &ldquo;measure twice, cut once.&rdquo; Or &ldquo;Google it.&rdquo;</p>
 
-<p>Whatever you call it, most programming problems you&rsquo;re likely to encounter have been solved in some form already &mdash; Ecclesiastes had it right in observing there was nothing new under the sun. In the form of libraries on GitHub, blog posts on the Internet, or just getting in touch with experienced individuals, good programmers know to do the research before they try to solve a problem.</p>
+<p>Whatever you call it, most programming problems you&rsquo;re likely to encounter have been solved in some form already &ndash; Ecclesiastes had it right in observing there was nothing new under the sun. In the form of libraries on GitHub, blog posts on the Internet, or just getting in touch with experienced individuals, good programmers know to do the research before they try to solve a problem.</p>
 
 <p>I&rsquo;ve seen even great programmers rush to solutions: but the worst programmers I&rsquo;ve worked with never consult others, and as a result do huge amounts of duplicate work or tackle issues in precisely the wrong way. And unfortunately, they end up paying for their mistakes later.</p>
 
 <h2>They read error messages (and act on them)</h2>
 
-<p>This includes desymbolicating stack traces. Yes, it&rsquo;s ugly and unfortunate &mdash; but if you&rsquo;re not willing to do it how are you going to know what&rsquo;s wrong? The most effective programmers I know aren&rsquo;t afraid to dig deep into problems. The least effective see there was an error but don&rsquo;t even bother reading the error message. (This sounds ridiculous but you&rsquo;d be surprised how frequently I run into it.)</p>
+<p>This includes desymbolicating stack traces. Yes, it&rsquo;s ugly and unfortunate &ndash; but if you&rsquo;re not willing to do it how are you going to know what&rsquo;s wrong? The most effective programmers I know aren&rsquo;t afraid to dig deep into problems. The least effective see there was an error but don&rsquo;t even bother reading the error message. (This sounds ridiculous but you&rsquo;d be surprised how frequently I run into it.)</p>
 
 <p>To take this a step further, great programmers see a problem and hunger to solve it. Reading error messages are for them just the beginning: they&rsquo;re anxious to dive deep into the issue that it represents and figure out what&rsquo;s going wrong. They&rsquo;re not interested in passing responsibility, they&rsquo;re interested in finding a solution. The buck really does stop with them.</p>
 
@@ -1619,7 +1893,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>Documentation, tests, people: these things lie. Not intentionally, but if you want to know exactly how something works, then you must view the source yourself.</p>
 
-<p>Don&rsquo;t be afraid if it&rsquo;s not a language you&rsquo;re super familiar with &mdash; if you&rsquo;re primarily a Ruby programmer and you suspect there&rsquo;s an error in one of Ruby&rsquo;s C libraries, go crack it open and have a look. Yes, you might not get it. But who knows? You just might, and you stand a way better chance than if you didn&rsquo;t try at all!</p>
+<p>Don&rsquo;t be afraid if it&rsquo;s not a language you&rsquo;re super familiar with &ndash; if you&rsquo;re primarily a Ruby programmer and you suspect there&rsquo;s an error in one of Ruby&rsquo;s C libraries, go crack it open and have a look. Yes, you might not get it. But who knows? You just might, and you stand a way better chance than if you didn&rsquo;t try at all!</p>
 
 <p>If you&rsquo;re in a closed-source environment then this becomes a lot harder, unfortunately, but the principle still applies. Poor programmers have little interest in viewing source, and as a result problems flummox them much longer than those who are willing to do some research.</p>
 
@@ -1627,7 +1901,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>Good programmers are driven to act. There&rsquo;s a compulsion in them that can be difficult to control: they&rsquo;re implementing a solution as soon as they identify a problem or see a new feature request, sometimes too early and sometimes too aggressively. But their instinctive response to a problem is to tackle it head-on.</p>
 
-<p>This can be troublesome at times &mdash; but their enthusiasm is a crucial part of being good at what they do. While some might stonewall or wait for the problem to go away on its own, good programmers start solving.</p>
+<p>This can be troublesome at times &ndash; but their enthusiasm is a crucial part of being good at what they do. While some might stonewall or wait for the problem to go away on its own, good programmers start solving.</p>
 
 <p>To put it more simply (and, perhaps, too obviously): if you see someone excitedly grabbing problems and acting on them, chances are you have a good programmer on your hands.</p>
 
@@ -1635,11 +1909,11 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>This is mostly a bad programmer trait: they tend to bounce from artificial crisis to artificial crisis, never really understanding one before they move to the next. They&rsquo;ll assign blame to the wrong parts of their program and then spend hours debugging something that works perfectly well. They let their emotions get the better of them, trusting gut feelings rather than careful, explicit analysis.</p>
 
-<p>If you hurry through a problem &mdash; or even view each problem as a world-shattering catastrophe &mdash; you&rsquo;re more likely to make errors or not address the underlying issues. Great programmers take the time to understand what&rsquo;s going wrong, even when there really is a catastrophe: but more than that, they treat regular problems as issues to be solved. Thus they solve more of them more accurately, and do so without raising the tension level of your organization.</p>
+<p>If you hurry through a problem &ndash; or even view each problem as a world-shattering catastrophe &ndash; you&rsquo;re more likely to make errors or not address the underlying issues. Great programmers take the time to understand what&rsquo;s going wrong, even when there really is a catastrophe: but more than that, they treat regular problems as issues to be solved. Thus they solve more of them more accurately, and do so without raising the tension level of your organization.</p>
 
 <h2>They communicate well</h2>
 
-<p>Ultimately, programming is a form of communication. Being able to succinctly and eloquently express your thoughts is as crucial in writing code as it is in writing prose &mdash; and I&rsquo;ve always found that those who can write a pithy email, elegant status report, or even just an effective memo will also be better programmers than those who cannot.</p>
+<p>Ultimately, programming is a form of communication. Being able to succinctly and eloquently express your thoughts is as crucial in writing code as it is in writing prose &ndash; and I&rsquo;ve always found that those who can write a pithy email, elegant status report, or even just an effective memo will also be better programmers than those who cannot.</p>
 
 <p>This applies to code in addition to English. It&rsquo;s certainly possible to make a one-liner filled with parenthesis, brackets, and single-letter functions: but if no one understands it, what&rsquo;s the point? Good programmers take the time to communicate their ideas properly in whatever medium they&rsquo;re using.</p>
 
@@ -1647,7 +1921,7 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>I think this might be the most important aspect of a good programmer (and perhaps the part of this list most generally applicable to fields other than computer science).</p>
 
-<p>If you truly care about what you&rsquo;re doing &mdash; if it&rsquo;s not just a job, but a hobby, an interest, even a fascination &mdash; then you have a major advantage over anyone else in your field. Great programmers are always programming. Their peers will clock out at eight hours a day: not out their job, but of their field in general. They don&rsquo;t have programming side projects or much interest in contributing back to the community. They&rsquo;re not constantly trying neat new methods and crazy programming languages just to see how they work.</p>
+<p>If you truly care about what you&rsquo;re doing &ndash; if it&rsquo;s not just a job, but a hobby, an interest, even a fascination &ndash; then you have a major advantage over anyone else in your field. Great programmers are always programming. Their peers will clock out at eight hours a day: not out their job, but of their field in general. They don&rsquo;t have programming side projects or much interest in contributing back to the community. They&rsquo;re not constantly trying neat new methods and crazy programming languages just to see how they work.</p>
 
 <p>When I see a programmer who&rsquo;s doing their own hobby projects on the weekends, who&rsquo;s involved in the creation of the tools that they use every day, who&rsquo;s fascinated by the new and the interesting: that&rsquo;s when I really know I&rsquo;m looking at an amazing person. Ultimately great programmers view their profession not just as a means to make money, but as a means to make a difference. I think that&rsquo;s what makes the best programmers who they are. Coding, to them, is a way of shaping the world. And that&rsquo;s what I truly respect and admire.</p>
 ]]></content>
@@ -1696,7 +1970,7 @@ prompt_josh_setup &quot;$@&quot;
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;apn_connection&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
 </span><span class='line'>    <span class="no">APNConnection</span><span class="o">.</span><span class="n">new</span>
@@ -1709,7 +1983,7 @@ prompt_josh_setup &quot;$@&quot;
 </span><span class='line'>      <span class="n">tokens</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">recipient_ids</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span><span class="o">|</span><span class="n">u</span><span class="o">|</span> <span class="n">u</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:token</span><span class="p">)}</span><span class="o">.</span><span class="n">flatten</span>
 </span><span class='line'>
 </span><span class='line'>      <span class="n">tokens</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">token</span><span class="o">|</span>
-</span><span class='line'>        <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">notification</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
 </span><span class='line'>        <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
 </span><span class='line'>        <span class="n">notification</span><span class="o">.</span><span class="n">sound</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
 </span><span class='line'>        <span class="n">notification</span><span class="o">.</span><span class="n">custom_data</span> <span class="o">=</span> <span class="n">custom_data</span>
@@ -1776,17 +2050,17 @@ prompt_josh_setup &quot;$@&quot;
 </span><span class='line'>  <span class="k">def</span> <span class="nf">setup</span>
 </span><span class='line'>    <span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
 </span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/keys/production_push.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>      <span class="o">]</span>
 </span><span class='line'>    <span class="k">else</span>
 </span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/keys/development_push.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>      <span class="o">]</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="vi">@connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@connection</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@connection</span><span class="o">.</span><span class="n">open</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
@@ -1811,7 +2085,7 @@ prompt_josh_setup &quot;$@&quot;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The main difference here is that the <code>write</code> method will raise an error if the connection has become closed &mdash; this happens most frequently when you write a bad device token into the stream, which causes the APN service to disconnect you. Frustratingly the closure is detected on the request <em>following</em> the bad request, meaning that a perfectly good request encounters an error for no particularly good reason. The retry code here will attempt to reopen the connection to Apple five times and resend the message, until eventually it gives up.</p>
+<p>The main difference here is that the <code>write</code> method will raise an error if the connection has become closed &ndash; this happens most frequently when you write a bad device token into the stream, which causes the APN service to disconnect you. Frustratingly the closure is detected on the request <em>following</em> the bad request, meaning that a perfectly good request encounters an error for no particularly good reason. The retry code here will attempt to reopen the connection to Apple five times and resend the message, until eventually it gives up.</p>
 
 <p>Using this method I have a robust, failure-resistant push notification service in production that I (and my customers) are very pleased with indeed.</p>
 ]]></content>
@@ -1824,7 +2098,7 @@ prompt_josh_setup &quot;$@&quot;
     <id>http://joshsymonds.com/blog/2013/10/14/helper-methods-in-sprinkle</id>
     <content type="html"><![CDATA[<p>Recently I&rsquo;ve been using <a href="https://github.com/sprinkle-tool/sprinkle">sprinkle</a> a lot in a large client project. Sprinkle is server provisioning software, akin to <a href="http://www.opscode.com/chef/">Chef</a> except much lighter. It&rsquo;s most directly akin to <a href="https://github.com/rubber/rubber">rubber</a>, but rubber&rsquo;s biggest advantage is its pre-built recipes: it&rsquo;s a little finicky to sensibly extend, and those only work well on EC2. Sprinkle is built for extension, customizability, and platform agnosticism, but comes with no recipes at all by default. Tradeoffs!</p>
 
-<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &mdash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
+<p>Sprinkle (and rubber) are very different from most other server provisioning software I&rsquo;ve used &ndash; on the one hand, by leveraging Capistrano for server communication (or SSH or Vlad if you prefer), it remains extremely light and focused on just provisioning. But on the other, it inherits most of Capistrano&rsquo;s downsides too: primary among them is that it&rsquo;s easy to repeat yourself if you&rsquo;re not careful. So I wanted to post a quick tip for other people using sprinkle on how to DRY it up just a little bit.</p>
 
 <!-- more -->
 
@@ -1924,19 +2198,19 @@ prompt_josh_setup &quot;$@&quot;
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># sprinkle/config/helpers.rb</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">class</span> <span class="nc">Sprinkle</span><span class="o">::</span><span class="no">Policy</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Sprinkle</span><span class="o">::</span><span class="no">Helpers</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle::Package</span>
 </span><span class='line'>  <span class="k">class</span> <span class="nc">Package</span>
-</span><span class='line'>    <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="no">Sprinkle</span><span class="o">::</span><span class="no">Helpers</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">module</span> <span class="nn">Sprinkle</span>
 </span><span class='line'>  <span class="k">class</span> <span class="nc">Verify</span>
-</span><span class='line'>    <span class="kp">include</span> <span class="ss">Sprinkle</span><span class="p">:</span><span class="ss">:Helpers</span>
+</span><span class='line'>    <span class="kp">include</span> <span class="no">Sprinkle</span><span class="o">::</span><span class="no">Helpers</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -1975,14 +2249,14 @@ prompt_josh_setup &quot;$@&quot;
 
 <p>The issues Laurent prioritized have done much to restore my confidence in using RubyMotion for production applications (which I think is a great framework anyway, memory issues aside). Before starting new client work in it, I&rsquo;m personally waiting a release or two longer to make sure that the fixes are indicative of a future pattern of prioritizing stability and memory management over exciting new hotness&hellip; Exciting new hotness is definitely great and probably lots of fun to make, but those of us making money on RubyMotion care more for platform stability than nifty new features. Or, at least, I do.</p>
 
-<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &mdash; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&rsquo;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
+<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &ndash; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&rsquo;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
 
 <blockquote>Every time I heard the phrase &#8220;well-known workaround&#8221; I interpret it as &#8220;tribal knowledge.&#8221;</blockquote>
 
 
 <p>And I think that applied very well to the workarounds available for the memory management issues. If you knew these issues existed and how to circumvent them, you were fine: but if you came into the framework with no foreknowledge and just coded regular Ruby, you were in for a nasty surprise. For RubyMotion to really attract the kind of success it deserves, surprises like that can&rsquo;t exist. Either you should be able to code Ruby as you would in MRI, or the differences in RubyMotion syntax as compared to regular Ruby syntax must be made as clear as possible.</p>
 
-<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &ldquo;we take performance and crashes very seriously&rdquo; &mdash; a much-appreciated statement indeed.</p>
+<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &ldquo;we take performance and crashes very seriously&rdquo; &ndash; a much-appreciated statement indeed.</p>
 
 <p>So is RubyMotion worth buying now? In my opinion, yes, very much. It&rsquo;s much faster to build iOS apps in RubyMotion than Objective-C, so if you want to get a rapid prototype out or just don&rsquo;t want to learn C and Objective-C, RubyMotion is a great investment. It&rsquo;s also a great way to get acclimated with the iOS frameworks in a language that&rsquo;s a lot kinder and gentler than Objective-C. And while I don&rsquo;t feel confident saying &ldquo;this is now production-solid&rdquo; yet, I&rsquo;m watching the project very closely and it&rsquo;s definitely moving rapidly in the right direction.</p>
 
@@ -2020,17 +2294,17 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>14</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
 </span><span class='line'>  <span class="o">[</span>
-</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>  <span class="o">]</span>
 </span><span class='line'><span class="k">else</span>
 </span><span class='line'>  <span class="o">[</span>
-</span><span class='line'>    <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>    <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>  <span class="o">]</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'><span class="n">connection</span><span class="o">.</span><span class="n">open</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -2080,22 +2354,22 @@ prompt_josh_setup &quot;$@&quot;
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">NotifierWorker</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="no">APN_POOL</span> <span class="o">=</span> <span class="no">ConnectionPool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:timeout</span> <span class="o">=&gt;</span> <span class="mi">300</span><span class="p">)</span> <span class="k">do</span>
 </span><span class='line'>    <span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
 </span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/production_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>      <span class="o">]</span>
 </span><span class='line'>    <span class="k">else</span>
 </span><span class='line'>      <span class="o">[</span>
-</span><span class='line'>        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+</span><span class='line'>        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
 </span><span class='line'>        <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/development_key.pem&quot;</span><span class="p">)</span>
 </span><span class='line'>      <span class="o">]</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">connection</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 </span><span class='line'>    <span class="n">connection</span><span class="o">.</span><span class="n">open</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">connection</span>
@@ -2103,7 +2377,7 @@ prompt_josh_setup &quot;$@&quot;
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
 </span><span class='line'>    <span class="no">APN_POOL</span><span class="o">.</span><span class="n">with</span> <span class="k">do</span> <span class="o">|</span><span class="n">connection</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">notification</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Notification</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">device</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
 </span><span class='line'>      <span class="n">notification</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="n">message</span>
 </span><span class='line'>      <span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">notification</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
 </span><span class='line'>    <span class="k">end</span>
@@ -2112,78 +2386,6 @@ prompt_josh_setup &quot;$@&quot;
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Why I'm Not Using RubyMotion in Production]]></title>
-    <link href="http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production/"/>
-    <updated>2013-06-26T12:11:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/06/26/why-im-not-using-rubymotion-in-production</id>
-    <content type="html"><![CDATA[<blockquote><p><strong>Based on recent bugfixes and refinements by the RubyMotion team, I&rsquo;ve posted <a href="http://joshsymonds.com/blog/2013/08/07/rubymotion-update-one-month-later/">an update to this blog post</a>. Check it out after reading this article.</strong></p></blockquote>
-
-<p>I&rsquo;m a big proponent of RubyMotion &mdash; a year and a month ago, I wrote an article titled &ldquo;<a href="http://joshsymonds.com/blog/2012/05/04/why-rubymotion-is-better-than-objective-c/">Why RubyMotion is Better Than Objective-C</a>&rdquo; and despite its divisiveness I still stand behind the points I made. Recently I&rsquo;ve been doing a lot of OSX and iOS coding, coming out with a <a href="http://gistifyapp.com">Mac app</a> and working on a new iPhone app for a client. For both projects, though I initially evaluated RubyMotion, I ended up settling on using Objective-C. Given that my blog post is frequently cited as a reason to adopt RubyMotion, after more than a year of its use, I wanted to weigh in on why I believe it isn&rsquo;t an appropriate choice for production applications.</p>
-
-<!-- more -->
-
-
-<p>Before I begin, I&rsquo;d like to say that I still use RubyMotion frequently and have made production (and prototype) applications built in it. I still love it, have renewed my RubyMotion license, and will do so for the foreseeable future. I believe it is a more productive option for coding than Objective-C. But it has a number of critical issues, and I feel compelled to say that it is an inappropriate choice for those looking for a platform to produce, distribute, and develop iPhone or Mac apps intended for broad release.</p>
-
-<h2>RubyMotion&rsquo;s ARC-equivalent is buggy</h2>
-
-<p>This is the main problem with RubyMotion, but it disguises a host of smaller issues with the RubyMotion project and community that&rsquo;s grown up around it.</p>
-
-<p>RubyMotion, for those who don&rsquo;t know, uses its own analog to Apple&rsquo;s automatic reference counting to obviate the need for manual retention and release of objects. It usually works great. But unfortunately it sometimes prematurely releases objects (or possibly fails to retain them?), leading to hard-to-diagnose memory access errors. Most tragically, these errors occur randomly from a user&rsquo;s perspective &mdash; sometimes the code will succeed (since the memory being referenced still contains the object the OS is expecting, despite being released) while other times it will fail (when the memory contains other data).</p>
-
-<p>This happens most frequently when using blocks and is easily reproducible with a very simple test case:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Test</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">test</span>
-</span><span class='line'>    <span class="n">foo</span> <span class="o">=</span> <span class="mi">42</span>
-</span><span class='line'>    <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="n">foo</span> <span class="o">+</span> <span class="mi">123</span> <span class="p">}</span> <span class="c1"># The local variable foo is released when the function ends</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="no">Test</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">call</span> <span class="c1"># Memory access error -- crashes sometimes, not all the time</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This example is straight from the RubyMotion bug tracker, where this issue is designated <a href="http://hipbyte.myjetbrains.com/youtrack/issue/RM-3">RM-3</a>. Despite being discovered four months ago, the problem has yet to be fixed. In the interim, instead, OSX support was revealed to great fanfare &mdash; and this same issue occurs on the new platform. I&rsquo;m as excited as the next guy for cool new features, but production applications are experiencing this error, and while it must be incredibly difficult to fix, a fix would be very welcome indeed.</p>
-
-<p>Of course, there&rsquo;s a workaround. Instance variables are retained by the class, so changing <code>foo</code> above to <code>@foo</code> will correct the crashing error &mdash; sometimes. I&rsquo;ve used instance variables and have still experienced crashes in blocks and I&rsquo;m frankly not sure if it&rsquo;s due to this error or something else entirely.</p>
-
-<p>And that&rsquo;s really the core issue: it&rsquo;s difficult to determine which memory access errors are due to RM-3, which are the result of some other RubyMotion retain/release error, and which are caused by you screwing something up.</p>
-
-<h2>Why is this a problem?</h2>
-
-<p>Aside from the severity of this issue &mdash; randomly crashing code and memory access errors are, in my mind, emergencies to be corrected as soon as humanly possible &mdash; the way that the bug has been handled, both by the community and the RubyMotion team, is very concerning.</p>
-
-<p>The RubyMotion team is very small. Making a garbage collector that&rsquo;s as stable and performant as Objective-C&rsquo;s ARC (developed over years by many smart programmers) is a tall task indeed for a tiny group of people, regardless of their obvious brilliance. But more concerning than the time it&rsquo;s taken to fix this error is the lack of communication and visibility regarding it. There&rsquo;s been little said to the community about the severity of this issue, when a fix is expected, or how to properly diagnose and repair the problem until a release patches it.</p>
-
-<p>As developers, we use tools like RubyMotion not just for hobby projects, but to create real products that are used daily. We must be able to expect that critical flaws in our toolchains will be fixed promptly &mdash; otherwise it&rsquo;s irresponsible of us to create our applications using them. And this isn&rsquo;t the only old bug that hasn&rsquo;t been discussed in awhile: the bug tracker is littered with issues of varying severity that are not scheduled for fixing and have no recent comments from the RubyMotion team.</p>
-
-<p>The RubyMotion community, meanwhile, is an amazing place full of overwhelmingly positive people&hellip; which I think works against us when trying to raise concerns with the framework itself. I really like RubyMotion and I think many in the community feel the same. Voicing serious problems is much less exciting for us than discussing new features or building awesome wrappers, so those who do point them out are largely ignored or dismissed as naysayers.</p>
-
-<p>Happily, this seems to be changing.</p>
-
-<h2>Why post about this now?</h2>
-
-<p>Because of <a href="https://groups.google.com/forum/#!topic/rubymotion/x6-9c__IHH0">this email thread</a> in the RubyMotion group. Summary: lots of people are experiencing memory-related issues that are a result of RM-3 or possibly some other difficult-to-identify problem with RubyMotion&rsquo;s memory management, and they&rsquo;re coming forward and talking about them. One post in the thread states:</p>
-
-<blockquote>I&#8217;m experiencing these memory-related types of crashes (like SIGSEGV and SIGBUS) with about 10-20% of users in production.</blockquote>
-
-
-<p>That&rsquo;s a truly startling number if accurate. I haven&rsquo;t bundled Crittercism (or another app performance analyzer) in production, but I&rsquo;ve heard from people using my applications who have experienced random crashes that I can only assume are memory-related. And mine is admittedly an incredibly simple app &mdash; apps with more views and complicated networking code seem like they&rsquo;d be leaving themselves open to even more potential memory-related errors. (Generally, it seems like the more asynchronous stuff you do, the more likely your code is to hit a released object.)</p>
-
-<p>While I&rsquo;ve personally experienced these RubyMotion memory problems myself, I never thought they were part of a bigger problem: I don&rsquo;t regularly go to meetups or watch the bug tracker, and was startled to discover that the issues were endemic to the community. People have been trying to raise visibility of these problems but so far there&rsquo;s been little said about them outside of the issue tracker and a few isolated posts in the community group.</p>
-
-<p>While I think RubyMotion is a great project and I love using it, it&rsquo;s inarguable that these memory-management issues are serious, fundamental flaws in the framework. They prevent the creation of stable, reliable code through no fault of the developer&rsquo;s, leading to random crashes and poor user experience. Thus I cannot recommend anyone use RubyMotion for applications that users will touch until these issues are sorted out &mdash; which I hope they will be, and very soon.</p>
 ]]></content>
   </entry>
   

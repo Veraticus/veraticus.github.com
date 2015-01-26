@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Seamless POST Logins with Rack Middleware - Hi, I'm Josh Symonds</title>
+  <title>Seamless POST Logins with Rack Middleware - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to &hellip;">
+  <meta name="description" content="It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &ndash; for example, maybe you&rsquo;re trying to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true">Oct 10<span>th</span>, 2012</time>
+<time datetime="2012-10-10T18:47:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 6  minutes</span>
 
         
@@ -120,7 +121,7 @@
   </header>
 
 
-  <div class="entry-content"><p>It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &mdash; for example, maybe you&rsquo;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &ldquo;post&rdquo; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&rsquo;s not logged in presses the button? In most Rails applications, they&rsquo;d be logged in, redirected back to the page they were referred from, and they&rsquo;d have to click the thumbs-up again.</p>
+  <div class="entry-content"><p>It&rsquo;s not uncommon to have login-required forms accessible to users who aren&rsquo;t logged in &ndash; for example, maybe you&rsquo;re trying to encourage someone to start writing some content without having to bother logging in first. Of course, they have to log in before they can post, but what happens when they push that big &ldquo;post&rdquo; button? Or take another example: you have a button to thumbs-up some content. Only logged-in users should be able to thumbs-up any content, but you always want to display the button. But then what happens when someone who&rsquo;s not logged in presses the button? In most Rails applications, they&rsquo;d be logged in, redirected back to the page they were referred from, and they&rsquo;d have to click the thumbs-up again.</p>
 
 <p>That sort of sucks. They already clicked it once. Why can&rsquo;t we remember that?</p>
 
@@ -148,7 +149,7 @@
 </span><span class='line'>  <span class="kp">private</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">redirect_to_login</span>
-</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">login_path</span><span class="p">(</span><span class="n">return_to</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">return_post_params</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="n">return_method</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">login_path</span><span class="p">(</span><span class="ss">return_to</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="ss">return_post_params</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="ss">return_method</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -175,7 +176,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Since I&rsquo;m using OmniAuth and Facebook, this will result in the user being logged in. In the login callback &mdash; I chose sessions#create &mdash; we need to do some special detection and redirection.</p>
+<p>Since I&rsquo;m using OmniAuth and Facebook, this will result in the user being logged in. In the login callback &ndash; I chose sessions#create &ndash; we need to do some special detection and redirection.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -259,7 +260,7 @@
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">req</span> <span class="o">=</span> <span class="ss">Rack</span><span class="p">:</span><span class="ss">:Request</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">req</span> <span class="o">=</span> <span class="no">Rack</span><span class="o">::</span><span class="no">Request</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/redirect_back&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_method</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span> <span class="o">&amp;&amp;</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_to</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
@@ -267,7 +268,7 @@
 </span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;CONTENT_TYPE&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span>
 </span><span class='line'>
 </span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_method</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s2">&quot;rack.input&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIO</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">Rack</span><span class="p">:</span><span class="ss">:Utils</span><span class="o">.</span><span class="n">build_nested_query</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">))</span>
+</span><span class='line'>      <span class="n">env</span><span class="o">[</span><span class="s2">&quot;rack.input&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIO</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Rack</span><span class="o">::</span><span class="no">Utils</span><span class="o">.</span><span class="n">build_nested_query</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">[</span><span class="ss">:return_post_params</span><span class="o">]</span><span class="p">))</span>
 </span><span class='line'>      <span class="n">req</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:return_post_params</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span>
 </span><span class='line'>        <span class="n">req</span><span class="o">.</span><span class="n">params</span><span class="o">[</span><span class="n">param</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span>
 </span><span class='line'>      <span class="k">end</span>
@@ -287,7 +288,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The whole idea of this middleware is to reformat the path and add in all the appropriate params from the session variables, and then call the Rails application with it. Rails believes that &mdash; despite the URL being <code>redirect_back</code> &mdash; we&rsquo;ve made a correctly-formatted post and processes it correctly, sending another redirect to the client when it&rsquo;s completed.</p>
+<p>The whole idea of this middleware is to reformat the path and add in all the appropriate params from the session variables, and then call the Rails application with it. Rails believes that &ndash; despite the URL being <code>redirect_back</code> &ndash; we&rsquo;ve made a correctly-formatted post and processes it correctly, sending another redirect to the client when it&rsquo;s completed.</p>
 
 <h2>Post-Controller Setup</h2>
 
@@ -310,7 +311,7 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
 </span><span class='line'>  <span class="n">protect_from_forgery</span>
 </span><span class='line'>  <span class="n">skip_before_filter</span> <span class="ss">:verify_authenticity_token</span><span class="p">,</span> <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="ss">:redirected?</span>
 </span><span class='line'>
@@ -328,7 +329,7 @@
 
 <p>As a bonus we also clean out the session a little bit so that <code>/redirect_back</code> won&rsquo;t work again.</p>
 
-<p>And that&rsquo;s that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output &mdash; all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can&rsquo;t be beat.</p>
+<p>And that&rsquo;s that! Now a user can initiate a POST and be automatically logged in, see the POST completed, and be redirected to the output &ndash; all with just one little button press. Though the Rails 2 method of doing this was substantially easier, I think this middleware method has an elegance to it. And the usability certainly can&rsquo;t be beat.</p>
 </div>
   <div class='attribution'>
   <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>

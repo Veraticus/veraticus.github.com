@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Dynamic Error Pages, Corrected - Hi, I'm Josh Symonds</title>
+  <title>Dynamic Error Pages, Corrected - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+<time datetime="2012-08-13T14:32:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 3  minutes</span>
 
         
@@ -133,7 +134,7 @@
 
 <p><code>rescue_from(ActionController::RoutingError) { render :text =&gt; 'This is a custom 404.' }</code></p>
 
-<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController &mdash; the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
+<p>Now in Rails 3, because routing is done as middleware (ActionDispatch), it seems that the ActionController::RoutingError that gets thrown by ActionDispatch no longer can be caught from ApplicationController &ndash; the error is already thrown and ActionDispatch renders /templates/rescues/routing_error.erb before the controller can rescue_from the error.</p></blockquote>
 
 <p>Essentially, <code>rescue_from ActionController::RoutingError</code> is never rescued because it&rsquo;s raised in Rack, not the application itself.</p>
 
@@ -150,10 +151,10 @@
 <span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">unless</span> <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">consider_all_requests_local</span>
 </span><span class='line'>  <span class="n">rescue_from</span> <span class="no">Exception</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_500</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:RoutingError</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:UnknownController</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">AbstractController</span><span class="p">:</span><span class="ss">:ActionNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span> <span class="c1"># To prevent Rails 3.2.8 deprecation warnings</span>
-</span><span class='line'>  <span class="n">rescue_from</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:RecordNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">AbstractController</span><span class="o">::</span><span class="no">ActionNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span> <span class="c1"># To prevent Rails 3.2.8 deprecation warnings</span>
+</span><span class='line'>  <span class="n">rescue_from</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="ss">:render_404</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -224,7 +225,7 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">MyApplication</span>
-</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Application</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </span><span class='line'>

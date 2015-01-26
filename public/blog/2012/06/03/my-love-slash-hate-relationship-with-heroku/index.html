@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Love/Hate Relationship with Heroku - Hi, I'm Josh Symonds</title>
+  <title>My Love/Hate Relationship with Heroku - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-06-03T22:43:00-05:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
+<time datetime="2012-06-03T22:43:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 4  minutes</span>
 
         
@@ -120,7 +121,7 @@
   </header>
 
 
-  <div class="entry-content"><p>There&rsquo;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&rsquo;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&rsquo;t decide whether or not I like the web&rsquo;s premier platform-as-a-service or not. Every now and again I&rsquo;ll gnash my teeth in frustration over it, and then other times I&rsquo;ll sigh dreamily and think of all the wonderful things Heroku has done for me &mdash; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&rsquo;s right for you.</p>
+  <div class="entry-content"><p>There&rsquo;s been <a href="http://justcramer.com/2012/06/02/the-cloud-is-not-for-you/">some</a> <a href="http://rdegges.com/heroku-isnt-for-idiots">discussion</a> recently about the relative merits of <a href="http://heroku.com">Heroku</a>. I&rsquo;ve managed applications both inside Heroku and outside it, and personally speaking, I just can&rsquo;t decide whether or not I like the web&rsquo;s premier platform-as-a-service or not. Every now and again I&rsquo;ll gnash my teeth in frustration over it, and then other times I&rsquo;ll sigh dreamily and think of all the wonderful things Heroku has done for me &ndash; and indeed, for the world. So I jotted down a quick list of pros and cons that I think everyone considering Heroku should know; then, at least, you can make an informed decision as to whether or not it&rsquo;s right for you.</p>
 
 <!-- more -->
 
@@ -129,7 +130,7 @@
 
 <h3>Lets Me Sleep At Night</h3>
 
-<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons &mdash; an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
+<p>I get paged from Hipstaweb servers every now and again at odd hours, and usually for horribly arcane reasons &ndash; an AWS instance became unresponsive, or a logfile that I thought was getting truncated suddenly spiralled out of control, or all the other small things that make systems administration so interesting. Heroku has never, ever had a stability problem like that. I imagine that sometimes stuff like that happens, but when it does Heroku just kills the dead or dying dyno behind the scenes and starts up a new one.</p>
 
 <p>Heroku&rsquo;s Postgres instances also do automatic backups and have always been available whenever I&rsquo;ve needed them. Heroku doesn&rsquo;t pay their infrastructure team enough, in my opinion; I&rsquo;ve seriously never had a single outage of any sort on their service, and I have this comforting belief that if something did go horribly awry, I would be in good hands.</p>
 
@@ -143,29 +144,29 @@
 
 <h3>Flexible</h3>
 
-<p>Heroku&rsquo;s Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons &mdash; essentially anything at all, as long as you&rsquo;re willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
+<p>Heroku&rsquo;s Cedar stack is really cool. Not only can you run whatever server software you want on it (I use unicorn), but you can spin up Resque workers, rapnd daemons &ndash; essentially anything at all, as long as you&rsquo;re willing to pay for the dyno it runs on. The flexibility Heroku provides allows you to run nearly anything in their managed environment, and then scale it however you find appropriate. With correct separation of concerns, this provides you an enormous amount of control over how your application is deployed and how you can respond to traffic influxes.</p>
 
 <h2>Cons</h2>
 
 <h3>Expensive</h3>
 
-<p>There&rsquo;s really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it&rsquo;s not just Heroku &mdash; especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost&hellip; and a big one, at that.</p>
+<p>There&rsquo;s really no getting around this one. SmashingBoxes wrote <a href="http://smashingboxes.com/heroku-vs-amazon-web-services/">a cost comparison</a> between Heroku and AWS, and their conclusion is inescapable: Heroku is costly. And it&rsquo;s not just Heroku &ndash; especially once you start throwing in addons, your credit card will start hurting hard. RedisToGo is very pricey, and the Postgres database options are seriously expensive. Heroku provides quite a lot, so their cost understandable, but it is definitely a cost&hellip; and a big one, at that.</p>
 
 <h3>Deploys Suck</h3>
 
-<p>Deploying to Heroku is easy and fast &mdash; the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There&rsquo;s no unicorn-style rolling deployments here. For small applications this is somewhat acceptable &mdash; in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
+<p>Deploying to Heroku is easy and fast &ndash; the first time. But then when you compare the speed and ease of ongoing deployments to your own servers you start scratching your head. Compiling a slug takes a while. After slug compilation is complete, your dynos must restart: and during the restart your application is completely offline. There&rsquo;s no unicorn-style rolling deployments here. For small applications this is somewhat acceptable &ndash; in a bare Rails application, my dynos restarted in 300-400 milliseconds. But in a big application you can be offline for excrucating, horrifying seconds, and that really sucks.</p>
 
 <h3>Addon Constrained</h3>
 
-<p>If you want to do something really customized or compiled on Heroku &mdash; something that needs the JRE, for example &mdash; you&rsquo;re pretty much screwed unless an addon already exists for it. You can&rsquo;t compile elasticsearch or Lucene yourself, and if you don&rsquo;t like the addons that provide those solutions you&rsquo;re essentially out of luck. You&rsquo;ll need to spool up your own EC2 instance, add Heroku&rsquo;s security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you&rsquo;re doing that, why not just manage the entire application yourself as well?</p>
+<p>If you want to do something really customized or compiled on Heroku &ndash; something that needs the JRE, for example &ndash; you&rsquo;re pretty much screwed unless an addon already exists for it. You can&rsquo;t compile elasticsearch or Lucene yourself, and if you don&rsquo;t like the addons that provide those solutions you&rsquo;re essentially out of luck. You&rsquo;ll need to spool up your own EC2 instance, add Heroku&rsquo;s security group, and connect your application to it. But then you have to manage that EC2 instance yourself. And if you&rsquo;re doing that, why not just manage the entire application yourself as well?</p>
 
 <h2>Conclusions</h2>
 
-<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku&rsquo;s platform-as-a-service. They&rsquo;re fast to deploy because they don&rsquo;t take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive &mdash; and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that&rsquo;s just something that Heroku can&rsquo;t provide.</p>
+<p>All this boils down to pretty much one thing: is your app going to be big, or small? Small apps that require few dynos and no add-ons are extremely cost efficient and benefit from Heroku&rsquo;s platform-as-a-service. They&rsquo;re fast to deploy because they don&rsquo;t take as long to compile, and the dynos serving them restart more quickly But bigger addons will be more expensive &ndash; and when you restart them, they take awhile to come back up. Also as an application grows your need for customized software will grow as well. Say you need hand-compiled elasticsearch or something like that; that&rsquo;s just something that Heroku can&rsquo;t provide.</p>
 
 <p>So, for a big application, I would stick to doing it by hand. Yes, you&rsquo;ll have a few more infrastructure annoyances, but you&rsquo;ll need the control.</p>
 
-<p>But! All big appliations started small. There&rsquo;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&rsquo;s ability to start lean and quick, then don&rsquo;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&rsquo;s easy and fast. And that&rsquo;s the real beauty of Heroku &mdash; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
+<p>But! All big appliations started small. There&rsquo;s nothing preventing you from starting on Heroku and then migrating to some other solution when you start hitting stumbling blocks. Migrating data can be frustrating, but if you need Heroku&rsquo;s ability to start lean and quick, then don&rsquo;t be afraid to go for it. Just always have an eye on your exit strategy, so that when you need to do something yourself, it&rsquo;s easy and fast. And that&rsquo;s the real beauty of Heroku &ndash; it gives you speed when you need it, and puts you in a pretty good position to graduate to something else when you outgrow it.</p>
 </div>
   <div class='attribution'>
   <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>

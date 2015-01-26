@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>RubyMotion Update: One Month Later - Hi, I'm Josh Symonds</title>
+  <title>RubyMotion Update: One Month Later - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2013-08-07T10:59:00-05:00" pubdate data-updated="true">Aug 7<span>th</span>, 2013</time>
+<time datetime="2013-08-07T10:59:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -127,14 +128,14 @@
 
 <p>The issues Laurent prioritized have done much to restore my confidence in using RubyMotion for production applications (which I think is a great framework anyway, memory issues aside). Before starting new client work in it, I&rsquo;m personally waiting a release or two longer to make sure that the fixes are indicative of a future pattern of prioritizing stability and memory management over exciting new hotness&hellip; Exciting new hotness is definitely great and probably lots of fun to make, but those of us making money on RubyMotion care more for platform stability than nifty new features. Or, at least, I do.</p>
 
-<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &mdash; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&rsquo;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
+<p>RM-3 flew under the radar because there were workarounds that corrected it most of the time &ndash; specifically, using instance variables instead of local variables or, when that failed, making a class to contain the block in question. These fixes would usually result in the memory behavior you&rsquo;d expect, but their decidedly un-Ruby-like syntax made them very surprising to anyone using the framework for the first time. <a href="https://news.ycombinator.com/item?id=5952085">A comment on my original post on Hacker News</a> states:</p>
 
 <blockquote>Every time I heard the phrase &#8220;well-known workaround&#8221; I interpret it as &#8220;tribal knowledge.&#8221;</blockquote>
 
 
 <p>And I think that applied very well to the workarounds available for the memory management issues. If you knew these issues existed and how to circumvent them, you were fine: but if you came into the framework with no foreknowledge and just coded regular Ruby, you were in for a nasty surprise. For RubyMotion to really attract the kind of success it deserves, surprises like that can&rsquo;t exist. Either you should be able to code Ruby as you would in MRI, or the differences in RubyMotion syntax as compared to regular Ruby syntax must be made as clear as possible.</p>
 
-<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &ldquo;we take performance and crashes very seriously&rdquo; &mdash; a much-appreciated statement indeed.</p>
+<p>HipByte recently released <a href="http://blog.rubymotion.com/post/56232015979/new-in-rubymotion-blocks-rewrite-retain-cycle">RubyMotion 2.5</a>, which is a strong affirmation of these principles. In addition to a complete rewrite of blocks, it contains a cyclic reference detector and improvements to crash reporting so that exceptions are no longer mysterious possibly-memory, possibly-something-else errors: now we can know with some confidence exactly what went wrong. This is RubyMotion saying, &ldquo;we take performance and crashes very seriously&rdquo; &ndash; a much-appreciated statement indeed.</p>
 
 <p>So is RubyMotion worth buying now? In my opinion, yes, very much. It&rsquo;s much faster to build iOS apps in RubyMotion than Objective-C, so if you want to get a rapid prototype out or just don&rsquo;t want to learn C and Objective-C, RubyMotion is a great investment. It&rsquo;s also a great way to get acclimated with the iOS frameworks in a language that&rsquo;s a lot kinder and gentler than Objective-C. And while I don&rsquo;t feel confident saying &ldquo;this is now production-solid&rdquo; yet, I&rsquo;m watching the project very closely and it&rsquo;s definitely moving rapidly in the right direction.</p>
 

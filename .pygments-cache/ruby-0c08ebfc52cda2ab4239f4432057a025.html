@@ -8,17 +8,17 @@
   <span class="k">def</span> <span class="nf">setup</span>
     <span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span> <span class="o">=</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production?</span>
       <span class="o">[</span>
-        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
+        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_PRODUCTION_GATEWAY_URI</span><span class="p">,</span>
         <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/keys/production_push.pem&quot;</span><span class="p">)</span>
       <span class="o">]</span>
     <span class="k">else</span>
       <span class="o">[</span>
-        <span class="ss">Houston</span><span class="p">:</span><span class="ss">:APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
+        <span class="no">Houston</span><span class="o">::</span><span class="no">APPLE_DEVELOPMENT_GATEWAY_URI</span><span class="p">,</span>
         <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/keys/development_push.pem&quot;</span><span class="p">)</span>
       <span class="o">]</span>
     <span class="k">end</span>
 
-    <span class="vi">@connection</span> <span class="o">=</span> <span class="ss">Houston</span><span class="p">:</span><span class="ss">:Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+    <span class="vi">@connection</span> <span class="o">=</span> <span class="no">Houston</span><span class="o">::</span><span class="no">Connection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@uri</span><span class="p">,</span> <span class="vi">@certificate</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
     <span class="vi">@connection</span><span class="o">.</span><span class="n">open</span>
   <span class="k">end</span>
 

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rails Concerns I: Starting with Redcarpet - Hi, I'm Josh Symonds</title>
+  <title>Rails Concerns I: Starting with Redcarpet - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+<time datetime="2012-07-01T20:32:00-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 2  minutes</span>
 
         
@@ -120,9 +121,9 @@
   </header>
 
 
-  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&rsquo;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&rsquo;t only for code refuse &mdash; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&rsquo;s where all the functionality for shipping lies&hellip; whereas a newcomer to your application would have to search through the order model to find it.</p>
+  <div class="entry-content"><p>Rails concerns are a fancy way of saying Ruby modules. 37signals uses concerns <a href="http://37signals.com/svn/posts/3167-code-spelunking-in-the-all-new-basecamp">a lot in the new Basecamp</a>, and it&rsquo;s easy to see why: separation and recatoring allow you to reuse code more sensibly and test it in only one place. But concerns aren&rsquo;t only for code refuse &ndash; by allowing you to unclutter models, they make it more obvious where code in your application lives. Even though, for example, orders are the only model in your system being shipped, having a concern called Shipping makes it completely obvious that that&rsquo;s where all the functionality for shipping lies&hellip; whereas a newcomer to your application would have to search through the order model to find it.</p>
 
-<p>I&rsquo;ve been using concerns extensively in GirlsGuideTo&rsquo;s upcoming application, and I figured it&rsquo;d be an interesting read if I shared the ones I&rsquo;ve made so far. They&rsquo;re not too complicated (this first one I&rsquo;m posting mostly just to illustrate the concept), but but don&rsquo;t let that fool you. They can be super complicated and really involved &mdash; but more than that, concerns just make your code better, so you should definitely be using them!</p>
+<p>I&rsquo;ve been using concerns extensively in GirlsGuideTo&rsquo;s upcoming application, and I figured it&rsquo;d be an interesting read if I shared the ones I&rsquo;ve made so far. They&rsquo;re not too complicated (this first one I&rsquo;m posting mostly just to illustrate the concept), but but don&rsquo;t let that fool you. They can be super complicated and really involved &ndash; but more than that, concerns just make your code better, so you should definitely be using them!</p>
 
 <!-- more -->
 
@@ -150,7 +151,7 @@
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Redcarpeted</span>
-</span><span class='line'>  <span class="kp">extend</span> <span class="ss">ActiveSupport</span><span class="p">:</span><span class="ss">:Concern</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">module</span> <span class="nn">ClassMethods</span>
 </span><span class='line'>
@@ -180,7 +181,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
 </span><span class='line'>    <span class="kp">include</span> <span class="no">Redcarpeted</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">redcarpet</span> <span class="ss">:body</span>

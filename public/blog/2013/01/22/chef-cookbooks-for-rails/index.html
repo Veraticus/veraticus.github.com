@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Chef Cookbooks for Rails - Hi, I'm Josh Symonds</title>
+  <title>Chef Cookbooks for Rails - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2013-01-22T12:36:00-06:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2013</time>
+<time datetime="2013-01-22T12:36:00-06:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 4  minutes</span>
 
         
@@ -202,7 +203,7 @@
 
 <ul>
 <li><p><strong>user::data_bag</strong> from <a href="http://github.com/fnichol/chef-user">this cookbook</a>. It allows you to have data bags for your users that get automatically added (or removed) from every server. It&rsquo;s really helpful.</p></li>
-<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &mdash; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&rsquo;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
+<li><p>I went back and forth on <strong>ruby_build and rbenv</strong> in the base cookbook. Compiling your own Ruby takes significantly longer than installing Ruby from a package, and I could just compile Ruby on the application servers and use the Ruby package on everything else. Ultimately I decided to keep compiled Ruby in the base list &ndash; it seems slightly faster than the package and allows me to apply performance patches, and since I made an AMI of the base role the speed difference didn&rsquo;t matter a whole lot to me. But I can definitely see taking this out.</p></li>
 <li><p><strong>zsh and oh-my-zsh</strong> are obviously just silly nice-to-haves. Use a zsh theme that says the server name or else you&rsquo;ll get confused.</p></li>
 </ul>
 

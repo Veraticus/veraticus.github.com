@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Creating an AWS OpsWorks Instance Store AMI - Hi, I'm Josh Symonds</title>
+  <title>Creating an AWS OpsWorks Instance Store AMI - Hi, I&#8217;m Josh Symonds</title>
   <meta name="author" content="Josh Symonds">
 
   
@@ -24,6 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
@@ -60,7 +61,7 @@
   <header role="banner"><hgroup>
   <img id='avatar' src="/images/josh_circle.png" />
   <div class='arrow_box'>
-    <h1><a href="/">Hi, I'm Josh Symonds</a></h1>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
     
       <h2>I blog about Ruby on Rails, coding, and servers</h2>
     
@@ -111,7 +112,7 @@
   
 
 
-<time datetime="2014-05-09T13:00:45-05:00" pubdate data-updated="true">May 9<span>th</span>, 2014</time>
+<time datetime="2014-05-09T13:00:45-05:00" pubdate data-updated="true"></time>
         <span class='readtime'>Reading time 4  minutes</span>
 
         
@@ -206,7 +207,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &mdash; following it should correct any boot issues you experience on your AMI.</p>
+<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &ndash; following it should correct any boot issues you experience on your AMI.</p>
 
 <h2>6. Stop all services</h2>
 
@@ -262,10 +263,10 @@
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>ec2-bundle-vol -k /tmp/cert/pk-X509.pem <span class="se">\</span>
 </span><span class='line'>               -c /tmp/cert/cert-X509.pem <span class="se">\</span>
-</span><span class='line'>               -u 123456789012 <span class="se">\</span>
+</span><span class='line'>               -u <span class="m">123456789012</span> <span class="se">\</span>
 </span><span class='line'>               -r x86_64 <span class="se">\</span>
 </span><span class='line'>               -e /tmp/cert <span class="se">\</span>
-</span><span class='line'>               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> | tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
+</span><span class='line'>               -i <span class="k">$(</span>find /etc /usr /opt -name <span class="s1">&#39;*.pem&#39;</span> -o -name <span class="s1">&#39;*.crt&#39;</span> -o -name <span class="s1">&#39;*.gpg&#39;</span> <span class="p">|</span> tr <span class="s1">&#39;\n&#39;</span> <span class="s1">&#39;,&#39;</span><span class="k">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
