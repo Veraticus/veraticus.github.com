@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I released v1.0.0 of huey today, adding some exciting new features: specifically, light groups and group events. Using them enabled me to quickly and &hellip;">
+  <meta name="description" content="In the past two months, since joining Everest, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Existing Rails API Solutions Suck</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-22T11:00:00-06:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the past two months, since joining <a href="http://everest.com">Everest</a>, I&rsquo;ve spent quite a lot of time and effort researching and reviewing the various Rails API gems and I&rsquo;ve come to a startling and disheartening conclusion.</p>
+
+<p>They all suck.</p>
+
+<p>In different ways, sure. And many have redeeming characteristics. But overall none of them do what I would consider the three most important parts of supporting a Rails API:</p>
+
+<ol>
+<li>Be DRY. I need versioning without copy and pasting huge swathes of code. If I want to make a query optimization in an API endpoint I shouldn&rsquo;t need to browse through every version of the API, applying it to each file.</li>
+<li>Support views (or something like them). Rendering JSON in controllers and models is inappropriate. JSON is a representation of data: a representation of data is a view of a model. You can argue this is a presenter or serializer or whatever, and that&rsquo;s fine. There are clearly places where this logic should <strong>not</strong> be, though.</li>
+<li>Integrate with Rails. I have an existing and complicated web application that I want to provide an API for. Probably I want to leverage the power of the Rails stack and everything I&rsquo;ve installed in it, like logging, error reporting, performance metrics and so on.</li>
+</ol>
+
+
+<p>Taken in that light, then, here are mini-reviews for every existing Rails API Gem I could find. And believe me, I think I found most of them. (Spoiler alert: they suck.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/22/existing-rails-api-solutions-suck/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -498,60 +554,13 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Dynamic Cache Counters in Rails</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-29T17:55:00-05:00" pubdate data-updated="true"></time>
-        <span class='readtime'>Reading time 1  minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I spent a frustrating hour today searching for a way to do dynamic cache counters in Rails.</p>
-
-<p>The problem is best summed up in a use case. I have a model called votes. A vote can be an upvote or a downvote; I set a column called <code>type</code> indicating what it is. Though I call the column <code>type</code> there&rsquo;s no need for STI here &ndash; there&rsquo;s really only one model, after all. However, it is polymorphic. You can vote up any kind of content on the site. I want to cache the number of upvotes and downvotes separately for that content. Unfortunately, the out-of-the-box Rails counter mechanism doesn&rsquo;t let you do this. According to the <code>counter_cache</code> documentation, you must either specify <code>true</code> or the name of the column you&rsquo;re caching under. You&rsquo;re out of luck if you want to change it dynamically.</p>
-
-<p>This, then, is the solution I came up with to allow dynamic cache counters.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/29/dynamic-cache-counters-in-rails/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
-      <a class="prev" href="5">&larr; Older</a>
+      <a class="prev" href="/posts/5">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
-    <a class="next" href="3">Newer &rarr;</a>
+    <a class="next" href="/posts/3">Newer &rarr;</a>
     
   </div>
 </div>

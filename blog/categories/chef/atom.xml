@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chef | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/chef/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-26T11:14:42-06:00</updated>
+  <updated>2015-02-04T17:18:55-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,154 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Chef Cookbook Continuous Integration]]></title>
+    <link href="http://joshsymonds.com/blog/2015/02/04/chef-cookbook-continuous-integration/"/>
+    <updated>2015-02-04T11:37:38-06:00</updated>
+    <id>http://joshsymonds.com/blog/2015/02/04/chef-cookbook-continuous-integration</id>
+    <content type="html"><![CDATA[<p>Testing infrastructure is as crucial to the success of a business as testing applications. Yet most infrastructure is untested and validated only occasionally, and only by hand &ndash; this is especially a tragedy when chef is used, because chef has many high-quality tools to provide testing coverage from <a href="https://foodcritic.io">static analysis</a> to <a href="https://github.com/sethvargo/chefspec">unit testing</a> and even <a href="http://kitchen.ci/">full convergence runs</a>.</p>
+
+<p>At Symonds &amp; Son, we spent a lot of time and energy integrating our tests on <a href="https://circleci.com">CircleCI</a> into a continuous deployment process that begins with three layers of testing and ends with automated cookbook deployment to the chef servers we manage. I&rsquo;ll discuss chef continuous deployment in a later article; here, I&rsquo;ll cover how we got Foodcritic, ChefSpec, and Test Kitchen all running seamlessly in Circle.</p>
+
+<!-- more -->
+
+
+<blockquote><p>My good friend and coworker, <a href="https://twitter.com/chrislopresto">Chris LoPresto</a>, contributed greatly to the engineering innovations discussed here.</p></blockquote>
+
+<p>CircleCI has a number of great integrations: here we&rsquo;ll use their docker service to create docker instances and automatically converge them with Test Kitchen. Before we do so, we&rsquo;ll run foodcritic and ChefSpec on them as well just to make sure everything works as we would expect.</p>
+
+<h2>Get Tested</h2>
+
+<p>You&rsquo;ll need to actually set up tests and get them running before getting them into continuous integration! Happily the process of testing cookbooks is relatively fast and easy: all three software tools Symonds &amp; Son uses have great documentation and tons of examples on the Internet. Here&rsquo;s how we set them up.</p>
+
+<h3>Foodcritic</h3>
+
+<p>Running Foodcritic is pretty simple. Simply add the foodcritic gem to your <code>Gemfile</code> and execute a command like this:</p>
+
+<pre><code class="sh">foodcritic . -X spec -f any -t ~FC003
+</code></pre>
+
+<p><code>~FC003</code> instructs Foodcritic not to use a rule that guards for chef-solo. We intentionally do not obey rule FC003 as we use chef-zero locally and chef-server remotely.</p>
+
+<h3>ChefSpec</h3>
+
+<p>ChefSpec is slightly more complicated. Your best bet is to follow the excellent installation guide at the <a href="https://github.com/sethvargo/chefspec">ChefSpec README</a>, since we don&rsquo;t really do any customization on top of that: our ChefSpec tests are rather traditional. Here&rsquo;s a sample from our cookbook that updates aptitude:</p>
+
+<pre><code class="ruby">require 'chefspec'
+require_relative '../spec_helper'
+
+describe 'custom_apt::default' do
+
+  before { stub_recipes %w(apt) }
+
+  let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
+
+  it 'upgrades upstart' do
+    expect(chef_run).to upgrade_package('upstart')
+  end
+
+end
+</code></pre>
+
+<h3>Test Kitchen</h3>
+
+<p>The most complicated of the chef testing suites, Test Kitchen performs actual convergence on a platform of your choice and then will run automated tests on the created instance. Test Kitchen is also the most essential of the suites, in my opinion &ndash; performing static analysis and unit tests are all well and good, but the only way to definitively determine if your cookbook works is to actually ensure servers converge and that their internal state is correct.</p>
+
+<p>Most of our cookbooks use <a href="https://docker.com">Docker</a> containers to perform testing. This has downsides: docker containers will not allow you to modify important files in their <code>/etc</code> directory. For example, you cannot change iptables rules in a docker container. Additionally Upstart does not work at all in docker-land. Despite drawbacks like this, docker has many advantages. It is extremely fast and well-supported across testing providers. In fact, our continuous integrator of choice, Circle, provides first-class support for docker containers on their test VMs &ndash; allowing you to run docker Test Kitchen convergences directly on Circle.</p>
+
+<p>Happily, the <code>.kitchen.yml</code> that supports this is rather standard:</p>
+
+<pre><code class="yaml">---
+driver:
+  name: docker
+  privileged: true
+
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: 11.16.4
+  attributes:
+    test-kitchen: true
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[cookbook::default]
+</code></pre>
+
+<p>The only special section to note here is the driver configuration: we&rsquo;re using docker and setting it to privileged mode, which enables it to more exactly match a cloud VM.</p>
+
+<p>Just for completeness&#8217; sake, here&rsquo;s a simple test from the afore-mentioned aptitude cookbook testing for the proper version of Upstart:</p>
+
+<pre><code class="ruby">require 'serverspec'
+set :backend, :exec
+
+describe command('apt-cache policy upstart | grep Installed') do
+  its(:exit_status) { should eq 0 }
+  its(:stdout) { should include('1.12.1') }
+end
+</code></pre>
+
+<p>Once you have your three testing suites set up, all that remains is to integrate them into Circle.</p>
+
+<h2>Circle Continuous Integration</h2>
+
+<p><a href="https://circleci.com">CircleCI</a> is my favorite continuous integration tool. It has a great UI and is really simple to set up with GitHub: it also has great support for third-party plugins, and even better, lets you SSH into a failed instance to run tests yourself and figure out exactly what went wrong.</p>
+
+<p>For our purposes, we need CircleCI to properly install chef and then run all the tests on our cookbook. As it turns out this is not all that difficult to set up: you&rsquo;ll want a <code>circle.yml</code> that looks a little like this&hellip;</p>
+
+<pre><code class="yaml">machine:
+  services:
+    - docker
+dependencies:
+  pre:
+    - if ! chef -v; then
+        if ! [ -f chefdk_0.3.5-1_amd64.deb ]; then
+          wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.3.5-1_amd64.deb;
+        fi;
+        sudo dpkg -i chefdk_0.3.5-1_amd64.deb;
+      fi
+    - chef gem install specific_install
+    - sudo chef gem specific_install kitchen-docker -l http://github.com/peterabbott/kitchen-docker.git -b v1.6.4
+    - sudo chef gem uninstall chefspec
+    - chef gem install chefspec:4.0.1
+    - mkdir ~/.chef
+    - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
+  cache_directories:
+    - ./chefdk_0.3.5-1_amd64.deb
+test:
+  override:
+    - chef exec berks install
+    - chef exec rspec -P spec/**/*_spec.rb --tty --color
+    - chef exec foodcritic . -X spec -f any -t ~FC003
+    - chef exec kitchen test
+</code></pre>
+
+<p>There&rsquo;s a lot going on here, so let&rsquo;s dive in at the top!</p>
+
+<p>First, the <code>machine.services</code> directive informs CircleCI we want docker to start on our Circle test VMs. Without this, the kitchen specs won&rsquo;t work at all.</p>
+
+<p>Next comes the dependencies directive. Chef provides the excellent <a href="https://downloads.chef.io/chef-dk/">ChefDK</a> download which bundles everything we care about: chef&rsquo;s own command-line interface, <a href="https://berkshelf.com">Berkshelf</a> (for managing cookbook dependencies), and all three testing tools we&rsquo;re using. We&rsquo;re installing the official Chef <code>.deb</code> distribution of ChefDK onto the Circle machine to get around downloading each tool individually.</p>
+
+<p>Next comes a bit of gem back-and-forth. Until very recently, the GitHub <a href="https://github.com/portertech/kitchen-docker">kitchen-docker main fork</a> was not kept up-to-date: we manually install a version of kitchen-docker that actually works, and then reinstall a better version of chefspec.</p>
+
+<p>Finally, we copy a stub <code>knife.rb</code> to <code>~/.chef/knife.rb</code>. You&rsquo;ll need to set this file up yourself, but it&rsquo;s intentionally pretty small. If you&rsquo;re downloading any cookbooks from a Berkshelf-API server, you&rsquo;ll probably need to include a valid private key for that server either in the <code>knife.rb</code> (bad) or include it as an environment variable in Circle (good). Here&rsquo;s what the <code>knife.rb</code> should look like:</p>
+
+<pre><code class="rb"># A knife.rb for Circle
+
+node_name 'circleci'
+chef_server_url 'https://your.chef.url'
+client_key ENV['CIRCLE_CI_MACHINE_USER_CHEF_KEY']
+</code></pre>
+
+<p>Once all the setup is done, running the tests is by comparison quite simple! We perform a <code>berks install</code> and then run each test command individually. If you have your tests working locally, this should get them working properly in Circle as well.</p>
+
+<p>Of course, even if you are testing your cookbooks, you&rsquo;re really only half-way to heaven. After testing comes deployment: and this can be a little difficult with chef&rsquo;s complicated keying and validation structure. In my next post I&rsquo;ll detail how we automatically release and deploy cookbooks to their destination chef servers&hellip; stay tuned!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Chef Cookbooks for Rails]]></title>

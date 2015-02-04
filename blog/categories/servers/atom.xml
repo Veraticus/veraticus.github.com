@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-01-26T11:14:42-06:00</updated>
+  <updated>2015-02-04T17:18:55-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,154 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Chef Cookbook Continuous Integration]]></title>
+    <link href="http://joshsymonds.com/blog/2015/02/04/chef-cookbook-continuous-integration/"/>
+    <updated>2015-02-04T11:37:38-06:00</updated>
+    <id>http://joshsymonds.com/blog/2015/02/04/chef-cookbook-continuous-integration</id>
+    <content type="html"><![CDATA[<p>Testing infrastructure is as crucial to the success of a business as testing applications. Yet most infrastructure is untested and validated only occasionally, and only by hand &ndash; this is especially a tragedy when chef is used, because chef has many high-quality tools to provide testing coverage from <a href="https://foodcritic.io">static analysis</a> to <a href="https://github.com/sethvargo/chefspec">unit testing</a> and even <a href="http://kitchen.ci/">full convergence runs</a>.</p>
+
+<p>At Symonds &amp; Son, we spent a lot of time and energy integrating our tests on <a href="https://circleci.com">CircleCI</a> into a continuous deployment process that begins with three layers of testing and ends with automated cookbook deployment to the chef servers we manage. I&rsquo;ll discuss chef continuous deployment in a later article; here, I&rsquo;ll cover how we got Foodcritic, ChefSpec, and Test Kitchen all running seamlessly in Circle.</p>
+
+<!-- more -->
+
+
+<blockquote><p>My good friend and coworker, <a href="https://twitter.com/chrislopresto">Chris LoPresto</a>, contributed greatly to the engineering innovations discussed here.</p></blockquote>
+
+<p>CircleCI has a number of great integrations: here we&rsquo;ll use their docker service to create docker instances and automatically converge them with Test Kitchen. Before we do so, we&rsquo;ll run foodcritic and ChefSpec on them as well just to make sure everything works as we would expect.</p>
+
+<h2>Get Tested</h2>
+
+<p>You&rsquo;ll need to actually set up tests and get them running before getting them into continuous integration! Happily the process of testing cookbooks is relatively fast and easy: all three software tools Symonds &amp; Son uses have great documentation and tons of examples on the Internet. Here&rsquo;s how we set them up.</p>
+
+<h3>Foodcritic</h3>
+
+<p>Running Foodcritic is pretty simple. Simply add the foodcritic gem to your <code>Gemfile</code> and execute a command like this:</p>
+
+<pre><code class="sh">foodcritic . -X spec -f any -t ~FC003
+</code></pre>
+
+<p><code>~FC003</code> instructs Foodcritic not to use a rule that guards for chef-solo. We intentionally do not obey rule FC003 as we use chef-zero locally and chef-server remotely.</p>
+
+<h3>ChefSpec</h3>
+
+<p>ChefSpec is slightly more complicated. Your best bet is to follow the excellent installation guide at the <a href="https://github.com/sethvargo/chefspec">ChefSpec README</a>, since we don&rsquo;t really do any customization on top of that: our ChefSpec tests are rather traditional. Here&rsquo;s a sample from our cookbook that updates aptitude:</p>
+
+<pre><code class="ruby">require 'chefspec'
+require_relative '../spec_helper'
+
+describe 'custom_apt::default' do
+
+  before { stub_recipes %w(apt) }
+
+  let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
+
+  it 'upgrades upstart' do
+    expect(chef_run).to upgrade_package('upstart')
+  end
+
+end
+</code></pre>
+
+<h3>Test Kitchen</h3>
+
+<p>The most complicated of the chef testing suites, Test Kitchen performs actual convergence on a platform of your choice and then will run automated tests on the created instance. Test Kitchen is also the most essential of the suites, in my opinion &ndash; performing static analysis and unit tests are all well and good, but the only way to definitively determine if your cookbook works is to actually ensure servers converge and that their internal state is correct.</p>
+
+<p>Most of our cookbooks use <a href="https://docker.com">Docker</a> containers to perform testing. This has downsides: docker containers will not allow you to modify important files in their <code>/etc</code> directory. For example, you cannot change iptables rules in a docker container. Additionally Upstart does not work at all in docker-land. Despite drawbacks like this, docker has many advantages. It is extremely fast and well-supported across testing providers. In fact, our continuous integrator of choice, Circle, provides first-class support for docker containers on their test VMs &ndash; allowing you to run docker Test Kitchen convergences directly on Circle.</p>
+
+<p>Happily, the <code>.kitchen.yml</code> that supports this is rather standard:</p>
+
+<pre><code class="yaml">---
+driver:
+  name: docker
+  privileged: true
+
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: 11.16.4
+  attributes:
+    test-kitchen: true
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[cookbook::default]
+</code></pre>
+
+<p>The only special section to note here is the driver configuration: we&rsquo;re using docker and setting it to privileged mode, which enables it to more exactly match a cloud VM.</p>
+
+<p>Just for completeness&#8217; sake, here&rsquo;s a simple test from the afore-mentioned aptitude cookbook testing for the proper version of Upstart:</p>
+
+<pre><code class="ruby">require 'serverspec'
+set :backend, :exec
+
+describe command('apt-cache policy upstart | grep Installed') do
+  its(:exit_status) { should eq 0 }
+  its(:stdout) { should include('1.12.1') }
+end
+</code></pre>
+
+<p>Once you have your three testing suites set up, all that remains is to integrate them into Circle.</p>
+
+<h2>Circle Continuous Integration</h2>
+
+<p><a href="https://circleci.com">CircleCI</a> is my favorite continuous integration tool. It has a great UI and is really simple to set up with GitHub: it also has great support for third-party plugins, and even better, lets you SSH into a failed instance to run tests yourself and figure out exactly what went wrong.</p>
+
+<p>For our purposes, we need CircleCI to properly install chef and then run all the tests on our cookbook. As it turns out this is not all that difficult to set up: you&rsquo;ll want a <code>circle.yml</code> that looks a little like this&hellip;</p>
+
+<pre><code class="yaml">machine:
+  services:
+    - docker
+dependencies:
+  pre:
+    - if ! chef -v; then
+        if ! [ -f chefdk_0.3.5-1_amd64.deb ]; then
+          wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.3.5-1_amd64.deb;
+        fi;
+        sudo dpkg -i chefdk_0.3.5-1_amd64.deb;
+      fi
+    - chef gem install specific_install
+    - sudo chef gem specific_install kitchen-docker -l http://github.com/peterabbott/kitchen-docker.git -b v1.6.4
+    - sudo chef gem uninstall chefspec
+    - chef gem install chefspec:4.0.1
+    - mkdir ~/.chef
+    - cp ~/${CIRCLE_PROJECT_REPONAME}/test/circle/knife.rb ~/.chef/knife.rb
+  cache_directories:
+    - ./chefdk_0.3.5-1_amd64.deb
+test:
+  override:
+    - chef exec berks install
+    - chef exec rspec -P spec/**/*_spec.rb --tty --color
+    - chef exec foodcritic . -X spec -f any -t ~FC003
+    - chef exec kitchen test
+</code></pre>
+
+<p>There&rsquo;s a lot going on here, so let&rsquo;s dive in at the top!</p>
+
+<p>First, the <code>machine.services</code> directive informs CircleCI we want docker to start on our Circle test VMs. Without this, the kitchen specs won&rsquo;t work at all.</p>
+
+<p>Next comes the dependencies directive. Chef provides the excellent <a href="https://downloads.chef.io/chef-dk/">ChefDK</a> download which bundles everything we care about: chef&rsquo;s own command-line interface, <a href="https://berkshelf.com">Berkshelf</a> (for managing cookbook dependencies), and all three testing tools we&rsquo;re using. We&rsquo;re installing the official Chef <code>.deb</code> distribution of ChefDK onto the Circle machine to get around downloading each tool individually.</p>
+
+<p>Next comes a bit of gem back-and-forth. Until very recently, the GitHub <a href="https://github.com/portertech/kitchen-docker">kitchen-docker main fork</a> was not kept up-to-date: we manually install a version of kitchen-docker that actually works, and then reinstall a better version of chefspec.</p>
+
+<p>Finally, we copy a stub <code>knife.rb</code> to <code>~/.chef/knife.rb</code>. You&rsquo;ll need to set this file up yourself, but it&rsquo;s intentionally pretty small. If you&rsquo;re downloading any cookbooks from a Berkshelf-API server, you&rsquo;ll probably need to include a valid private key for that server either in the <code>knife.rb</code> (bad) or include it as an environment variable in Circle (good). Here&rsquo;s what the <code>knife.rb</code> should look like:</p>
+
+<pre><code class="rb"># A knife.rb for Circle
+
+node_name 'circleci'
+chef_server_url 'https://your.chef.url'
+client_key ENV['CIRCLE_CI_MACHINE_USER_CHEF_KEY']
+</code></pre>
+
+<p>Once all the setup is done, running the tests is by comparison quite simple! We perform a <code>berks install</code> and then run each test command individually. If you have your tests working locally, this should get them working properly in Circle as well.</p>
+
+<p>Of course, even if you are testing your cookbooks, you&rsquo;re really only half-way to heaven. After testing comes deployment: and this can be a little difficult with chef&rsquo;s complicated keying and validation structure. In my next post I&rsquo;ll detail how we automatically release and deploy cookbooks to their destination chef servers&hellip; stay tuned!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Continuous Deployments with Consul]]></title>
@@ -424,225 +572,6 @@ end
 <p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
 
 <p>I&rsquo;ll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Pricing Popular Hosting Options (With Devops Time)]]></title>
-    <link href="http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time/"/>
-    <updated>2013-04-17T18:16:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/04/17/pricing-popular-hosting-options-with-devops-time</id>
-    <content type="html"><![CDATA[<p>Recently I compared the major Rails hosting providers &ndash; but as opposed to most price breakdowns I&rsquo;ve read on the Internet, I opted to include provisional hourly devops time to set up and perform maintenance on the servers. For the purposes of this comparison, I only selected four providers: AWS, RackSpace, BlueBox and Heroku, and I&rsquo;m assuming you use all their services (rather than combining two, say Heroku Postgres with AWS EC2 instances). I found the resulting price breakdown instructive, though interpreting them (and disagreeing with the provided hours) are left as an exercise for the reader.</p>
-
-<!-- more -->
-
-
-<h2>Comparisons</h2>
-
-<p>Any of these configurations should be adequate to support roughly a million requests a month (assuming throughput of 5 requests a second), provided most of the requests served aren&rsquo;t that complicated. We&rsquo;ll go for a medium database instance and aggressively cache as much as possible, thus we&rsquo;ll also need to provide memcached room somewhere.</p>
-
-<p>The big differentiator in my comparison (as opposed to others&#8217;) is certainly a devops contractor at $150 an hour. I&rsquo;ll include the hours as I would estimate them personally, but for other people it might take longer or shorter &ndash; and the price could go up if there&rsquo;s a ton of other software to go in the server. (For example, this theoretical application would probably eventually want redis and some sort of asynchronous worker system.)</p>
-
-<p>So let&rsquo;s get down to the details!</p>
-
-<h3>Amazon Web Services</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 medium EC2 instance (1 year contract, medium utilization)</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$277.00</td>
-    <td>$30.74</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 medium RDS instance (1 year contract, medium utilization)</h4>
-    </td>
-    <td>$500.00</td>
-    <td>$40.26</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      10 hours setup<br />
-      5 hours maintenance
-    </td>
-    <td>$1500.00</td>
-    <td>$750.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$2277.00</th>
-    <th>$821.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$12129.00</th>
-  </tr>
-</table>
-
-
-<p>No surprises here: if you&rsquo;re using AWS, the hardware is ridiculously cheap. Most of your cost is going to be engineering time to get the instance up and running and then perform maintenance and add additional features to it. That said, I&rsquo;ve had an EC2 instance going for about 8 months now with no maintenance at all on my part (laziness!), so if you don&rsquo;t need any additional server setup you can probably omit the maintenance time, for a monthly cost of $71.00 and a yearly cost of $3129.00.</p>
-
-<h3>RackSpace</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB managed cloud instance</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$0.00</td>
-    <td>$262.80</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud database instance</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$321.20</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      10 hours setup<br />
-      2 hours maintenance
-    </td>
-    <td>$750.00</td>
-    <td>$300.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$750.00</th>
-    <th>$884.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$11358.00</th>
-  </tr>
-</table>
-
-
-<p>RackSpace&rsquo;s managed cloud offerings are more expensive than AWS, but the theory is you can omit server-related maintenance (since they&rsquo;ll keep services running and your servers themselves operational) and that&rsquo;s reflected in a lowered monthly devops cost. They don&rsquo;t do maintenance or improvements on your application proper, however, so I built a rather modest two hours a month in for simple tasks like upgrading Rails or performing minor server optimizations. You can once again probably ignore the monthly devops cost if you like, but that won&rsquo;t have nearly the impact on the final price that it did for AWS, with a new monthly of $584.00 and a final year total of $7758.00.</p>
-
-<h3>BlueBox</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud instance</h4>
-      6 unicorn workers<br/>
-      1 nginx reverse proxy<br/>
-      memcached
-    </td>
-    <td>$0.00</td>
-    <td>$385.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>1 4GB cloud database instance</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$385.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      0 hours setup<br />
-      0 hours maintenance
-    </td>
-    <td>$0.00</td>
-    <td>$0.00</td>
-  </tr>
-  <tr class='highlighted'>
-    <th>Total</th>
-    <th>$0.00</th>
-    <th>$770.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$9240.00</th>
-  </tr>
-</table>
-
-
-<p>BlueBox&rsquo;s claim to fame is that they perform server, application, and database setup, maintenance, and integration. Thus the need for a devops engineer is completely obviated (as reflected in the final totals). Obviously this price point is extremely attractive if you&rsquo;d otherwise have to pay a server administrator and engineer, but if you have one on staff already then BlueBox&rsquo;s product is easily the most expensive. You&rsquo;re paying for their expertise much more than their hardware.</p>
-
-<h3>Heroku</h3>
-
-<table class='numbers'>
-  <tr>
-    <th style='width: 72%;'>Service</th>
-    <th>Setup</th>
-    <th>Monthly</th>
-  </tr>
-  <tr>
-    <td>
-      <h4>4 dynos</h4>
-      12 unicorn workers<br/>
-    </td>
-    <td>$0.00</td>
-    <td>$143.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>memcached addon (500 MB)</h4>
-    </td>
-    <td>$0.00</td>
-    <td>$40.00</td>
-  </tr>
-  <tr>
-    <td><h4>Fugu database instance</h4></td>
-    <td>$0.00</td>
-    <td>$400.00</td>
-  </tr>
-  <tr>
-    <td>
-      <h4>Devops Time</h4>
-      2 hours setup<br />
-      0 hours maintenance
-    </td>
-    <td>$300.00</td>
-    <td>$0.00</td>
-  </tr>
-    <tr class='highlighted'>
-    <th>Total</th>
-    <th>$300.00</th>
-    <th>$583.00</th>
-  </tr>
-  <tr class='highlighted'>
-    <th>First Year</th>
-    <th colspan='2'>$7296.00</th>
-  </tr>
-</table>
-
-
-<p>I&rsquo;m always somewhat mystified by Heroku&rsquo;s pricing &ndash; their database offerings are incredibly expensive, especially compared to their incredibly cheap dynos. Anyway, they provide the least expensive option for purely hosting an application, but this cheapness comes with a hidden price. Being unable to control your production environment can be a frightening proposition and exposes you to potential hidden vagaries of Heroku&rsquo;s internals (such as the latest flap about their routing mesh). And the fact that their addons are third-party products means that if they go down, you have no ability to expedite their repair. I would deploy a small or medium app to Heroku (which might be perfect for this theoretical application), but for a bigger one I would definitely be hesitant.</p>
-
-<h2>Conclusions</h2>
-
-<p>I don&rsquo;t think any of these prices are particularly surprising. For knowledgeable server engineers, AWS is indeed a tremendous bargain. For those with little or no infrastructure knowledge, Heroku or BlueBox would be a much better choice. And keep in mind these are the hours it would take me to set up these instances; the times might not be representative of another engineer. I think they&rsquo;re reasonable though, and that the comparison is an interesting one to draw, even if not a tremendous revelation.</p>
 ]]></content>
   </entry>
   
