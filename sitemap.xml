@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://joshsymonds.com/blog/2015/06/10/packaging-anything-with-chef-and-fpm/</loc>
+    <lastmod>2015-06-10T10:33:45-05:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://joshsymonds.com/blog/2015/02/04/chef-cookbook-continuous-integration/</loc>
     <lastmod>2015-02-04T11:37:38-06:00</lastmod>
     <priority>0.8</priority>
@@ -437,25 +442,25 @@
   </url>
   <url>
     <loc>http://joshsymonds.com/404.html</loc>
-    <lastmod>2015-02-04T17:18:55-06:00</lastmod>
+    <lastmod>2015-06-10T11:22:57-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://joshsymonds.com/</loc>
-    <lastmod>2015-02-04T17:18:55-06:00</lastmod>
+    <lastmod>2015-06-10T11:22:57-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://joshsymonds.com/blog/archives/</loc>
-    <lastmod>2015-02-04T17:18:55-06:00</lastmod>
+    <lastmod>2015-06-10T11:22:57-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://joshsymonds.com/resume/</loc>
-    <lastmod>2015-02-04T17:18:55-06:00</lastmod>
+    <lastmod>2015-06-10T11:22:57-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

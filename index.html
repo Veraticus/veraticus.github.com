@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Testing infrastructure is as crucial to the success of a business as testing applications. Yet most infrastructure is untested and validated only &hellip;">
+  <meta name="description" content="Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/10/packaging-anything-with-chef-and-fpm/">Packaging Anything With Chef and Fpm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-10T10:33:45-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that wanted to install ffmpeg on each server, with compilation times upwards of five minutes. The answer to getting around long compilation times in a standardized server environment is, of course, packages! So we developed a Chef-based solution to create packages with the really excellent <a href="https://github.com/jordansissel/fpm">fpm</a>, upload them to S3, and then download them on target servers: all without needing anything other than a few gems.</p>
+
+<p>Want to do it yourself? Then read on.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/10/packaging-anything-with-chef-and-fpm/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -501,49 +546,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/12/interviewing-symonds-and-son/">Interviewing Symonds &amp; Son</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-12T23:43:18-05:00" pubdate data-updated="true"></time>
-        <span class='readtime'>Reading time 6  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &ndash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/12/interviewing-symonds-and-son/">Read on &rarr;</a>
     </footer>
   
 

@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Packaging Anything with Chef and fpm - Hi, I&#8217;m Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2015/06/10/packaging-anything-with-chef-and-fpm">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Packaging Anything With Chef and Fpm</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-10T10:33:45-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that wanted to install ffmpeg on each server, with compilation times upwards of five minutes. The answer to getting around long compilation times in a standardized server environment is, of course, packages! So we developed a Chef-based solution to create packages with the really excellent <a href="https://github.com/jordansissel/fpm">fpm</a>, upload them to S3, and then download them on target servers: all without needing anything other than a few gems.</p>
+
+<p>Want to do it yourself? Then read on.</p>
+
+<!-- more -->
+
+
+<h2>Creating Packages</h2>
+
+<p>There are two parts to this setup: first, compiling the software and creating packages from it. Then, downloading it on client servers. For the purposes of this cookbook, I&rsquo;ll be referring to the former as &ldquo;creating,&rdquo; and the latter as &ldquo;installing.&rdquo;</p>
+
+<p>Creating is pretty easy. We&rsquo;ll have one generic <code>create</code> recipe that all the other recipes can include, and a provider that does most of the heavy lifting. First, let&rsquo;s set up some cookbook attributes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># symondsandson_packages/attributes/default.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Compile extensions immediately</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;build-essential&#39;</span><span class="o">][</span><span class="s1">&#39;compile_time&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;xml&#39;</span><span class="o">][</span><span class="s1">&#39;compiletime&#39;</span><span class="o">]</span>              <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># fpm settings</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;fpm&#39;</span><span class="o">][</span><span class="s1">&#39;version&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;1.3.3&#39;</span>
+</span><span class='line'><span class="n">set</span><span class="o">[</span><span class="s1">&#39;fpm_tng&#39;</span><span class="o">][</span><span class="s1">&#39;exec&#39;</span><span class="o">]</span>                       <span class="o">=</span> <span class="s1">&#39;/opt/chef/embedded/bin/fpm&#39;</span>
+</span><span class='line'><span class="n">set</span><span class="o">[</span><span class="s1">&#39;fpm_tng&#39;</span><span class="o">][</span><span class="s1">&#39;gem&#39;</span><span class="o">]</span>                        <span class="o">=</span> <span class="s1">&#39;/opt/chef/embedded/bin/gem&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># S3 settings</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;bucket&#39;</span><span class="o">]</span>            <span class="o">=</span> <span class="s1">&#39;packages&#39;</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;download_path&#39;</span><span class="o">]</span>     <span class="o">=</span> <span class="s1">&#39;production&#39;</span> <span class="c1"># By default, download from production</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;upload_path&#39;</span><span class="o">]</span>       <span class="o">=</span> <span class="s1">&#39;development&#39;</span>  <span class="c1"># By default, upload to development</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;access_key_id&#39;</span><span class="o">]</span>     <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;secret_access_key&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;YYY&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Download settings</span>
+</span><span class='line'><span class="n">default</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;download&#39;</span><span class="o">][</span><span class="s1">&#39;cache_directory&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;/usr/local/symondsandson/cache/&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;ve pegged our package creation to fpm 1.3.3, which has worked extremely well for us. Remember to include your actual access key and secret access key to actually upload this to S3! Also note the cache directory location. We&rsquo;ll be using that down below.</p>
+
+<p>Now the base create recipe:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># symondsandson_packages/recipes/create.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Install everything we need to create packages.</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;apt&#39;</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;build-essential&#39;</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;xml&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">package</span> <span class="s2">&quot;zlib-devel compiletime install wget liblzma-dev libssl-dev libyaml-dev libreadline6-dev&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">chef_gem</span> <span class="s1">&#39;fpm&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">version</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;fpm&#39;</span><span class="o">][</span><span class="s1">&#39;version&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">action</span> <span class="ss">:upgrade</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">chef_gem</span> <span class="s1">&#39;fog&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">version</span> <span class="s1">&#39;1.25.0&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here we&rsquo;re just installing a bunch of packages that will be necessary for compiling whatever software we choose. And finally, let&rsquo;s create a version of Ruby:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># symondsandson_packages/recipes/create_ruby.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Pull in package creation prerequisites.</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;symondsandson_packages::create&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Pull in Ruby prerequisites</span>
+</span><span class='line'><span class="sx">%w(libffi6 libffi-dev)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">package</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">apt_package</span> <span class="n">package</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Install rbenv</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;custom_ruby::rbenv&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">rbenv_ruby</span> <span class="s1">&#39;2.2.0&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">environment</span><span class="p">({</span>
+</span><span class='line'>    <span class="s1">&#39;CONFIGURE_OPTS&#39;</span> <span class="o">=&gt;</span> <span class="s2">&quot;--enable-shared --with-opt-dir=/usr/local/rbenv/versions/2.2.0&quot;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="sx">%w(bundler backup puma nokogiri)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">g</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">rbenv_gem</span> <span class="n">g</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">rbenv_version</span> <span class="s1">&#39;2.2.0&#39;</span>
+</span><span class='line'>    <span class="n">action</span> <span class="ss">:install</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">symondsandson_packages</span> <span class="s1">&#39;ruby&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">version</span> <span class="s1">&#39;2.2.0&#39;</span>
+</span><span class='line'>  <span class="n">input_args</span> <span class="s1">&#39;.&#39;</span>
+</span><span class='line'>  <span class="n">prefix</span> <span class="s2">&quot;/usr/local/rbenv/versions/2.2.0&quot;</span>
+</span><span class='line'>  <span class="n">chdir</span> <span class="s2">&quot;/usr/local/rbenv/versions/2.2.0&quot;</span>
+</span><span class='line'>  <span class="n">action</span> <span class="ss">:create</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Again, we&rsquo;re just installing package prerequisites, compiling Ruby and a few gems, and then using a provider called <code>symondsandson_packages</code> to do the real work. The provider is quite special, so let&rsquo;s dig into it in a little bit more detail.</p>
+
+<h2>The Package Provider</h2>
+
+<p>Of course, the package provider does most of the heavy lifting. In addition to creating the packages, it also supports installing them. Before we get to it though, let&rsquo;s implement a little bit of abstraction so we can DRY up the provider a bit:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># symondsandson_packages/libraries/packages_helper.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># A few DRY helpers.</span>
+</span><span class='line'><span class="k">module</span> <span class="nn">SymondsandsonPackages</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="nb">self</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+</span><span class='line'>    <span class="s2">&quot;</span><span class="si">#{</span><span class="n">package</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">version</span><span class="si">}</span><span class="s2">.deb&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">download_path</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;download_path&#39;</span><span class="o">]</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">upload_path</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;upload_path&#39;</span><span class="o">]</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This shouldn&rsquo;t exactly be surprising stuff, and we&rsquo;re about to use it extensively!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># symondsandson_packages/providers/default.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;chef/mixin/shell_out&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;chef/mixin/language&#39;</span>
+</span><span class='line'><span class="kp">include</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Mixin</span><span class="o">::</span><span class="no">ShellOut</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">use_inline_resources</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">load_current_resource</span>
+</span><span class='line'>  <span class="vi">@package_name</span> <span class="o">=</span> <span class="o">::</span><span class="no">SymondsandsonPackages</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@download_path</span> <span class="o">=</span> <span class="o">::</span><span class="no">SymondsandsonPackages</span><span class="o">.</span><span class="n">download_path</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@upload_path</span> <span class="o">=</span> <span class="o">::</span><span class="no">SymondsandsonPackages</span><span class="o">.</span><span class="n">upload_path</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@cache_directory</span> <span class="o">=</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">cache_directory</span> <span class="o">||</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;download&#39;</span><span class="o">][</span><span class="s1">&#39;cache_directory&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">action</span> <span class="ss">:install</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">run_context</span><span class="o">.</span><span class="n">include_recipe</span> <span class="s1">&#39;apt&#39;</span>
+</span><span class='line'>  <span class="n">run_context</span><span class="o">.</span><span class="n">include_recipe</span> <span class="s1">&#39;symondsandson_packages::default&#39;</span>
+</span><span class='line'>  <span class="n">run_context</span><span class="o">.</span><span class="n">include_recipe</span> <span class="s1">&#39;s3_file&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span> <span class="o">=</span> <span class="n">s3_file</span><span class="p">(</span><span class="o">::</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vi">@cache_directory</span><span class="p">,</span> <span class="vi">@package_name</span><span class="p">))</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">bucket</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;bucket&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">aws_access_key_id</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;access_key_id&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">aws_secret_access_key</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;secret_access_key&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">action</span> <span class="ss">:nothing</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">instance_variable_set</span><span class="p">(</span><span class="ss">:@remote_path</span><span class="p">,</span> <span class="s2">&quot;/</span><span class="si">#{</span><span class="vi">@download_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Instance variables do not enter a lwrp setting block</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">run_action</span><span class="p">(</span><span class="ss">:create</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">d</span> <span class="o">=</span> <span class="n">dpkg_package</span><span class="p">(</span><span class="vi">@package_name</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">action</span> <span class="ss">:nothing</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">d</span><span class="o">.</span><span class="n">instance_variable_set</span><span class="p">(</span><span class="ss">:@source</span><span class="p">,</span> <span class="o">::</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vi">@cache_directory</span><span class="p">,</span> <span class="vi">@package_name</span><span class="p">))</span> <span class="c1"># Instance variables still do not enter a lwrp setting block</span>
+</span><span class='line'>  <span class="n">d</span><span class="o">.</span><span class="n">run_action</span><span class="p">(</span><span class="ss">:install</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">new_resource</span><span class="o">.</span><span class="n">updated_by_last_action</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">updated_by_last_action?</span> <span class="o">&amp;&amp;</span> <span class="n">d</span><span class="o">.</span><span class="n">updated_by_last_action?</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">run_context</span><span class="o">.</span><span class="n">include_recipe</span> <span class="s1">&#39;fpm-tng::default&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">fpm_tng_package</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">name</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">input_type</span> <span class="s1">&#39;dir&#39;</span>
+</span><span class='line'>    <span class="n">output_type</span> <span class="s1">&#39;deb&#39;</span>
+</span><span class='line'>    <span class="n">version</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">version</span>
+</span><span class='line'>    <span class="n">prefix</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">prefix</span>
+</span><span class='line'>    <span class="n">chdir</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">chdir</span>
+</span><span class='line'>    <span class="n">input_args</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">input_args</span>
+</span><span class='line'>    <span class="n">provides</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">provides</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">ruby_block</span> <span class="s2">&quot;upload </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> package&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">block</span> <span class="k">do</span>
+</span><span class='line'>      <span class="nb">require</span> <span class="s1">&#39;fog&#39;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">connection</span> <span class="o">=</span> <span class="no">Fog</span><span class="o">::</span><span class="no">Storage</span><span class="o">.</span><span class="n">new</span> <span class="ss">provider</span><span class="p">:</span>              <span class="s1">&#39;AWS&#39;</span><span class="p">,</span>
+</span><span class='line'>                                    <span class="ss">aws_access_key_id</span><span class="p">:</span>     <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;access_key_id&#39;</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>                                    <span class="ss">aws_secret_access_key</span><span class="p">:</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;secret_access_key&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">bucket</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">directories</span><span class="o">.</span><span class="n">get</span> <span class="n">node</span><span class="o">[</span><span class="s1">&#39;symondsandson_packages&#39;</span><span class="o">][</span><span class="s1">&#39;s3&#39;</span><span class="o">][</span><span class="s1">&#39;bucket&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">file</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">create</span> <span class="ss">key</span><span class="p">:</span>  <span class="o">::</span><span class="no">SymondsandsonPackages</span><span class="o">.</span><span class="n">upload_path</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">version</span><span class="p">),</span>
+</span><span class='line'>                                 <span class="ss">body</span><span class="p">:</span> <span class="o">::</span><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;/opt/fpm-pkgs/</span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">.deb&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There&rsquo;s a lot of stuff going on here, so let&rsquo;s take it piece by piece.</p>
+
+<p>First, we set some instance variables for use throughout the provider. We use them almost immediately in the <code>install</code> action with the excellent <a href="https://github.com/adamsb6/s3_file">s3_file</a> Chef provider, which allows us to easily download files from S3. Tragically we are forced to do some Ruby gymnastics to set instance variables for the providers, since instance variables do not enter blocks appropriately in Chef&hellip; but once the file is downloaded from S3, we use dkpg_package on it to install it. If both the files was downloaded and installed, then the <code>install</code> action updated its resource.</p>
+
+<p>The <code>create</code> action is just as easy. We pass in a bunch of arguments that fpm expects: here we make extensive use of the <a href="https://github.com/hw-cookbooks/fpm-tng">fpm_tng</a> provider, which wraps the installation and use of fpm. Finally, we manually upload the created package file using Fog directly.</p>
+
+<p>Using this provider and the <code>create</code> recipes above, you should be able to start up a vagrant or test-kitchen instance using a recipe like <code>symondsandson_packages::create_ruby</code> and have it automatically compile and upload Ruby to an S3 bucket of your choosing.</p>
+
+<h2>Installing Packages</h2>
+
+<p>Now that we have the provider out of the way, installing packages is simplicity itself!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># symondsandson_packages/recipes/install_ruby.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Do common basics.</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;apt&#39;</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;build-essential&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Install necessary packages</span>
+</span><span class='line'><span class="n">package</span> <span class="s2">&quot;zlib-devel compiletime install&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">package_name</span> <span class="s1">&#39;zlib1g-dev&#39;</span>
+</span><span class='line'><span class="k">end</span><span class="o">.</span><span class="n">run_action</span><span class="p">(</span><span class="ss">:install</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Install rbenv to manage the Ruby versions</span>
+</span><span class='line'><span class="n">include_recipe</span> <span class="s1">&#39;custom_ruby::rbenv&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Install libyaml so Ruby can function</span>
+</span><span class='line'><span class="n">package</span> <span class="s1">&#39;libyaml-dev&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">symondsandson_packages</span> <span class="s2">&quot;ruby-2.2.0&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">name</span> <span class="s1">&#39;ruby&#39;</span>
+</span><span class='line'>  <span class="n">version</span> <span class="s1">&#39;2.2.0&#39;</span>
+</span><span class='line'>  <span class="n">action</span> <span class="ss">:install</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Make sure rbenv detects and sets shims for this Ruby</span>
+</span><span class='line'><span class="n">rbenv_global</span> <span class="s1">&#39;2.2.0&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This simple and robust system has allowed us to package up any kind of software in a repeatable, efficient manner and then deploy it to multiple servers quickly. It&rsquo;s saved our clients tons of time wasted in compilation, and was pretty interesting and fun to code besides. Hopefully you&rsquo;ll find it useful as well!</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='http://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2015/06/10/packaging-anything-with-chef-and-fpm/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2015/06/10/packaging-anything-with-chef-and-fpm/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/04/chef-cookbook-continuous-integration/" title="Previous Post: Chef Cookbook Continuous Integration">&laquo; Chef Cookbook Continuous Integration</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2015 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
