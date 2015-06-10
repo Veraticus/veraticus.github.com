@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&rsquo;ve always loved reading behind-the-scenes articles about people&rsquo;s businesses: where their money came from, where it went, and what they &hellip;">
+  <meta name="description" content="Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,96 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/10/packaging-anything-with-chef-and-fpm/">Packaging Anything With Chef and Fpm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-10T10:33:45-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 9  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that wanted to install ffmpeg on each server, with compilation times upwards of five minutes. The answer to getting around long compilation times in a standardized server environment is, of course, packages! So we developed a Chef-based solution to create packages with the really excellent <a href="https://github.com/jordansissel/fpm">fpm</a>, upload them to S3, and then download them on target servers: all without needing anything other than a few gems.</p>
+
+<p>Want to do it yourself? Then read on.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/10/packaging-anything-with-chef-and-fpm/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/04/chef-cookbook-continuous-integration/">Chef Cookbook Continuous Integration</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-04T11:37:38-06:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 6  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Testing infrastructure is as crucial to the success of a business as testing applications. Yet most infrastructure is untested and validated only occasionally, and only by hand &ndash; this is especially a tragedy when chef is used, because chef has many high-quality tools to provide testing coverage from <a href="https://foodcritic.io">static analysis</a> to <a href="https://github.com/sethvargo/chefspec">unit testing</a> and even <a href="http://kitchen.ci/">full convergence runs</a>.</p>
+
+<p>At Symonds &amp; Son, we spent a lot of time and energy integrating our tests on <a href="https://circleci.com">CircleCI</a> into a continuous deployment process that begins with three layers of testing and ends with automated cookbook deployment to the chef servers we manage. I&rsquo;ll discuss chef continuous deployment in a later article; here, I&rsquo;ll cover how we got Foodcritic, ChefSpec, and Test Kitchen all running seamlessly in Circle.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/02/04/chef-cookbook-continuous-integration/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -462,99 +552,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/12/interviewing-symonds-and-son/">Interviewing Symonds &amp; Son</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-12T23:43:18-05:00" pubdate data-updated="true"></time>
-        <span class='readtime'>Reading time 6  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve had a rash of posts recently about <a href="http://symondsandson.com">Symonds &amp; Son</a>, and I was intending to write a piece more pertinent to Rails or programming rather than the business side of things&hellip; but recently I was approached to do an interview about working with my family. In answering the interviewer&rsquo;s questions, I thought the results were interesting enough to post on my blog &ndash; hopefully I&rsquo;ll also be able to post the interview itself when it&rsquo;s completed!</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/12/interviewing-symonds-and-son/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/22/supercharge-your-rails-development-environment/">Supercharge Your Rails Development Environment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-22T08:55:45-06:00" pubdate data-updated="true"></time>
-        <span class='readtime'>Reading time 7  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I love trying to improve my development environment. Efficiency is important to me: I spend hours and hours a day programming, and even a 1% or 2% productivity boost would provide a massive time savings over the course of a year. Or, as xkcd so pithily put it:</p>
-
-<p><a href="http://xkcd.com/1205/"><img src="http://imgs.xkcd.com/comics/is_it_worth_the_time.png" alt="Is It Worth The Time?" /></a></p>
-
-<p>Of course, I&rsquo;ve probably obliterated any potential savings by spending so much time experimenting, but now that I&rsquo;ve done it you don&rsquo;t have to! Listed here is everything important to me to get my development environment zipping along. Hopefully you&rsquo;ll be able to find something useful here too that makes your programming experiences a little bit faster.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/22/supercharge-your-rails-development-environment/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
-      <a class="prev" href="2">&larr; Older</a>
+      <a class="prev" href="/posts/2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
