@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="I&rsquo;ve had a rash of posts recently about Symonds &amp; Son, and I was intending to write a piece more pertinent to Rails or programming rather &hellip;">
+  <meta name="description" content="I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s OpsWorks, in many ways an elegant service. Once you have a set of chef recipes &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">Creating an AWS OpsWorks Instance Store AMI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-09T13:00:45-05:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 4  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -500,50 +543,6 @@
     <footer>
       <a rel="full-article" href="/blog/2013/10/14/helper-methods-in-sprinkle/">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/">Gistify 1.2.0: Drag &amp; Drop Gisting</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-13T10:23:00-05:00" pubdate data-updated="true"></time>
-        <span class='readtime'>Reading time less than 1 minute</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Gistify just keeps getting better!</p>
-
-<p><a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify 1.2.0</a> is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an entire file onto the Gistify icon and a new gist will be created from your file. The format of the file will automatically be detected, and the resulting gist URL added to your clipboard just as usual. Amazing!</p>
-
-<p>In addition to that big new feature, 1.2.0 features a number of bug fixes and performance improvements: for example, now Gistify will properly start up if you check the &ldquo;Open at Startup&rdquo; box, and you can copy and paste in the GitHub username/password fields (for the 1Password or LastPass users out there). Just small quality of life improvements generally.</p>
-
-<p>Interested in giving Gistify a shot? Go <a href="https://itunes.apple.com/us/app/gistify/id653231502">download it</a> now! Or if you&rsquo;d like to demo it without paying the $1.99, just let me know and I&rsquo;d be happy to set you up with a review copy.</p>
-</div>
-  
   
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-06-10T11:22:57-05:00</updated>
+  <updated>2015-12-09T00:09:00-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,252 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Awesome Banners With Consul and Monit]]></title>
+    <link href="http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit/"/>
+    <updated>2015-12-08T22:53:33-06:00</updated>
+    <id>http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit</id>
+    <content type="html"><![CDATA[<p>I love Hashicorp&rsquo;s <a href="https://consul.io">Consul</a> and I use it extensively in my infrastructures. I also love <a href="https://mmonit.com/monit/">Monit</a> and I use the two to keep up-to-date on the services running on my servers and remain confident that they&rsquo;ll stay up. Though both products have server dashboards (<a href="https://atlas.hashicorp.com/">Atlas</a> and <a href="https://mmonit.com/">mmonit</a> respectively) it can be very helpful to see the result of checks immediately upon logging in. Something like this:</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>After a bit of hacking I set up a little Ruby script that outputs exactly that using the magic of a <code>pam_motd</code> banner, so that when you log in you can immediately see how your system is doing. Getting it going is pretty easy and I&rsquo;ve found it quite helpful so far &ndash; if you&rsquo;re interested in running it as well, here&rsquo;s how!</p>
+
+<!-- more -->
+
+
+<h2>1. Remove <code>noupdate</code> from <code>/etc/pam.d/sshd</code> and <code>/etc/pam.d/login</code></h2>
+
+<p>Both the <code>/etc/pam.d/sshd</code> and <code>/etc/pam.d/login</code> files contain lines like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Print the message of the day upon successful login.</span>
+</span><span class='line'><span class="c"># This includes a dynamically generated part from /run/motd.dynamic</span>
+</span><span class='line'><span class="c"># and a static (admin-editable) part from /etc/motd.</span>
+</span><span class='line'>session    optional     pam_motd.so  <span class="nv">motd</span><span class="o">=</span>/run/motd.dynamic noupdate
+</span><span class='line'>session    optional     pam_motd.so <span class="c"># [1]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll want to comment out <code>noupdate</code> in both files, which prevents <code>pam_motd</code> from updating before login. Normally you don&rsquo;t want the <code>motd</code> updating before login, since that could be a bit time-consuming and you don&rsquo;t want to slow down the login process. However, if we don&rsquo;t update it before login then you&rsquo;ll get stale data, which is rather pointless for a status banner. And happily my Ruby script is very light-weight and adds less than 50ms to a login. Which, sure, not great, but also, not bad.</p>
+
+<p>So ensure you comment out <code>noupdate</code> before moving on to step 2.</p>
+
+<h2>2. Place the <code>statuser.rb</code> script in <code>/etc/update-motd.d/</code></h2>
+
+<p>The script I came up with is pretty lightweight, and I&rsquo;m sure I&rsquo;ll spend some time tightening it up, but for my purposes it serves well. I tried to avoid too many abstractions: though my first inclination was to put the memory and disk stats in objects, keeping them as arrays helps make the script minutely faster. Similarly I used <a href="https://github.com/ohler55/oj">oj</a> for JSON parsing since it&rsquo;s the fastest available JSON parser, though the amount of JSON Consul returns is so small I think any parser would&rsquo;ve performed adequately.</p>
+
+<p>So, with no further ado:</p>
+
+<div><script src='https://gist.github.com/039ef900b1d8bbcce4b7.js?file=statuser.rb'></script>
+<noscript><pre><code>#!/usr/bin/env ruby
+# Encoding: utf-8
+
+require &#39;colorize&#39;
+require &#39;oj&#39;
+require &#39;open3&#39;
+
+class Statuser
+  MAX_WIDTH           = 80
+  SINGLE_COLUMN_WIDTH = (MAX_WIDTH / 2 ) - 3
+  MAX_WORD_LENGTH     = 26
+  CHECK_MARK          = &#39;✓&#39;
+  X_MARK              = &#39;✗&#39;
+  WARNING_MARK        = &#39;⚠&#39;
+  SPACER              = &#39;·&#39;
+  TRUNCATOR           = &#39;…&#39;
+  GOOD_COLOR          = :green
+  GOOD_BACKGROUND     = :default
+  WARNING_COLOR       = :yellow
+  WARNING_BACKGROUND  = :default
+  BAD_COLOR           = :black
+  BAD_BACKGROUND      = :red
+
+  class &lt;&lt; self
+    def system_status
+      columns = []
+
+      # Basics
+      columns &lt;&lt; format_to_column(&#39;Time&#39;, :good, Time.now.strftime(&#39;%d %b %y %H:%M:%S %Z&#39;))
+      columns &lt;&lt; format_to_column(&#39;Uptime&#39;, :good, `uptime`.chomp.split(&#39;up &#39;).last.split(&#39;,  &#39;).first)
+      columns &lt;&lt; format_to_column(&#39;Release&#39;, :good, `lsb_release -s -d`)
+      columns &lt;&lt; format_to_column(&#39;Kernel&#39;, :good, `uname -r`)
+      columns &lt;&lt; format_to_column(&#39;Environment&#39;, :good, &#39;develop&#39;)
+
+      # Load average
+      load = `cat /proc/loadavg`.chomp.to_f
+      status = load &lt;= 0.8 ? :good : (load &lt;= 0.95 ? :warning : :bad)
+      columns &lt;&lt; format_to_column(&#39;Load (1 min)&#39;, status, load)
+
+      # Free space stats
+      space = `df -h /`.split(&quot;\n&quot;).collect {|l| l.split(/\s+/) }
+
+      root = space.find {|l| l.last == &#39;/&#39; }
+      if root
+        root_use = root[4]
+        status = root_use.to_i &lt;= 80 ? :good : (root_use.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Usage of /&#39;, status, root_use)
+      end
+
+      mnt = space.find {|l| l.last == &#39;/mnt&#39;}
+      if mnt
+        mnt_use = mnt[4]
+        status = mnt_use.to_i &lt;= 80 ? :good : (mnt_use.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Usage of /mnt&#39;, status, mnt_use)
+      end
+
+      # Memory stats
+      memory = `free -m`.split(&quot;\n&quot;).collect {|l| l.split(/\s+/) }
+
+      ram_usage = ((memory[1][2].to_f / memory[1][1].to_f) * 100).round(1).to_s + &#39;%&#39;
+      status = ram_usage.to_i &lt;= 80 ? :good : (ram_usage.to_i &lt;= 95 ? :warning : :bad)
+      columns &lt;&lt; format_to_column(&#39;Memory usage&#39;, status, ram_usage)
+
+      swap = memory[3][2] == &#39;0&#39; ? nil : ((memory[3][2].to_f / memory[3][1].to_f) * 100).round(1).to_s + &#39;%&#39;
+      if swap
+        status = swap.to_i &lt;= 80 ? :good : (memory.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Swap usage&#39;, status, swap)
+      end
+
+      # User stats
+      columns &lt;&lt; format_to_column(&#39;Users&#39;, :good, `users | wc -w`)
+
+      columns = columns.flatten.uniq
+
+      puts &quot;System Info&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    end
+
+    def monit_status
+      input, output, error, exit_status = Open3.popen3(&#39;monit summary&#39;)
+      output = output.read
+
+      raise &#39;Could not contact monit!&#39; unless output =~ /uptime/
+
+      columns = []
+
+      summary = output.chomp.split(&quot;\n&quot;).collect {|l| l.split(/&#39;\s+/) }
+      summary[2..-1].each do |line|
+        next if line[0] =~ /System/
+
+        name = line[0].split(&quot;&#39;&quot;).last
+        status = line[1]
+        status = &#39;Online&#39; if status =~ /Online/
+        color = if status == &#39;Online&#39; || status == &#39;Running&#39;
+          :good
+        else
+          :bad
+        end
+
+        columns &lt;&lt; format_to_column(name, color)
+      end
+
+      puts &quot;Monit Summary&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    rescue Exception =&gt; e
+      puts &quot;Monit error: #{e}&quot;.red.underline
+      puts &quot;&quot;
+    end
+
+    def consul_status
+      input, output, error, exit_status = Open3.popen3(&#39;curl http://localhost:8500/v1/agent/checks&#39;)
+
+      raise &#39;Could not contact consul!&#39; unless exit_status.value.success?
+
+      columns = []
+
+      summary = Oj.load(output.read)
+      summary.each do |name, hash|
+        status = hash[&#39;Status&#39;]
+
+        color = if status == &#39;passing&#39;
+          :good
+        elsif status == &#39;warning&#39;
+          :warning
+        else
+          :bad
+        end
+
+        columns &lt;&lt; format_to_column(name.split(&#39;:&#39;)[1..-1].join(&#39;:&#39;), color)
+      end
+
+      puts &quot;Consul Checks&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    rescue Exception =&gt; e
+      puts &quot;Consul error: #{e}&quot;.red.underline
+      puts &quot;&quot;
+    end
+
+    private
+
+    def combine_columns(left, right)
+      return left unless right
+      &quot;#{left} | #{right}&quot;
+    end
+
+    def format_to_column(left, status = :good, right = nil)
+      return nil unless left
+
+      right ||= case status
+      when :good
+        CHECK_MARK
+      when :warning
+        WARNING_MARK
+      when :bad
+        X_MARK
+      end
+
+      left = truncate(left, MAX_WORD_LENGTH)
+      right = truncate(right, MAX_WORD_LENGTH)
+
+      spacers = SINGLE_COLUMN_WIDTH - (left.size + right.size) - 1
+      spacers = 1 if spacers &lt;= 0
+
+      &quot;#{left} #{SPACER * spacers} #{right.colorize(
+        color: Statuser.const_get(status.to_s.upcase + &#39;_COLOR&#39;),
+        background: Statuser.const_get(status.to_s.upcase + &#39;_BACKGROUND&#39;)
+      )}&quot;
+    end
+
+    def truncate(string, length)
+      string = string.to_s.gsub(&quot;\n&quot;, &quot;&quot;)
+
+      return string if string.length &lt;= length
+      &quot;#{string[0..(length - 1)]}#{TRUNCATOR}&quot;
+    end
+  end
+
+end
+
+Statuser.system_status
+Statuser.monit_status
+Statuser.consul_status
+</code></pre></noscript></div>
+
+
+<p>To speak about the code generally, at the top I define a bunch of constants that you might want to change (like I thought using cute unicode characters for statuses was sensible, but if you don&rsquo;t have a unicode-compatible system you should probably change those). <code>system_status</code> queries for a lot of miscellaneous statuses and converts them into words and colors that are easily digestible &ndash; similarly, <code>monit_status</code> and <code>consul_status</code> do the same for my monitoring services.</p>
+
+<p>Helpers at the bottom format strings and tabularize the data into a more lovely format. I tried to keep the stuff you might want to change at the top, but if you really want to get into the nitty gritty of displaying, tweak the private methods at the bottom of the class.</p>
+
+<h2>3. SSH in!</h2>
+
+<p>SSH into your server and you should see your new banner displayed proudly!</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>If it isn&rsquo;t working you might just see your system&rsquo;s standard motd. If that&rsquo;s the case, try running the statuser manually &ndash; hopefully you&rsquo;ll get an error you can debug a little bit more.</p>
+
+<p>I know the statuser isn&rsquo;t the most elegant Ruby ever, but it does work, it is fast, and also it&rsquo;s easily extensible: you could add a lot more useful information to it very simply. I tried to err slightly on the side of conservatism with the data I chose, since I didn&rsquo;t want the login process to take too long&hellip; but I would love to hear suggestions for other interesting tidbits to put in that you might want to see every time you ssh in. And, of course, as I improve it I&rsquo;ll keep the gist updated.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Packaging Anything with Chef and fpm]]></title>
@@ -2875,21 +3121,6 @@ prompt_josh_setup &quot;$@&quot;
 <p>Now your helpers will be available everywhere you expect, allowing you to use them anywhere but still define them in one place.</p>
 
 <p>I&rsquo;ll post some more neat sprinkle tidbits in the future, but this by itself allowed me to significantly dry up my code and enjoy my sprinkle experience quite a lot more.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Gistify 1.2.0: Drag &amp; Drop Gisting]]></title>
-    <link href="http://joshsymonds.com/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting/"/>
-    <updated>2013-08-13T10:23:00-05:00</updated>
-    <id>http://joshsymonds.com/blog/2013/08/13/gistify-1-dot-2-0-drag-and-drop-gisting</id>
-    <content type="html"><![CDATA[<p>Gistify just keeps getting better!</p>
-
-<p><a href="https://itunes.apple.com/us/app/gistify/id653231502">Gistify 1.2.0</a> is now in the App Store, and features some awesome drag and drop magic. Drag a snippet of text or an entire file onto the Gistify icon and a new gist will be created from your file. The format of the file will automatically be detected, and the resulting gist URL added to your clipboard just as usual. Amazing!</p>
-
-<p>In addition to that big new feature, 1.2.0 features a number of bug fixes and performance improvements: for example, now Gistify will properly start up if you check the &ldquo;Open at Startup&rdquo; box, and you can copy and paste in the GitHub username/password fields (for the 1Password or LastPass users out there). Just small quality of life improvements generally.</p>
-
-<p>Interested in giving Gistify a shot? Go <a href="https://itunes.apple.com/us/app/gistify/id653231502">download it</a> now! Or if you&rsquo;d like to demo it without paying the $1.99, just let me know and I&rsquo;d be happy to set you up with a review copy.</p>
 ]]></content>
   </entry>
   

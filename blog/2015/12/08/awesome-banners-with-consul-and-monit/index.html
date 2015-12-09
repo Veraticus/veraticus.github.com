@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Awesome Banners With Consul and Monit - Hi, I&#8217;m Josh Symonds</title>
+  <meta name="author" content="Josh Symonds">
+
+  
+  <meta name="description" content="I love Hashicorp&rsquo;s Consul and I use it extensively in my infrastructures. I also love Monit and I use the two to keep up-to-date on the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hi, I'm Josh Symonds" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//code.highcharts.com/highcharts.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//use.typekit.net/vkg2ijz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+  $.noConflict();
+  jQuery(document).ready(function($) {
+    var stickyTop = $('nav').offset().top; // returns number
+    $(window).scroll(function(){ // scroll event
+      var windowTop = $(window).scrollTop(); // returns number
+      $('nav').toggleClass('sticky', (stickyTop < windowTop))
+    });
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29421607-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body >
+  <header role="banner"><hgroup>
+  <img id='avatar' src="/images/josh_circle.png" />
+  <div class='arrow_box'>
+    <h1><a href="/">Hi, I&#8217;m Josh Symonds</a></h1>
+    
+      <h2>I blog about Ruby on Rails, coding, and servers</h2>
+    
+  </div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><div id='navigation'>
+  <ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.google.com/search" method="get">
+    <fieldset role="search">
+      <input type="hidden" name="q" value="site:joshsymonds.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+    
+  <ul class="main-navigation">
+  <li id='logo'><a href="/">Josh Symonds</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/resume/">Resum&#233;</a></li>
+</ul>
+
+</div></nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Awesome Banners With Consul and Monit</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-08T22:53:33-06:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I love Hashicorp&rsquo;s <a href="https://consul.io">Consul</a> and I use it extensively in my infrastructures. I also love <a href="https://mmonit.com/monit/">Monit</a> and I use the two to keep up-to-date on the services running on my servers and remain confident that they&rsquo;ll stay up. Though both products have server dashboards (<a href="https://atlas.hashicorp.com/">Atlas</a> and <a href="https://mmonit.com/">mmonit</a> respectively) it can be very helpful to see the result of checks immediately upon logging in. Something like this:</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>After a bit of hacking I set up a little Ruby script that outputs exactly that using the magic of a <code>pam_motd</code> banner, so that when you log in you can immediately see how your system is doing. Getting it going is pretty easy and I&rsquo;ve found it quite helpful so far &ndash; if you&rsquo;re interested in running it as well, here&rsquo;s how!</p>
+
+<!-- more -->
+
+
+<h2>1. Remove <code>noupdate</code> from <code>/etc/pam.d/sshd</code> and <code>/etc/pam.d/login</code></h2>
+
+<p>Both the <code>/etc/pam.d/sshd</code> and <code>/etc/pam.d/login</code> files contain lines like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Print the message of the day upon successful login.</span>
+</span><span class='line'><span class="c"># This includes a dynamically generated part from /run/motd.dynamic</span>
+</span><span class='line'><span class="c"># and a static (admin-editable) part from /etc/motd.</span>
+</span><span class='line'>session    optional     pam_motd.so  <span class="nv">motd</span><span class="o">=</span>/run/motd.dynamic noupdate
+</span><span class='line'>session    optional     pam_motd.so <span class="c"># [1]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll want to comment out <code>noupdate</code> in both files, which prevents <code>pam_motd</code> from updating before login. Normally you don&rsquo;t want the <code>motd</code> updating before login, since that could be a bit time-consuming and you don&rsquo;t want to slow down the login process. However, if we don&rsquo;t update it before login then you&rsquo;ll get stale data, which is rather pointless for a status banner. And happily my Ruby script is very light-weight and adds less than 50ms to a login. Which, sure, not great, but also, not bad.</p>
+
+<p>So ensure you comment out <code>noupdate</code> before moving on to step 2.</p>
+
+<h2>2. Place the <code>statuser.rb</code> script in <code>/etc/update-motd.d/</code></h2>
+
+<p>The script I came up with is pretty lightweight, and I&rsquo;m sure I&rsquo;ll spend some time tightening it up, but for my purposes it serves well. I tried to avoid too many abstractions: though my first inclination was to put the memory and disk stats in objects, keeping them as arrays helps make the script minutely faster. Similarly I used <a href="https://github.com/ohler55/oj">oj</a> for JSON parsing since it&rsquo;s the fastest available JSON parser, though the amount of JSON Consul returns is so small I think any parser would&rsquo;ve performed adequately.</p>
+
+<p>So, with no further ado:</p>
+
+<div><script src='https://gist.github.com/039ef900b1d8bbcce4b7.js?file=statuser.rb'></script>
+<noscript><pre><code>#!/usr/bin/env ruby
+# Encoding: utf-8
+
+require &#39;colorize&#39;
+require &#39;oj&#39;
+require &#39;open3&#39;
+
+class Statuser
+  MAX_WIDTH           = 80
+  SINGLE_COLUMN_WIDTH = (MAX_WIDTH / 2 ) - 3
+  MAX_WORD_LENGTH     = 26
+  CHECK_MARK          = &#39;✓&#39;
+  X_MARK              = &#39;✗&#39;
+  WARNING_MARK        = &#39;⚠&#39;
+  SPACER              = &#39;·&#39;
+  TRUNCATOR           = &#39;…&#39;
+  GOOD_COLOR          = :green
+  GOOD_BACKGROUND     = :default
+  WARNING_COLOR       = :yellow
+  WARNING_BACKGROUND  = :default
+  BAD_COLOR           = :black
+  BAD_BACKGROUND      = :red
+
+  class &lt;&lt; self
+    def system_status
+      columns = []
+
+      # Basics
+      columns &lt;&lt; format_to_column(&#39;Time&#39;, :good, Time.now.strftime(&#39;%d %b %y %H:%M:%S %Z&#39;))
+      columns &lt;&lt; format_to_column(&#39;Uptime&#39;, :good, `uptime`.chomp.split(&#39;up &#39;).last.split(&#39;,  &#39;).first)
+      columns &lt;&lt; format_to_column(&#39;Release&#39;, :good, `lsb_release -s -d`)
+      columns &lt;&lt; format_to_column(&#39;Kernel&#39;, :good, `uname -r`)
+      columns &lt;&lt; format_to_column(&#39;Environment&#39;, :good, &#39;develop&#39;)
+
+      # Load average
+      load = `cat /proc/loadavg`.chomp.to_f
+      status = load &lt;= 0.8 ? :good : (load &lt;= 0.95 ? :warning : :bad)
+      columns &lt;&lt; format_to_column(&#39;Load (1 min)&#39;, status, load)
+
+      # Free space stats
+      space = `df -h /`.split(&quot;\n&quot;).collect {|l| l.split(/\s+/) }
+
+      root = space.find {|l| l.last == &#39;/&#39; }
+      if root
+        root_use = root[4]
+        status = root_use.to_i &lt;= 80 ? :good : (root_use.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Usage of /&#39;, status, root_use)
+      end
+
+      mnt = space.find {|l| l.last == &#39;/mnt&#39;}
+      if mnt
+        mnt_use = mnt[4]
+        status = mnt_use.to_i &lt;= 80 ? :good : (mnt_use.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Usage of /mnt&#39;, status, mnt_use)
+      end
+
+      # Memory stats
+      memory = `free -m`.split(&quot;\n&quot;).collect {|l| l.split(/\s+/) }
+
+      ram_usage = ((memory[1][2].to_f / memory[1][1].to_f) * 100).round(1).to_s + &#39;%&#39;
+      status = ram_usage.to_i &lt;= 80 ? :good : (ram_usage.to_i &lt;= 95 ? :warning : :bad)
+      columns &lt;&lt; format_to_column(&#39;Memory usage&#39;, status, ram_usage)
+
+      swap = memory[3][2] == &#39;0&#39; ? nil : ((memory[3][2].to_f / memory[3][1].to_f) * 100).round(1).to_s + &#39;%&#39;
+      if swap
+        status = swap.to_i &lt;= 80 ? :good : (memory.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Swap usage&#39;, status, swap)
+      end
+
+      # User stats
+      columns &lt;&lt; format_to_column(&#39;Users&#39;, :good, `users | wc -w`)
+
+      columns = columns.flatten.uniq
+
+      puts &quot;System Info&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    end
+
+    def monit_status
+      input, output, error, exit_status = Open3.popen3(&#39;monit summary&#39;)
+      output = output.read
+
+      raise &#39;Could not contact monit!&#39; unless output =~ /uptime/
+
+      columns = []
+
+      summary = output.chomp.split(&quot;\n&quot;).collect {|l| l.split(/&#39;\s+/) }
+      summary[2..-1].each do |line|
+        next if line[0] =~ /System/
+
+        name = line[0].split(&quot;&#39;&quot;).last
+        status = line[1]
+        status = &#39;Online&#39; if status =~ /Online/
+        color = if status == &#39;Online&#39; || status == &#39;Running&#39;
+          :good
+        else
+          :bad
+        end
+
+        columns &lt;&lt; format_to_column(name, color)
+      end
+
+      puts &quot;Monit Summary&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    rescue Exception =&gt; e
+      puts &quot;Monit error: #{e}&quot;.red.underline
+      puts &quot;&quot;
+    end
+
+    def consul_status
+      input, output, error, exit_status = Open3.popen3(&#39;curl http://localhost:8500/v1/agent/checks&#39;)
+
+      raise &#39;Could not contact consul!&#39; unless exit_status.value.success?
+
+      columns = []
+
+      summary = Oj.load(output.read)
+      summary.each do |name, hash|
+        status = hash[&#39;Status&#39;]
+
+        color = if status == &#39;passing&#39;
+          :good
+        elsif status == &#39;warning&#39;
+          :warning
+        else
+          :bad
+        end
+
+        columns &lt;&lt; format_to_column(name.split(&#39;:&#39;)[1..-1].join(&#39;:&#39;), color)
+      end
+
+      puts &quot;Consul Checks&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    rescue Exception =&gt; e
+      puts &quot;Consul error: #{e}&quot;.red.underline
+      puts &quot;&quot;
+    end
+
+    private
+
+    def combine_columns(left, right)
+      return left unless right
+      &quot;#{left} | #{right}&quot;
+    end
+
+    def format_to_column(left, status = :good, right = nil)
+      return nil unless left
+
+      right ||= case status
+      when :good
+        CHECK_MARK
+      when :warning
+        WARNING_MARK
+      when :bad
+        X_MARK
+      end
+
+      left = truncate(left, MAX_WORD_LENGTH)
+      right = truncate(right, MAX_WORD_LENGTH)
+
+      spacers = SINGLE_COLUMN_WIDTH - (left.size + right.size) - 1
+      spacers = 1 if spacers &lt;= 0
+
+      &quot;#{left} #{SPACER * spacers} #{right.colorize(
+        color: Statuser.const_get(status.to_s.upcase + &#39;_COLOR&#39;),
+        background: Statuser.const_get(status.to_s.upcase + &#39;_BACKGROUND&#39;)
+      )}&quot;
+    end
+
+    def truncate(string, length)
+      string = string.to_s.gsub(&quot;\n&quot;, &quot;&quot;)
+
+      return string if string.length &lt;= length
+      &quot;#{string[0..(length - 1)]}#{TRUNCATOR}&quot;
+    end
+  end
+
+end
+
+Statuser.system_status
+Statuser.monit_status
+Statuser.consul_status
+</code></pre></noscript></div>
+
+
+<p>To speak about the code generally, at the top I define a bunch of constants that you might want to change (like I thought using cute unicode characters for statuses was sensible, but if you don&rsquo;t have a unicode-compatible system you should probably change those). <code>system_status</code> queries for a lot of miscellaneous statuses and converts them into words and colors that are easily digestible &ndash; similarly, <code>monit_status</code> and <code>consul_status</code> do the same for my monitoring services.</p>
+
+<p>Helpers at the bottom format strings and tabularize the data into a more lovely format. I tried to keep the stuff you might want to change at the top, but if you really want to get into the nitty gritty of displaying, tweak the private methods at the bottom of the class.</p>
+
+<h2>3. SSH in!</h2>
+
+<p>SSH into your server and you should see your new banner displayed proudly!</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>If it isn&rsquo;t working you might just see your system&rsquo;s standard motd. If that&rsquo;s the case, try running the statuser manually &ndash; hopefully you&rsquo;ll get an error you can debug a little bit more.</p>
+
+<p>I know the statuser isn&rsquo;t the most elegant Ruby ever, but it does work, it is fast, and also it&rsquo;s easily extensible: you could add a lot more useful information to it very simply. I tried to err slightly on the side of conservatism with the data I chose, since I didn&rsquo;t want the login process to take too long&hellip; but I would love to hear suggestions for other interesting tidbits to put in that you might want to see every time you ssh in. And, of course, as I improve it I&rsquo;ll keep the gist updated.</p>
+</div>
+  <div class='attribution'>
+  <p>Josh Symonds performs devops and server wrangling on cloud-scale infrastructures, deploys amazing web applications with Ruby on Rails, and creates awesome iOS apps with Objective-C and RubyMotion. He is founder and CTO of <a href='http://symondsandson.com'>Symonds &amp; Son</a>, a development shop focused on quality and excellence.</p>
+  <img src="/images/josh.png" width='200' height='188' alt='Josh Symonds'/>
+  <ul class='icons'>
+    <li><i class="fa fa-phone"></i> 773-480-4810</li>
+    <li><i class="fa fa-envelope"></i> <a href='mailto:josh@joshsymonds.com?Subject=Hi&nbsp;Josh!'>josh@joshsymonds.com</a></li>
+    <li><i class="fa fa-link"></i> <a href='http://joshsymonds.com'>joshsymonds.com</a></li>
+    <li><a href='https://github.com/Veraticus'><i class="fa fa-github"></i> github.com/Veraticus</a></li>
+    <li><a href='https://twitter.com/Veraticus'><i class="fa fa-twitter"></i> twitter.com/Veraticus</a></li>
+  </ul>
+</div>
+
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit/" data-via="Veraticus" data-counturl="http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/10/packaging-anything-with-chef-and-fpm/" title="Previous Post: Packaging Anything with Chef and fpm">&laquo; Packaging Anything with Chef and fpm</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><div id='footer'>
+  <p>
+  Copyright &copy; 2015 - Josh Symonds -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</div>
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

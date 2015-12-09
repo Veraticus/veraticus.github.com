@@ -4,7 +4,7 @@
   <title><![CDATA[Category: servers | Hi, I'm Josh Symonds]]></title>
   <link href="http://joshsymonds.com/blog/categories/servers/atom.xml" rel="self"/>
   <link href="http://joshsymonds.com/"/>
-  <updated>2015-06-10T11:22:57-05:00</updated>
+  <updated>2015-12-09T00:09:00-06:00</updated>
   <id>http://joshsymonds.com/</id>
   <author>
     <name><![CDATA[Josh Symonds]]></name>
@@ -12,6 +12,246 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Awesome Banners With Consul and Monit]]></title>
+    <link href="http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit/"/>
+    <updated>2015-12-08T22:53:33-06:00</updated>
+    <id>http://joshsymonds.com/blog/2015/12/08/awesome-banners-with-consul-and-monit</id>
+    <content type="html"><![CDATA[<p>I love Hashicorp&rsquo;s <a href="https://consul.io">Consul</a> and I use it extensively in my infrastructures. I also love <a href="https://mmonit.com/monit/">Monit</a> and I use the two to keep up-to-date on the services running on my servers and remain confident that they&rsquo;ll stay up. Though both products have server dashboards (<a href="https://atlas.hashicorp.com/">Atlas</a> and <a href="https://mmonit.com/">mmonit</a> respectively) it can be very helpful to see the result of checks immediately upon logging in. Something like this:</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>After a bit of hacking I set up a little Ruby script that outputs exactly that using the magic of a <code>pam_motd</code> banner, so that when you log in you can immediately see how your system is doing. Getting it going is pretty easy and I&rsquo;ve found it quite helpful so far &ndash; if you&rsquo;re interested in running it as well, here&rsquo;s how!</p>
+
+<!-- more -->
+
+
+<h2>1. Remove <code>noupdate</code> from <code>/etc/pam.d/sshd</code> and <code>/etc/pam.d/login</code></h2>
+
+<p>Both the <code>/etc/pam.d/sshd</code> and <code>/etc/pam.d/login</code> files contain lines like this:</p>
+
+<pre><code class="bash"># Print the message of the day upon successful login.
+# This includes a dynamically generated part from /run/motd.dynamic
+# and a static (admin-editable) part from /etc/motd.
+session    optional     pam_motd.so  motd=/run/motd.dynamic noupdate
+session    optional     pam_motd.so # [1]
+</code></pre>
+
+<p>You&rsquo;ll want to comment out <code>noupdate</code> in both files, which prevents <code>pam_motd</code> from updating before login. Normally you don&rsquo;t want the <code>motd</code> updating before login, since that could be a bit time-consuming and you don&rsquo;t want to slow down the login process. However, if we don&rsquo;t update it before login then you&rsquo;ll get stale data, which is rather pointless for a status banner. And happily my Ruby script is very light-weight and adds less than 50ms to a login. Which, sure, not great, but also, not bad.</p>
+
+<p>So ensure you comment out <code>noupdate</code> before moving on to step 2.</p>
+
+<h2>2. Place the <code>statuser.rb</code> script in <code>/etc/update-motd.d/</code></h2>
+
+<p>The script I came up with is pretty lightweight, and I&rsquo;m sure I&rsquo;ll spend some time tightening it up, but for my purposes it serves well. I tried to avoid too many abstractions: though my first inclination was to put the memory and disk stats in objects, keeping them as arrays helps make the script minutely faster. Similarly I used <a href="https://github.com/ohler55/oj">oj</a> for JSON parsing since it&rsquo;s the fastest available JSON parser, though the amount of JSON Consul returns is so small I think any parser would&rsquo;ve performed adequately.</p>
+
+<p>So, with no further ado:</p>
+
+<p><div><script src='https://gist.github.com/039ef900b1d8bbcce4b7.js?file=statuser.rb'></script>
+<noscript><pre><code>#!/usr/bin/env ruby
+# Encoding: utf-8
+
+require &#39;colorize&#39;
+require &#39;oj&#39;
+require &#39;open3&#39;
+
+class Statuser
+  MAX_WIDTH           = 80
+  SINGLE_COLUMN_WIDTH = (MAX_WIDTH / 2 ) - 3
+  MAX_WORD_LENGTH     = 26
+  CHECK_MARK          = &#39;✓&#39;
+  X_MARK              = &#39;✗&#39;
+  WARNING_MARK        = &#39;⚠&#39;
+  SPACER              = &#39;·&#39;
+  TRUNCATOR           = &#39;…&#39;
+  GOOD_COLOR          = :green
+  GOOD_BACKGROUND     = :default
+  WARNING_COLOR       = :yellow
+  WARNING_BACKGROUND  = :default
+  BAD_COLOR           = :black
+  BAD_BACKGROUND      = :red
+
+  class &lt;&lt; self
+    def system_status
+      columns = []
+
+      # Basics
+      columns &lt;&lt; format_to_column(&#39;Time&#39;, :good, Time.now.strftime(&#39;%d %b %y %H:%M:%S %Z&#39;))
+      columns &lt;&lt; format_to_column(&#39;Uptime&#39;, :good, `uptime`.chomp.split(&#39;up &#39;).last.split(&#39;,  &#39;).first)
+      columns &lt;&lt; format_to_column(&#39;Release&#39;, :good, `lsb_release -s -d`)
+      columns &lt;&lt; format_to_column(&#39;Kernel&#39;, :good, `uname -r`)
+      columns &lt;&lt; format_to_column(&#39;Environment&#39;, :good, &#39;develop&#39;)
+
+      # Load average
+      load = `cat /proc/loadavg`.chomp.to_f
+      status = load &lt;= 0.8 ? :good : (load &lt;= 0.95 ? :warning : :bad)
+      columns &lt;&lt; format_to_column(&#39;Load (1 min)&#39;, status, load)
+
+      # Free space stats
+      space = `df -h /`.split(&quot;\n&quot;).collect {|l| l.split(/\s+/) }
+
+      root = space.find {|l| l.last == &#39;/&#39; }
+      if root
+        root_use = root[4]
+        status = root_use.to_i &lt;= 80 ? :good : (root_use.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Usage of /&#39;, status, root_use)
+      end
+
+      mnt = space.find {|l| l.last == &#39;/mnt&#39;}
+      if mnt
+        mnt_use = mnt[4]
+        status = mnt_use.to_i &lt;= 80 ? :good : (mnt_use.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Usage of /mnt&#39;, status, mnt_use)
+      end
+
+      # Memory stats
+      memory = `free -m`.split(&quot;\n&quot;).collect {|l| l.split(/\s+/) }
+
+      ram_usage = ((memory[1][2].to_f / memory[1][1].to_f) * 100).round(1).to_s + &#39;%&#39;
+      status = ram_usage.to_i &lt;= 80 ? :good : (ram_usage.to_i &lt;= 95 ? :warning : :bad)
+      columns &lt;&lt; format_to_column(&#39;Memory usage&#39;, status, ram_usage)
+
+      swap = memory[3][2] == &#39;0&#39; ? nil : ((memory[3][2].to_f / memory[3][1].to_f) * 100).round(1).to_s + &#39;%&#39;
+      if swap
+        status = swap.to_i &lt;= 80 ? :good : (memory.to_i &lt;= 95 ? :warning : :bad)
+        columns &lt;&lt; format_to_column(&#39;Swap usage&#39;, status, swap)
+      end
+
+      # User stats
+      columns &lt;&lt; format_to_column(&#39;Users&#39;, :good, `users | wc -w`)
+
+      columns = columns.flatten.uniq
+
+      puts &quot;System Info&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    end
+
+    def monit_status
+      input, output, error, exit_status = Open3.popen3(&#39;monit summary&#39;)
+      output = output.read
+
+      raise &#39;Could not contact monit!&#39; unless output =~ /uptime/
+
+      columns = []
+
+      summary = output.chomp.split(&quot;\n&quot;).collect {|l| l.split(/&#39;\s+/) }
+      summary[2..-1].each do |line|
+        next if line[0] =~ /System/
+
+        name = line[0].split(&quot;&#39;&quot;).last
+        status = line[1]
+        status = &#39;Online&#39; if status =~ /Online/
+        color = if status == &#39;Online&#39; || status == &#39;Running&#39;
+          :good
+        else
+          :bad
+        end
+
+        columns &lt;&lt; format_to_column(name, color)
+      end
+
+      puts &quot;Monit Summary&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    rescue Exception =&gt; e
+      puts &quot;Monit error: #{e}&quot;.red.underline
+      puts &quot;&quot;
+    end
+
+    def consul_status
+      input, output, error, exit_status = Open3.popen3(&#39;curl http://localhost:8500/v1/agent/checks&#39;)
+
+      raise &#39;Could not contact consul!&#39; unless exit_status.value.success?
+
+      columns = []
+
+      summary = Oj.load(output.read)
+      summary.each do |name, hash|
+        status = hash[&#39;Status&#39;]
+
+        color = if status == &#39;passing&#39;
+          :good
+        elsif status == &#39;warning&#39;
+          :warning
+        else
+          :bad
+        end
+
+        columns &lt;&lt; format_to_column(name.split(&#39;:&#39;)[1..-1].join(&#39;:&#39;), color)
+      end
+
+      puts &quot;Consul Checks&quot;.white.bold.underline
+      columns.each_slice(2) {|c| puts combine_columns(c[0], c[1])}
+      puts &quot;&quot;
+    rescue Exception =&gt; e
+      puts &quot;Consul error: #{e}&quot;.red.underline
+      puts &quot;&quot;
+    end
+
+    private
+
+    def combine_columns(left, right)
+      return left unless right
+      &quot;#{left} | #{right}&quot;
+    end
+
+    def format_to_column(left, status = :good, right = nil)
+      return nil unless left
+
+      right ||= case status
+      when :good
+        CHECK_MARK
+      when :warning
+        WARNING_MARK
+      when :bad
+        X_MARK
+      end
+
+      left = truncate(left, MAX_WORD_LENGTH)
+      right = truncate(right, MAX_WORD_LENGTH)
+
+      spacers = SINGLE_COLUMN_WIDTH - (left.size + right.size) - 1
+      spacers = 1 if spacers &lt;= 0
+
+      &quot;#{left} #{SPACER * spacers} #{right.colorize(
+        color: Statuser.const_get(status.to_s.upcase + &#39;_COLOR&#39;),
+        background: Statuser.const_get(status.to_s.upcase + &#39;_BACKGROUND&#39;)
+      )}&quot;
+    end
+
+    def truncate(string, length)
+      string = string.to_s.gsub(&quot;\n&quot;, &quot;&quot;)
+
+      return string if string.length &lt;= length
+      &quot;#{string[0..(length - 1)]}#{TRUNCATOR}&quot;
+    end
+  end
+
+end
+
+Statuser.system_status
+Statuser.monit_status
+Statuser.consul_status
+</code></pre></noscript></div>
+</p>
+
+<p>To speak about the code generally, at the top I define a bunch of constants that you might want to change (like I thought using cute unicode characters for statuses was sensible, but if you don&rsquo;t have a unicode-compatible system you should probably change those). <code>system_status</code> queries for a lot of miscellaneous statuses and converts them into words and colors that are easily digestible &ndash; similarly, <code>monit_status</code> and <code>consul_status</code> do the same for my monitoring services.</p>
+
+<p>Helpers at the bottom format strings and tabularize the data into a more lovely format. I tried to keep the stuff you might want to change at the top, but if you really want to get into the nitty gritty of displaying, tweak the private methods at the bottom of the class.</p>
+
+<h2>3. SSH in!</h2>
+
+<p>SSH into your server and you should see your new banner displayed proudly!</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>If it isn&rsquo;t working you might just see your system&rsquo;s standard motd. If that&rsquo;s the case, try running the statuser manually &ndash; hopefully you&rsquo;ll get an error you can debug a little bit more.</p>
+
+<p>I know the statuser isn&rsquo;t the most elegant Ruby ever, but it does work, it is fast, and also it&rsquo;s easily extensible: you could add a lot more useful information to it very simply. I tried to err slightly on the side of conservatism with the data I chose, since I didn&rsquo;t want the login process to take too long&hellip; but I would love to hear suggestions for other interesting tidbits to put in that you might want to see every time you ssh in. And, of course, as I improve it I&rsquo;ll keep the gist updated.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Packaging Anything with Chef and fpm]]></title>
@@ -600,142 +840,6 @@ default['database'] = {
 <h2>6. Use the AWS API</h2>
 
 <p>So what&rsquo;s the real advantage of doing this whole song and dance? Using the AWS API, you can command and control your servers (and all your attached AWS stuff) with an ease and simplicity you can&rsquo;t achieve anywhere else. But for more details on that, you&rsquo;ll just have to stay tuned for my next post, which will discuss all the awesome things you can start doing with OpsWorks once you have it set up properly.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating an AWS OpsWorks Instance Store AMI]]></title>
-    <link href="http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/"/>
-    <updated>2014-05-09T13:00:45-05:00</updated>
-    <id>http://joshsymonds.com/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
-
-<!-- more -->
-
-
-<h2>0. Get your chef recipes working in OpsWorks</h2>
-
-<p>Don&rsquo;t do any of this until you have a fully-provisioned server working exactly as you&rsquo;d expect. Make sure <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html">auto healing</a> is disabled for the layer. The rest of the steps assume you have such a properly set-up instance, a well configured layer, and that the original image was Ubuntu 12.04.</p>
-
-<h2>1. Download your X.509 certificates</h2>
-
-<p>Amazon has a pretty good <a href="http://docs.aws.amazon.com/AmazonDevPay/latest/DevPayDeveloperGuide/X509Certificates.html">checklist</a> for how to do this. You need X.509 certificates so only you and Amazon can access your AMI, which for most layers is a sensible security precaution. For this walkthrough I&rsquo;ll assume you have the private key downloaded to ~/certs/pk-X509.pem and the the certificate downloaded to ~/certs/cert-X509.pem.</p>
-
-<h2>2. Transfer your certs to the server</h2>
-
-<p>On the server itself:</p>
-
-<pre><code class="bash">mkdir -p /tmp/cert/
-</code></pre>
-
-<p>On your local computer:</p>
-
-<pre><code>scp ~/certs/pk-X509.pem ~/certs/cert-X509.pem your-user@your-servers-public-dns:/tmp/cert/
-</code></pre>
-
-<p>This will securely transfer your certs up to the server. Make sure to replace <code>your-user</code> with whatever user on OpsWorks you have permission to access, and <code>your-servers-public-dns</code> with the public DNS record for your server.</p>
-
-<h2>3. Download the EC2 AMI tools</h2>
-
-<p>I&rsquo;m not totally sure why the AMI tools and API tools are separate packages, but since they are you&rsquo;ll need to install them individually. For the AMI tools:</p>
-
-<pre><code class="bash">sudo apt-get install -y unzip
-wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
-sudo mkdir -p /usr/local/ec2
-sudo unzip ec2-ami-tools.zip -d /usr/local/ec2
-export EC2_AMITOOL_HOME=/usr/local/ec2/ec2-ami-tools-1.5.3/
-export PATH=$EC2_AMITOOL_HOME/bin:$PATH
-</code></pre>
-
-<p>If you got a different version of the AMI tools than 1.5.3, you&rsquo;ll want to replace the AMI tools directory with the proper version.</p>
-
-<h2>4. Download the EC2 API tools</h2>
-
-<p>A similar process to step 3.</p>
-
-<pre><code class="bash">wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
-sudo unzip ec2-api-tools.zip -d /usr/local/ec2
-sudo apt-get install -y openjdk-7-jre
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre/
-export EC2_HOME=/usr/local/ec2/ec2-api-tools-1.6.13.0/
-export PATH=$PATH:$EC2_HOME/bin
-export AWS_ACCESS_KEY=YourAccessKey
-export AWS_SECRET_KEY=YourSecretKey
-</code></pre>
-
-<p>Again, if you downloaded a different version of the API tools, you&rsquo;ll need to change the API tools directory. Also replace <code>YourAccessKey</code> and <code>YourSecretKey</code> with your real access and secret keys.</p>
-
-<h2>5. Ensure your version of GRUB is correct</h2>
-
-<p>On Ubuntu 12.04, I didn&rsquo;t have to do anything except this:</p>
-
-<pre><code class="bash">sudo apt-get install -y grub gdisk kpartx
-</code></pre>
-
-<p>But if your image has boot problems GRUB is the most likely culprit. Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">good walkthrough</a> of how to set up legacy GRUB properly &ndash; following it should correct any boot issues you experience on your AMI.</p>
-
-<h2>6. Stop all services</h2>
-
-<p>Make sure everything and anything is stopped on the target server. A non-exclusive list:</p>
-
-<pre><code class="bash">sudo service monit stop
-sudo service mysql stop
-sudo service nginx stop
-sudo service redis stop
-sudo service memcached stop
-sudo service opsworks-agent stop
-</code></pre>
-
-<p>Running services can destroy the integrity of the image. Make sure everything is stopped before you waste your time!</p>
-
-<h2>7. Remove instance configuration directories</h2>
-
-<p>All of the instance-specific config directories must be destroyed, or OpsWorks will fail to provision the new image.</p>
-
-<pre><code class="bash">sudo rm -rf /etc/aws/opsworks/ \
-            /opt/aws/opsworks/ \
-            /var/log/aws/opsworks/ \
-            /var/lib/aws/opsworks/ \
-            /etc/monit.d/opsworks-agent.monitrc \
-            /etc/monit/conf.d/opsworks-agent.monitrc \
-            /var/lib/cloud/
-</code></pre>
-
-<h2>8. Bundle the volume</h2>
-
-<p>Finally, after all that setup, you&rsquo;re ready to actually bundle the volume.</p>
-
-<pre><code class="bash">ec2-bundle-vol -k /tmp/cert/pk-X509.pem \
-               -c /tmp/cert/cert-X509.pem \
-               -u 123456789012 \
-               -r x86_64 \
-               -e /tmp/cert \
-               -i $(find /etc /usr /opt -name '*.pem' -o -name '*.crt' -o -name '*.gpg' | tr '\n' ',')
-</code></pre>
-
-<p>Note that we provide the certificate locations as part of this command, so if your certs are named differently change that name above. Also you need to provide the account ID number for the -u flag. You can find this on your <a href="https://console.aws.amazon.com/iam/home?#security_credential">security credentials IAM page</a>, or if you need more help, check out Amazon&rsquo;s <a href="http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html">documentation on finding your account ID number</a>.</p>
-
-<p>This command will probably take a long while to run.</p>
-
-<h2>9. Create and upload the volume to an S3 bucket</h2>
-
-<p>Once the volume is bundled, go to S3 and create a bucket to receive the machine image. Then run this command on your instance:</p>
-
-<pre><code class="bash">ec2-upload-bundle -b bucket_name/image_name \
-                  -m /tmp/image.manifest.xml \
-                  --region us-east-1
-</code></pre>
-
-<p>Replace <code>bucket_name</code> and <code>image_name</code> with the bucket you created in S3 and whatever you&rsquo;d like to name the image, and the region with whatever region your bucket is located in (and where you want the AMI to be registered). This will also take awhile to run.</p>
-
-<h2>10. Register the AMI</h2>
-
-<p>Only one step left, and this is an easy one! You can register the AMI with this command:</p>
-
-<pre><code class="bash">ec2-register bucket_name/image_name/image.manifest.xml -n image_name --region us-east-1
-</code></pre>
-
-<p>You should now successfully see your new image in your list of registered AMIs for your region. Change your layer settings to use a custom image and select the AMI as the image for a new instance and try it out. Hopefully you&rsquo;ll have just cut out a fair amount of time from your instance provisioning process.</p>
 ]]></content>
   </entry>
   

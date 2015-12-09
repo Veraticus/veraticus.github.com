@@ -9,7 +9,7 @@
   <meta name="author" content="Josh Symonds">
 
   
-  <meta name="description" content="Compiling software takes a long time. The worst offender, for us, is usually Ruby, but it could be anything &ndash; recently we had a client that &hellip;">
+  <meta name="description" content="I love Hashicorp&rsquo;s Consul and I use it extensively in my infrastructures. I also love Monit and I use the two to keep up-to-date on the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/08/awesome-banners-with-consul-and-monit/">Awesome Banners With Consul and Monit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-08T22:53:33-06:00" pubdate data-updated="true"></time>
+        <span class='readtime'>Reading time 5  minutes</span>
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I love Hashicorp&rsquo;s <a href="https://consul.io">Consul</a> and I use it extensively in my infrastructures. I also love <a href="https://mmonit.com/monit/">Monit</a> and I use the two to keep up-to-date on the services running on my servers and remain confident that they&rsquo;ll stay up. Though both products have server dashboards (<a href="https://atlas.hashicorp.com/">Atlas</a> and <a href="https://mmonit.com/">mmonit</a> respectively) it can be very helpful to see the result of checks immediately upon logging in. Something like this:</p>
+
+<p><img src="https://s3.amazonaws.com/f.cl.ly/items/2w2G2g1S0E111y0l1Q15/banner.png" alt="Banner" /></p>
+
+<p>After a bit of hacking I set up a little Ruby script that outputs exactly that using the magic of a <code>pam_motd</code> banner, so that when you log in you can immediately see how your system is doing. Getting it going is pretty easy and I&rsquo;ve found it quite helpful so far &ndash; if you&rsquo;re interested in running it as well, here&rsquo;s how!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/12/08/awesome-banners-with-consul-and-monit/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -503,49 +550,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/06/11/getting-started-with-aws-opsworks/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">Creating an AWS OpsWorks Instance Store AMI</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-09T13:00:45-05:00" pubdate data-updated="true"></time>
-        <span class='readtime'>Reading time 4  minutes</span>
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been doing a fair amount of work in Amazon&rsquo;s <a href="https://aws.amazon.com/opsworks/">OpsWorks</a>, in many ways an elegant service. Once you have a set of chef recipes provisioning properly, you&rsquo;ll want to create an AMI for the layer in question so that you don&rsquo;t have to wait through a long setup process again. Unfortunately, doing this in OpsWorks can be frustrating since the instructions for making it happen are scattered across <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-custom-ami.html">four</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">entirely</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/ec2-cli-get-set-up.html#install-ami-tools">different</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/CommandLineReference/set-up-ec2-cli-linux.html">documents</a>. For my own sanity I made a checklist of all the steps necessary to create an AMI on an instance store EC2 server: this is that checklist for anyone else who might find it useful.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/09/creating-an-aws-opsworks-instance-store-ami/">Read on &rarr;</a>
     </footer>
   
 
