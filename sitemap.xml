@@ -447,25 +447,25 @@
   </url>
   <url>
     <loc>http://joshsymonds.com/404.html</loc>
-    <lastmod>2015-12-09T00:09:00-06:00</lastmod>
+    <lastmod>2016-08-03T23:08:43-05:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://joshsymonds.com/blog/archives/</loc>
+    <lastmod>2016-08-03T23:08:43-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://joshsymonds.com/</loc>
-    <lastmod>2015-12-09T00:09:00-06:00</lastmod>
+    <lastmod>2016-08-03T23:08:43-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://joshsymonds.com/blog/archives/</loc>
-    <lastmod>2015-12-09T00:09:00-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>http://joshsymonds.com/resume/</loc>
-    <lastmod>2015-12-09T00:09:00-06:00</lastmod>
+    <lastmod>2016-08-03T23:08:43-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
