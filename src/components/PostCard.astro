@@ -35,12 +35,32 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
     border-left: 3px solid var(--black);
     background: var(--bg-surface);
     margin-block-end: 0.5rem;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
   }
 
   .post-card:hover {
     border-left-color: var(--teal);
     transform: translateX(4px);
+    box-shadow: 3px 3px 0 var(--yellow);
+  }
+
+  .post-card::before {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--pink);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .post-card:hover::before {
+    opacity: 1;
   }
 
   .post-date {

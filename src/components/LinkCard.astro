@@ -3,33 +3,99 @@ interface Props {
   readonly href: string;
   readonly title: string;
   readonly icon?: string;
+  readonly colorIndex?: number;
 }
 
-const { href, title, icon } = Astro.props;
+const { href, title, icon, colorIndex = 0 } = Astro.props;
+
+// Pastel Memphis colors - gentle tones
+const colors = [
+  '#a8e6cf', // soft mint
+  '#ffb3ba', // soft coral
+  '#fff5b7', // soft yellow
+  '#c9c9ff', // soft lavender
+  '#ffd3b6', // soft peach
+];
+const bgColor = colors[colorIndex % colors.length];
+
+// Alternating skew directions
+const skewDir = colorIndex % 2 === 0 ? -6 : 6;
 ---
 
-<a class="link-card" href={href}>
-  {icon && <span class="link-card-icon">{icon}</span>}
-  <span class="link-card-title">{title}</span>
+<a
+  class="link-card"
+  href={href}
+  style={`--card-color: ${bgColor}; --skew: ${skewDir}deg;`}
+>
+  <span class="slash slash-1" aria-hidden="true"></span>
+  <span class="slash slash-2" aria-hidden="true"></span>
+  <span class="card-content">
+    {icon && <span class="link-card-icon">{icon}</span>}
+    <span class="link-card-title">{title}</span>
+  </span>
+  <span class="card-arrow" aria-hidden="true">→</span>
 </a>
 
 <style>
   .link-card {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 1.25rem 1.5rem;
-    background: #fff;
-    border: 3px solid #1a1a1a;
+    justify-content: space-between;
+    padding: 1.35rem 1.75rem;
+    background: var(--card-color);
+    border: 3px solid var(--black, #1a1a1a);
     text-decoration: none;
-    color: #1a1a1a;
-    box-shadow: 4px 4px 0 #1a1a1a;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: var(--black, #1a1a1a);
+    transform: skewX(var(--skew));
+    box-shadow: 3px 3px 0 var(--black, #1a1a1a);
+    transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1),
+                box-shadow 0.1s cubic-bezier(0.2, 0, 0, 1);
+    overflow: hidden;
   }
 
   .link-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #1a1a1a;
+    transform: skewX(var(--skew)) translate(-3px, -3px);
+    box-shadow: 5px 5px 0 var(--black, #1a1a1a);
+  }
+
+  .link-card:active {
+    transform: skewX(var(--skew)) translate(1px, 1px);
+    box-shadow: 2px 2px 0 var(--black, #1a1a1a);
+    transition-duration: 0.05s;
+  }
+
+  /* Diagonal slashes */
+  .slash {
+    position: absolute;
+    background: var(--black, #1a1a1a);
+    pointer-events: none;
+  }
+
+  .slash-1 {
+    top: -20%;
+    right: 22%;
+    width: 3px;
+    height: 140%;
+    transform: rotate(-20deg);
+    opacity: 0.1;
+  }
+
+  .slash-2 {
+    top: -20%;
+    right: 30%;
+    width: 6px;
+    height: 140%;
+    transform: rotate(-20deg);
+    opacity: 0.06;
+  }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    transform: skewX(calc(var(--skew) * -1));
+    z-index: 1;
   }
 
   .link-card-icon {
@@ -39,8 +105,24 @@ const { href, title, icon } = Astro.props;
   }
 
   .link-card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-style: italic;
+  }
+
+  .card-arrow {
+    font-size: 1.5rem;
+    font-weight: 900;
+    transform: skewX(calc(var(--skew) * -1));
+    opacity: 0.4;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+    z-index: 1;
+  }
+
+  .link-card:hover .card-arrow {
+    transform: skewX(calc(var(--skew) * -1)) translateX(6px);
+    opacity: 1;
   }
 </style>

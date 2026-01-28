@@ -53,6 +53,19 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     margin-block-end: 2.5rem;
     padding-block-end: 1.5rem;
     border-block-end: 3px solid var(--black);
+    position: relative;
+  }
+
+  .post-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 10px;
+    height: 10px;
+    background: var(--teal);
+    border: 2px solid var(--black);
+    border-radius: 50%;
   }
 
   .post-header h1 {
@@ -165,6 +178,19 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     padding: 1rem 1.25rem;
     color: var(--text-muted);
     font-style: italic;
+    position: relative;
+  }
+
+  .prose :global(blockquote)::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    background: var(--coral);
+    border: 2px solid var(--black);
+    transform: rotate(45deg);
   }
 
   .prose :global(img) {
@@ -194,5 +220,19 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     height: 3px;
     background: var(--black);
     margin-block: 2rem;
+    position: relative;
+  }
+
+  .prose :global(hr)::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--yellow);
+    border: 2px solid var(--black);
+    border-radius: 50%;
   }
 </style>

@@ -27,7 +27,10 @@ const sortedYears = [...postsByYear.keys()].sort((a, b) => b - a);
 
 <Page title="Blog Archive">
   <div class="archive-container">
-    <h1 class="archive-heading">Blog Archive</h1>
+    <h1 class="archive-heading">
+      Blog Archive
+      <span class="heading-flair" aria-hidden="true"></span>
+    </h1>
     {sortedYears.map((year) => (
       <section class="year-group">
         <h2 class="year-heading">{year}</h2>
@@ -59,6 +62,18 @@ const sortedYears = [...postsByYear.keys()].sort((a, b) => b - a);
     font-weight: 800;
     color: var(--black);
     margin-block-end: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .heading-flair {
+    width: 12px;
+    height: 12px;
+    background: var(--teal);
+    border: 2px solid var(--black);
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   .year-group {
@@ -72,6 +87,19 @@ const sortedYears = [...postsByYear.keys()].sort((a, b) => b - a);
     margin-block-end: 1rem;
     padding-block-end: 0.5rem;
     border-block-end: 3px solid var(--black);
+    position: relative;
+  }
+
+  .year-heading::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -3px;
+    width: 8px;
+    height: 8px;
+    background: var(--coral);
+    border: 2px solid var(--black);
+    transform: rotate(45deg);
   }
 
   .posts-list {

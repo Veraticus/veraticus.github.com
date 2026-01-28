@@ -3,12 +3,15 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="footer-squiggle" aria-hidden="true">
-    <svg width="80" height="16" viewBox="0 0 80 16" fill="none">
+  <div class="footer-flair" aria-hidden="true">
+    <span class="flair-circle"></span>
+    <svg class="footer-squiggle" width="80" height="16" viewBox="0 0 80 16" fill="none">
       <path d="M2 8 C12 2, 18 14, 28 8 C38 2, 44 14, 54 8 C64 2, 70 14, 78 8" stroke="#2ec4b6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
     </svg>
+    <span class="flair-diamond"></span>
   </div>
   <p>&copy; {currentYear} Josh Symonds</p>
+  <a class="source-link" href="https://github.com/Veraticus/veraticus.github.com">View Source</a>
 </footer>
 
 <style>
@@ -20,10 +23,28 @@ const currentYear = new Date().getFullYear();
     background: #fff;
   }
 
-  .footer-squiggle {
+  .footer-flair {
     margin-bottom: 0.75rem;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .flair-circle {
+    width: 8px;
+    height: 8px;
+    background: var(--coral, #ff6b6b);
+    border: 2px solid #1a1a1a;
+    border-radius: 50%;
+  }
+
+  .flair-diamond {
+    width: 7px;
+    height: 7px;
+    background: var(--yellow, #ffd166);
+    border: 2px solid #1a1a1a;
+    transform: rotate(45deg);
   }
 
   .site-footer p {
@@ -31,5 +52,19 @@ const currentYear = new Date().getFullYear();
     font-size: 0.9rem;
     font-weight: 600;
     margin: 0;
+  }
+
+  .source-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--teal, #2ec4b6);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .source-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 </style>

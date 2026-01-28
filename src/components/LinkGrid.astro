@@ -1,17 +1,100 @@
 ---
 ---
 
-<div class="link-grid">
-  <slot />
+<div class="link-grid-wrapper">
+  <!-- Bold colored slashes across the section -->
+  <div class="color-slash slash-mint" aria-hidden="true"></div>
+  <div class="color-slash slash-coral" aria-hidden="true"></div>
+  <div class="color-slash slash-yellow" aria-hidden="true"></div>
+  <div class="color-slash slash-lavender" aria-hidden="true"></div>
+  <div class="color-slash slash-peach" aria-hidden="true"></div>
+
+  <div class="link-grid">
+    <slot />
+  </div>
 </div>
 
 <style>
-  .link-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
-    max-width: 800px;
+  .link-grid-wrapper {
+    position: relative;
+    max-width: 900px;
     margin: 0 auto;
-    width: 100%;
+    padding: 3rem 1.5rem;
+    overflow: hidden;
+  }
+
+  /* Bold colored slashes spanning the section */
+  .color-slash {
+    position: absolute;
+    width: 20px;
+    height: 200%;
+    top: -50%;
+    transform: rotate(-15deg);
+    pointer-events: none;
+    border: 3px solid var(--black, #1a1a1a);
+  }
+
+  .slash-mint {
+    left: 2%;
+    background: #a8e6cf;
+  }
+
+  .slash-coral {
+    left: 12%;
+    width: 12px;
+    background: #ffb3ba;
+  }
+
+  .slash-yellow {
+    right: 8%;
+    width: 28px;
+    background: #fff5b7;
+  }
+
+  .slash-lavender {
+    right: 18%;
+    width: 10px;
+    background: #c9c9ff;
+  }
+
+  .slash-peach {
+    left: 25%;
+    width: 8px;
+    background: #ffd3b6;
+    opacity: 0.7;
+  }
+
+  .link-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .link-grid :global(.link-card) {
+    width: calc(50% - 3rem);
+    margin: 1rem 1.5rem;
+  }
+
+  @media (max-width: 700px) {
+    .link-grid {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .link-grid :global(.link-card) {
+      width: calc(100% - 2rem);
+      margin: 0.75rem 1rem;
+    }
+
+    .color-slash {
+      width: 12px;
+    }
+
+    .slash-yellow {
+      width: 18px;
+    }
   }
 </style>

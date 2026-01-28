@@ -20,10 +20,9 @@ import { links } from "../data/links";
   </section>
 
   <section class="links-section">
-    <h2 class="links-heading">Find Me</h2>
     <LinkGrid>
       {links.map((link, i) => (
-        <LinkCard {...link} style={`--delay: ${i * 0.1}s`} />
+        <LinkCard {...link} colorIndex={i} />
       ))}
     </LinkGrid>
   </section>
@@ -75,15 +74,6 @@ import { links } from "../data/links";
     background: var(--bg, #fafaf7);
   }
 
-  .links-heading {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--teal, #2ec4b6);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 1rem;
-  }
 
   /* --- Responsive --- */
   @media (max-width: 768px) {
