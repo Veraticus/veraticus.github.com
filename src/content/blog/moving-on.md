@@ -1,0 +1,25 @@
+---
+title: "Moving On"
+date: 2012-05-31 16:49
+tags: [business]
+---
+I try to keep to a schedule of a post every three days, and I've definitely not been keeping on top of that -- I haven't posted for almost a week and a half now. I apologize for the lack of content; in my defense, I've been deep in negotiations that have resulted in some exciting personal changes. Changes that should hopefully make this modest blog even more interesting!
+
+
+## Leaving Hipstamatic
+
+I'm leaving my position as web director of Synthetic. I love the company and the product -- I think Hipstamatic has a bright future ahead of it, and it is, in my opinion, easily the best photography app on the market. But my professional growth there had stalled. I was having lots of fun juggling servers, code, customer service, database administration, and, well, everything else technical. Yet I was hungry for more: specifically, opportunities to execute and pursue my own technical vision as a valued partner, not just a valued employee. I wanted to be a decision maker.
+
+Synthetic has always been a company driven by design. You can see it in any of their [amazing](http://makebeautiful.hipstamatic.com/) [sites](http://gear.hipstamatic.com) (featuring stellar HTML, CSS, and JS by the incomparable [@LukesBeard](http://lukesbeard.com/)), and even the design of the Hipstamatic itself, which is retro and cool and usable all at once. But for an ambitious technical guy, direction through design didn't leave a lot of opportunity for personal growth. I knew if I wanted to let my voice be heard, I'd have to go somewhere else to do it.
+
+## Joining GirlsGuideTo
+
+So what's next for Josh Symonds?
+
+I accepted an offer from [GirlsGuideTo](http://girlsguideto.com), an insanely fabulous website for women, to be their CTO and co-founder. Having recently secured a round of seed financing, GirlsGuideTo is positioned really excellently. They have a huge userbase and are poised to really take over their market; their only stumbling block is some really old software and a somewhat dated design. Those are problems I can fix! Within the next month, I intend to give the site a complete graphical and technical overhaul. Under my technical direction (and CEO Brette Borow's product management), GirlsGuideTo will grow to be an even more amazing site -- the premiere destination for women to get advice, read awesome articles, and connect with one another.
+
+Within the next couple weeks, I also intend to release my first RubyMotion application to the iTunes App Store. Featuring some excellent designs by the aforementioned [@LukesBeard](http://lukesbeard.com/) and some pretty nifty code by yours truly, it represents the culmination of nearly a month spent working during almost all my free time. I think it's pretty cool, and I'll be spending some time discussing its technical infrastructure and how I used RubyMotion to make it happen.
+
+Finally, what does all this mean for my blog? Well, I'll still post awesome code and go on and on about how much I love Ruby. But I'll also be talking about the trials and tribulations of a newly-minted CTO at a new startup; finding talent, putting it to use, and in general conquering the world one step at a time. And I promise to get back on my regular, three-day schedule while I do it.
+
+So stick around and keep reading; this blog will only get more interesting!

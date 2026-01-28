@@ -1,0 +1,608 @@
+---
+---
+
+<canvas id="hero-canvas-back"></canvas>
+<canvas id="hero-canvas-front"></canvas>
+
+<style>
+  #hero-canvas-back {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+  }
+
+  #hero-canvas-front {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  // ---------------------------------------------------------------------------
+  // 1. Shape interfaces and types
+  // ---------------------------------------------------------------------------
+
+  type ShapeType = "circle" | "pipe" | "star" | "donut" | "diamond";
+
+  interface ShapeBase {
+    readonly type: ShapeType;
+    readonly color: string;
+    readonly size: number;
+    readonly rotationSpeed: number;
+    readonly driftSpeedX: number;
+    readonly driftSpeedY: number;
+    readonly opacity: number;
+    x: number;
+    y: number;
+    rotation: number;
+  }
+
+  interface CircleShape extends ShapeBase {
+    readonly type: "circle";
+  }
+
+  interface PipeShape extends ShapeBase {
+    readonly type: "pipe";
+    readonly pipeLength: number;
+    readonly pipeWidth: number;
+  }
+
+  interface StarShape extends ShapeBase {
+    readonly type: "star";
+  }
+
+  interface DonutShape extends ShapeBase {
+    readonly type: "donut";
+    readonly strokeWidth: number;
+  }
+
+  interface DiamondShape extends ShapeBase {
+    readonly type: "diamond";
+  }
+
+  type Shape = CircleShape | PipeShape | StarShape | DonutShape | DiamondShape;
+
+  interface DiagonalSlash {
+    readonly x1: number;
+    readonly y1: number;
+    readonly x2: number;
+    readonly y2: number;
+    readonly color: string;
+    readonly lineWidth: number;
+    readonly opacity: number;
+  }
+
+  interface MousePosition {
+    x: number;
+    y: number;
+  }
+
+  type CanvasLayer = "back" | "front";
+
+  // ---------------------------------------------------------------------------
+  // 2. Constants
+  // ---------------------------------------------------------------------------
+
+  const NEON_COLORS: readonly string[] = [
+    "#ff2d95",
+    "#00f0ff",
+    "#39ff14",
+    "#ffe600",
+    "#b347ea",
+  ];
+
+  const NEON_COLORS_ALPHA: readonly string[] = [
+    "rgba(255, 45, 149, 0.5)",
+    "rgba(0, 240, 255, 0.5)",
+    "rgba(57, 255, 20, 0.5)",
+    "rgba(255, 230, 0, 0.5)",
+    "rgba(179, 71, 234, 0.5)",
+  ];
+
+  const BACK_SHAPE_TYPES: readonly ShapeType[] = [
+    "circle",
+    "pipe",
+    "star",
+    "donut",
+    "diamond",
+  ];
+
+  const FRONT_SHAPE_TYPES: readonly ShapeType[] = ["circle", "pipe"];
+
+  const BACK_SHAPE_COUNT = 14;
+  const FRONT_SHAPE_COUNT = 6;
+
+  const BACK_PARALLAX_STRENGTH = 30;
+  const FRONT_PARALLAX_STRENGTH = 12;
+
+  // ---------------------------------------------------------------------------
+  // 3. Utility functions
+  // ---------------------------------------------------------------------------
+
+  function randomBetween(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
+  }
+
+  function pickRandom<T>(arr: readonly T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // ---------------------------------------------------------------------------
+  // 4. Factory functions for creating shapes
+  // ---------------------------------------------------------------------------
+
+  function createBackShape(w: number, h: number): Shape {
+    const shapeType = pickRandom(BACK_SHAPE_TYPES);
+    return createShapeOfType(shapeType, w, h, "back");
+  }
+
+  function createFrontShape(w: number, h: number): Shape {
+    const shapeType = pickRandom(FRONT_SHAPE_TYPES);
+    return createShapeOfType(shapeType, w, h, "front");
+  }
+
+  function createShapeOfType(
+    shapeType: ShapeType,
+    w: number,
+    h: number,
+    layer: CanvasLayer
+  ): Shape {
+    const isFront = layer === "front";
+    const baseOpacity = isFront ? randomBetween(0.15, 0.25) : randomBetween(0.7, 1.0);
+    const color = isFront ? pickRandom(NEON_COLORS) : pickRandom([...NEON_COLORS, ...NEON_COLORS_ALPHA]);
+
+    const base = {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      rotation: Math.random() * Math.PI * 2,
+      rotationSpeed: randomBetween(0.002, 0.01) * (Math.random() > 0.5 ? 1 : -1),
+      driftSpeedX: randomBetween(0.15, 0.5) * (Math.random() > 0.5 ? 1 : -1),
+      driftSpeedY: randomBetween(0.1, 0.4) * (Math.random() > 0.5 ? 1 : -1),
+      color,
+      opacity: baseOpacity,
+    };
+
+    switch (shapeType) {
+      case "circle":
+        return {
+          ...base,
+          type: "circle" as const,
+          size: randomBetween(60, 150),
+        };
+      case "pipe":
+        return {
+          ...base,
+          type: "pipe" as const,
+          size: randomBetween(200, 400),
+          pipeLength: randomBetween(200, 400),
+          pipeWidth: randomBetween(20, 40),
+        };
+      case "star":
+        return {
+          ...base,
+          type: "star" as const,
+          size: randomBetween(80, 120),
+        };
+      case "donut":
+        return {
+          ...base,
+          type: "donut" as const,
+          size: randomBetween(60, 100),
+          strokeWidth: randomBetween(15, 25),
+        };
+      case "diamond":
+        return {
+          ...base,
+          type: "diamond" as const,
+          size: randomBetween(80, 140),
+        };
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. Drawing functions per shape type
+  // ---------------------------------------------------------------------------
+
+  function drawCircle(
+    ctx: CanvasRenderingContext2D,
+    shape: CircleShape,
+    x: number,
+    y: number
+  ): void {
+    ctx.beginPath();
+    ctx.arc(x, y, shape.size / 2, 0, Math.PI * 2);
+    ctx.fillStyle = shape.color;
+    ctx.fill();
+  }
+
+  function drawPipe(
+    ctx: CanvasRenderingContext2D,
+    shape: PipeShape,
+    x: number,
+    y: number
+  ): void {
+    const halfLen = shape.pipeLength / 2;
+    const halfWid = shape.pipeWidth / 2;
+    const radius = Math.min(halfWid, 10);
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(shape.rotation);
+    ctx.beginPath();
+
+    // Rounded rectangle path
+    ctx.moveTo(-halfLen + radius, -halfWid);
+    ctx.lineTo(halfLen - radius, -halfWid);
+    ctx.arcTo(halfLen, -halfWid, halfLen, -halfWid + radius, radius);
+    ctx.lineTo(halfLen, halfWid - radius);
+    ctx.arcTo(halfLen, halfWid, halfLen - radius, halfWid, radius);
+    ctx.lineTo(-halfLen + radius, halfWid);
+    ctx.arcTo(-halfLen, halfWid, -halfLen, halfWid - radius, radius);
+    ctx.lineTo(-halfLen, -halfWid + radius);
+    ctx.arcTo(-halfLen, -halfWid, -halfLen + radius, -halfWid, radius);
+    ctx.closePath();
+
+    ctx.fillStyle = shape.color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawStar(
+    ctx: CanvasRenderingContext2D,
+    shape: StarShape,
+    x: number,
+    y: number
+  ): void {
+    const outerRadius = shape.size / 2;
+    const innerRadius = outerRadius * 0.4;
+    const points = 5;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(shape.rotation);
+    ctx.beginPath();
+
+    for (let i = 0; i < points * 2; i++) {
+      const radius = i % 2 === 0 ? outerRadius : innerRadius;
+      const angle = (i * Math.PI) / points - Math.PI / 2;
+      const px = Math.cos(angle) * radius;
+      const py = Math.sin(angle) * radius;
+
+      if (i === 0) {
+        ctx.moveTo(px, py);
+      } else {
+        ctx.lineTo(px, py);
+      }
+    }
+
+    ctx.closePath();
+    ctx.fillStyle = shape.color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawDonut(
+    ctx: CanvasRenderingContext2D,
+    shape: DonutShape,
+    x: number,
+    y: number
+  ): void {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(shape.rotation);
+    ctx.beginPath();
+    ctx.arc(0, 0, shape.size / 2, 0, Math.PI * 1.7);
+    ctx.strokeStyle = shape.color;
+    ctx.lineWidth = shape.strokeWidth;
+    ctx.lineCap = "round";
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawDiamond(
+    ctx: CanvasRenderingContext2D,
+    shape: DiamondShape,
+    x: number,
+    y: number
+  ): void {
+    const half = shape.size / 2;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(shape.rotation);
+    ctx.beginPath();
+    ctx.moveTo(0, -half);
+    ctx.lineTo(half * 0.6, 0);
+    ctx.lineTo(0, half);
+    ctx.lineTo(-half * 0.6, 0);
+    ctx.closePath();
+    ctx.fillStyle = shape.color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawShape(
+    ctx: CanvasRenderingContext2D,
+    shape: Shape,
+    offsetX: number,
+    offsetY: number
+  ): void {
+    const x = shape.x + offsetX;
+    const y = shape.y + offsetY;
+
+    ctx.globalAlpha = shape.opacity;
+
+    switch (shape.type) {
+      case "circle":
+        drawCircle(ctx, shape, x, y);
+        break;
+      case "pipe":
+        drawPipe(ctx, shape, x, y);
+        break;
+      case "star":
+        drawStar(ctx, shape, x, y);
+        break;
+      case "donut":
+        drawDonut(ctx, shape, x, y);
+        break;
+      case "diamond":
+        drawDiamond(ctx, shape, x, y);
+        break;
+      default: {
+        const _exhaustive: never = shape;
+        return _exhaustive;
+      }
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. Diagonal slashes (Persona 5 style)
+  // ---------------------------------------------------------------------------
+
+  function createDiagonalSlashes(
+    canvasWidth: number,
+    canvasHeight: number
+  ): readonly DiagonalSlash[] {
+    const slashes: DiagonalSlash[] = [];
+    const count = Math.floor(randomBetween(4, 6));
+
+    for (let i = 0; i < count; i++) {
+      const angle = randomBetween(25, 50) * (Math.PI / 180);
+      const startX = randomBetween(-canvasWidth * 0.3, canvasWidth * 0.7);
+      const startY = randomBetween(-canvasHeight * 0.2, canvasHeight * 0.5);
+      const length = randomBetween(canvasWidth * 0.7, canvasWidth * 1.5);
+
+      slashes.push({
+        x1: startX,
+        y1: startY,
+        x2: startX + Math.cos(angle) * length,
+        y2: startY + Math.sin(angle) * length,
+        color: pickRandom(NEON_COLORS),
+        lineWidth: randomBetween(4, 8),
+        opacity: randomBetween(0.1, 0.18),
+      });
+    }
+
+    return slashes;
+  }
+
+  function drawSlashes(
+    ctx: CanvasRenderingContext2D,
+    slashes: readonly DiagonalSlash[]
+  ): void {
+    for (const slash of slashes) {
+      ctx.save();
+      ctx.globalAlpha = slash.opacity;
+      ctx.strokeStyle = slash.color;
+      ctx.lineWidth = slash.lineWidth;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(slash.x1, slash.y1);
+      ctx.lineTo(slash.x2, slash.y2);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 7. Update / animate logic
+  // ---------------------------------------------------------------------------
+
+  function updateShape(
+    shape: Shape,
+    canvasWidth: number,
+    canvasHeight: number
+  ): void {
+    shape.x += shape.driftSpeedX;
+    shape.y += shape.driftSpeedY;
+    shape.rotation += shape.rotationSpeed;
+
+    const margin = shape.size + 50;
+
+    if (shape.x < -margin) {
+      shape.x = canvasWidth + margin;
+    } else if (shape.x > canvasWidth + margin) {
+      shape.x = -margin;
+    }
+
+    if (shape.y < -margin) {
+      shape.y = canvasHeight + margin;
+    } else if (shape.y > canvasHeight + margin) {
+      shape.y = -margin;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 8. Parallax
+  // ---------------------------------------------------------------------------
+
+  function computeParallaxOffset(
+    mouse: MousePosition,
+    canvasWidth: number,
+    canvasHeight: number,
+    strength: number
+  ): { readonly offsetX: number; readonly offsetY: number } {
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+
+    const normalizedX = (mouse.x - centerX) / centerX;
+    const normalizedY = (mouse.y - centerY) / centerY;
+
+    return {
+      offsetX: normalizedX * strength,
+      offsetY: normalizedY * strength,
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 9. init() - sets up both canvases
+  // ---------------------------------------------------------------------------
+
+  function init(): void {
+    const backCanvas = document.getElementById("hero-canvas-back");
+    const frontCanvas = document.getElementById("hero-canvas-front");
+
+    if (
+      !(backCanvas instanceof HTMLCanvasElement) ||
+      !(frontCanvas instanceof HTMLCanvasElement)
+    ) {
+      return;
+    }
+
+    const backCtx = backCanvas.getContext("2d");
+    const frontCtx = frontCanvas.getContext("2d");
+
+    if (backCtx === null || frontCtx === null) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    let canvasWidth = window.innerWidth;
+    let canvasHeight = window.innerHeight;
+
+    function resizeCanvases(): void {
+      canvasWidth = window.innerWidth;
+      canvasHeight = window.innerHeight;
+      backCanvas.width = canvasWidth;
+      backCanvas.height = canvasHeight;
+      frontCanvas.width = canvasWidth;
+      frontCanvas.height = canvasHeight;
+    }
+
+    resizeCanvases();
+
+    // Create shapes for each layer
+    const backShapes: Shape[] = Array.from({ length: BACK_SHAPE_COUNT }, () =>
+      createBackShape(canvasWidth, canvasHeight)
+    );
+
+    const frontShapes: Shape[] = Array.from({ length: FRONT_SHAPE_COUNT }, () =>
+      createFrontShape(canvasWidth, canvasHeight)
+    );
+
+    let slashes = createDiagonalSlashes(canvasWidth, canvasHeight);
+
+    const mouse: MousePosition = {
+      x: canvasWidth / 2,
+      y: canvasHeight / 2,
+    };
+
+    // ---------------------------------------------------------------------------
+    // 10. Event listeners
+    // ---------------------------------------------------------------------------
+
+    document.addEventListener("mousemove", (event: MouseEvent) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+    });
+
+    window.addEventListener("resize", () => {
+      resizeCanvases();
+      slashes = createDiagonalSlashes(canvasWidth, canvasHeight);
+
+      if (prefersReducedMotion) {
+        drawFrame();
+      }
+    });
+
+    // ---------------------------------------------------------------------------
+    // 11. Draw and animate
+    // ---------------------------------------------------------------------------
+
+    function drawFrame(): void {
+      // -- Back canvas --
+      backCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      // Diagonal slashes first (behind shapes)
+      drawSlashes(backCtx, slashes);
+
+      const backOffset = computeParallaxOffset(
+        mouse,
+        canvasWidth,
+        canvasHeight,
+        BACK_PARALLAX_STRENGTH
+      );
+
+      for (const shape of backShapes) {
+        drawShape(backCtx, shape, backOffset.offsetX, backOffset.offsetY);
+      }
+
+      // -- Front canvas --
+      frontCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      const frontOffset = computeParallaxOffset(
+        mouse,
+        canvasWidth,
+        canvasHeight,
+        FRONT_PARALLAX_STRENGTH
+      );
+
+      for (const shape of frontShapes) {
+        drawShape(frontCtx, shape, frontOffset.offsetX, frontOffset.offsetY);
+      }
+    }
+
+    function animate(): void {
+      for (const shape of backShapes) {
+        updateShape(shape, canvasWidth, canvasHeight);
+      }
+
+      for (const shape of frontShapes) {
+        updateShape(shape, canvasWidth, canvasHeight);
+      }
+
+      drawFrame();
+      requestAnimationFrame(animate);
+    }
+
+    if (prefersReducedMotion) {
+      drawFrame();
+    } else {
+      requestAnimationFrame(animate);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 12. Bootstrap
+  // ---------------------------------------------------------------------------
+
+  document.addEventListener("astro:page-load", init);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+</script>

@@ -1,0 +1,81 @@
+---
+import Page from "../../layouts/Page.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog");
+
+posts.sort((a, b) => {
+  const dateA = new Date(a.data.date);
+  const dateB = new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
+});
+
+const postsByYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = new Date(post.data.date).getFullYear();
+  const group = postsByYear.get(year);
+  if (group) {
+    group.push(post);
+  } else {
+    postsByYear.set(year, [post]);
+  }
+}
+
+const sortedYears = [...postsByYear.keys()].sort((a, b) => b - a);
+---
+
+<Page title="Blog Archive">
+  <div class="archive-container">
+    <h1 class="archive-heading">Blog Archive</h1>
+    {sortedYears.map((year) => (
+      <section class="year-group">
+        <h2 class="year-heading">{year}</h2>
+        <div class="posts-list">
+          {postsByYear.get(year)!.map((post) => (
+            <PostCard
+              title={post.data.title}
+              date={post.data.date.toISOString()}
+              slug={post.id}
+              tags={post.data.tags}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Page>
+
+<style>
+  .archive-container {
+    max-width: 800px;
+    margin-inline: auto;
+    padding: 2rem;
+  }
+
+  .archive-heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    color: var(--black);
+    margin-block-end: 2rem;
+  }
+
+  .year-group {
+    margin-block-end: 2.5rem;
+  }
+
+  .year-heading {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--teal);
+    margin-block-end: 1rem;
+    padding-block-end: 0.5rem;
+    border-block-end: 3px solid var(--black);
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

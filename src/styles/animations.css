@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Animations — Keyframes & Animation Utilities
+   Memphis design: bouncy, geometric, playful
+   ========================================================================== */
+
+/* --- Float ---
+   Gentle bouncing drift, like a rubber ball */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* --- Pop In ---
+   Scale bounce entrance, snappy and bold */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Wiggle ---
+   Slight rotation wiggle for that squiggly Memphis feeling */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(3deg);
+  }
+  40% {
+    transform: rotate(-3deg);
+  }
+  60% {
+    transform: rotate(2deg);
+  }
+  80% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* --- Slide Up ---
+   Translate + opacity for page entry */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Spin Slow ---
+   Slow continuous rotation for geometric decorative shapes */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Squiggle ---
+   Wavy horizontal movement, like a Memphis squiggle line */
+@keyframes squiggle {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(6px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+/* ==========================================================================
+   Animation Utility Classes
+   ========================================================================== */
+
+.anim-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.anim-pop-in {
+  animation: pop-in 0.4s var(--ease-spring) both;
+}
+
+.anim-wiggle {
+  animation: wiggle 1.5s ease-in-out infinite;
+}
+
+.anim-slide-up {
+  animation: slide-up 0.5s var(--ease-out-expo) both;
+}
+
+.anim-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.anim-squiggle {
+  animation: squiggle 2s ease-in-out infinite;
+}
+
+/* --- Staggered entrance delays --- */
+.anim-delay-1 { animation-delay: 0.1s; }
+.anim-delay-2 { animation-delay: 0.2s; }
+.anim-delay-3 { animation-delay: 0.3s; }
+.anim-delay-4 { animation-delay: 0.4s; }
+.anim-delay-5 { animation-delay: 0.5s; }
+.anim-delay-6 { animation-delay: 0.6s; }
+.anim-delay-7 { animation-delay: 0.7s; }
+.anim-delay-8 { animation-delay: 0.8s; }
+
+/* ==========================================================================
+   Reduced Motion
+   Handled globally in global.css, but duplicated here for standalone use
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-float,
+  .anim-pop-in,
+  .anim-wiggle,
+  .anim-slide-up,
+  .anim-spin-slow,
+  .anim-squiggle {
+    animation: none;
+  }
+}

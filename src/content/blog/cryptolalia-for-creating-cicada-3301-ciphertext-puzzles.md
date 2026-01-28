@@ -1,0 +1,84 @@
+---
+title: "cryptolalia, for creating Cicada 3301 ciphertext puzzles"
+date: 2013-12-26 10:31
+tags: [gems, cryptolalia]
+---
+After reading yet another article on [Cicada 3301](http://en.wikipedia.org/wiki/Cicada_3301) on Hacker News a few weeks ago, I was struck by inspiration. If I wanted a whole gaggle of people on the Internet to compete for -- well, for some unknown goal -- apparently all I needed was ciphertexts of arbitrary complexity and arcane places to hide them. Arcane places I had, but what I didn't was a good way to generate all the sorts of codes that Cicada 3301 employed.
+
+So I decided to make it.
+
+
+[cryptolalia](https://github.com/Veraticus/cryptolalia) is a Ruby gem that allows the creation of arbitrarily-complicated ciphertexts from plaintexts. At release, it has the following ciphers:
+
+* *atbash inversion* - an alphabet substitution cipher that replaces every character in the plaintext with its opposite character in the target alphabet.
+* *Beale homophonic substitution* - for every letter of the plaintext, finds a word in a source text beginning with that letter, and adds its position in the source to the ciphertext.
+* *Caesar* - the simplest alphabet substitution cipher, rotate each letter of the ciphertext through a chosen alphabet.
+* *Pollux* - translate the plaintext into Morse code, and chooses dot, dash, and separator symbols from an arbitrarily complex alphabet.
+* *PNG Steganography* - encode your plaintext in an image, either in its comments or least-significant bits.
+* *Vigenere* - a very complicated alphabet substitution cipher that takes a keyword and rotates each letter of the target alphabet based on the keyword and the plaintext.
+
+You've probably seen most of these ciphers before. But they become way more difficult to decode if you choose weird alphabets, Victorian-era source texts, and long-dead numeral systems. Combine these ciphers with excellent placement and you too can take the cryptography world by storm!
+
+## Cryptolalia In Action
+
+Taken from the [cryptolalia](https://github.com/Veraticus/cryptolalia) README:
+
+![Rainbows](http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png)
+
+The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:
+
+The plaintext ("secrets are fun") was transformed with a Pollux Morse code cipher:
+```ruby
+pollux = Cryptolalia::Cipher::Pollux.new
+pollux.plaintext = 'secrets are fun'
+pollux.dot = ['a', 'b', 'c']
+pollux.dash = ['d', 'e', 'f']
+pollux.seperator = ['g', 'h', 'i']
+pollux.encode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+```
+
+The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
+```ruby
+beale = Cryptolalia::Cipher::Beale.new
+beale.plaintext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
+beale.encode! # "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+```
+
+The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
+```ruby
+steg = Cryptolalia::Cipher::Steganography.new
+steg.plaintext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+steg.file = "test/fixtures/sample.png"
+steg.encoded_in = :lsb
+steg.output_file = File.open('rainbow.png', 'w+')
+steg.encode! # true, see the file above
+```
+
+Don't believe me? You can decode it yourself, also using cryptolalia:
+
+Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:
+```ruby
+steg = Cryptolalia::Cipher::Steganography.new
+steg.file = 'rainbow.png'
+steg.encoded_in = :lsb
+steg.decode! # A very very long string, starting with: "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+```
+
+Insert the numbers of the Beale homophonic substitution cipher back in:
+```ruby
+beale = Cryptolalia::Cipher::Beale.new
+beale.ciphertext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
+beale.decode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+```
+
+And finally, plug it right back into the Pollux cipher:
+```ruby
+pollux = Cryptolalia::Cipher::Pollux.new
+pollux.ciphertext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+pollux.dot = ['a', 'b', 'c']
+pollux.dash = ['d', 'e', 'f']
+pollux.seperator = ['g', 'h', 'i']
+pollux.decode! # "secretsarefun"
+```

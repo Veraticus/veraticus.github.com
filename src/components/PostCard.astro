@@ -1,0 +1,77 @@
+---
+interface Props {
+  readonly title: string;
+  readonly date: string;
+  readonly slug: string;
+  readonly tags: readonly string[];
+}
+
+const { title, date, slug, tags } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<a class="post-card" href={`/blog/${slug}/`}>
+  <time class="post-date" datetime={date}>{formattedDate}</time>
+  <h3 class="post-title">{title}</h3>
+  {tags.length > 0 && (
+    <div class="post-tags">
+      {tags.map((tag) => (
+        <span class="tag-pill">{tag}</span>
+      ))}
+    </div>
+  )}
+</a>
+
+<style>
+  .post-card {
+    display: block;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    border-left: 3px solid var(--black);
+    background: var(--bg-surface);
+    margin-block-end: 0.5rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .post-card:hover {
+    border-left-color: var(--teal);
+    transform: translateX(4px);
+  }
+
+  .post-date {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .post-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.4;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag-pill {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--black);
+    border-radius: var(--radius-full);
+    color: var(--black);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+  }
+</style>

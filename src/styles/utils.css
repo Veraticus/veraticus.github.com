@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Utility Classes — Memphis Design Building Blocks
+   Bold borders, hard shadows, geometric patterns, flat color
+   ========================================================================== */
+
+/* ==========================================================================
+   Layout / Container
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.wrapper {
+  width: 100%;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--space-2xl);
+}
+
+.section-sm {
+  padding-block: var(--space-xl);
+}
+
+/* ==========================================================================
+   Memphis Core Styles
+   ========================================================================== */
+
+/* Bold black border, the Memphis signature */
+.memphis-border {
+  border: 3px solid var(--black);
+}
+
+/* Hard offset shadow, no blur — flat and graphic */
+.memphis-shadow {
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+/* Card: white surface with bold border and hard shadow */
+.memphis-card {
+  background: var(--bg-surface);
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.memphis-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+/* ==========================================================================
+   Geometric Patterns
+   ========================================================================== */
+
+/* Polka dot pattern background */
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--black) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+/* Diagonal hatching pattern background */
+.hatch-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 8px,
+    var(--black) 8px,
+    var(--black) 9px
+  );
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+}
+
+/* ==========================================================================
+   Color Utilities
+   ========================================================================== */
+
+.text-teal { color: var(--teal); }
+.text-coral { color: var(--coral); }
+.text-pink { color: var(--pink); }
+.text-yellow { color: var(--yellow); }
+.text-black { color: var(--black); }
+.text-muted { color: var(--text-muted); }
+
+.bg-teal { background-color: var(--teal); }
+.bg-coral { background-color: var(--coral); }
+.bg-pink { background-color: var(--pink); }
+.bg-yellow { background-color: var(--yellow); }
+.bg-black { background-color: var(--black); }
+.bg-white { background-color: var(--white); }
+.bg-surface { background-color: var(--bg-surface); }
+
+/* ==========================================================================
+   Pill / Tag
+   ========================================================================== */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.75em;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border: 2px solid var(--black);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--black);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.pill-teal {
+  background: var(--teal);
+  color: var(--black);
+}
+
+.pill-coral {
+  background: var(--coral);
+  color: var(--white);
+}
+
+.pill-pink {
+  background: var(--pink);
+  color: var(--black);
+}
+
+.pill-yellow {
+  background: var(--yellow);
+  color: var(--black);
+}
+
+/* ==========================================================================
+   Spacing Utilities
+   ========================================================================== */
+
+.mt-xs { margin-top: var(--space-xs); }
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+.mt-xl { margin-top: var(--space-xl); }
+
+.mb-xs { margin-bottom: var(--space-xs); }
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.mb-xl { margin-bottom: var(--space-xl); }
+
+.gap-xs { gap: var(--space-xs); }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+.gap-xl { gap: var(--space-xl); }
+
+/* ==========================================================================
+   Display / Flex Helpers
+   ========================================================================== */
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.grid { display: grid; }
+.text-center { text-align: center; }

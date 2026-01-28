@@ -1,0 +1,105 @@
+---
+import Page from "../layouts/Page.astro";
+import MemphisLogo from "../components/MemphisLogo.astro";
+import MemphisShapes from "../components/MemphisShapes.astro";
+import LinkCard from "../components/LinkCard.astro";
+import LinkGrid from "../components/LinkGrid.astro";
+import { links } from "../data/links";
+---
+
+<Page title="Josh Symonds">
+  <section class="hero">
+    <MemphisShapes />
+    <div class="hero-content">
+      <MemphisLogo />
+      <p class="tagline">Software engineer, infrastructure architect & creator</p>
+      <p class="tagline-sub">
+        Building platforms at scale with Go, Kubernetes, and a love for bold design.
+      </p>
+    </div>
+  </section>
+
+  <section class="links-section">
+    <h2 class="links-heading">Find Me</h2>
+    <LinkGrid>
+      {links.map((link, i) => (
+        <LinkCard {...link} style={`--delay: ${i * 0.1}s`} />
+      ))}
+    </LinkGrid>
+  </section>
+</Page>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    background-image: url("/images/josh-header.webp");
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    margin-left: 50%;
+    max-width: 45vw;
+    padding: 3rem 3rem 3rem 2rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .tagline {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    color: var(--text, #1a1a1a);
+    margin: 0 0 1rem;
+    font-weight: 600;
+  }
+
+  .tagline-sub {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-muted, #555);
+    margin: 0;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  /* --- Links --- */
+  .links-section {
+    padding: 5rem 1.5rem 6rem;
+    position: relative;
+    z-index: 1;
+    background: var(--bg, #fafaf7);
+  }
+
+  .links-heading {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--teal, #2ec4b6);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1rem;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 768px) {
+    .hero {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-end;
+      background-position: center top;
+      background-size: cover;
+    }
+
+    .hero-content {
+      margin-left: 0;
+      max-width: 100%;
+      padding: 2rem 1.5rem 3rem;
+      background: rgba(255, 255, 255, 0.92);
+    }
+  }
+</style>

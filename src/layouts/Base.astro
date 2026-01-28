@@ -1,0 +1,50 @@
+---
+interface Props {
+  readonly title: string;
+  readonly description?: string;
+  readonly ogImage?: string;
+}
+
+const {
+  title,
+  description = "Personal site of Josh Symonds - software engineer, consultant, and creator",
+  ogImage,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={canonicalURL.href} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL.href} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      @import "../styles/global.css";
+      @import "../styles/animations.css";
+      @import "../styles/utils.css";
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

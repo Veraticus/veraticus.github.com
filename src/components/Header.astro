@@ -1,0 +1,61 @@
+---
+import MemphisLogo from "./MemphisLogo.astro";
+---
+
+<header class="site-header">
+  <nav>
+    <a href="/" class="site-name-link">
+      <MemphisLogo size="header" as="span" />
+    </a>
+    <div class="nav-links">
+      <a href="/blog/">Blog</a>
+      <a href="/resume/">Resume</a>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #1a1a1a;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .site-name-link {
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--teal, #2ec4b6);
+  }
+
+  @media (max-width: 480px) {
+    .nav-links {
+      gap: 1rem;
+    }
+  }
+</style>

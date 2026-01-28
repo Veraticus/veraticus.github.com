@@ -1,0 +1,155 @@
+---
+// Memphis-styled "Josh Symonds" logo
+// The "O" in Josh is a teal circle, the "S" in Symonds has a coral stripe
+interface Props {
+  size?: 'hero' | 'header';
+  as?: 'h1' | 'span';
+}
+
+const { size = 'hero', as = 'h1' } = Astro.props;
+const Tag = as;
+
+const fontSize = size === 'header' ? '1.5rem' : 'clamp(3rem, 6vw, 5.5rem)';
+const margin = size === 'header' ? '0' : '0 0 1.25rem';
+const borderWidth = size === 'header' ? '2px' : '3px';
+const circleSize = size === 'header' ? '14px' : '0.55em';
+---
+
+<Tag class="memphis-logo" style={`--logo-font-size: ${fontSize}; --logo-margin: ${margin}; --logo-border: ${borderWidth}; --circle-size: ${circleSize};`}>
+  <span class="word-josh">
+    <span class="letter">J</span><span class="letter letter-o"><span class="o-circle"></span></span><span class="letter">s</span><span class="letter">h</span>
+    <span class="squiggle-window">
+      <svg class="josh-squiggle" viewBox="0 0 120 14" fill="none">
+        <path d="M0 7 Q1.5 2, 3 7 T6 7 T9 7 T12 7 T15 7 T18 7 T21 7 T24 7 T27 7 T30 7 T33 7 T36 7 T39 7 T42 7 T45 7 T48 7 T51 7 T54 7 T57 7 T60 7 T63 7 T66 7 T69 7 T72 7 T75 7 T78 7 T81 7 T84 7 T87 7 T90 7 T93 7 T96 7 T99 7 T102 7 T105 7 T108 7 T111 7 T114 7 T117 7 T120 7" stroke="var(--black, #1a1a1a)" stroke-width="1" stroke-linecap="round" fill="none"/>
+      </svg>
+    </span>
+  </span>
+  <span class="word-symonds">
+    <span class="letter letter-s">S<span class="s-stripe"></span></span><span class="letter">y</span><span class="letter">m</span><span class="letter letter-o2"><span class="o-square"></span></span><span class="letter">n</span><span class="letter">d</span><span class="letter">s</span>
+  </span>
+</Tag>
+
+<style>
+  .memphis-logo {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: var(--logo-font-size, clamp(3rem, 6vw, 5.5rem));
+    font-weight: 800;
+    color: var(--black, #1a1a1a);
+    margin: var(--logo-margin, 0 0 1.25rem);
+    line-height: 1.1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em;
+  }
+
+  .word-josh,
+  .word-symonds {
+    display: inline-flex;
+    align-items: baseline;
+    position: relative;
+  }
+
+  .letter {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* The "O" letters - teal circle and pink square */
+  .letter-o,
+  .letter-o2 {
+    display: inline-block;
+    vertical-align: baseline;
+    position: relative;
+    top: -0.02em;
+  }
+
+  .o-circle {
+    width: var(--circle-size, 0.7em);
+    height: var(--circle-size, 0.7em);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--teal, #2ec4b6);
+    border: var(--logo-border, 3px) solid var(--black, #1a1a1a);
+    display: inline-block;
+    box-sizing: border-box;
+  }
+
+  .squiggle-window {
+    position: absolute;
+    top: 0.11em;
+    left: 0.57em;
+    width: 1.25em;
+    height: 0.3em;
+    display: block;
+    overflow: hidden;
+  }
+
+  .josh-squiggle {
+    display: block;
+    width: 200%;
+    height: 100%;
+    animation: wave-travel 6s linear infinite;
+  }
+
+  @keyframes wave-travel {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Second "O" in Symonds - pink square that wobbles */
+  .o-square {
+    width: var(--circle-size, 0.7em);
+    height: var(--circle-size, 0.7em);
+    aspect-ratio: 1;
+    border-radius: 0;
+    background: var(--pink, #ffb6c1);
+    border: var(--logo-border, 3px) solid var(--black, #1a1a1a);
+    display: inline-block;
+    box-sizing: border-box;
+    animation: memphis-wobble 6s ease-in-out infinite;
+  }
+
+  /* The "S" in Symonds - with a diagonal stripe */
+  .letter-s {
+    position: relative;
+  }
+
+  .s-stripe {
+    position: absolute;
+    width: 0.15em;
+    height: 120%;
+    background: var(--yellow, #ffd166);
+    border: var(--logo-border, 3px) solid var(--black, #1a1a1a);
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%) rotate(-15deg);
+    z-index: -1;
+  }
+
+
+  @keyframes memphis-wobble {
+    0%, 100% {
+      transform: rotate(-6deg);
+    }
+    50% {
+      transform: rotate(6deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .memphis-logo {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .o-square,
+    .josh-squiggle {
+      animation: none;
+    }
+  }
+</style>

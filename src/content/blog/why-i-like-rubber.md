@@ -1,0 +1,24 @@
+---
+title: "Why I Like Rubber"
+date: 2012-02-23 13:30
+tags: [rubber, servers]
+---
+When I was analyzing tools to deploy applications into Amazon's elastic cloud, I settled on [rubber](https://github.com/wr0ngway/rubber) as our EC2 provisioner of choice.
+
+rubber has a lot going for it. It provides simple, close-to-the-metal server creation and bootstrapping; it's super easy to start a server with nothing more than:
+
+```bash
+cap rubber:create ALIAS=fluttershy ROLES=unicorn
+```
+
+And bootstrap it with all the software needed for that role with:
+
+```bash
+cap rubber:bootstrap FILTER=fluttershy
+```
+
+Of course, looking at command line magic doesn't tell you anything about how hard or easy it is to initially configure, but rubber is also pretty easy to figure out and get running. When you initially rubber-ize your project, you get an entire directory in config/ called rubber that contains all the configuration files, separated by role, that you can browse to figure out exactly what rubber is doing.
+
+It's easy to extend, as well. Adding in hubot scripts to automatically start and stop our little Hipstabot was really painless and will make a good future post, I'm sure. The good part -- for me at least -- is how close it is to the servers and how well it ties in with Capistrano. There's no magic going on and there's almost nothing to learn: as long as you have an EC2 account, you can set up a server quickly and painlessly with rubber... but if you know what you're doing, it provides an immense amount of flexibility and power to deploy whatever you want in a simple, repeatable way.
+
+rubber isn't just happiness and unicorns, though; it has some definite downsides. It seems to have a lot less mindshare than tools like Chef or Puppet, and because it's deployed on a per-application basis, it can't easily manage multiple applications deployed onto one machine. But despite these problems I like it a lot, and it perfectly suits our present use case.
