@@ -1,0 +1,10 @@
+{
+  "1": {"class_type": "VHS_LoadVideo", "inputs": {"video": "josh_i2v_combined.mp4", "force_rate": 0, "force_size": "Disabled", "custom_width": 1280, "custom_height": 720, "frame_load_cap": 0, "skip_first_frames": 0, "select_every_nth": 1}},
+  "30": {"class_type": "Free_Video_Memory", "inputs": {"images": ["1", 0], "aggressive_cleanup": "enable", "report_memory": "enable"}},
+  "31": {"class_type": "SeedVR2LoadDiTModel", "inputs": {"model": "seedvr2_ema_3b_fp16.safetensors", "device": "cuda:0", "offload_device": "cpu", "blocks_to_swap": 20, "attention_mode": "sageattn_2"}},
+  "32": {"class_type": "SeedVR2LoadVAEModel", "inputs": {"model": "ema_vae_fp16.safetensors", "device": "cuda:0", "encode_tiled": true, "encode_tile_size": 512, "decode_tiled": true, "decode_tile_size": 512}},
+  "33": {"class_type": "SeedVR2VideoUpscaler", "inputs": {"image": ["30", 0], "dit": ["31", 0], "vae": ["32", 0], "seed": 98765, "resolution": 1080, "max_resolution": 0, "batch_size": 17, "uniform_batch_size": true, "temporal_overlap": 8, "color_correction": "lab", "input_noise_scale": 0.15, "latent_noise_scale": 0.05}},
+  "34": {"class_type": "Free_Video_Memory", "inputs": {"images": ["33", 0], "aggressive_cleanup": "enable", "report_memory": "enable"}},
+  "28": {"class_type": "RIFE VFI", "inputs": {"ckpt_name": "rife47.pth", "frames": ["34", 0], "clear_cache_after_n_frames": 10, "multiplier": 4, "fast_mode": true, "ensemble": true, "scale_factor": 1.0}},
+  "21": {"class_type": "VHS_VideoCombine", "inputs": {"images": ["28", 0], "frame_rate": 10, "loop_count": 0, "filename_prefix": "josh_hero_final", "format": "video/h264-mp4", "pix_fmt": "yuv420p", "crf": 12, "save_metadata": true, "pingpong": false, "save_output": true}}
+}

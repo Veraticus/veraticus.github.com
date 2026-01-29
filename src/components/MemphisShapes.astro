@@ -165,4 +165,20 @@
       animation: none;
     }
   }
+
+  /* Mobile: move shapes away from left side where the person is */
+  @media (max-width: 768px) {
+    .memphis-shapes > :nth-child(1) { left: 80% !important; } /* circle - keep right */
+    .memphis-shapes > :nth-child(2) { left: 85% !important; top: 75% !important; } /* circle - move to right */
+    .memphis-shapes > :nth-child(3) { left: 75% !important; top: 8% !important; } /* triangle - move to right */
+    .memphis-shapes > :nth-child(4) { left: 60% !important; } /* triangle - keep bottom middle */
+    .memphis-shapes > :nth-child(5) { left: 70% !important; } /* diamond - move to right */
+    .memphis-shapes > :nth-child(6) { left: 82% !important; top: 65% !important; } /* diamond - move to right */
+    .memphis-shapes > :nth-child(7) { left: 55% !important; top: 5% !important; } /* squiggle - keep top */
+    .memphis-shapes > :nth-child(8) { left: 70% !important; top: 45% !important; } /* squiggle - move to right */
+    .memphis-shapes > :nth-child(9) { left: 78% !important; top: 30% !important; } /* dots - move to right */
+    .memphis-shapes > :nth-child(10) { left: 65% !important; } /* dots - keep bottom right */
+    .memphis-shapes > :nth-child(11) { left: 72% !important; top: 20% !important; } /* halftone - move to right */
+    .memphis-shapes > :nth-child(12) { left: 58% !important; } /* halftone - keep bottom */
+  }
 </style>
