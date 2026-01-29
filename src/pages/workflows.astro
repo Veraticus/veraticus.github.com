@@ -1,0 +1,212 @@
+---
+import Page from "../layouts/Page.astro";
+---
+
+<Page title="WAN 2.2 Workflows - Josh Symonds">
+  <div class="workflows">
+    <header class="workflows-header">
+      <h1>WAN 2.2 I2V Workflow</h1>
+      <p class="intro">
+        The animated hero video on this site was generated using these ComfyUI workflows
+        with the <a href="https://github.com/Wan-Video/Wan2.1">WAN 2.2</a> image-to-video model,
+        upscaled with <a href="https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler">SeedVR2</a>
+        and interpolated with <a href="https://github.com/Fannovel16/ComfyUI-Frame-Interpolation">RIFE</a>.
+      </p>
+    </header>
+
+    <section class="section">
+      <h2>Download Workflows</h2>
+      <div class="workflow-grid">
+        <a class="workflow-card" href="/workflows/wan-i2v/workflow-vace-v2.json" download>
+          <span class="workflow-name">workflow-vace-v2.json</span>
+          <span class="workflow-desc">Main I2V generation with VACE</span>
+        </a>
+        <a class="workflow-card" href="/workflows/wan-i2v/workflow-i2v-noffl.json" download>
+          <span class="workflow-name">workflow-i2v-noffl.json</span>
+          <span class="workflow-desc">I2V without first/last frame loop</span>
+        </a>
+        <a class="workflow-card" href="/workflows/wan-i2v/workflow-upscale-only.json" download>
+          <span class="workflow-name">workflow-upscale-only.json</span>
+          <span class="workflow-desc">SeedVR2 + RIFE upscaling pipeline</span>
+        </a>
+        <a class="workflow-card" href="/workflows/wan-i2v/VACE-Clip-Joiner-v2.2-loop.json" download>
+          <span class="workflow-name">VACE-Clip-Joiner-v2.2-loop.json</span>
+          <span class="workflow-desc">Full VACE clip joiner with looping</span>
+        </a>
+        <a class="workflow-card" href="/workflows/wan-i2v/Lightweight-VACE-Clip-Joiner-v1.0.3.json" download>
+          <span class="workflow-name">Lightweight-VACE-Clip-Joiner.json</span>
+          <span class="workflow-desc">Lightweight variant for faster iteration</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Quick Start</h2>
+      <ol class="steps">
+        <li><strong>Generate I2V:</strong> Load a workflow into ComfyUI with your source image</li>
+        <li><strong>Upscale:</strong> Run <code>workflow-upscale-only.json</code> with SeedVR2 + RIFE</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2>Key Settings</h2>
+
+      <h3>Step Distribution (No Lightning LoRA)</h3>
+      <p>WAN 2.2 uses two specialized models (Mixture of Experts):</p>
+      <ul>
+        <li><strong>High Noise (early steps):</strong> Motion planning, composition, structure</li>
+        <li><strong>Low Noise (late steps):</strong> Refinement, details, cleanup</li>
+      </ul>
+      <p>
+        <strong>Critical insight:</strong> Too many high noise steps = frozen/slow motion.
+        The model keeps re-planning instead of committing.
+      </p>
+      <p><strong>Recommended:</strong> 5 high + 15 low = 20 total steps</p>
+
+      <h3>CFG (Classifier-Free Guidance)</h3>
+      <ul>
+        <li><strong>HighNoise CFG 3.5:</strong> Good prompt adherence for motion instructions</li>
+        <li><strong>LowNoise CFG 1.0:</strong> Flexible refinement</li>
+      </ul>
+
+      <h3>First-Last-Frame Loop Constraints</h3>
+      <p>
+        Using the same image for start AND end frame inherently suppresses motion—the model
+        must return to the exact starting position. Micro-expressions are possible but require
+        very specific prompting.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Prompting for Micro-Expressions</h2>
+      <p>Vague prompts don't work well. Use beat-structured prompting:</p>
+      <pre><code>Beat 1 (0-2s): His chest rises with a slow breath, eyelids lowering
+momentarily then reopening with subtle brow movement.
+Beat 2 (2-4s): A micro-expression crosses his face as his gaze drifts,
+jaw relaxing, geometric shapes on suit begin transforming.
+Beat 3 (4-6s): Background shapes rotate and slide, patterns animate.
+Beat 4 (6-8s): Breathing steadies, eyes blink naturally, returns to start.</code></pre>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .workflows {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .workflows-header {
+    margin-bottom: 3rem;
+  }
+
+  .workflows-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+    color: var(--black, #1a1a1a);
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-muted, #555);
+  }
+
+  .intro a {
+    color: var(--teal, #2ec4b6);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .intro a:hover {
+    border-color: var(--teal, #2ec4b6);
+  }
+
+  .section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+    margin: 0 0 1rem;
+    color: var(--black, #1a1a1a);
+    border-bottom: 3px solid var(--black, #1a1a1a);
+    padding-bottom: 0.5rem;
+  }
+
+  .section h3 {
+    font-size: 1.1rem;
+    margin: 1.5rem 0 0.5rem;
+    color: var(--black, #1a1a1a);
+  }
+
+  .workflow-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .workflow-card {
+    display: block;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: 3px solid var(--black, #1a1a1a);
+    box-shadow: 4px 4px 0 var(--black, #1a1a1a);
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .workflow-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--black, #1a1a1a);
+  }
+
+  .workflow-name {
+    display: block;
+    font-weight: 600;
+    color: var(--teal, #2ec4b6);
+    font-family: monospace;
+    margin-bottom: 0.25rem;
+  }
+
+  .workflow-desc {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-muted, #555);
+  }
+
+  .steps {
+    padding-left: 1.5rem;
+    line-height: 1.8;
+  }
+
+  .steps code {
+    background: #f0f0f0;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+
+  ul, ol {
+    line-height: 1.8;
+  }
+
+  p {
+    line-height: 1.6;
+    margin: 0.75rem 0;
+  }
+
+  pre {
+    background: #f5f5f5;
+    border: 2px solid var(--black, #1a1a1a);
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  code {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  }
+</style>
