@@ -1,26 +1,21 @@
-# Creative Lab - ComfyUI Workflows
+# WAN 2.2 I2V Hero Video Workflow
 
-## WAN 2.2 I2V Hero Video
+The animated hero video on [joshsymonds.com](https://joshsymonds.com) was generated using these ComfyUI workflows with the WAN 2.2 image-to-video model.
 
-Location: `comfyui/wan-i2v/`
+## Download Workflows
 
-### Quick Start (Two-Step Process)
+| Workflow | Purpose |
+|----------|---------|
+| [workflow-vace-v2.json](./workflow-vace-v2.json) | Main I2V generation with VACE |
+| [workflow-i2v-noffl.json](./workflow-i2v-noffl.json) | I2V without first/last frame loop |
+| [workflow-upscale-only.json](./workflow-upscale-only.json) | SeedVR2 + RIFE upscaling |
+| [VACE-Clip-Joiner-v2.2-loop.json](./VACE-Clip-Joiner-v2.2-loop.json) | Full VACE clip joiner pipeline |
+| [Lightweight-VACE-Clip-Joiner-v1.0.3.json](./Lightweight-VACE-Clip-Joiner-v1.0.3.json) | Lightweight variant |
 
-1. **Generate I2V** (~16 min): Submit `workflow-i2v-only.json`
-   - Review output at `/var/lib/comfyui/output/josh_i2v_creative_*.mp4`
-   - If good, proceed to step 2
+## Quick Start (Two-Step Process)
 
-2. **Upscale** (~6 min): Submit `workflow-upscale-only.json`
-   - Loads I2V output, runs SeedVR2 + RIFE
-   - Final output: `josh_hero_final_00001.mp4`
-
-### Workflow Files
-
-| File | Purpose |
-|------|---------|
-| `workflow-i2v-only.json` | I2V generation, saves base video |
-| `workflow-upscale-only.json` | Loads base, runs SeedVR2 + RIFE |
-| `workflow.json` | Combined full pipeline |
+1. **Generate I2V**: Load a workflow and submit with your source image
+2. **Upscale**: Run `workflow-upscale-only.json` with SeedVR2 + RIFE
 
 ---
 
