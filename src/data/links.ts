@@ -10,4 +10,5 @@ export const links: readonly Link[] = [
   { title: "Email", icon: "\u2709\uFE0F", href: "mailto:josh@joshsymonds.com" },
   { title: "Resume", icon: "\uD83D\uDCC4", href: "/resume/" },
   { title: "Blog Archive", icon: "\uD83D\uDCDD", href: "/blog/" },
+  { title: "Savecraft", icon: "\uD83C\uDFAE", href: "https://savecraft.gg" },
 ] as const;
