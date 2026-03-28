@@ -46,6 +46,11 @@ const sortedYears = [...postsByYear.keys()].sort((a, b) => b - a);
         </div>
       </section>
     ))}
+
+    <aside class="ai-disclosure">
+      <span class="disclosure-flair" aria-hidden="true"></span>
+      Posts on this blog are written with AI assistance. The voice and opinions are mine; the drafting process involves LLMs.
+    </aside>
   </div>
 </Page>
 
@@ -105,5 +110,26 @@ const sortedYears = [...postsByYear.keys()].sort((a, b) => b - a);
   .posts-list {
     display: flex;
     flex-direction: column;
+  }
+
+  .ai-disclosure {
+    margin-block-start: 3rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    color: var(--black);
+    opacity: 0.6;
+    border-top: 2px solid var(--black);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .disclosure-flair {
+    width: 6px;
+    height: 6px;
+    background: var(--yellow);
+    border: 1.5px solid var(--black);
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 </style>
