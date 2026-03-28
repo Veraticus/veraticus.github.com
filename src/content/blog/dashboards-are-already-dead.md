@@ -3,9 +3,9 @@ title: "Dashboards Are Already Dead"
 date: 2026-03-28 12:00:00 -0500
 tags: [ai, business]
 ---
-I built a [gaming companion](https://savecraft.gg) that parses save files, computes drop rates, scores draft picks across 31 archetypes, and gives you advice tailored to your exact character state. It has no dashboard -- because it doesn't need one. There's no way to see what you uploaded, no settings page with toggles, no nav bar to speak of. It has virtually no screens at all.
+I built a [gaming companion](https://savecraft.gg) that parses save files, computes drop rates, scores draft picks across 31 archetypes, and gives you advice tailored to your exact character state. It has no dashboard; it doesn't need one, and I hope by the end of this essay to convince you that you don't need one either.
 
-You talk to it and it talks back, and when the answer needs visual structure -- a comparison grid, a scoring timeline, a farming plan -- it renders a view inline, right there in the conversation. Then you keep talking.
+Instead, you talk to Savecraft, and it talks back, and when the reply needs visual structure -- a comparison grid, a scoring timeline, a farming plan -- it renders a view inline, right there in the conversation. Then you keep talking.
 
 I didn't skip the dashboard because I ran out of time (I didn't) or because I'm a backend engineer who hates CSS (I am). I skipped it because dashboards are boring. They are steaming piles of pre-answered questions that your users don't actually care about, lovingly arranged into tabs by someone who thought they knew what people would want to look at. They didn't. You don't either. Neither do I, frankly, and I've been doing this awhile now!
 
