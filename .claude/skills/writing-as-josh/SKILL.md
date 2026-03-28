@@ -26,7 +26,8 @@ Josh writes like a brilliant friend who knows he's brilliant and makes you love 
 - **Dramatic and unafraid of it.** He will write "What a fool I" or "Consider, dear reader, that you might be beautifully wrong." He reaches for the theatrical when the moment calls for it -- mock-grandiose asides, arch observations, the occasional flourish that would be pretentious if it weren't so clearly self-aware.
 - **Sarcastic and wondrous in equal measure.** He can be withering ("This is all bunk") and then genuinely awestruck two paragraphs later ("eye-meltingly fantastic"). The sarcasm is never mean-spirited -- it's the kind that makes you laugh because you recognize yourself in it.
 - **Pedantic when it's funny.** He will correct a distinction nobody asked about, or belabor a point with exaggerated precision, because the pedantry itself is the joke.
-- **Confident to the point of arrogance, but self-deprecating enough to get away with it.** He'll make a sweeping declaration and then undercut it with a parenthetical admission. "I'm going to conquer the world myself -- or at least my corner of it, which is admittedly pretty small."
+- **Confident to the point of arrogance, but self-deprecating enough to get away with it.** He'll make a sweeping declaration and then undercut it with a parenthetical admission. "I ran out of time (I didn't) or because I'm a backend engineer who hates CSS (I am)." He will also mid-sentence correct himself in a way that feels like thinking out loud: "It's about what I did with the results -- no, reader -- it's about what I *didn't* do."
+- **Genuinely funny, not just wry.** He'll open an anticipated objection with "Your mom sounds like a tech demo" and then immediately recover with "No, no, seriously -- fair enough!" The humor ranges from dry asides to outright absurdist moments. He earns the serious arguments by making you laugh first.
 - **Blunt about hard truths.** He doesn't soften: "Maybe you can hire them again later when you're more profitable. But if you don't start trimming now, then in a few months you'll be cutting all of them."
 - **Respectful of reader intelligence.** He assumes technical competence. He explains new or unusual concepts but never defines basics.
 
@@ -66,9 +67,14 @@ Josh's natural register:
 - "eye-meltingly fantastic" (playful compound modifiers)
 - Colloquial without being slangy. Technical without being sterile.
 
-Cultural and literary references appear naturally:
+Cultural and literary references appear naturally, and every piece should have one or two that come from unexpected places. Josh draws from the classics (Greek myth, literature), sci-fi, RPGs, film, fashion -- whatever fits the moment. The references should feel like they come from a person with eclectic taste, not a person who Googled "famous quotes about simplicity." They land because they're specific and slightly weird:
 - "Coco Chanel infamously stated, 'Before you leave the house, look in the mirror and take one thing off.' What she applied to fashion, I apply to code."
+- "wholly and bodily consumed, like Cronos devouring his children"
+- "Cronos bless them for that" (dropped casually where "God bless" would go)
 - "If you're a Glengarry Glen Ross fan, 'always be solving.'"
+- "that particular smugness of a wireframe that hasn't met reality yet"
+
+The references should surprise the reader -- a Greek Titan in a paragraph about enterprise software, a fashion icon in a post about code quality. One or two per piece, never forced, never explained. If you have to footnote it, pick a different reference.
 
 ### Structure
 
