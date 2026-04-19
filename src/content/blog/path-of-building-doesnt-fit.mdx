@@ -16,6 +16,10 @@ I wanted Claude to be able to use it.
 
 Here is what I mean by "use it." Making your own Path of Exile build from scratch is, famously, almost impossible. The passive tree has roughly 1,500 nodes; you pick 120 of them. Every piece of gear has a dozen modifier rolls that interact with everything else on the character. Skill gems level, support gems multiply, and damage types quietly convert into each other behind your back. Nobody holds this in their head. What players actually do is copy someone else's build guide move-for-move, and the moment they deviate -- a better chest drops, the unique the guide wants is 20 divines out of budget -- they are on their own. Did that swap cost 200,000 DPS or 2 million? Is the tree still balanced? Am I still viable in red maps? PoB answers all of this, if you are willing to sit in front of it for an hour. Nobody is willing to sit in front of it for an hour. That is what I wanted Claude to do. I wanted the LLM to hold a pickaxe at the calc engine, try five passives the build guide would never recommend, watch the numbers move, and come back with "this one is 40% more clear speed for 500 HP, worth it." That kind of answer. I wanted the LLM to iterate.
 
+### The Dream
+
+![A Hierophant build loaded into Claude via Savecraft: PoB's full offense table, defense numbers, and socket groups -- all reachable in a conversation.](/images/pob/claude-pob-build.jpg)
+
 The naive version of this is obvious: embed PoB in my Worker, call into it from the MCP tool handler, stream the result back. I host my whole stack on Cloudflare's edge. Workers are cheap and globally distributed and fast enough for what I'm doing. I had already embedded two other games' reference engines as WASM modules. This would make three. Get the Lua compiled to WASM, stuff it into a Worker, done.
 
 Reader, it was not done.
