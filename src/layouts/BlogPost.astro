@@ -235,4 +235,71 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     border: 2px solid var(--black);
     border-radius: 50%;
   }
+
+  /* Memphis-styled table */
+  .prose :global(table) {
+    display: block;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 3px solid var(--black);
+    box-shadow: 4px 4px 0 var(--black);
+    background: var(--white);
+    margin-block: 2rem;
+    font-family: var(--font-body);
+    overflow-x: auto;
+  }
+
+  .prose :global(thead) {
+    background: var(--teal);
+  }
+
+  .prose :global(th) {
+    padding: 0.6rem 0.9rem;
+    font-weight: 700;
+    text-align: left;
+    color: var(--black);
+    border-bottom: 3px solid var(--black);
+    border-right: 2px solid var(--black);
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+  .prose :global(th:last-child) {
+    border-right: none;
+  }
+
+  .prose :global(td) {
+    padding: 0.55rem 0.9rem;
+    border-top: 2px solid rgba(26, 26, 26, 0.12);
+    border-right: 2px solid rgba(26, 26, 26, 0.12);
+    color: var(--black);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .prose :global(tr:first-child td) {
+    border-top: none;
+  }
+  .prose :global(td:last-child) {
+    border-right: none;
+  }
+  .prose :global(tbody tr:nth-child(even)) {
+    background: rgba(26, 26, 26, 0.03);
+  }
+
+  .prose :global(td:first-child) {
+    font-family: var(--font-body);
+    font-weight: 500;
+  }
+
+  /* `**N MB**` in the source becomes <strong> inside a td -- render as a yellow pill */
+  .prose :global(td strong) {
+    display: inline-block;
+    background: var(--yellow);
+    padding: 0.05em 0.4em;
+    border: 2px solid var(--black);
+    box-shadow: 2px 2px 0 var(--black);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    line-height: 1.2;
+  }
 </style>
