@@ -18,7 +18,7 @@ Here is what I mean by "use it." Making your own Path of Exile build from scratc
 
 What players *actually* do is copy someone else's build guide move-for-move, and the moment they deviate -- a better chest drops, the unique the guide wants is 20 divines out of budget -- they are on their own. Did that swap cost 200,000 DPS or 2 million? Is the tree still balanced? Am I still viable in red maps? PoB answers all of this, if you are willing to sit in front of it for a few hours, twiddling things around and experiment.
 
-That is what I wanted Claude to do for me! I wanted the LLM to dig deep in the build mines for me to uncover gems. It should naturally try five passives the build guide would never recommend, watch the numbers move, and come back with "this one is 40% more clear speed for 500 HP, worth it." LLMs are superb when iterating on code when constrained by sensible guard rails -- why can't that be applied to theorycrafting PoE builds?
+That is what I wanted Claude to do for me! I wanted the LLM to dig deep in the build mines for me to uncover gems. It should naturally try five passives the build guide would never recommend, watch the numbers move, and come back with "this one is 40% more clear speed for 500 HP, worth it." LLMs are superb at iterating on code constrained by sensible guard rails. The same thing should work for theorycrafting a PoE build.
 
 ### The Dream
 
@@ -69,7 +69,7 @@ This catastrophic number would walk straight into an AI recommendation with no w
 
 **Ship it on a VPS.** Trivially solvable, boringly so, and the option I least wanted. The rest of Savecraft lives on Cloudflare's edge -- one ops surface, one deploy pipeline, one mental model. A VPS adds provisioning, patching, monitoring, TLS, backups, and all the busywork that comes with running a real server, for exactly one game. If I were writing a business plan I would dress this up as "progressive infrastructure." Since I am not, I will call it what it is: a mess.
 
-Skip ahead: I took this option anyway. Every objection in the paragraph above stayed true. I just ran out of better ideas.
+(Skip ahead: I took this option anyway. Every objection in the paragraph above stayed true. I just ran out of better ideas.)
 
 **Rewrite PoB's calc engine in TypeScript.** The "real" answer. TypeScript objects are more compact than Lua tables. A TS port runs fine in a Worker. This is also the *enormous* answer, because PoB's calc engine is two hundred thousand lines of Lua and every PoE league changes enough of it to make the merge into your fork nontrivial. Doing this well is a multi-month undertaking that turns into a recurring tax forever. I may still do this eventually -- I have a folder of notes -- because I love programming and hate myself in equal measures.
 
@@ -89,9 +89,9 @@ The details that matter:
 
 **Two-send protocol for iteration.** When the AI wants to "explore builds near this one," I don't let the subprocess decide what to do -- Go decides. The subprocess gets a build and returns its stats. Go looks at the stats, picks a passive to perturb, sends that perturbation back for recomputation, and the cycle continues until Go has seen enough to answer. The subprocess stays dumb. All the decision logic lives in Go: which passive to swap next, which support gem might be worth trying, and whether any particular branch of the passive tree is pure dead weight under the current gear assumptions.
 
-**Ported PoB's perturbation algorithms to Go.** This is the piece I'm most proud of, and also the piece that took the longest. PoB's "nearby" and "audit" features, which let you compare a build to its neighbors and find opportunity cost, originally lived in Lua inside PoB proper. I ported them to Go so my subprocess pool only does PoB API calls while Go handles segmentation, ranking, and the dead-weight detection that makes the whole thing actually useful. This matters because I can now reason about the iteration loop without reading Lua -- and because Go is a language considerably more people can reason about than Lua is.
+**Ported PoB's perturbation algorithms to Go.** This is the piece I'm most proud of, and also the piece that took the longest. PoB's "nearby" and "audit" features, which let you compare a build to its neighbors and find opportunity cost, originally lived in Lua inside PoB proper. I ported them to Go so my subprocess pool only does PoB API calls while Go handles segmentation, ranking, and the dead-weight detection that makes the whole thing actually useful. This matters because I can now reason about the iteration loop without reading Lua.
 
-The numbers I actually care about: pool size 8, p50 at 40ms for a swap-and-recompute, p99 at about 400ms. Good enough.
+The numbers I actually care about: pool size 8, p50 at 40ms for a swap-and-recompute, p99 at about 300ms. Good enough.
 
 ![A Claude conversation asking "show me what swapping Void Manipulation for Concentrated Effect might do" -- Savecraft returns a before/after table: Combined DPS 5.22M → 5.99M (+766,500), Fire Hit Average 0 → 52,600 -- and Claude reasons about why its own prediction was off by half.](/images/pob/concentrated-effect-swap.jpeg)
 
@@ -107,4 +107,4 @@ All of this is open source and Apache 2.0. The pob-server code is at [github.com
 
 Option four -- the TypeScript port of the calc engine -- is the right answer eventually. Someone is going to do it, and when they do, `pob-server` becomes vestigial, and good riddance to it. The subprocess pool is what you build when the correct architecture costs more hours than you have and you need to ship something that works today. I will defend that tradeoff cheerfully and then help pay for its funeral the moment the better thing exists.
 
-But if you are sitting at a kitchen table at one in the morning staring at a 145-megabyte Lua runtime and a 128-megabyte memory ceiling, and you have already ruled out the clever options, and you still want to ship: write the subprocess pool. It is an embarrassing architecture that happens to work, which is the highest praise I can muster for a piece of software at 1am. And on Tuesday night when the colony is burning and someone wants to know whether to take Vaal Pact, it gives the right answer -- which, when you get down to it, is the only thing an architecture has to do.
+But if you are sitting at a kitchen table at one in the morning staring at a 145-megabyte Lua runtime and a 128-megabyte memory ceiling, and you have already ruled out the clever options, and you still want to ship: write the subprocess pool. It is an embarrassing architecture that happens to work, which is the highest praise I can muster for a piece of software at 1am. And on Tuesday night when all the PoE experts are asleep and someone wants to know whether to take Vaal Pact, it gives the right answer -- which, when you get down to it, is the only thing an architecture has to do.
