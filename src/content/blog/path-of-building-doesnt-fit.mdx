@@ -53,29 +53,33 @@ While we are here, there is a genuinely funny wrinkle about Lua runtimes and Web
 
 The Lua runtimes that *can* compile to WASM (Lua 5.1, Luau) pay for that portability with worse memory behavior. The runtime with the memory numbers you want cannot run in a Worker. The runtimes that can run in a Worker cost you thirty percent more memory than you have to spend. These are the same fact stated from two angles, and they leave you nowhere. It is not an accident of my measurement methodology; it is a structural fact about how these runtimes are built, and it does not get better by staring at it harder.
 
-Luau -- Roblox's fork -- has the additional indignity of missing `goto` entirely. PoB uses `goto`, among other PoE-specific cleverness. You can restructure around it, probably, but you are restructuring in a fork of the Lua runtime inside a fork of the calc engine, and at that point you have committed to maintaining two forks in parallel every time PoE gets a league update, which is every three months. I don't have the weekends for that.
+Luau -- Roblox's fork -- has the additional indignity of missing `goto` entirely. PoB uses `goto`. You can restructure around it, probably, but you are restructuring in a fork of the Lua runtime inside a fork of the calc engine, and at that point you have committed to maintaining two forks in parallel every time PoE gets a league update, which is every three months. I don't have the weekends for that.
 
 ## The Architectures I Considered and Rejected
 
-I spent about a week in the planning equivalent of pacing around the apartment before I settled on what to build. The options that didn't survive:
+I spent about a week in the planning equivalent of pacing around the house before I settled on what to build. The options that didn't survive:
 
 **Full PoB in WASM.** Dead on arrival, see above.
 
 **Stripped PoB in WASM.** Fork PoB, lazy-load items, skip UI code, load only the current tree. I sketched it out and got something that might run under Luau at about 120 MB on the main scenario, modulo the `goto` situation. But "might run at 120 MB on the main scenario" is a fragile thing to rest production on -- the moment a player loads a build with unusual uniques, I exceed the budget and crash. And the fork has to be carried forward every league. This is a 4:3 tradeoff where the 3 is "runs at all" and the 4 is "the rest of my free time for the next two years."
 
-And the crash outcome, it turns out, is the optimistic one. I tested the pessimistic one. If you strip a data table and stay under the memory ceiling, PoB doesn't know it's been mutilated -- it starts up fine, imports the build, runs the calc, and returns a DPS number that looks reasonable and is wrong. I deleted PoB's ModCache at load time and ran a build that should have reported 5.22 million DPS. It reported 48. No error. No warning. Just a quietly catastrophic answer that would walk straight into an AI recommendation with no way for the player to know they were looking at a number the engine pulled out of a hat. The crash path is honest. The silent-wrong-answer path is the one that haunts you. That's the DPS: 48 row in the widget at the top of this post, in case you didn't find it.
+And the crash outcome, it turns out, is the optimistic one. I tested the pessimistic one. If you strip a data table and stay under the memory ceiling, PoB doesn't know it's been mutilated -- it starts up fine, imports the build, runs the calc, and returns a DPS number that looks reasonable and is wrong. I deleted PoB's ModCache at load time and ran a build that should have reported 5.22 million DPS. It reported 48! And the math checked out!!
 
-**Ship it on a VPS.** Trivially solvable, boringly so, and still the wrong call. The rest of Savecraft lives on Cloudflare's edge. Adding a VPS means adding an entire ops surface -- provisioning, patching, monitoring, and all the TLS and backup busywork that comes with a real server -- for exactly one game. If I were writing a business plan I would spin this as "progressive infrastructure"; since I am not writing a business plan I will spin it as "what a mess."
+This catastrophic number would walk straight into an AI recommendation with no way for the player to know they were looking at a number the engine pulled out of a hat. Then someone posts "your tool is fundamentally broken" and trust in what I'm trying to do erodes further.
 
-**Rewrite PoB's calc engine in TypeScript.** The "real" answer. TypeScript objects are more compact than Lua tables. A TS port runs fine in a Worker. This is also the *enormous* answer, because PoB's calc engine is two hundred thousand lines of Lua and every PoE league changes enough of it to make the merge into your fork nontrivial. Doing this well is a multi-month undertaking that turns into a recurring tax forever. I may still do this eventually -- I have a folder of notes -- but not this year.
+**Ship it on a VPS.** Trivially solvable, boringly so, and the option I least wanted. The rest of Savecraft lives on Cloudflare's edge -- one ops surface, one deploy pipeline, one mental model. A VPS adds provisioning, patching, monitoring, TLS, backups, and all the busywork that comes with running a real server, for exactly one game. If I were writing a business plan I would dress this up as "progressive infrastructure." Since I am not, I will call it what it is: a mess.
+
+Skip ahead: I took this option anyway. Every objection in the paragraph above stayed true. I just ran out of better ideas.
+
+**Rewrite PoB's calc engine in TypeScript.** The "real" answer. TypeScript objects are more compact than Lua tables. A TS port runs fine in a Worker. This is also the *enormous* answer, because PoB's calc engine is two hundred thousand lines of Lua and every PoE league changes enough of it to make the merge into your fork nontrivial. Doing this well is a multi-month undertaking that turns into a recurring tax forever. I may still do this eventually -- I have a folder of notes -- because I love programming and hate myself in equal measures.
 
 **Parse-only, no calc.** Decode the PoB build code (it is base64-encoded zlib, compressing a hilariously straightforward XML blob) and serve structured build data to the AI. No DPS numbers, no defense layers, nothing to iterate against. Trivially implementable. I rejected this because it kills the whole point: I wanted the AI to *play* with the build, not stare at it.
 
-So: not WASM, not stripped WASM, not a VPS, not a TypeScript rewrite, and decidedly not parse-only. The remaining option is the one I eventually shipped, and it is mildly embarrassing.
+So: not pure WASM, not stripped WASM, not a full TypeScript rewrite, and decidedly not parse-only. Which leaves the VPS. What I built on top of it, however, is mildly embarrassing.
 
-## The Subprocess Pool, or: An Architecture Nobody Wants To Admit Works
+## The Subprocess Pool, or: The Least Worst Solution
 
-I wrote a Go HTTP server that manages a pool of long-lived LuaJIT subprocesses. Each subprocess runs a small Lua wrapper that embeds PoB's headless mode. When a request comes in, the Go server hands it to an idle subprocess over stdin; the subprocess runs the calc and writes a result to stdout; the Go server relays the result to whoever asked.
+I wrote a Go HTTP server. On a VPS, yes, the exact thing I spent a paragraph above rejecting. It manages a pool of long-lived LuaJIT subprocesses, each running a small Lua wrapper that embeds PoB's headless mode. When a request comes in, the Go server hands it to an idle subprocess over stdin; the subprocess runs the calc and writes a result to stdout; the Go server relays the result to whoever asked.
 
 This is an architecture that feels like something you'd sketch on a whiteboard at 2am and then throw out in the morning. It is also, empirically, the architecture that works.
 
