@@ -319,7 +319,7 @@
 <InteractiveFrame {title}>
   {#snippet children()}
     <div class="palette-header">
-      <span class="palette-label">Palette</span>
+      <span class="palette-label">Path of Building Components</span>
       <ResetButton onreset={handleReset} />
     </div>
     <div class="palette" bind:this={paletteEl}>
@@ -496,21 +496,23 @@
     display: inline-flex;
   }
 
-  /* Ghost block: dashed outline version of the real block, slides alongside the cursor. */
+  /* Ghost block: dashed outline version of the real block, slides alongside
+     the cursor. Sized to match the real Draggable exactly (inset:0 on the
+     nudge-wrap, box-sizing: border-box). */
   .phantom-block {
     position: absolute;
-    top: 0;
-    left: 0;
-    display: inline-flex;
+    inset: 0;
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     gap: 0.125rem;
     padding: 0.75rem 1rem;
     border: 3px dashed var(--black);
+    box-sizing: border-box;
     color: var(--black);
     font-family: var(--font-body);
     font-size: var(--text-base, 1rem);
-    min-width: 8rem;
     pointer-events: none;
     z-index: 2;
     opacity: 0;
