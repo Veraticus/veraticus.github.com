@@ -16,14 +16,50 @@ export interface PobBlock {
   size: number;
   color: BlockColor;
   required: boolean;
+  description: string;
 }
 
 export const POB_BLOCKS: readonly PobBlock[] = [
-  { id: 'mods', label: 'Mod tables', size: 41, color: 'teal', required: true },
-  { id: 'uniques', label: 'Uniques', size: 46, color: 'coral', required: true },
-  { id: 'ui', label: 'UI + class defs', size: 26, color: 'yellow', required: false },
-  { id: 'calc', label: 'Calc temps', size: 28, color: 'purple', required: true },
-  { id: 'build', label: 'Your build', size: 22, color: 'green', required: false },
+  {
+    id: 'mods',
+    label: 'Mod tables',
+    size: 41,
+    color: 'teal',
+    required: true,
+    description: 'Item rolls',
+  },
+  {
+    id: 'uniques',
+    label: 'Uniques',
+    size: 46,
+    color: 'coral',
+    required: true,
+    description: 'Unique items',
+  },
+  {
+    id: 'ui',
+    label: 'UI + class defs',
+    size: 26,
+    color: 'yellow',
+    required: false,
+    description: 'Rendering',
+  },
+  {
+    id: 'calc',
+    label: 'Calc temps',
+    size: 28,
+    color: 'purple',
+    required: true,
+    description: 'Scratch mem',
+  },
+  {
+    id: 'build',
+    label: 'Your build',
+    size: 22,
+    color: 'green',
+    required: false,
+    description: 'Character',
+  },
 ];
 
 export const CAPACITY_MB = 128;

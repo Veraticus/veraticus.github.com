@@ -344,6 +344,9 @@
                 <span class="phantom-block color-{slot.block.color}" aria-hidden="true">
                   <span class="phantom-label">{slot.block.label}</span>
                   <span class="phantom-size">{slot.block.size} MB</span>
+                  {#if slot.block.description}
+                    <span class="phantom-desc">{slot.block.description}</span>
+                  {/if}
                 </span>
                 <!-- Cursor: arrow above, fist on grab, open hand on release -->
                 <span class="phantom-cursor" aria-hidden="true">
@@ -362,6 +365,7 @@
                   label={slot.block.label}
                   size={slot.block.size}
                   color={slot.block.color}
+                  description={slot.block.description}
                   placed={false}
                   ontoggle={toggle}
                   ondragmove={handleLiveMove}
@@ -374,6 +378,7 @@
                 label={slot.block.label}
                 size={slot.block.size}
                 color={slot.block.color}
+                description={slot.block.description}
                 placed={false}
                 ontoggle={toggle}
                 ondragmove={handleLiveMove}
@@ -415,6 +420,7 @@
                 label={slot.block.label}
                 size={slot.block.size}
                 color={slot.block.color}
+                description={slot.block.description}
                 placed={true}
                 ontoggle={toggle}
                 ondragmove={handleLiveMove}
@@ -532,7 +538,14 @@
   .phantom-size {
     font-family: var(--font-mono, monospace);
     font-size: var(--text-sm, 0.875rem);
-    opacity: 0.8;
+    opacity: 0.85;
+  }
+  .phantom-desc {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    line-height: 1.15;
+    opacity: 0.75;
+    margin-top: 0.1rem;
   }
 
   /* Cursor container: travels along the same path as the phantom block, but

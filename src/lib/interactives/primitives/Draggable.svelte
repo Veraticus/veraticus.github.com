@@ -16,6 +16,7 @@
     size: number;
     placed: boolean;
     color?: 'teal' | 'coral' | 'yellow' | 'purple' | 'green';
+    description?: string;
     ontoggle: (id: string) => void;
     ondragmove?: (id: string, position: Position) => void;
     ondragend?: (id: string, position: Position) => void;
@@ -28,6 +29,7 @@
     size,
     placed,
     color = 'teal',
+    description,
     ontoggle,
     ondragmove,
     ondragend,
@@ -149,6 +151,9 @@
 >
   <span class="label">{label}</span>
   <span class="size">{size} MB</span>
+  {#if description}
+    <span class="description">{description}</span>
+  {/if}
   {#if children}
     <span class="extra">{@render children()}</span>
   {/if}
@@ -224,7 +229,15 @@
   .size {
     font-family: var(--font-mono, monospace);
     font-size: var(--text-sm, 0.875rem);
-    opacity: 0.8;
+    opacity: 0.85;
+  }
+
+  .description {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    line-height: 1.15;
+    opacity: 0.75;
+    margin-top: 0.1rem;
   }
 
   @media (prefers-reduced-motion: reduce) {
