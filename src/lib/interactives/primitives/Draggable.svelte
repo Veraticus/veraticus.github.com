@@ -1,6 +1,14 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { handleKeyDown } from './keyboard';
+  import {
+    createDragState,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    type DragState,
+  } from './drag';
+  import type { Position } from './pointer';
 
   interface Props {
     id: string;
@@ -9,6 +17,7 @@
     placed: boolean;
     color?: 'teal' | 'coral' | 'yellow' | 'purple';
     ontoggle: (id: string) => void;
+    ondragend?: (id: string, position: Position) => void;
     children?: Snippet;
   }
 
@@ -19,10 +28,18 @@
     placed,
     color = 'teal',
     ontoggle,
+    ondragend,
     children,
   }: Props = $props();
 
+  let drag = $state<DragState>(createDragState());
+  let suppressNextClick = $state(false);
+
   function onClick() {
+    if (suppressNextClick) {
+      suppressNextClick = false;
+      return;
+    }
     ontoggle(id);
   }
 
@@ -34,6 +51,49 @@
       (e.currentTarget as HTMLElement | null)?.blur();
     }
   }
+
+  function onPointerDown(e: PointerEvent) {
+    const target = e.currentTarget as HTMLElement;
+    try {
+      target.setPointerCapture(e.pointerId);
+    } catch {
+      // Not all environments support pointer capture (older jsdom, some browsers under test).
+      // The drag state machine still works without it.
+    }
+    drag = handlePointerDown(drag, id, e);
+  }
+
+  function onPointerMove(e: PointerEvent) {
+    if (drag.draggingId === null) return;
+    drag = handlePointerMove(drag, e);
+  }
+
+  function onPointerUp(e: PointerEvent) {
+    if (drag.draggingId === null) return;
+    const { state: next, result } = handlePointerUp(drag, e);
+    drag = next;
+    if (result.moved && result.dropId !== null && result.dropPosition !== null) {
+      suppressNextClick = true;
+      ondragend?.(result.dropId, result.dropPosition);
+    }
+    const target = e.currentTarget as HTMLElement;
+    try {
+      target.releasePointerCapture(e.pointerId);
+    } catch {
+      // same tolerance as setPointerCapture above
+    }
+  }
+
+  function onPointerCancel() {
+    drag = createDragState();
+  }
+
+  let isDragging = $derived(drag.draggingId !== null && drag.moved);
+  let translateStyle = $derived(
+    drag.draggingId !== null
+      ? `translate(${drag.offset.x}px, ${drag.offset.y}px)`
+      : 'translate(0, 0)',
+  );
 </script>
 
 <button
@@ -41,8 +101,15 @@
   aria-pressed={placed}
   class="draggable color-{color}"
   class:placed
+  class:dragging={isDragging}
+  data-dragging={isDragging}
+  style:transform={translateStyle}
   onclick={onClick}
   onkeydown={onKeyDown}
+  onpointerdown={onPointerDown}
+  onpointermove={onPointerMove}
+  onpointerup={onPointerUp}
+  onpointercancel={onPointerCancel}
 >
   <span class="label">{label}</span>
   <span class="size">{size} MB</span>
@@ -65,11 +132,13 @@
     font-family: var(--font-body);
     font-size: var(--text-base, 1rem);
     text-align: left;
-    cursor: pointer;
+    cursor: grab;
     min-width: 8rem;
+    touch-action: none;
+    user-select: none;
     transition:
-      transform 120ms ease,
-      box-shadow 120ms ease,
+      transform 180ms ease,
+      box-shadow 180ms ease,
       filter 180ms ease;
   }
 
@@ -87,16 +156,21 @@
     color: var(--bg);
   }
 
-  .draggable:hover,
   .draggable:focus-visible {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--black);
-    outline: none;
+    outline: 3px solid var(--black);
+    outline-offset: 4px;
   }
 
-  .draggable:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--black);
+  .draggable:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  .draggable.dragging {
+    cursor: grabbing;
+    box-shadow: 10px 10px 0 var(--black);
+    z-index: 10;
+    transition: none;
   }
 
   .draggable.placed {
@@ -111,5 +185,11 @@
     font-family: var(--font-mono, monospace);
     font-size: var(--text-sm, 0.875rem);
     opacity: 0.8;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .draggable {
+      transition: none;
+    }
   }
 </style>

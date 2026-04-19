@@ -6,15 +6,22 @@
     used: number;
     capacity: number;
     children?: Snippet;
+    onmount?: (el: HTMLElement) => void;
   }
 
-  let { label, used, capacity, children }: Props = $props();
+  let { label, used, capacity, children, onmount }: Props = $props();
+
+  let rootEl: HTMLDivElement | undefined = $state();
+  $effect(() => {
+    if (rootEl && onmount) onmount(rootEl);
+  });
 
   let overflowing = $derived(used > capacity);
   let fillPercent = $derived(Math.min(100, (used / capacity) * 100));
 </script>
 
 <div
+  bind:this={rootEl}
   class="drop-target"
   class:overflowing
   role="region"
