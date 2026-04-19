@@ -5,7 +5,6 @@
   import Draggable from '../primitives/Draggable.svelte';
   import DropTarget from '../primitives/DropTarget.svelte';
   import ResetButton from '../primitives/ResetButton.svelte';
-  import Squiggle from '../primitives/Squiggle.svelte';
   import FailureCatalog from './FailureCatalog.svelte';
   import { hitTest, type Position } from '../primitives/pointer';
   import { computeInsertionIndex } from '../primitives/reorder';
@@ -320,10 +319,7 @@
 <InteractiveFrame {title}>
   {#snippet children()}
     <div class="palette-header">
-      <span class="palette-label">
-        <span class="label-text">Path of Building Components</span>
-        <Squiggle color="coral" stroke={3} height={0.45} />
-      </span>
+      <span class="palette-label">Path of Building Components</span>
       <ResetButton onreset={handleReset} />
     </div>
     <div class="palette" bind:this={paletteEl}>
