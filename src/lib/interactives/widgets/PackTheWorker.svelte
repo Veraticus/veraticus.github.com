@@ -456,7 +456,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.65rem;
   }
 
   .palette-label {

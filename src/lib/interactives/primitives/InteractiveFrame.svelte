@@ -56,11 +56,13 @@
     position: relative;
   }
 
-  h3 {
-    margin: 0 0 0.5rem 0;
+  .interactive-frame h3 {
+    margin: 0 0 0.35rem 0;
+    padding: 0;
     font-family: var(--font-heading, var(--font-body));
-    font-size: var(--text-lg, 1.125rem);
-    line-height: 1.2;
+    font-size: 1.05rem;
+    line-height: 1.15;
+    font-weight: 700;
   }
 
   .interactive-frame-body {
