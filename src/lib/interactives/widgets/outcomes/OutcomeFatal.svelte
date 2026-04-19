@@ -14,11 +14,8 @@
 <aside class="fatal" aria-label="Path of Building failed to boot">
   <pre class="boot">
 {#each bootLines as line (line)}<span class="ok">{line}</span>
-{/each}<span class="fail">^1Error:</span>
-<span class="fail">^0In 'Init': {text}</span>
-<span class="fail">^8v2.63.0</span>
-<span class="fail">^0Press Enter/Escape to dismiss, or F5 to restart the application.</span>
-<span class="fail">Press CTRL + C to copy error text.</span>
+{/each}<span class="fail">Error:</span>
+<span class="fail">In 'Init': {text}</span>
   </pre>
 </aside>
 
