@@ -50,15 +50,17 @@
 <style>
   .interactive-frame {
     border: 3px solid var(--black);
-    padding: 1rem;
+    padding: 0.75rem 1rem 1rem;
     background: var(--bg);
     box-shadow: 4px 4px 0 var(--black);
     position: relative;
   }
 
   h3 {
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.5rem 0;
     font-family: var(--font-heading, var(--font-body));
+    font-size: var(--text-lg, 1.125rem);
+    line-height: 1.2;
   }
 
   .interactive-frame-body {
