@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import FillBar from './FillBar.svelte';
 
   interface Props {
     label: string;
@@ -17,7 +18,6 @@
   });
 
   let overflowing = $derived(used > capacity);
-  let fillPercent = $derived(Math.min(100, (used / capacity) * 100));
 </script>
 
 <div
@@ -38,9 +38,8 @@
     </span>
   </header>
 
-  <div class="bar" aria-hidden="true">
-    <div class="bar-fill" style:width="{fillPercent}%"></div>
-    <div class="ceiling"></div>
+  <div class="bar-wrap">
+    <FillBar value={used} max={capacity} unit="MB" label={`${label} memory usage`} />
   </div>
 
   <div class="contents">
@@ -86,32 +85,8 @@
     opacity: 0.7;
   }
 
-  .bar {
-    position: relative;
-    height: 10px;
-    background: rgba(26, 26, 26, 0.1);
-    border: 2px solid var(--black);
-    overflow: visible;
+  .bar-wrap {
     margin-bottom: 0.75rem;
-  }
-
-  .bar-fill {
-    height: 100%;
-    background: var(--teal);
-    transition: width 240ms ease;
-  }
-
-  .ceiling {
-    position: absolute;
-    top: -4px;
-    right: 0;
-    bottom: -4px;
-    width: 2px;
-    background: var(--black);
-  }
-
-  .drop-target.overflowing .bar-fill {
-    background: var(--coral);
   }
 
   .drop-target.overflowing {
@@ -137,9 +112,6 @@
   @media (prefers-reduced-motion: reduce) {
     .drop-target.overflowing {
       animation: none;
-    }
-    .bar-fill {
-      transition: none;
     }
   }
 
