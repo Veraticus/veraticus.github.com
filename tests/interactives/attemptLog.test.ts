@@ -37,16 +37,16 @@ describe('AttemptLog', () => {
     expect(items[1].getAttribute('data-result')).toBe('error');
   });
 
-  it('renders entries in an ordered list with padded index prefixes', () => {
+  it('renders entries in an ordered list', () => {
     const { container } = render(AttemptLog, {
       entries: [
-        { id: '1', label: 'a', result: 'fit', text: 'x' },
-        { id: '2', label: 'b', result: 'fit', text: 'y' },
+        { id: '1', label: 'first', result: 'fit', text: 'x' },
+        { id: '2', label: 'second', result: 'fit', text: 'y' },
       ],
     });
     const list = container.querySelector('ol');
     expect(list).not.toBeNull();
-    expect(list?.textContent).toMatch(/01/);
-    expect(list?.textContent).toMatch(/02/);
+    const items = list?.querySelectorAll('li');
+    expect(items?.length).toBe(2);
   });
 });

@@ -19,10 +19,6 @@
     emptyMessage = 'No attempts yet.',
     label = 'Attempt log',
   }: Props = $props();
-
-  function pad(n: number): string {
-    return String(n).padStart(2, '0');
-  }
 </script>
 
 <section class="attempt-log" aria-label={label}>
@@ -30,9 +26,8 @@
     <p class="empty">{emptyMessage}</p>
   {:else}
     <ol>
-      {#each entries as entry, i (entry.id)}
+      {#each entries as entry (entry.id)}
         <li data-result={entry.result}>
-          <span class="index">[{pad(i + 1)}]</span>
           <span class="label">{entry.label}</span>
           <span class="arrow" aria-hidden="true">→</span>
           <span class="result-badge result-{entry.result}">{entry.result}</span>
@@ -78,10 +73,6 @@
 
   li:last-child {
     border-bottom: none;
-  }
-
-  .index {
-    color: #8a8577;
   }
 
   .label {
