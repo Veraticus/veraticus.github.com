@@ -1,27 +1,6 @@
-<script lang="ts" module>
-  import { getContext, setContext } from 'svelte';
-
-  const KEY = Symbol('interactive-frame');
-
-  export interface FrameContext {
-    readonly prefersReducedMotion: boolean;
-    announce(msg: string): void;
-  }
-
-  export function useInteractiveFrame(): FrameContext {
-    const ctx = getContext<FrameContext | undefined>(KEY);
-    if (!ctx) {
-      throw new Error('useInteractiveFrame() must be called inside an <InteractiveFrame>');
-    }
-    return ctx;
-  }
-
-  // Re-export for child components that need to provide their own frame in tests.
-  export { KEY as INTERACTIVE_FRAME_KEY };
-</script>
-
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
+  import { INTERACTIVE_FRAME_KEY, type FrameContext } from './InteractiveFrame.context';
 
   interface Props {
     title?: string;
@@ -57,7 +36,7 @@
     },
     announce,
   };
-  setContext(KEY, ctx);
+  setContext(INTERACTIVE_FRAME_KEY, ctx);
 </script>
 
 <section class="interactive-frame" aria-label={title}>

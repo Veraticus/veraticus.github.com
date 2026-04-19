@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useInteractiveFrame } from '../InteractiveFrame.svelte';
+  import { useInteractiveFrame } from '../InteractiveFrame.context';
 
   interface Props {
     label?: string;

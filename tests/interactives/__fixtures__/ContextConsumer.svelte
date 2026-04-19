@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useInteractiveFrame } from '../../../src/lib/interactives/primitives/InteractiveFrame.svelte';
+  import { useInteractiveFrame } from '../../../src/lib/interactives/primitives/InteractiveFrame.context';
 
   const frame = useInteractiveFrame();
 </script>
