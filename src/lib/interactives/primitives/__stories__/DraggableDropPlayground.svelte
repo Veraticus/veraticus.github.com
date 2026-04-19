@@ -153,64 +153,81 @@
     }
   }
 
+  /** Move the dragged id from one list into the other at `insertAt`, wiggling any blocks that shift. */
+  function applyCrossListMove(
+    from: 'placed' | 'palette',
+    to: 'placed' | 'palette',
+    id: string,
+    insertAt: number,
+  ): void {
+    const beforeSource = from === 'placed' ? placedOrder : paletteOrder;
+    const beforeTarget = to === 'placed' ? placedOrder : paletteOrder;
+    // Remove from source
+    const sourceAfter = beforeSource.filter((x) => x !== id);
+    if (from === 'placed') placedOrder = sourceAfter;
+    else paletteOrder = sourceAfter;
+    // Insert into target
+    const targetAfter = [
+      ...beforeTarget.slice(0, insertAt),
+      id,
+      ...beforeTarget.slice(insertAt),
+    ];
+    if (to === 'placed') placedOrder = targetAfter;
+    else paletteOrder = targetAfter;
+    // Wiggle everyone whose index changed in either list (excluding the dragged block).
+    for (const otherId of sourceAfter) {
+      if (beforeSource.indexOf(otherId) !== sourceAfter.indexOf(otherId)) {
+        triggerWiggle(otherId);
+      }
+    }
+    for (const otherId of targetAfter) {
+      if (otherId === id) continue;
+      if (beforeTarget.indexOf(otherId) !== targetAfter.indexOf(otherId)) {
+        triggerWiggle(otherId);
+      }
+    }
+  }
+
   function handleLiveMove(id: string, pos: Position) {
     draggingId = id;
-    const list = listForId(id);
-    if (!list) return;
-    const container = list === 'placed' ? dropEl : paletteEl;
-    if (!container) return;
-    // Only live-reorder while the pointer is actually over the source list.
-    const rect = container.getBoundingClientRect();
-    if (!hitTest(pos, rect)) return;
+    // Hit-test BOTH containers. Whichever the pointer is currently over
+    // becomes the target list -- even if different from the block's source
+    // list, in which case the block migrates between lists live.
+    let targetList: 'placed' | 'palette' | null = null;
+    let container: HTMLElement | null = null;
+    if (dropEl && hitTest(pos, dropEl.getBoundingClientRect())) {
+      container = dropEl;
+      targetList = 'placed';
+    } else if (paletteEl && hitTest(pos, paletteEl.getBoundingClientRect())) {
+      container = paletteEl;
+      targetList = 'palette';
+    }
+    if (!container || !targetList) return;
+
+    const currentList = listForId(id);
+    if (!currentList) return;
+
     const childRects = childRectsIn(container, id);
     const insertAt = computeInsertionIndex(pos.x, childRects);
-    const currentOrder = list === 'placed' ? placedOrder : paletteOrder;
-    const currentIndex = currentOrder.indexOf(id);
-    if (currentIndex === insertAt) return;
-    applySameListReorder(list, id, insertAt);
+
+    if (currentList === targetList) {
+      const currentOrder = targetList === 'placed' ? placedOrder : paletteOrder;
+      if (currentOrder.indexOf(id) === insertAt) return;
+      applySameListReorder(targetList, id, insertAt);
+    } else {
+      applyCrossListMove(currentList, targetList, id, insertAt);
+    }
   }
 
   function handleDragEnd(id: string, pos: Position) {
     draggingId = null;
+    // State is already correct thanks to handleLiveMove (cross-list included).
+    // Just celebrate the landing if the drop is inside either container.
     const overTarget = dropEl ? hitTest(pos, dropEl.getBoundingClientRect()) : false;
     const overPalette = paletteEl ? hitTest(pos, paletteEl.getBoundingClientRect()) : false;
-    const wasPlaced = placedOrder.includes(id);
-
-    if (overTarget) {
-      const rects = dropEl ? childRectsIn(dropEl, id) : [];
-      const insertAt = computeInsertionIndex(pos.x, rects);
-      if (wasPlaced) {
-        placedOrder = placedOrder.filter((x) => x !== id);
-      } else {
-        paletteOrder = paletteOrder.filter((x) => x !== id);
-      }
-      placedOrder = [
-        ...placedOrder.slice(0, insertAt),
-        id,
-        ...placedOrder.slice(insertAt),
-      ];
+    if (overTarget || overPalette) {
       triggerJitter(id);
-      return;
     }
-
-    if (overPalette) {
-      const rects = paletteEl ? childRectsIn(paletteEl, id) : [];
-      const insertAt = computeInsertionIndex(pos.x, rects);
-      if (wasPlaced) {
-        placedOrder = placedOrder.filter((x) => x !== id);
-      } else {
-        paletteOrder = paletteOrder.filter((x) => x !== id);
-      }
-      paletteOrder = [
-        ...paletteOrder.slice(0, insertAt),
-        id,
-        ...paletteOrder.slice(insertAt),
-      ];
-      triggerJitter(id);
-      return;
-    }
-
-    // Dropped outside either region: leave state alone; Draggable snaps back visually.
   }
 </script>
 
@@ -223,7 +240,7 @@
           class:jittering={justJittered === b.id}
           class:wiggled={justWiggled[b.id]}
           animate:flip={{ duration: draggingId === b.id ? 0 : 240 }}
-          in:fly={{ y: -20, duration: 240 }}
+          in:fly={{ y: draggingId === b.id ? 0 : -20, duration: draggingId === b.id ? 0 : 240 }}
         >
           <Draggable
             id={b.id}
@@ -255,7 +272,7 @@
             class:jittering={justJittered === b.id}
             class:wiggled={justWiggled[b.id]}
             animate:flip={{ duration: draggingId === b.id ? 0 : 240 }}
-            in:fly={{ y: -40, duration: 320 }}
+            in:fly={{ y: draggingId === b.id ? 0 : -40, duration: draggingId === b.id ? 0 : 320 }}
           >
             <Draggable
               id={b.id}
