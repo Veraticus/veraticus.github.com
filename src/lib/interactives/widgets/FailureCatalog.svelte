@@ -7,14 +7,14 @@
   }
 
   // Ordered loudest → subtlest for narrative effect.
-  // The Silent row is the emotional payoff; the Fit row states the only
-  // achievable state's own limitation; the Impossible row is the thesis.
+  // The Silent row is the emotional payoff; the Fit row is the only achievable
+  // "running" state; the Impossible row below is the thesis punchline.
   export const CATALOG_ITEMS: readonly CatalogItem[] = [
     { kind: 'oom', label: 'Worker terminated' },
     { kind: 'fatal', label: 'PoB refuses to boot' },
     { kind: 'stuck', label: 'calc() hangs forever' },
     { kind: 'silent', label: 'DPS silently reads 48' },
-    { kind: 'fit', label: 'Cannot load a build' },
+    { kind: 'fit', label: 'Worker running, headless' },
   ];
 </script>
 
@@ -46,7 +46,7 @@
     {/each}
     <li class="item" aria-checked="false" role="checkbox" aria-disabled="true">
       <span class="box" aria-hidden="true"></span>
-      <span class="label">It all works and fits in 128&nbsp;MB</span>
+      <span class="label">PoB returns DPS for your build</span>
     </li>
   </ul>
 </section>

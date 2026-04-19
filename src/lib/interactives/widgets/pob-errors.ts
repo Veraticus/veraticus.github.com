@@ -7,8 +7,8 @@
  * interactive. Changes to these constants are locked down by unit tests.
  */
 
-export type BlockId = 'mods' | 'uniques' | 'ui' | 'calc';
-export type BlockColor = 'teal' | 'coral' | 'yellow' | 'purple';
+export type BlockId = 'mods' | 'uniques' | 'ui' | 'calc' | 'build';
+export type BlockColor = 'teal' | 'coral' | 'yellow' | 'purple' | 'green';
 
 export interface PobBlock {
   id: BlockId;
@@ -23,10 +23,10 @@ export const POB_BLOCKS: readonly PobBlock[] = [
   { id: 'uniques', label: 'Uniques', size: 46, color: 'coral', required: true },
   { id: 'ui', label: 'UI + class defs', size: 26, color: 'yellow', required: false },
   { id: 'calc', label: 'Calc temps', size: 28, color: 'purple', required: true },
+  { id: 'build', label: 'Your build', size: 22, color: 'green', required: false },
 ];
 
 export const CAPACITY_MB = 128;
-export const BUILD_LOAD_MB = 22;
 export const SILENT_DPS = 48;
 export const REAL_DPS = 5_219_847;
 

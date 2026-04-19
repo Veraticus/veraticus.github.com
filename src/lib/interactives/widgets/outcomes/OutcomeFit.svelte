@@ -5,10 +5,10 @@
   let { text }: Props = $props();
 </script>
 
-<aside class="fit" aria-label="Configuration fits headless">
+<aside class="fit" aria-label="Worker running headless">
   <div class="check" aria-hidden="true">✓</div>
   <div class="body">
-    <p class="headline">Fits.</p>
+    <p class="headline">Worker running, headless.</p>
     <p class="caption">{text}</p>
   </div>
 </aside>

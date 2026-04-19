@@ -2,30 +2,33 @@ import { describe, it, expect } from 'vitest';
 import {
   POB_BLOCKS,
   CAPACITY_MB,
-  BUILD_LOAD_MB,
   REAL_DPS,
   SILENT_DPS,
   POB_ERRORS,
 } from '../../../src/lib/interactives/widgets/pob-errors';
 
 describe('pob-errors constants', () => {
-  it('has exactly four memory blocks in the canonical order', () => {
-    expect(POB_BLOCKS.map((b) => b.id)).toEqual(['mods', 'uniques', 'ui', 'calc']);
+  it('has exactly five memory blocks in the canonical order', () => {
+    expect(POB_BLOCKS.map((b) => b.id)).toEqual(['mods', 'uniques', 'ui', 'calc', 'build']);
   });
 
-  it('blocks sum to 141 MB when all placed', () => {
+  it('blocks sum to 163 MB when all placed', () => {
     const total = POB_BLOCKS.reduce((s, b) => s + b.size, 0);
-    expect(total).toBe(141);
+    expect(total).toBe(163);
   });
 
-  it('marks exactly the UI block as non-required', () => {
+  it('marks UI and Build as non-required', () => {
     const required = POB_BLOCKS.filter((b) => b.required).map((b) => b.id);
     expect(required).toEqual(['mods', 'uniques', 'calc']);
   });
 
-  it('has capacity 128 MB and build load 22 MB', () => {
+  it('the build block weighs 22 MB', () => {
+    const build = POB_BLOCKS.find((b) => b.id === 'build')!;
+    expect(build.size).toBe(22);
+  });
+
+  it('has capacity 128 MB', () => {
     expect(CAPACITY_MB).toBe(128);
-    expect(BUILD_LOAD_MB).toBe(22);
   });
 
   it('pins the real-vs-silent DPS numbers', () => {

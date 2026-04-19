@@ -15,7 +15,7 @@
     label: string;
     size: number;
     placed: boolean;
-    color?: 'teal' | 'coral' | 'yellow' | 'purple';
+    color?: 'teal' | 'coral' | 'yellow' | 'purple' | 'green';
     ontoggle: (id: string) => void;
     ondragmove?: (id: string, position: Position) => void;
     ondragend?: (id: string, position: Position) => void;
@@ -190,6 +190,10 @@
   .color-purple {
     background: #7c5cff;
     color: var(--bg);
+  }
+  .color-green {
+    background: #8ab37a;
+    color: var(--black);
   }
 
   .draggable:focus-visible {

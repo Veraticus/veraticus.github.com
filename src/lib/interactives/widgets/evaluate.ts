@@ -20,7 +20,6 @@
 import {
   POB_BLOCKS,
   CAPACITY_MB,
-  BUILD_LOAD_MB,
   POB_ERRORS,
   SILENT_DPS,
   REAL_DPS,
@@ -39,16 +38,14 @@ export interface Outcome {
 
 export interface EvaluateInput {
   placedIds: BlockId[] | string[];
-  buildLoaded: boolean;
 }
 
 export function evaluateConfig(input: EvaluateInput): Outcome {
   const placed = new Set<string>(input.placedIds);
-  const placedSize = POB_BLOCKS.filter((b) => placed.has(b.id)).reduce(
+  const total = POB_BLOCKS.filter((b) => placed.has(b.id)).reduce(
     (sum, b) => sum + b.size,
     0,
   );
-  const total = placedSize + (input.buildLoaded ? BUILD_LOAD_MB : 0);
 
   if (total > CAPACITY_MB) {
     return {
@@ -75,7 +72,7 @@ export function evaluateConfig(input: EvaluateInput): Outcome {
 
   return {
     kind: 'fit',
-    text: 'fits headless (this is what pob-server does)',
+    text: 'Up and running at 115 MB.',
     badge: 'fit',
   };
 }

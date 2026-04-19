@@ -1,29 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { useInteractiveFrame } from '../../primitives/InteractiveFrame.context';
-
   interface Props {
     wrong: number;
     real: number;
   }
   let { wrong, real }: Props = $props();
-
-  const frame = useInteractiveFrame();
-  let showReal = $state(false);
-  let timer: ReturnType<typeof setTimeout> | null = null;
-
-  onMount(() => {
-    if (frame.prefersReducedMotion) {
-      showReal = true;
-      return () => {};
-    }
-    timer = setTimeout(() => {
-      showReal = true;
-    }, 2000);
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  });
 
   function fmt(n: number): string {
     return n.toLocaleString('en-US');
@@ -34,14 +14,10 @@
   <div class="check" aria-hidden="true">✓</div>
   <div class="body">
     <p class="headline">Calc complete.</p>
-    <p class="dps">
-      DPS: <span class="wrong">{fmt(wrong)}</span>
-      {#if showReal}
-        <span class="real">
-          <s>{fmt(real)}</s>
-        </span>
-      {/if}
-    </p>
+    <p class="dps">DPS: <span class="wrong">{fmt(wrong)}</span></p>
+    <aside class="reveal">
+      Should be <strong>{fmt(real)}</strong>. Without the mod tables, every item modifier evaluated to zero &mdash; PoB ran the calc against a naked character.
+    </aside>
     <p class="caption">PoB has no way to know it's wrong.</p>
   </div>
 </aside>
@@ -83,24 +59,20 @@
   .wrong {
     font-weight: 700;
   }
-  .real {
-    margin-left: 0.75rem;
-    animation: fade-in 320ms ease-out 1;
+  .reveal {
+    display: block;
+    margin: 0.4rem 0 0.5rem 0;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid var(--black);
+    background: var(--yellow);
+    color: var(--black);
+    font-size: var(--text-sm, 0.875rem);
+    line-height: 1.4;
+    box-shadow: 3px 3px 0 var(--black);
   }
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(-2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .real {
-      animation: none;
-    }
+  .reveal strong {
+    font-family: var(--font-mono, monospace);
+    font-weight: 700;
   }
   .caption {
     margin: 0;

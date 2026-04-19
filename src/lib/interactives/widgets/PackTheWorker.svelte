@@ -4,7 +4,6 @@
   import InteractiveFrame from '../primitives/InteractiveFrame.svelte';
   import Draggable from '../primitives/Draggable.svelte';
   import DropTarget from '../primitives/DropTarget.svelte';
-  import Toggle from '../primitives/Toggle.svelte';
   import ResetButton from '../primitives/ResetButton.svelte';
   import FailureCatalog from './FailureCatalog.svelte';
   import { hitTest, type Position } from '../primitives/pointer';
@@ -31,7 +30,7 @@
   let {
     title = 'Pack the Worker',
     initialPlaced = [],
-    storageKey = 'veraticus:pack-the-worker:v1',
+    storageKey = 'veraticus:pack-the-worker:v2',
   }: Props = $props();
 
   const ALL_IDS: BlockId[] = POB_BLOCKS.map((b) => b.id);
@@ -40,7 +39,6 @@
   interface SavedState {
     placedOrder?: string[];
     paletteOrder?: string[];
-    buildLoaded?: boolean;
     seenKinds?: OutcomeKind[];
   }
 
@@ -61,7 +59,6 @@
   function hydrated(): {
     placedOrder: BlockId[];
     paletteOrder: BlockId[];
-    buildLoaded: boolean;
     seenKinds: Set<OutcomeKind>;
   } {
     const saved = loadJSON<SavedState>(storageKey, {});
@@ -74,43 +71,32 @@
       return {
         placedOrder: [...initialPlaced],
         paletteOrder: ALL_IDS.filter((id) => !initialPlaced.includes(id)),
-        buildLoaded: false,
         seenKinds: new Set(),
       };
     }
     const seenKinds = new Set<OutcomeKind>(
       validSeenKinds(saved.seenKinds) ? saved.seenKinds : [],
     );
-    return {
-      placedOrder,
-      paletteOrder,
-      buildLoaded: typeof saved.buildLoaded === 'boolean' ? saved.buildLoaded : false,
-      seenKinds,
-    };
+    return { placedOrder, paletteOrder, seenKinds };
   }
 
   const initial = hydrated();
   let placedOrder = $state<BlockId[]>(initial.placedOrder);
   let paletteOrder = $state<BlockId[]>(initial.paletteOrder);
-  let buildLoaded = $state<boolean>(initial.buildLoaded);
   let seenKinds = $state<Set<OutcomeKind>>(initial.seenKinds);
 
   $effect(() => {
     saveJSON(storageKey, {
       placedOrder,
       paletteOrder,
-      buildLoaded,
       seenKinds: [...seenKinds],
     });
   });
 
   const placedBlocks = $derived(placedOrder.map(byId));
-  const paletteBlocks = $derived(paletteOrder.map(byId));
   const usedSize = $derived(placedBlocks.reduce((s, b) => s + b.size, 0));
 
-  const outcome = $derived<Outcome>(
-    evaluateConfig({ placedIds: placedOrder, buildLoaded }),
-  );
+  const outcome = $derived<Outcome>(evaluateConfig({ placedIds: placedOrder }));
 
   $effect(() => {
     if (!seenKinds.has(outcome.kind)) {
@@ -320,23 +306,16 @@
   function handleReset() {
     placedOrder = [];
     paletteOrder = [...ALL_IDS];
-    buildLoaded = false;
     seenKinds = new Set();
   }
 </script>
 
 <InteractiveFrame {title}>
   {#snippet children()}
-    <div class="controls">
-      <Toggle
-        checked={buildLoaded}
-        label="Load a build (+22 MB)"
-        ontoggle={(next) => (buildLoaded = next)}
-      />
+    <div class="palette-header">
+      <span class="palette-label">Palette</span>
       <ResetButton onreset={handleReset} />
     </div>
-
-    <div class="palette-label">Palette</div>
     <div class="palette" bind:this={paletteEl}>
       {#each paletteSlots as slot (slot.key)}
         <span
@@ -373,7 +352,7 @@
 
     <DropTarget
       label="Cloudflare Worker"
-      used={usedSize + (buildLoaded ? 22 : 0)}
+      used={usedSize}
       capacity={CAPACITY_MB}
       onmount={(el) => (dropEl = el)}
     >
@@ -434,12 +413,12 @@
 </InteractiveFrame>
 
 <style>
-  .controls {
+  .palette-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.35rem;
   }
 
   .palette-label {
@@ -449,7 +428,6 @@
     text-transform: uppercase;
     color: var(--black);
     opacity: 0.55;
-    margin-bottom: 0.35rem;
   }
 
   .palette {
