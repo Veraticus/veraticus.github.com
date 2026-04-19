@@ -7,14 +7,14 @@
   }
 
   // Ordered loudest → subtlest for narrative effect.
-  // The Silent row is the emotional payoff; the Fit row is the only achievable
-  // "success" (headless); the Impossible row below is the thesis punchline.
+  // The Silent row is the emotional payoff; the Fit row states the only
+  // achievable state's own limitation; the Impossible row is the thesis.
   export const CATALOG_ITEMS: readonly CatalogItem[] = [
-    { kind: 'oom', label: 'Worker terminated (memory overflow)' },
-    { kind: 'fatal', label: "PoB refuses to boot (uniques stripped)" },
-    { kind: 'stuck', label: 'calc() hangs forever (calc temps stripped)' },
-    { kind: 'silent', label: 'DPS silently reads 48 (mod tables stripped)' },
-    { kind: 'fit', label: 'Fits headless, no build loaded (UI stripped)' },
+    { kind: 'oom', label: 'Worker terminated' },
+    { kind: 'fatal', label: 'PoB refuses to boot' },
+    { kind: 'stuck', label: 'calc() hangs forever' },
+    { kind: 'silent', label: 'DPS silently reads 48' },
+    { kind: 'fit', label: 'Cannot load a build' },
   ];
 </script>
 
@@ -27,7 +27,7 @@
 </script>
 
 <section class="catalog" aria-label={label}>
-  <header class="catalog-header">Failure catalog</header>
+  <header class="catalog-header">Outcomes</header>
   <ul>
     {#each CATALOG_ITEMS as item (item.kind)}
       {@const reached = seenKinds.has(item.kind)}
@@ -44,10 +44,9 @@
         <span class="label">{item.label}</span>
       </li>
     {/each}
-    <li class="item impossible" aria-checked="false" role="checkbox" aria-disabled="true">
+    <li class="item" aria-checked="false" role="checkbox" aria-disabled="true">
       <span class="box" aria-hidden="true"></span>
       <span class="label">It all works and fits in 128&nbsp;MB</span>
-      <span class="tag">impossible</span>
     </li>
   </ul>
 </section>
@@ -103,34 +102,6 @@
   }
   .label {
     flex: 1;
-  }
-  .item.impossible {
-    margin-top: 0.5rem;
-    padding-top: 0.6rem;
-    border-top: 2px dashed rgba(26, 26, 26, 0.25);
-    font-style: italic;
-    opacity: 0.5;
-  }
-  .item.impossible .box {
-    background: repeating-linear-gradient(
-      45deg,
-      transparent 0,
-      transparent 3px,
-      rgba(26, 26, 26, 0.35) 3px,
-      rgba(26, 26, 26, 0.35) 5px
-    );
-  }
-  .tag {
-    font-family: var(--font-mono, monospace);
-    font-size: var(--text-xs, 0.75rem);
-    padding: 0.1rem 0.45rem;
-    border: 2px solid var(--black);
-    background: var(--coral);
-    color: var(--black);
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    font-style: normal;
   }
   @media (prefers-reduced-motion: reduce) {
     .item,
