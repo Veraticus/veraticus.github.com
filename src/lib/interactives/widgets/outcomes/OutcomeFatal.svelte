@@ -12,11 +12,13 @@
 </script>
 
 <aside class="fatal" aria-label="Path of Building failed to boot">
-  <pre class="boot">
-{#each bootLines as line (line)}<span class="ok">{line}</span>
-{/each}<span class="fail">Error:</span>
-<span class="fail">In 'Init': {text}</span>
-  </pre>
+  <div class="boot">
+    {#each bootLines as line (line)}
+      <span class="ok">{line}</span>
+    {/each}
+    <span class="fail">Error:</span>
+    <span class="fail">In 'Init': {text}</span>
+  </div>
 </aside>
 
 <style>
@@ -27,22 +29,22 @@
     box-shadow: 4px 4px 0 var(--black);
   }
   .boot {
-    margin: 0;
-    padding: 0.75rem 1rem;
+    padding: 0.55rem 0.85rem;
     background: #0f1220;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-sm, 0.875rem);
-    line-height: 1.5;
+    line-height: 1.4;
     color: #d8d4c8;
-    white-space: pre-wrap;
     word-break: break-word;
+  }
+  .ok,
+  .fail {
+    display: block;
   }
   .ok {
     color: #8ab37a;
-    display: block;
   }
   .fail {
     color: #ff6b6b;
-    display: block;
   }
 </style>
