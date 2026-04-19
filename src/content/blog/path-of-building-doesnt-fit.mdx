@@ -18,7 +18,7 @@ Here is what I mean by "use it." Making your own Path of Exile build from scratc
 
 What players *actually* do is copy someone else's build guide move-for-move, and the moment they deviate -- a better chest drops, the unique the guide wants is 20 divines out of budget -- they are on their own. Did that swap cost 200,000 DPS or 2 million? Is the tree still balanced? Am I still viable in red maps? PoB answers all of this, if you are willing to sit in front of it for a few hours, twiddling things around and experiment.
 
-That is what I wanted Claude to do for me! I wanted the LLM to mine the build for me, try five passives the build guide would never recommend, watch the numbers move, and come back with "this one is 40% more clear speed for 500 HP, worth it." LLMs are superb when iterating on guard rails in code -- why not trying to maximize PoE builds?
+That is what I wanted Claude to do for me! I wanted the LLM to dig deep in the build mines for me to uncover gems. It should naturally try five passives the build guide would never recommend, watch the numbers move, and come back with "this one is 40% more clear speed for 500 HP, worth it." LLMs are superb when iterating on code when constrained by sensible guard rails -- why can't that be applied to theorycrafting PoE builds?
 
 ### The Dream
 
@@ -26,7 +26,7 @@ That is what I wanted Claude to do for me! I wanted the LLM to mine the build fo
 
 I already run a gaming-focused MCP server on Cloudflare's edge (more on that below). So the naive version of this was obvious: embed PoB in the Worker, call into it from the MCP tool handler, stream the result back. Workers are cheap and globally distributed and fast enough for what I'm doing. I had already embedded two other games' reference engines as WASM modules; this would make three. Get the Lua compiled to WASM, stuff it into a Worker, done.
 
-Reader, it was not done.
+Reader, it was **not** done.
 
 ## The Measurement
 
@@ -41,7 +41,7 @@ Here is what it said.
 | During calc (peak, no GC) | **145 MB** | **~188 MB** |
 | After calc (post-GC) | 135 MB | ~176 MB |
 
-That 145 MB is the number that killed the idea. Workers cap WASM memory at 128 MB. You do not get to negotiate with that number; it is a hard limit enforced by the runtime. And 145 is only the low end of the measurement, because LuaJIT's compact table representation is the *best* you can do on memory for Lua. The runtimes that can actually be compiled to WASM use around thirty percent more. Call it 188 under Lua 5.1, maybe a touch less under Luau. Neither fits.
+That 145 MB is the number that killed the idea. Workers cap WASM memory at 128 MB. You do not get to negotiate with that number: it is a hard limit enforced by the runtime. And 145 is only the low end of the measurement, because LuaJIT's compact table representation is the *best* you can do on memory for Lua. The runtimes that can actually be compiled to WASM use around thirty percent more. Call it 188 under Lua 5.1, maybe a touch less under Luau. Neither fits.
 
 Mod tables alone take up 41 MB. The uniques, once parsed through the mod engine, add another 46. UI code, class definitions, and the passive-tree scaffolding account for 26 MB more. Calc temporaries during evaluation add anywhere from five to twenty-eight megabytes depending on the build, and some of that is unavoidable because PoB's damage math is genuinely complicated and needs to hold a lot of intermediate state. There is no "just trim the UI" path that gets you under 128, because when you trim the UI you have about 120 MB of data left, and then you do a calc on top of it, and the calc needs room to breathe.
 
@@ -51,7 +51,7 @@ So: no WASM. That is the wall I walked into at the end of week one.
 
 While we are here, there is a genuinely funny wrinkle about Lua runtimes and WebAssembly worth a paragraph. LuaJIT -- the only Lua runtime with memory numbers this good -- uses a native JIT. It compiles to machine code at runtime. It cannot be compiled *to* WebAssembly, because WebAssembly has no native JIT to compile down to. It is a compile-once, run-anywhere target. LuaJIT and WASM are structurally incompatible at the layer that matters.
 
-The Lua runtimes that *can* compile to WASM (Lua 5.1, Luau) pay for that portability with worse memory behavior. The runtime with the memory numbers you want cannot run in a Worker. The runtimes that can run in a Worker cost you thirty percent more memory than you had to spend. These are the same fact stated from two angles, and they leave you nowhere. It is not an accident of my measurement methodology; it is a structural fact about how these runtimes are built, and it does not get better by staring at it harder.
+The Lua runtimes that *can* compile to WASM (Lua 5.1, Luau) pay for that portability with worse memory behavior. The runtime with the memory numbers you want cannot run in a Worker. The runtimes that can run in a Worker cost you thirty percent more memory than you have to spend. These are the same fact stated from two angles, and they leave you nowhere. It is not an accident of my measurement methodology; it is a structural fact about how these runtimes are built, and it does not get better by staring at it harder.
 
 Luau -- Roblox's fork -- has the additional indignity of missing `goto` entirely. PoB uses `goto`, among other PoE-specific cleverness. You can restructure around it, probably, but you are restructuring in a fork of the Lua runtime inside a fork of the calc engine, and at that point you have committed to maintaining two forks in parallel every time PoE gets a league update, which is every three months. I don't have the weekends for that.
 
