@@ -77,6 +77,7 @@
   }
   .body {
     flex: 1;
+    min-width: 0;
   }
   .headline {
     margin: 0 0 0.25rem 0;
@@ -88,9 +89,12 @@
     opacity: 0.7;
   }
   code {
+    display: block;
     font-family: var(--font-mono, monospace);
-    font-size: var(--text-sm, 0.875rem);
+    font-size: var(--text-xs, 0.75rem);
     opacity: 0.75;
+    white-space: nowrap;
+    overflow-x: auto;
   }
   .reveal {
     margin: 0.5rem 0 0 0;
