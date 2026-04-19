@@ -301,4 +301,34 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     font-family: var(--font-mono);
     line-height: 1.2;
   }
+
+  /* Memphis squiggle underline under section headings, tiled as a data-URI
+     SVG so the wave keeps its aspect ratio regardless of heading width. */
+  .prose :global(h2)::after {
+    content: '';
+    display: block;
+    height: 0.45em;
+    margin-top: 0.2em;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 14'><path d='M2 7 Q14 2 26 7 Q38 12 50 7 Q62 2 74 7 Q86 12 98 7 Q110 2 122 7 Q134 12 146 7 Q158 2 170 7 Q182 12 194 7 Q206 2 218 7' fill='none' stroke='%232ec4b6' stroke-width='4' stroke-linecap='round'/></svg>");
+    background-repeat: repeat-x;
+    background-position: left center;
+    background-size: auto 100%;
+  }
+
+  /* H3 shrinks to its text width so the squiggle sits tight under "The Dream"
+     rather than spanning the whole column. */
+  .prose :global(h3) {
+    display: inline-block;
+    max-width: 100%;
+  }
+  .prose :global(h3)::after {
+    content: '';
+    display: block;
+    height: 0.38em;
+    margin-top: 0.15em;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 14'><path d='M2 7 Q14 2 26 7 Q38 12 50 7 Q62 2 74 7 Q86 12 98 7 Q110 2 122 7 Q134 12 146 7 Q158 2 170 7 Q182 12 194 7 Q206 2 218 7' fill='none' stroke='%23ffd166' stroke-width='3' stroke-linecap='round'/></svg>");
+    background-repeat: repeat-x;
+    background-position: left center;
+    background-size: auto 100%;
+  }
 </style>
