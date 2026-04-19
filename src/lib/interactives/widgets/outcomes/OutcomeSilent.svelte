@@ -18,7 +18,7 @@
   <div class="body">
     <p class="dps">DPS: <span class="wrong">{fmt(wrong)}</span></p>
     <aside class="reveal">
-      Should be <strong>{fmt(real)}</strong>. Without the mod tables, every item modifier evaluated to zero &mdash; PoB ran the calc against a naked character.
+      Should be <strong>{fmt(real)}</strong>. Without the mod tables, every item modifier evaluated to zero -- PoB ran the calc against a naked character.
     </aside>
   </div>
 </aside>
