@@ -460,12 +460,25 @@
   }
 
   .palette-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-xs, 0.75rem);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--black);
-    opacity: 0.55;
+    opacity: 0.75;
+  }
+  .palette-label::before {
+    content: '';
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    background: var(--coral);
+    border: 2px solid var(--black);
+    box-shadow: 2px 2px 0 var(--black);
+    transform: rotate(-8deg);
   }
 
   .palette {

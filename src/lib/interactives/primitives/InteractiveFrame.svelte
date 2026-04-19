@@ -57,12 +57,35 @@
   }
 
   .interactive-frame h3 {
-    margin: 0 0 0.35rem 0;
-    padding: 0;
+    position: relative;
+    display: inline-block;
+    margin: 0 0 0.55rem 0;
+    padding: 0 0.4rem;
     font-family: var(--font-heading, var(--font-body));
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     line-height: 1.15;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    /* Yellow highlighter stroke across the lower half of the text -- Memphis marker */
+    background: linear-gradient(
+      to top,
+      var(--yellow) 0,
+      var(--yellow) 45%,
+      transparent 45%
+    );
+  }
+  .interactive-frame h3::after {
+    /* Small teal circle accent trailing the title */
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-left: 0.5rem;
+    border: 2px solid var(--black);
+    border-radius: 50%;
+    background: var(--teal);
+    vertical-align: middle;
+    transform: translateY(-2px);
   }
 
   .interactive-frame-body {
