@@ -322,7 +322,7 @@
     <div class="palette-header">
       <span class="palette-label">
         <span class="label-text">Path of Building Components</span>
-        <Squiggle flavor="zigzag" color="coral" stroke={2} height={0.55} />
+        <Squiggle color="coral" stroke={3} height={0.45} />
       </span>
       <ResetButton onreset={handleReset} />
     </div>

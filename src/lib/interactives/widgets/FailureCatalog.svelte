@@ -31,7 +31,7 @@
 <section class="catalog" aria-label={label}>
   <header class="catalog-header">
     <span class="label-text">Outcomes</span>
-    <Squiggle flavor="dash" color="yellow" stroke={2} height={0.55} />
+    <Squiggle color="yellow" stroke={3} height={0.45} />
   </header>
   <ul>
     {#each CATALOG_ITEMS as item (item.kind)}

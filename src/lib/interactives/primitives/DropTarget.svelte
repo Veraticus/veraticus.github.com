@@ -43,7 +43,7 @@
   <header class="header">
     <span class="label-wrap">
       <span class="label">{label}</span>
-      <Squiggle flavor={labelSquiggle} color={labelSquiggleColor} stroke={2.5} height={0.45} />
+      <Squiggle color={labelSquiggleColor} stroke={4} height={0.55} />
     </span>
     <span class="readout">
       <span data-testid="used">{used}</span>
