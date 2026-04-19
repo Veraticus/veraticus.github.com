@@ -153,108 +153,191 @@
     }
   }
 
-  /** Move the dragged id from one list into the other at `insertAt`, wiggling any blocks that shift. */
-  function applyCrossListMove(
-    from: 'placed' | 'palette',
-    to: 'placed' | 'palette',
-    id: string,
-    insertAt: number,
-  ): void {
-    const beforeSource = from === 'placed' ? placedOrder : paletteOrder;
-    const beforeTarget = to === 'placed' ? placedOrder : paletteOrder;
-    // Remove from source
-    const sourceAfter = beforeSource.filter((x) => x !== id);
-    if (from === 'placed') placedOrder = sourceAfter;
-    else paletteOrder = sourceAfter;
-    // Insert into target
-    const targetAfter = [
-      ...beforeTarget.slice(0, insertAt),
-      id,
-      ...beforeTarget.slice(insertAt),
-    ];
-    if (to === 'placed') placedOrder = targetAfter;
-    else paletteOrder = targetAfter;
-    // Wiggle everyone whose index changed in either list (excluding the dragged block).
-    for (const otherId of sourceAfter) {
-      if (beforeSource.indexOf(otherId) !== sourceAfter.indexOf(otherId)) {
-        triggerWiggle(otherId);
-      }
-    }
-    for (const otherId of targetAfter) {
-      if (otherId === id) continue;
-      if (beforeTarget.indexOf(otherId) !== targetAfter.indexOf(otherId)) {
-        triggerWiggle(otherId);
-      }
+  /**
+   * When the pointer is hovering over the list the dragged block is NOT in,
+   * we show a phantom placeholder there at the would-be insertion index so
+   * the destination blocks shift and signal "this is where it'll go." The
+   * block's actual DOM stays in its source list throughout the drag -- if
+   * we moved it between {#each} blocks mid-drag Svelte would remount the
+   * Draggable, killing the pointer capture and stopping the drag.
+   */
+  let phantomPlacedIndex = $state<number | null>(null);
+  let phantomPaletteIndex = $state<number | null>(null);
+  let dragBlockSize = $state<{ width: number; height: number } | null>(null);
+
+  function maybeCaptureDragSize(id: string) {
+    if (dragBlockSize) return;
+    const el = document.querySelector<HTMLElement>(`[data-draggable-id="${id}"]`);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    dragBlockSize = { width: rect.width, height: rect.height };
+  }
+
+  function wigglePhantomShift(
+    list: 'placed' | 'palette',
+    prevIdx: number | null,
+    nextIdx: number | null,
+  ) {
+    if (prevIdx === nextIdx) return;
+    const order = list === 'placed' ? placedOrder : paletteOrder;
+    const lo = Math.min(prevIdx ?? order.length, nextIdx ?? order.length);
+    for (let i = lo; i < order.length; i++) {
+      triggerWiggle(order[i]);
     }
   }
 
   function handleLiveMove(id: string, pos: Position) {
     draggingId = id;
-    // Hit-test BOTH containers. Whichever the pointer is currently over
-    // becomes the target list -- even if different from the block's source
-    // list, in which case the block migrates between lists live.
-    let targetList: 'placed' | 'palette' | null = null;
-    let container: HTMLElement | null = null;
-    if (dropEl && hitTest(pos, dropEl.getBoundingClientRect())) {
-      container = dropEl;
-      targetList = 'placed';
-    } else if (paletteEl && hitTest(pos, paletteEl.getBoundingClientRect())) {
-      container = paletteEl;
-      targetList = 'palette';
-    }
-    if (!container || !targetList) return;
+    maybeCaptureDragSize(id);
 
     const currentList = listForId(id);
     if (!currentList) return;
 
-    const childRects = childRectsIn(container, id);
-    const insertAt = computeInsertionIndex(pos.x, childRects);
+    const sourceContainer = currentList === 'placed' ? dropEl : paletteEl;
+    const destContainer = currentList === 'placed' ? paletteEl : dropEl;
+    const destListName: 'placed' | 'palette' = currentList === 'placed' ? 'palette' : 'placed';
 
-    if (currentList === targetList) {
-      const currentOrder = targetList === 'placed' ? placedOrder : paletteOrder;
-      if (currentOrder.indexOf(id) === insertAt) return;
-      applySameListReorder(targetList, id, insertAt);
-    } else {
-      applyCrossListMove(currentList, targetList, id, insertAt);
+    // Over the OTHER list → show a phantom there; source stays static
+    if (destContainer && hitTest(pos, destContainer.getBoundingClientRect())) {
+      const rects = childRectsIn(destContainer, id);
+      const insertAt = computeInsertionIndex(pos.x, rects);
+      if (destListName === 'placed') {
+        wigglePhantomShift('placed', phantomPlacedIndex, insertAt);
+        phantomPlacedIndex = insertAt;
+        phantomPaletteIndex = null;
+      } else {
+        wigglePhantomShift('palette', phantomPaletteIndex, insertAt);
+        phantomPaletteIndex = insertAt;
+        phantomPlacedIndex = null;
+      }
+      return;
+    }
+
+    // Over the source list → clear any phantom, run same-list reorder
+    if (sourceContainer && hitTest(pos, sourceContainer.getBoundingClientRect())) {
+      if (phantomPlacedIndex !== null) {
+        wigglePhantomShift('placed', phantomPlacedIndex, null);
+        phantomPlacedIndex = null;
+      }
+      if (phantomPaletteIndex !== null) {
+        wigglePhantomShift('palette', phantomPaletteIndex, null);
+        phantomPaletteIndex = null;
+      }
+      const childRects = childRectsIn(sourceContainer, id);
+      const insertAt = computeInsertionIndex(pos.x, childRects);
+      const currentOrder = currentList === 'placed' ? placedOrder : paletteOrder;
+      if (currentOrder.indexOf(id) !== insertAt) {
+        applySameListReorder(currentList, id, insertAt);
+      }
+      return;
+    }
+
+    // Over neither → clear phantom, leave source untouched
+    if (phantomPlacedIndex !== null) {
+      wigglePhantomShift('placed', phantomPlacedIndex, null);
+      phantomPlacedIndex = null;
+    }
+    if (phantomPaletteIndex !== null) {
+      wigglePhantomShift('palette', phantomPaletteIndex, null);
+      phantomPaletteIndex = null;
     }
   }
 
   function handleDragEnd(id: string, pos: Position) {
-    draggingId = null;
-    // State is already correct thanks to handleLiveMove (cross-list included).
-    // Just celebrate the landing if the drop is inside either container.
     const overTarget = dropEl ? hitTest(pos, dropEl.getBoundingClientRect()) : false;
     const overPalette = paletteEl ? hitTest(pos, paletteEl.getBoundingClientRect()) : false;
-    if (overTarget || overPalette) {
+    const wasPlaced = placedOrder.includes(id);
+
+    // Cross-list commit: pointer released on the OTHER list. Use the phantom
+    // index we've been maintaining as the insertion slot.
+    if (overTarget && !wasPlaced) {
+      const insertAt = phantomPlacedIndex ?? placedOrder.length;
+      paletteOrder = paletteOrder.filter((x) => x !== id);
+      placedOrder = [
+        ...placedOrder.slice(0, insertAt),
+        id,
+        ...placedOrder.slice(insertAt),
+      ];
+      triggerJitter(id);
+    } else if (overPalette && wasPlaced) {
+      const insertAt = phantomPaletteIndex ?? paletteOrder.length;
+      placedOrder = placedOrder.filter((x) => x !== id);
+      paletteOrder = [
+        ...paletteOrder.slice(0, insertAt),
+        id,
+        ...paletteOrder.slice(insertAt),
+      ];
+      triggerJitter(id);
+    } else if (overTarget || overPalette) {
+      // Dropped in source list (same-list reorder already applied live)
       triggerJitter(id);
     }
+    // Else: released outside both; leave state alone, block snaps back visually
+
+    draggingId = null;
+    phantomPlacedIndex = null;
+    phantomPaletteIndex = null;
+    dragBlockSize = null;
   }
+
+  /**
+   * Helpers to render a list with an optional phantom inserted at a given index.
+   * Keyed by a stable string so Svelte reconciliation works with flip/transitions.
+   */
+  type SlotEntry =
+    | { kind: 'block'; id: string; block: Block; key: string }
+    | { kind: 'phantom'; key: string };
+
+  function makeSlots(order: string[], phantomAt: number | null): SlotEntry[] {
+    const slots: SlotEntry[] = order.map((id) => ({
+      kind: 'block' as const,
+      id,
+      block: byId(id),
+      key: id,
+    }));
+    if (phantomAt !== null) {
+      const insertAt = Math.min(phantomAt, slots.length);
+      slots.splice(insertAt, 0, { kind: 'phantom', key: '__phantom__' });
+    }
+    return slots;
+  }
+
+  const paletteSlots = $derived(makeSlots(paletteOrder, phantomPaletteIndex));
+  const placedSlots = $derived(makeSlots(placedOrder, phantomPlacedIndex));
 </script>
 
 <InteractiveFrame {title}>
   {#snippet children()}
     <div class="palette" bind:this={paletteEl}>
-      {#each palette as b (b.id)}
+      {#each paletteSlots as slot (slot.key)}
         <span
-          class="slot"
-          class:jittering={justJittered === b.id}
-          class:wiggled={justWiggled[b.id]}
-          animate:flip={{ duration: draggingId === b.id ? 0 : 240 }}
-          in:fly={{ y: draggingId === b.id ? 0 : -20, duration: draggingId === b.id ? 0 : 240 }}
+          class:slot={slot.kind === 'block'}
+          class:phantom={slot.kind === 'phantom'}
+          class:jittering={slot.kind === 'block' && justJittered === slot.id}
+          class:wiggled={slot.kind === 'block' && !!justWiggled[slot.id]}
+          style:width={slot.kind === 'phantom' ? `${dragBlockSize?.width ?? 140}px` : null}
+          style:height={slot.kind === 'phantom' ? `${dragBlockSize?.height ?? 64}px` : null}
+          animate:flip={{ duration: slot.kind === 'block' && draggingId === slot.id ? 0 : 240 }}
+          in:fly={{
+            y: slot.kind === 'block' && draggingId !== slot.id ? -20 : 0,
+            duration: slot.kind === 'block' && draggingId !== slot.id ? 240 : 0,
+          }}
         >
-          <Draggable
-            id={b.id}
-            label={b.label}
-            size={b.size}
-            color={b.color}
-            placed={false}
-            ontoggle={toggle}
-            ondragmove={handleLiveMove}
-            ondragend={handleDragEnd}
-          />
+          {#if slot.kind === 'block'}
+            <Draggable
+              id={slot.block.id}
+              label={slot.block.label}
+              size={slot.block.size}
+              color={slot.block.color}
+              placed={false}
+              ontoggle={toggle}
+              ondragmove={handleLiveMove}
+              ondragend={handleDragEnd}
+            />
+          {/if}
         </span>
       {/each}
-      {#if palette.length === 0}
+      {#if paletteSlots.length === 0}
         <p class="empty-palette">All blocks placed.</p>
       {/if}
     </div>
@@ -266,24 +349,32 @@
       onmount={(el) => (dropEl = el)}
     >
       {#snippet children()}
-        {#each inTarget as b (b.id)}
+        {#each placedSlots as slot (slot.key)}
           <span
-            class="slot"
-            class:jittering={justJittered === b.id}
-            class:wiggled={justWiggled[b.id]}
-            animate:flip={{ duration: draggingId === b.id ? 0 : 240 }}
-            in:fly={{ y: draggingId === b.id ? 0 : -40, duration: draggingId === b.id ? 0 : 320 }}
+            class:slot={slot.kind === 'block'}
+            class:phantom={slot.kind === 'phantom'}
+            class:jittering={slot.kind === 'block' && justJittered === slot.id}
+            class:wiggled={slot.kind === 'block' && !!justWiggled[slot.id]}
+            style:width={slot.kind === 'phantom' ? `${dragBlockSize?.width ?? 140}px` : null}
+            style:height={slot.kind === 'phantom' ? `${dragBlockSize?.height ?? 64}px` : null}
+            animate:flip={{ duration: slot.kind === 'block' && draggingId === slot.id ? 0 : 240 }}
+            in:fly={{
+              y: slot.kind === 'block' && draggingId !== slot.id ? -40 : 0,
+              duration: slot.kind === 'block' && draggingId !== slot.id ? 320 : 0,
+            }}
           >
-            <Draggable
-              id={b.id}
-              label={b.label}
-              size={b.size}
-              color={b.color}
-              placed={true}
-              ontoggle={toggle}
-              ondragmove={handleLiveMove}
-              ondragend={handleDragEnd}
-            />
+            {#if slot.kind === 'block'}
+              <Draggable
+                id={slot.block.id}
+                label={slot.block.label}
+                size={slot.block.size}
+                color={slot.block.color}
+                placed={true}
+                ontoggle={toggle}
+                ondragmove={handleLiveMove}
+                ondragend={handleDragEnd}
+              />
+            {/if}
           </span>
         {/each}
       {/snippet}
@@ -312,6 +403,15 @@
 
   .slot {
     display: inline-flex;
+  }
+
+  .phantom {
+    display: inline-block;
+    border: 3px dashed var(--black);
+    background: transparent;
+    box-sizing: border-box;
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .slot.jittering {
