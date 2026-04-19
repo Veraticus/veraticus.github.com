@@ -85,9 +85,9 @@ The details that matter:
 
 The numbers I actually care about: pool size 8, p50 at 40ms for a swap-and-recompute, p99 at about 400ms. Good enough.
 
-![A passive swap run through the pool: +54,600 DPS gained, 241 life lost. The kind of answer the architecture makes cheap.](/images/pob/build-swap-delta.png)
+![A Claude conversation asking "show me what swapping Void Manipulation for Concentrated Effect might do" -- Savecraft returns a before/after table: Combined DPS 5.22M → 5.99M (+766,500), Fire Hit Average 0 → 52,600 -- and Claude reasons about why its own prediction was off by half.](/images/pob/concentrated-effect-swap.jpeg)
 
-That is what the whole 10,000-line apparatus produces: three rows of "here is what moved." The AI asked, the pool calculated, the answer came back. That was the goal.
+That is what the whole 10,000-line apparatus produces: a table of "here is what moved," followed by a real model reasoning about why its own expectation was off. The AI asked, the pool calculated, the answer came back, and the next sentence was "interesting, my prediction was wrong." That was the goal.
 
 ## What This Is Part Of
 
