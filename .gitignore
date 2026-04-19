@@ -2,6 +2,10 @@
 dist/
 # generated types
 .astro/
+# storybook
+storybook-static/
+# screenshots (generated artifacts)
+screenshots/
 
 # dependencies
 node_modules/
