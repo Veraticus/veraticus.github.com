@@ -331,4 +331,13 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     background-position: left center;
     background-size: auto 100%;
   }
+
+  /* Widget titles render their own <Squiggle>; suppress the prose rule there
+     so we don't get a double underline. */
+  .prose :global(.interactive-frame h3)::after {
+    display: none;
+  }
+  .prose :global(.interactive-frame h3) {
+    display: inline-block;
+  }
 </style>
