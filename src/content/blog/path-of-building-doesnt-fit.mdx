@@ -6,6 +6,10 @@ tags: [engineering, ai, gamedev]
 
 import PackTheWorker from '../../lib/interactives/widgets/PackTheWorker.svelte';
 
+Try it yourself. Drag a block into the Worker.
+
+<PackTheWorker client:visible />
+
 The calc engine that every Path of Exile player uses weighs 145 megabytes in memory. Cloudflare Workers give you 128. That is the entire story of this post, and I am going to spend the next fifteen hundred words telling it to you anyway -- because the dead ends are where the interesting engineering lives, and because I still think I made the right call at each fork, even the ones that led nowhere.
 
 So. Some background, briefly, for the non-PoE-brained among you. Path of Building (PoB) is a community-maintained desktop application that simulates your character against every damage formula in a game that has, conservatively, a thousand of them. You paste in a build, it spits out your DPS, your survival numbers, your resistances, and the exact moment you stop being able to afford the next gem upgrade. It is the calc engine the entire community runs on. If you have ever read a build guide that quoted a number, the number came from PoB. It is a rare and wonderful piece of software -- open source, maintained by people who genuinely love the game, never taken hostage by a storefront, and weighing in at about two hundred thousand lines of Lua that somehow still works.
@@ -53,11 +57,7 @@ I spent about a week in the planning equivalent of pacing around the apartment b
 
 **Stripped PoB in WASM.** Fork PoB, lazy-load items, skip UI code, load only the current tree. I sketched it out and got something that might run under Luau at about 120 MB on the main scenario, modulo the `goto` situation. But "might run at 120 MB on the main scenario" is a fragile thing to rest production on -- the moment a player loads a build with unusual uniques, I exceed the budget and crash. And the fork has to be carried forward every league. This is a 4:3 tradeoff where the 3 is "runs at all" and the 4 is "the rest of my free time for the next two years."
 
-And the crash outcome, it turns out, is the optimistic one. I tested the pessimistic one. If you strip a data table and stay under the memory ceiling, PoB doesn't know it's been mutilated -- it starts up fine, imports the build, runs the calc, and returns a DPS number that looks reasonable and is wrong. I deleted PoB's ModCache at load time and ran a build that should have reported 5.22 million DPS. It reported 48. No error. No warning. Just a quietly catastrophic answer that would walk straight into an AI recommendation with no way for the player to know they were looking at a number the engine pulled out of a hat. The crash path is honest. The silent-wrong-answer path is the one that haunts you.
-
-### Try it yourself
-
-<PackTheWorker client:visible />
+And the crash outcome, it turns out, is the optimistic one. I tested the pessimistic one. If you strip a data table and stay under the memory ceiling, PoB doesn't know it's been mutilated -- it starts up fine, imports the build, runs the calc, and returns a DPS number that looks reasonable and is wrong. I deleted PoB's ModCache at load time and ran a build that should have reported 5.22 million DPS. It reported 48. No error. No warning. Just a quietly catastrophic answer that would walk straight into an AI recommendation with no way for the player to know they were looking at a number the engine pulled out of a hat. The crash path is honest. The silent-wrong-answer path is the one that haunts you. That's the DPS: 48 row in the widget at the top of this post, in case you didn't find it.
 
 **Ship it on a VPS.** Trivially solvable, boringly so, and still the wrong call. The rest of Savecraft lives on Cloudflare's edge. Adding a VPS means adding an entire ops surface -- provisioning, patching, monitoring, and all the TLS and backup busywork that comes with a real server -- for exactly one game. If I were writing a business plan I would spin this as "progressive infrastructure"; since I am not writing a business plan I will spin it as "what a mess."
 

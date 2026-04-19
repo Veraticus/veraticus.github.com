@@ -40,6 +40,7 @@
     placedOrder?: string[];
     paletteOrder?: string[];
     seenKinds?: OutcomeKind[];
+    hasInteracted?: boolean;
   }
 
   const ALL_KINDS: OutcomeKind[] = ['oom', 'fatal', 'stuck', 'silent', 'fit'];
@@ -60,6 +61,7 @@
     placedOrder: BlockId[];
     paletteOrder: BlockId[];
     seenKinds: Set<OutcomeKind>;
+    hasInteracted: boolean;
   } {
     const saved = loadJSON<SavedState>(storageKey, {});
     const placedOrder = validOrder(saved.placedOrder) ? saved.placedOrder : [...initialPlaced];
@@ -72,26 +74,39 @@
         placedOrder: [...initialPlaced],
         paletteOrder: ALL_IDS.filter((id) => !initialPlaced.includes(id)),
         seenKinds: new Set(),
+        hasInteracted: false,
       };
     }
     const seenKinds = new Set<OutcomeKind>(
       validSeenKinds(saved.seenKinds) ? saved.seenKinds : [],
     );
-    return { placedOrder, paletteOrder, seenKinds };
+    return {
+      placedOrder,
+      paletteOrder,
+      seenKinds,
+      hasInteracted:
+        saved.hasInteracted === true || placedOrder.length > 0 || seenKinds.size > 0,
+    };
   }
 
   const initial = hydrated();
   let placedOrder = $state<BlockId[]>(initial.placedOrder);
   let paletteOrder = $state<BlockId[]>(initial.paletteOrder);
   let seenKinds = $state<Set<OutcomeKind>>(initial.seenKinds);
+  let hasInteracted = $state<boolean>(initial.hasInteracted);
 
   $effect(() => {
     saveJSON(storageKey, {
       placedOrder,
       paletteOrder,
       seenKinds: [...seenKinds],
+      hasInteracted,
     });
   });
+
+  const nudgeBlockId = $derived(
+    !hasInteracted && paletteOrder.length > 0 ? paletteOrder[0] : null,
+  );
 
   const placedBlocks = $derived(placedOrder.map(byId));
   const usedSize = $derived(placedBlocks.reduce((s, b) => s + b.size, 0));
@@ -137,6 +152,7 @@
   }
 
   function toggle(id: string) {
+    hasInteracted = true;
     if (placedOrder.includes(id as BlockId)) {
       placedOrder = placedOrder.filter((x) => x !== id);
       paletteOrder = [...paletteOrder, id as BlockId];
@@ -196,6 +212,7 @@
   }
 
   function handleLiveMove(id: string, pos: Position) {
+    hasInteracted = true;
     draggingId = id;
     maybeCaptureDragSize(id);
 
@@ -332,16 +349,37 @@
           }}
         >
           {#if slot.kind === 'block'}
-            <Draggable
-              id={slot.block.id}
-              label={slot.block.label}
-              size={slot.block.size}
-              color={slot.block.color}
-              placed={false}
-              ontoggle={toggle}
-              ondragmove={handleLiveMove}
-              ondragend={handleDragEnd}
-            />
+            {#if nudgeBlockId === slot.block.id}
+              <span class="nudge-wrap">
+                <span class="nudge-pointer" aria-hidden="true">
+                  <span class="nudge-label">Drag me!</span>
+                  <span class="nudge-arrow">↓</span>
+                </span>
+                <span class="nudge-pulse">
+                  <Draggable
+                    id={slot.block.id}
+                    label={slot.block.label}
+                    size={slot.block.size}
+                    color={slot.block.color}
+                    placed={false}
+                    ontoggle={toggle}
+                    ondragmove={handleLiveMove}
+                    ondragend={handleDragEnd}
+                  />
+                </span>
+              </span>
+            {:else}
+              <Draggable
+                id={slot.block.id}
+                label={slot.block.label}
+                size={slot.block.size}
+                color={slot.block.color}
+                placed={false}
+                ontoggle={toggle}
+                ondragmove={handleLiveMove}
+                ondragend={handleDragEnd}
+              />
+            {/if}
           {/if}
         </span>
       {/each}
@@ -446,6 +484,67 @@
     opacity: 0.6;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-sm, 0.875rem);
+  }
+
+  .nudge-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .nudge-pointer {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.45rem);
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    pointer-events: none;
+    animation: nudge-bob 1.3s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  .nudge-label {
+    background: var(--coral);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-sm, 0.875rem);
+    padding: 0.2rem 0.55rem;
+    border: 3px solid var(--black);
+    box-shadow: 3px 3px 0 var(--black);
+    white-space: nowrap;
+  }
+
+  .nudge-arrow {
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--black);
+    font-weight: 700;
+  }
+
+  .nudge-pulse {
+    display: inline-flex;
+    border-radius: 2px;
+    animation: nudge-pulse 1.3s ease-in-out infinite;
+  }
+
+  @keyframes nudge-bob {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -3px); }
+  }
+
+  @keyframes nudge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.55); }
+    50% { box-shadow: 0 0 0 8px rgba(255, 107, 107, 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nudge-pointer,
+    .nudge-pulse {
+      animation: none;
+    }
   }
 
   .slot {
