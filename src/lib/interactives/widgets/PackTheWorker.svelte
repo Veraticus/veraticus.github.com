@@ -340,9 +340,23 @@
           {#if slot.kind === 'block'}
             {#if nudgeBlockId === slot.block.id}
               <span class="nudge-wrap">
-                <svg class="phantom-cursor" viewBox="0 0 24 28" aria-hidden="true">
-                  <path d="M 3 2 L 3 22 L 8 18 L 12 26 L 16 24 L 12 16 L 19 16 Z" />
-                </svg>
+                <!-- Ghost block that "drags" along with the cursor -->
+                <span class="phantom-block color-{slot.block.color}" aria-hidden="true">
+                  <span class="phantom-label">{slot.block.label}</span>
+                  <span class="phantom-size">{slot.block.size} MB</span>
+                </span>
+                <!-- Cursor: arrow above, fist on grab, open hand on release -->
+                <span class="phantom-cursor" aria-hidden="true">
+                  <svg class="cursor-arrow" viewBox="0 0 24 28">
+                    <path d="M 3 2 L 3 22 L 8 18 L 12 26 L 16 24 L 12 16 L 19 16 Z" />
+                  </svg>
+                  <svg class="cursor-fist" viewBox="0 0 28 32">
+                    <path d="M 6 12 Q 6 6 12 6 L 18 6 Q 24 6 24 12 L 24 22 Q 24 28 18 28 L 12 28 Q 6 28 6 22 Z M 9 10 L 9 14 M 13 10 L 13 14 M 17 10 L 17 14 M 21 10 L 21 14" />
+                  </svg>
+                  <svg class="cursor-open" viewBox="0 0 28 36">
+                    <path d="M 6 18 L 6 10 Q 6 8 8 8 Q 10 8 10 10 L 10 18 L 10 4 Q 10 2 12 2 Q 14 2 14 4 L 14 18 L 14 3 Q 14 1 16 1 Q 18 1 18 3 L 18 18 L 18 6 Q 18 4 20 4 Q 22 4 22 6 L 22 22 Q 22 32 14 32 Q 6 32 6 22 Z" />
+                  </svg>
+                </span>
                 <Draggable
                   id={slot.block.id}
                   label={slot.block.label}
@@ -477,68 +491,116 @@
     display: inline-flex;
   }
 
+  .nudge-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+
+  /* Ghost block: dashed outline version of the real block, slides alongside the cursor. */
+  .phantom-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    border: 3px dashed var(--black);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: var(--text-base, 1rem);
+    min-width: 8rem;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    animation: phantom-block-demo 3.6s ease-in-out infinite;
+  }
+  .phantom-block.color-teal { background: rgba(46, 196, 182, 0.55); }
+  .phantom-block.color-coral { background: rgba(255, 107, 107, 0.55); }
+  .phantom-block.color-yellow { background: rgba(255, 209, 102, 0.55); }
+  .phantom-block.color-purple { background: rgba(124, 92, 255, 0.55); color: var(--bg); }
+  .phantom-block.color-green { background: rgba(138, 179, 122, 0.55); }
+  .phantom-label { font-weight: 600; }
+  .phantom-size {
+    font-family: var(--font-mono, monospace);
+    font-size: var(--text-sm, 0.875rem);
+    opacity: 0.8;
+  }
+
+  /* Cursor container: travels along the same path as the phantom block, but
+     with a vertical offset so the tip sits at the top of the block. Each
+     cursor variant fades in at its own phase. */
   .phantom-cursor {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 26px;
-    height: auto;
     pointer-events: none;
     z-index: 3;
-    animation: cursor-demo 3.4s ease-in-out infinite;
-    animation-delay: 0.6s;
+    opacity: 0;
+    animation: phantom-cursor-travel 3.6s ease-in-out infinite;
+  }
+  .phantom-cursor svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 26px;
+    height: auto;
     opacity: 0;
   }
-
-  .phantom-cursor path {
-    fill: rgba(255, 255, 255, 0.9);
+  .phantom-cursor svg path {
+    fill: rgba(255, 255, 255, 0.92);
     stroke: var(--black);
     stroke-width: 2;
     stroke-dasharray: 3 2;
     stroke-linejoin: round;
   }
+  .cursor-arrow { animation: phantom-cursor-arrow 3.6s ease-in-out infinite; }
+  .cursor-fist { animation: phantom-cursor-fist 3.6s ease-in-out infinite; }
+  .cursor-open { animation: phantom-cursor-open 3.6s ease-in-out infinite; }
 
-  @keyframes cursor-demo {
-    0% {
-      transform: translate(-50%, -40px) scale(1);
-      opacity: 0;
-    }
-    8% {
-      transform: translate(-50%, -40px) scale(1);
-      opacity: 0.95;
-    }
-    22% {
-      transform: translate(-50%, -4px) scale(1);
-      opacity: 0.95;
-    }
-    28% {
-      transform: translate(-50%, -4px) scale(0.8);
-      opacity: 0.95;
-    }
-    34% {
-      transform: translate(-50%, -4px) scale(1);
-      opacity: 0.95;
-    }
-    70% {
-      transform: translate(-50%, 150px) scale(1);
-      opacity: 0.95;
-    }
-    85% {
-      transform: translate(-50%, 150px) scale(1);
-      opacity: 0;
-    }
-    100% {
-      transform: translate(-50%, -40px) scale(1);
-      opacity: 0;
-    }
+  /* Travel path (cursor): start above, press down onto block, drag to worker. */
+  @keyframes phantom-cursor-travel {
+    0%, 100% { transform: translate(-50%, -44px); opacity: 0; }
+    8%       { transform: translate(-50%, -44px); opacity: 1; }
+    24%      { transform: translate(-50%, -6px);  opacity: 1; }
+    70%      { transform: translate(-50%, 150px); opacity: 1; }
+    85%      { transform: translate(-50%, 150px); opacity: 0; }
+  }
+
+  /* Ghost block only appears during the grab-and-drag phase. */
+  @keyframes phantom-block-demo {
+    0%, 22%, 100% { transform: translate(0, 0); opacity: 0; }
+    28%           { transform: translate(0, 0); opacity: 0.8; }
+    70%           { transform: translate(0, 148px); opacity: 0.8; }
+    82%           { transform: translate(0, 148px); opacity: 0; }
+  }
+
+  /* Arrow visible only during approach (before grab). */
+  @keyframes phantom-cursor-arrow {
+    0%, 26%, 100% { opacity: 1; }
+    27%, 99%      { opacity: 0; }
+  }
+  /* Closed fist during the drag portion. */
+  @keyframes phantom-cursor-fist {
+    0%, 27%, 72%, 100% { opacity: 0; }
+    28%, 70%           { opacity: 1; }
+  }
+  /* Open hand briefly on release. */
+  @keyframes phantom-cursor-open {
+    0%, 71%, 86%, 100% { opacity: 0; }
+    73%, 82%           { opacity: 1; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .phantom-cursor {
+    .phantom-cursor,
+    .phantom-cursor svg,
+    .phantom-block {
       animation: none;
-      opacity: 0.6;
-      transform: translate(-50%, 40px) scale(1);
     }
+    .phantom-cursor { opacity: 1; transform: translate(-50%, 40px); }
+    .cursor-fist { opacity: 1; }
+    .phantom-block { opacity: 0.7; transform: translate(0, 40px); }
   }
 
   .slot {
