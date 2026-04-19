@@ -19,6 +19,8 @@
 </script>
 
 <script lang="ts">
+  import Squiggle from '../primitives/Squiggle.svelte';
+
   interface Props {
     seenKinds: Set<OutcomeKind>;
     label?: string;
@@ -27,7 +29,10 @@
 </script>
 
 <section class="catalog" aria-label={label}>
-  <header class="catalog-header">Outcomes</header>
+  <header class="catalog-header">
+    <span class="label-text">Outcomes</span>
+    <Squiggle flavor="dash" color="yellow" stroke={2} height={0.55} />
+  </header>
   <ul>
     {#each CATALOG_ITEMS as item (item.kind)}
       {@const reached = seenKinds.has(item.kind)}
@@ -59,26 +64,18 @@
     padding: 0.75rem 1rem;
   }
   .catalog-header {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
+    display: inline-block;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-xs, 0.75rem);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--black);
-    opacity: 0.75;
+    opacity: 0.85;
     margin-bottom: 0.5rem;
   }
-  .catalog-header::before {
-    content: '';
-    display: inline-block;
-    width: 0.7rem;
-    height: 0.7rem;
-    background: var(--yellow);
-    border: 2px solid var(--black);
-    box-shadow: 2px 2px 0 var(--black);
-    transform: rotate(-8deg);
+  .catalog-header .label-text {
+    display: block;
+    line-height: 1.1;
   }
   ul {
     list-style: none;

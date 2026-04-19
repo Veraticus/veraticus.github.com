@@ -6,6 +6,8 @@ export { default as FillBar } from './FillBar.svelte';
 export { default as AttemptLog } from './AttemptLog.svelte';
 export { default as Toggle } from './Toggle.svelte';
 export { default as ResetButton } from './ResetButton.svelte';
+export { default as Squiggle } from './Squiggle.svelte';
+export type { SquiggleFlavor, SquiggleColor } from './Squiggle.types';
 
 export * from './pointer';
 export * from './keyboard';

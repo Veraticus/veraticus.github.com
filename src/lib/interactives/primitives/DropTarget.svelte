@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import FillBar from './FillBar.svelte';
+  import Squiggle from './Squiggle.svelte';
+  import type { SquiggleFlavor, SquiggleColor } from './Squiggle.types';
 
   interface Props {
     label: string;
@@ -8,9 +10,19 @@
     capacity: number;
     children?: Snippet;
     onmount?: (el: HTMLElement) => void;
+    labelSquiggle?: SquiggleFlavor;
+    labelSquiggleColor?: SquiggleColor;
   }
 
-  let { label, used, capacity, children, onmount }: Props = $props();
+  let {
+    label,
+    used,
+    capacity,
+    children,
+    onmount,
+    labelSquiggle = 'arc',
+    labelSquiggleColor = 'teal',
+  }: Props = $props();
 
   let rootEl: HTMLDivElement | undefined = $state();
   $effect(() => {
@@ -29,7 +41,10 @@
   data-overflowing={overflowing}
 >
   <header class="header">
-    <span class="label">{label}</span>
+    <span class="label-wrap">
+      <span class="label">{label}</span>
+      <Squiggle flavor={labelSquiggle} color={labelSquiggleColor} stroke={2.5} height={0.45} />
+    </span>
     <span class="readout">
       <span data-testid="used">{used}</span>
       <span class="divider">/</span>
@@ -65,9 +80,14 @@
     font-family: var(--font-body);
   }
 
+  .label-wrap {
+    display: inline-block;
+  }
+
   .label {
-    font-weight: 600;
-    font-size: var(--text-lg, 1.125rem);
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.1;
   }
 
   .readout {

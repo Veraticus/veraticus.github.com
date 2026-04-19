@@ -5,6 +5,7 @@
   import Draggable from '../primitives/Draggable.svelte';
   import DropTarget from '../primitives/DropTarget.svelte';
   import ResetButton from '../primitives/ResetButton.svelte';
+  import Squiggle from '../primitives/Squiggle.svelte';
   import FailureCatalog from './FailureCatalog.svelte';
   import { hitTest, type Position } from '../primitives/pointer';
   import { computeInsertionIndex } from '../primitives/reorder';
@@ -319,7 +320,10 @@
 <InteractiveFrame {title}>
   {#snippet children()}
     <div class="palette-header">
-      <span class="palette-label">Path of Building Components</span>
+      <span class="palette-label">
+        <span class="label-text">Path of Building Components</span>
+        <Squiggle flavor="zigzag" color="coral" stroke={2} height={0.55} />
+      </span>
       <ResetButton onreset={handleReset} />
     </div>
     <div class="palette" bind:this={paletteEl}>
@@ -460,25 +464,17 @@
   }
 
   .palette-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
+    display: inline-block;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-xs, 0.75rem);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--black);
-    opacity: 0.75;
+    opacity: 0.85;
   }
-  .palette-label::before {
-    content: '';
-    display: inline-block;
-    width: 0.7rem;
-    height: 0.7rem;
-    background: var(--coral);
-    border: 2px solid var(--black);
-    box-shadow: 2px 2px 0 var(--black);
-    transform: rotate(-8deg);
+  .palette-label .label-text {
+    display: block;
+    line-height: 1.1;
   }
 
   .palette {
