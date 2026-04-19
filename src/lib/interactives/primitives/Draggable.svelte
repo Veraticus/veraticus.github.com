@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte';
+  import { flushSync, type Snippet } from 'svelte';
   import { handleKeyDown } from './keyboard';
   import {
     createDragState,
@@ -74,28 +74,31 @@
 
   function onPointerMove(e: PointerEvent) {
     if (drag.draggingId === null) return;
-    // Detect DOM-layout changes (e.g. parent reordered the list during live
-    // drag). Strip our known transform to recover the pure layout position,
-    // then adjust origin so `offset = pointer - origin` still yields the
-    // correct visual translate for the new DOM slot.
-    if (buttonEl) {
-      const rect = buttonEl.getBoundingClientRect();
-      const currentLayoutLeft = rect.left - drag.offset.x;
-      const currentLayoutTop = rect.top - drag.offset.y;
-      const dx = currentLayoutLeft - layoutLeft;
-      const dy = currentLayoutTop - layoutTop;
-      if (dx !== 0 || dy !== 0) {
-        drag = {
-          ...drag,
-          origin: { x: drag.origin.x + dx, y: drag.origin.y + dy },
-        };
-        layoutLeft = currentLayoutLeft;
-        layoutTop = currentLayoutTop;
-      }
-    }
     drag = handlePointerMove(drag, e);
-    if (drag.moved) {
-      ondragmove?.(id, { x: e.clientX, y: e.clientY });
+    if (!drag.moved) return;
+
+    ondragmove?.(id, { x: e.clientX, y: e.clientY });
+
+    // After ondragmove, the parent may have reordered the array and our
+    // DOM slot may now be at a new layout position. Force Svelte to flush
+    // so getBoundingClientRect reflects the new slot, then recompute origin
+    // and offset so the block stays pinned to the pointer (adjust origin
+    // for future moves, adjust offset so the current paint is correct).
+    flushSync();
+    if (!buttonEl) return;
+    const rect = buttonEl.getBoundingClientRect();
+    const currentLayoutLeft = rect.left - drag.offset.x;
+    const currentLayoutTop = rect.top - drag.offset.y;
+    const dx = currentLayoutLeft - layoutLeft;
+    const dy = currentLayoutTop - layoutTop;
+    if (dx !== 0 || dy !== 0) {
+      drag = {
+        ...drag,
+        origin: { x: drag.origin.x + dx, y: drag.origin.y + dy },
+        offset: { x: drag.offset.x - dx, y: drag.offset.y - dy },
+      };
+      layoutLeft = currentLayoutLeft;
+      layoutTop = currentLayoutTop;
     }
   }
 
