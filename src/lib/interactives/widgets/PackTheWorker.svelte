@@ -6,7 +6,7 @@
   import DropTarget from '../primitives/DropTarget.svelte';
   import Toggle from '../primitives/Toggle.svelte';
   import ResetButton from '../primitives/ResetButton.svelte';
-  import AttemptLog, { type AttemptEntry } from '../primitives/AttemptLog.svelte';
+  import FailureCatalog from './FailureCatalog.svelte';
   import { hitTest, type Position } from '../primitives/pointer';
   import { computeInsertionIndex } from '../primitives/reorder';
   import { loadJSON, saveJSON } from '../primitives/persist';
@@ -16,7 +16,7 @@
     type BlockId,
     type PobBlock,
   } from './pob-errors';
-  import { evaluateConfig, type Outcome } from './evaluate';
+  import { evaluateConfig, type Outcome, type OutcomeKind } from './evaluate';
   import OutcomeOOM from './outcomes/OutcomeOOM.svelte';
   import OutcomeFatal from './outcomes/OutcomeFatal.svelte';
   import OutcomeStuck from './outcomes/OutcomeStuck.svelte';
@@ -41,7 +41,10 @@
     placedOrder?: string[];
     paletteOrder?: string[];
     buildLoaded?: boolean;
+    seenKinds?: OutcomeKind[];
   }
+
+  const ALL_KINDS: OutcomeKind[] = ['oom', 'fatal', 'stuck', 'silent', 'fit'];
 
   function validOrder(order: unknown): order is BlockId[] {
     return (
@@ -51,7 +54,16 @@
     );
   }
 
-  function hydrated(): { placedOrder: BlockId[]; paletteOrder: BlockId[]; buildLoaded: boolean } {
+  function validSeenKinds(v: unknown): v is OutcomeKind[] {
+    return Array.isArray(v) && v.every((k) => typeof k === 'string' && ALL_KINDS.includes(k as OutcomeKind));
+  }
+
+  function hydrated(): {
+    placedOrder: BlockId[];
+    paletteOrder: BlockId[];
+    buildLoaded: boolean;
+    seenKinds: Set<OutcomeKind>;
+  } {
     const saved = loadJSON<SavedState>(storageKey, {});
     const placedOrder = validOrder(saved.placedOrder) ? saved.placedOrder : [...initialPlaced];
     const paletteOrder = validOrder(saved.paletteOrder)
@@ -63,12 +75,17 @@
         placedOrder: [...initialPlaced],
         paletteOrder: ALL_IDS.filter((id) => !initialPlaced.includes(id)),
         buildLoaded: false,
+        seenKinds: new Set(),
       };
     }
+    const seenKinds = new Set<OutcomeKind>(
+      validSeenKinds(saved.seenKinds) ? saved.seenKinds : [],
+    );
     return {
       placedOrder,
       paletteOrder,
       buildLoaded: typeof saved.buildLoaded === 'boolean' ? saved.buildLoaded : false,
+      seenKinds,
     };
   }
 
@@ -76,9 +93,15 @@
   let placedOrder = $state<BlockId[]>(initial.placedOrder);
   let paletteOrder = $state<BlockId[]>(initial.paletteOrder);
   let buildLoaded = $state<boolean>(initial.buildLoaded);
+  let seenKinds = $state<Set<OutcomeKind>>(initial.seenKinds);
 
   $effect(() => {
-    saveJSON(storageKey, { placedOrder, paletteOrder, buildLoaded });
+    saveJSON(storageKey, {
+      placedOrder,
+      paletteOrder,
+      buildLoaded,
+      seenKinds: [...seenKinds],
+    });
   });
 
   const placedBlocks = $derived(placedOrder.map(byId));
@@ -89,27 +112,11 @@
     evaluateConfig({ placedIds: placedOrder, buildLoaded }),
   );
 
-  let attemptLog = $state<AttemptEntry[]>([]);
-  let lastSignature = '';
-
   $effect(() => {
-    const signature = `${outcome.kind}::${outcome.text}`;
-    if (signature === lastSignature) return;
-    lastSignature = signature;
-    const entry: AttemptEntry = {
-      id: `${Date.now()}-${signature}`,
-      label: describeConfig(placedOrder, buildLoaded),
-      result: outcome.badge,
-      text: outcome.text,
-    };
-    attemptLog = [...attemptLog, entry];
+    if (!seenKinds.has(outcome.kind)) {
+      seenKinds = new Set([...seenKinds, outcome.kind]);
+    }
   });
-
-  function describeConfig(order: BlockId[], build: boolean): string {
-    if (order.length === 0) return 'no blocks placed';
-    const names = order.map((id) => byId(id).label).join(' + ');
-    return build ? `${names}  (+build)` : names;
-  }
 
   let dropEl: HTMLElement | null = $state(null);
   let paletteEl: HTMLElement | null = $state(null);
@@ -314,8 +321,7 @@
     placedOrder = [];
     paletteOrder = [...ALL_IDS];
     buildLoaded = false;
-    attemptLog = [];
-    lastSignature = '';
+    seenKinds = new Set();
   }
 </script>
 
@@ -420,11 +426,7 @@
       {/if}
     </div>
 
-    <AttemptLog
-      entries={attemptLog}
-      emptyMessage="No attempts yet. Drag a block into the Worker, or flip the build toggle."
-      label="Attempt history"
-    />
+    <FailureCatalog seenKinds={seenKinds} />
   {/snippet}
 </InteractiveFrame>
 
