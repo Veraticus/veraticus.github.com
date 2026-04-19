@@ -152,6 +152,34 @@ describe('Draggable', () => {
     // the click test below covers that path directly.
   });
 
+  it('fires ondragmove(id, pos) on each pointermove after the threshold is crossed', async () => {
+    const moves: Array<[string, { x: number; y: number }]> = [];
+    const { getByRole } = render(Draggable, {
+      id: 'mods',
+      label: 'Mod tables',
+      size: 41,
+      placed: false,
+      ontoggle: () => {},
+      ondragmove: (id: string, pos: { x: number; y: number }) => moves.push([id, pos]),
+    });
+    const btn = getByRole('button');
+    await fireEvent.pointerDown(btn, { clientX: 100, clientY: 100, pointerId: 1 });
+    // Below threshold -- should NOT emit
+    await fireEvent.pointerMove(btn, { clientX: 101, clientY: 101, pointerId: 1 });
+    expect(moves).toEqual([]);
+    // Past threshold -- emits from this move onward
+    await fireEvent.pointerMove(btn, { clientX: 120, clientY: 120, pointerId: 1 });
+    await fireEvent.pointerMove(btn, { clientX: 140, clientY: 130, pointerId: 1 });
+    expect(moves).toEqual([
+      ['mods', { x: 120, y: 120 }],
+      ['mods', { x: 140, y: 130 }],
+    ]);
+    // After pointerup, further moves do not emit
+    await fireEvent.pointerUp(btn, { clientX: 140, clientY: 130, pointerId: 1 });
+    await fireEvent.pointerMove(btn, { clientX: 200, clientY: 200, pointerId: 1 });
+    expect(moves.length).toBe(2);
+  });
+
   it('sets data-dragging=true only while actively dragging past threshold', async () => {
     const { getByRole } = render(Draggable, {
       id: 'mods',

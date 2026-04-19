@@ -17,6 +17,7 @@
     placed: boolean;
     color?: 'teal' | 'coral' | 'yellow' | 'purple';
     ontoggle: (id: string) => void;
+    ondragmove?: (id: string, position: Position) => void;
     ondragend?: (id: string, position: Position) => void;
     children?: Snippet;
   }
@@ -28,6 +29,7 @@
     placed,
     color = 'teal',
     ontoggle,
+    ondragmove,
     ondragend,
     children,
   }: Props = $props();
@@ -66,6 +68,9 @@
   function onPointerMove(e: PointerEvent) {
     if (drag.draggingId === null) return;
     drag = handlePointerMove(drag, e);
+    if (drag.moved) {
+      ondragmove?.(id, { x: e.clientX, y: e.clientY });
+    }
   }
 
   function onPointerUp(e: PointerEvent) {

@@ -59,17 +59,29 @@ type PlaygroundStory = StoryObj<typeof DraggableDropPlayground>;
 export const PlaygroundEmpty: PlaygroundStory = {
   name: 'Playground: all unplaced',
   render: (args) => ({ Component: DraggableDropPlayground, props: args }),
-  args: { title: 'All unplaced (palette full)', initialPlaced: [] },
+  args: {
+    title: 'All unplaced (palette full)',
+    initialPlaced: [],
+    storageKey: 'veraticus:playground:story:empty',
+  },
 };
 
 export const PlaygroundPartial: PlaygroundStory = {
   name: 'Playground: two placed, under capacity',
   render: (args) => ({ Component: DraggableDropPlayground, props: args }),
-  args: { title: 'Two placed: 41 + 26 = 67 / 128', initialPlaced: ['mods', 'ui'] },
+  args: {
+    title: 'Two placed: 41 + 26 = 67 / 128',
+    initialPlaced: ['mods', 'ui'],
+    storageKey: 'veraticus:playground:story:partial',
+  },
 };
 
 export const PlaygroundOverflowing: PlaygroundStory = {
   name: 'Playground: all placed, overflowing',
   render: (args) => ({ Component: DraggableDropPlayground, props: args }),
-  args: { title: 'All placed: 141 / 128 (overflow)', initialPlaced: ['mods', 'uniques', 'ui', 'calc'] },
+  args: {
+    title: 'All placed: 141 / 128 (overflow)',
+    initialPlaced: ['mods', 'uniques', 'ui', 'calc'],
+    storageKey: 'veraticus:playground:story:overflow',
+  },
 };
