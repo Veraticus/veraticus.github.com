@@ -409,24 +409,27 @@
       {/snippet}
     </DropTarget>
 
-    <div class="outcome-row">
-      {#if outcome.kind === 'oom'}
-        <OutcomeOOM text={outcome.text} />
-      {:else if outcome.kind === 'fatal'}
-        <OutcomeFatal text={outcome.text} />
-      {:else if outcome.kind === 'stuck'}
-        <OutcomeStuck text={outcome.text} />
-      {:else if outcome.kind === 'silent'}
-        <OutcomeSilent
-          wrong={outcome.revealRealAnswer!.wrong}
-          real={outcome.revealRealAnswer!.real}
-        />
-      {:else}
-        <OutcomeFit text={outcome.text} />
-      {/if}
+    <div class="lower-grid">
+      <div class="outcome-cell">
+        {#if outcome.kind === 'oom'}
+          <OutcomeOOM text={outcome.text} />
+        {:else if outcome.kind === 'fatal'}
+          <OutcomeFatal text={outcome.text} />
+        {:else if outcome.kind === 'stuck'}
+          <OutcomeStuck text={outcome.text} />
+        {:else if outcome.kind === 'silent'}
+          <OutcomeSilent
+            wrong={outcome.revealRealAnswer!.wrong}
+            real={outcome.revealRealAnswer!.real}
+          />
+        {:else}
+          <OutcomeFit text={outcome.text} />
+        {/if}
+      </div>
+      <div class="catalog-cell">
+        <FailureCatalog seenKinds={seenKinds} />
+      </div>
     </div>
-
-    <FailureCatalog seenKinds={seenKinds} />
   {/snippet}
 </InteractiveFrame>
 
@@ -519,7 +522,21 @@
     }
   }
 
-  .outcome-row {
-    margin: 1rem 0;
+  .lower-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 620px) {
+    .lower-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .outcome-cell,
+  .catalog-cell {
+    min-width: 0;
   }
 </style>
