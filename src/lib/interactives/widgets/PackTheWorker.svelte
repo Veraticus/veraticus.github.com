@@ -40,7 +40,6 @@
     placedOrder?: string[];
     paletteOrder?: string[];
     seenKinds?: OutcomeKind[];
-    hasInteracted?: boolean;
   }
 
   const ALL_KINDS: OutcomeKind[] = ['oom', 'fatal', 'stuck', 'silent', 'fit'];
@@ -61,7 +60,6 @@
     placedOrder: BlockId[];
     paletteOrder: BlockId[];
     seenKinds: Set<OutcomeKind>;
-    hasInteracted: boolean;
   } {
     const saved = loadJSON<SavedState>(storageKey, {});
     const placedOrder = validOrder(saved.placedOrder) ? saved.placedOrder : [...initialPlaced];
@@ -74,38 +72,31 @@
         placedOrder: [...initialPlaced],
         paletteOrder: ALL_IDS.filter((id) => !initialPlaced.includes(id)),
         seenKinds: new Set(),
-        hasInteracted: false,
       };
     }
     const seenKinds = new Set<OutcomeKind>(
       validSeenKinds(saved.seenKinds) ? saved.seenKinds : [],
     );
-    return {
-      placedOrder,
-      paletteOrder,
-      seenKinds,
-      hasInteracted:
-        saved.hasInteracted === true || placedOrder.length > 0 || seenKinds.size > 0,
-    };
+    return { placedOrder, paletteOrder, seenKinds };
   }
 
   const initial = hydrated();
   let placedOrder = $state<BlockId[]>(initial.placedOrder);
   let paletteOrder = $state<BlockId[]>(initial.paletteOrder);
   let seenKinds = $state<Set<OutcomeKind>>(initial.seenKinds);
-  let hasInteracted = $state<boolean>(initial.hasInteracted);
 
   $effect(() => {
     saveJSON(storageKey, {
       placedOrder,
       paletteOrder,
       seenKinds: [...seenKinds],
-      hasInteracted,
     });
   });
 
+  // Nudge the first palette block while the Worker is empty. Reset brings
+  // the nudge back. Any drop into the Worker turns it off for the session.
   const nudgeBlockId = $derived(
-    !hasInteracted && paletteOrder.length > 0 ? paletteOrder[0] : null,
+    placedOrder.length === 0 && paletteOrder.length > 0 ? paletteOrder[0] : null,
   );
 
   const placedBlocks = $derived(placedOrder.map(byId));
@@ -152,7 +143,6 @@
   }
 
   function toggle(id: string) {
-    hasInteracted = true;
     if (placedOrder.includes(id as BlockId)) {
       placedOrder = placedOrder.filter((x) => x !== id);
       paletteOrder = [...paletteOrder, id as BlockId];
@@ -212,7 +202,6 @@
   }
 
   function handleLiveMove(id: string, pos: Position) {
-    hasInteracted = true;
     draggingId = id;
     maybeCaptureDragSize(id);
 
@@ -355,6 +344,15 @@
                   <span class="nudge-label">Drag me!</span>
                   <span class="nudge-arrow">↓</span>
                 </span>
+                <svg
+                  class="phantom-cursor"
+                  viewBox="0 0 24 28"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M 3 2 L 3 22 L 8 18 L 12 26 L 16 24 L 12 16 L 19 16 Z"
+                  />
+                </svg>
                 <span class="nudge-pulse">
                   <Draggable
                     id={slot.block.id}
@@ -530,6 +528,62 @@
     animation: nudge-pulse 1.3s ease-in-out infinite;
   }
 
+  .phantom-cursor {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 26px;
+    height: auto;
+    pointer-events: none;
+    z-index: 3;
+    animation: cursor-demo 3.4s ease-in-out infinite;
+    animation-delay: 0.6s;
+    opacity: 0;
+  }
+
+  .phantom-cursor path {
+    fill: rgba(255, 255, 255, 0.9);
+    stroke: var(--black);
+    stroke-width: 2;
+    stroke-dasharray: 3 2;
+    stroke-linejoin: round;
+  }
+
+  @keyframes cursor-demo {
+    0% {
+      transform: translate(-50%, -40px) scale(1);
+      opacity: 0;
+    }
+    8% {
+      transform: translate(-50%, -40px) scale(1);
+      opacity: 0.95;
+    }
+    22% {
+      transform: translate(-50%, -4px) scale(1);
+      opacity: 0.95;
+    }
+    28% {
+      transform: translate(-50%, -4px) scale(0.8);
+      opacity: 0.95;
+    }
+    34% {
+      transform: translate(-50%, -4px) scale(1);
+      opacity: 0.95;
+    }
+    70% {
+      transform: translate(-50%, 150px) scale(1);
+      opacity: 0.95;
+    }
+    85% {
+      transform: translate(-50%, 150px) scale(1);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, -40px) scale(1);
+      opacity: 0;
+    }
+  }
+
   @keyframes nudge-bob {
     0%, 100% { transform: translate(-50%, 0); }
     50% { transform: translate(-50%, -3px); }
@@ -542,8 +596,13 @@
 
   @media (prefers-reduced-motion: reduce) {
     .nudge-pointer,
-    .nudge-pulse {
+    .nudge-pulse,
+    .phantom-cursor {
       animation: none;
+    }
+    .phantom-cursor {
+      opacity: 0.6;
+      transform: translate(-50%, 40px) scale(1);
     }
   }
 
