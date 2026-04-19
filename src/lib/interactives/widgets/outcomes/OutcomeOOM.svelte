@@ -36,14 +36,18 @@
   .body {
     padding: 0.75rem 1rem;
     flex: 1;
+    min-width: 0;
   }
   .headline {
     margin: 0 0 0.25rem 0;
     font-weight: 700;
   }
   code {
+    display: inline-block;
     font-family: var(--font-mono, monospace);
-    font-size: var(--text-sm, 0.875rem);
+    font-size: var(--text-xs, 0.75rem);
     color: var(--black);
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 </style>
