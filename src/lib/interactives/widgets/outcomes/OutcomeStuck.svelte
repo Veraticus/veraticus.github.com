@@ -89,12 +89,12 @@
     opacity: 0.7;
   }
   code {
-    display: block;
+    display: inline-block;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-xs, 0.75rem);
     opacity: 0.75;
-    white-space: nowrap;
-    overflow-x: auto;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
   .reveal {
     margin: 0.5rem 0 0 0;
