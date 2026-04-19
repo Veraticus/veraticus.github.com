@@ -49,7 +49,7 @@ So: no WASM. That is the wall I walked into at the end of week one.
 
 ## The Runtime Trap, Which Is Funny
 
-While we are here, there is a genuinely funny wrinkle about Lua runtimes and WebAssembly worth a paragraph. LuaJIT -- the only Lua runtime with memory numbers this good -- uses a native JIT. It compiles to machine code at runtime. It cannot be compiled *to* WebAssembly, because WebAssembly has no native JIT to compile down to. It is a compile-once, run-anywhere target. LuaJIT and WASM are structurally incompatible at the layer that matters.
+While we are here, there is a genuinely funny wrinkle about Lua runtimes and WebAssembly worth a paragraph. LuaJIT -- the only Lua runtime with memory numbers this good -- uses a native JIT. It compiles to machine code at runtime. It cannot be compiled *to* WebAssembly, because WebAssembly has no native JIT to compile down to. It is a compile-once, run-anywhere target. You cannot put LuaJIT inside WebAssembly. The two designs rule each other out.
 
 The Lua runtimes that *can* compile to WASM (Lua 5.1, Luau) pay for that portability with worse memory behavior. The runtime with the memory numbers you want cannot run in a Worker. The runtimes that can run in a Worker cost you thirty percent more memory than you have to spend. These are the same fact stated from two angles, and they leave you nowhere. It is not an accident of my measurement methodology; it is a structural fact about how these runtimes are built, and it does not get better by staring at it harder.
 
