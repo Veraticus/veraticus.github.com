@@ -238,7 +238,6 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
 
   /* Memphis-styled table */
   .prose :global(table) {
-    display: block;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -247,11 +246,11 @@ const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     background: var(--white);
     margin-block: 2rem;
     font-family: var(--font-body);
-    overflow-x: auto;
   }
 
   .prose :global(thead) {
-    background: var(--teal);
+    /* Soft tinted teal; full-strength --teal was too dark behind bold text. */
+    background: color-mix(in srgb, var(--teal) 45%, white);
   }
 
   .prose :global(th) {
