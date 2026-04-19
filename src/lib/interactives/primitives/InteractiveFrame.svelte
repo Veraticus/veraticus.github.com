@@ -49,7 +49,10 @@
 </script>
 
 <section class="interactive-frame" aria-label={title}>
-  <h3>{title}</h3>
+  <div class="interactive-frame-title">
+    <h3>{title}</h3>
+    <Squiggle color={titleSquiggleColor} stroke={5} height={0.55} />
+  </div>
   <div class="interactive-frame-body">
     {@render children?.()}
   </div>
