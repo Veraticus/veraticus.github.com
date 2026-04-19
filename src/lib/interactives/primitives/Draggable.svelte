@@ -103,6 +103,7 @@
   class:placed
   class:dragging={isDragging}
   data-dragging={isDragging}
+  data-draggable-id={id}
   style:transform={translateStyle}
   onclick={onClick}
   onkeydown={onKeyDown}

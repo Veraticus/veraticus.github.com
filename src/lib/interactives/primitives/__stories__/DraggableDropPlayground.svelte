@@ -5,13 +5,13 @@
   import Draggable from '../Draggable.svelte';
   import DropTarget from '../DropTarget.svelte';
   import { hitTest, type Position } from '../pointer';
+  import { computeInsertionIndex } from '../reorder';
 
   interface Block {
     id: string;
     label: string;
     size: number;
     color: 'teal' | 'coral' | 'yellow' | 'purple';
-    placed: boolean;
   }
 
   interface Props {
@@ -20,32 +20,61 @@
   }
   let { title = 'Draggable + DropTarget', initialPlaced = [] }: Props = $props();
 
-  let blocks = $state<Block[]>([
-    { id: 'mods', label: 'Mod tables', size: 41, color: 'teal', placed: initialPlaced.includes('mods') },
-    { id: 'uniques', label: 'Uniques', size: 46, color: 'coral', placed: initialPlaced.includes('uniques') },
-    { id: 'ui', label: 'UI + class defs', size: 26, color: 'yellow', placed: initialPlaced.includes('ui') },
-    { id: 'calc', label: 'Calc temps', size: 28, color: 'purple', placed: initialPlaced.includes('calc') },
-  ]);
+  const blocks: Block[] = [
+    { id: 'mods', label: 'Mod tables', size: 41, color: 'teal' },
+    { id: 'uniques', label: 'Uniques', size: 46, color: 'coral' },
+    { id: 'ui', label: 'UI + class defs', size: 26, color: 'yellow' },
+    { id: 'calc', label: 'Calc temps', size: 28, color: 'purple' },
+  ];
 
-  const used = $derived(blocks.filter((b) => b.placed).reduce((s, b) => s + b.size, 0));
-  const palette = $derived(blocks.filter((b) => !b.placed));
-  const inTarget = $derived(blocks.filter((b) => b.placed));
+  let placedOrder = $state<string[]>([...initialPlaced]);
+  let justJittered = $state<string | null>(null);
+  let jitterTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const byId = (id: string) => blocks.find((b) => b.id === id)!;
+  const inTarget = $derived(placedOrder.map(byId));
+  const palette = $derived(blocks.filter((b) => !placedOrder.includes(b.id)));
+  const used = $derived(inTarget.reduce((s, b) => s + b.size, 0));
 
   let dropEl: HTMLElement | null = $state(null);
 
   function toggle(id: string) {
-    const block = blocks.find((b) => b.id === id);
-    if (block) block.placed = !block.placed;
+    if (placedOrder.includes(id)) {
+      placedOrder = placedOrder.filter((x) => x !== id);
+    } else {
+      placedOrder = [...placedOrder, id];
+      triggerJitter(id);
+    }
+  }
+
+  function triggerJitter(id: string) {
+    justJittered = id;
+    if (jitterTimer) clearTimeout(jitterTimer);
+    jitterTimer = setTimeout(() => {
+      if (justJittered === id) justJittered = null;
+    }, 420);
   }
 
   function onDragEnd(id: string, pos: Position) {
     if (!dropEl) return;
     const rect = dropEl.getBoundingClientRect();
     const over = hitTest(pos, rect);
-    const block = blocks.find((b) => b.id === id);
-    if (!block) return;
-    if (over && !block.placed) toggle(id);
-    else if (!over && block.placed) toggle(id);
+    const wasPlaced = placedOrder.includes(id);
+
+    if (over) {
+      const childRects = Array.from(
+        dropEl.querySelectorAll<HTMLElement>('[data-draggable-id]'),
+      )
+        .filter((el) => el.getAttribute('data-draggable-id') !== id)
+        .map((el) => el.getBoundingClientRect());
+      const insertAt = computeInsertionIndex(pos.x, childRects);
+      const next = wasPlaced ? placedOrder.filter((x) => x !== id) : [...placedOrder];
+      next.splice(insertAt, 0, id);
+      placedOrder = next;
+      triggerJitter(id);
+    } else if (wasPlaced) {
+      placedOrder = placedOrder.filter((x) => x !== id);
+    }
   }
 </script>
 
@@ -53,7 +82,12 @@
   {#snippet children()}
     <div class="palette">
       {#each palette as b (b.id)}
-        <span animate:flip={{ duration: 240 }} in:fly={{ y: -20, duration: 240 }}>
+        <span
+          class="slot"
+          class:jittering={justJittered === b.id}
+          animate:flip={{ duration: 240 }}
+          in:fly={{ y: -20, duration: 240 }}
+        >
           <Draggable
             id={b.id}
             label={b.label}
@@ -78,7 +112,12 @@
     >
       {#snippet children()}
         {#each inTarget as b (b.id)}
-          <span animate:flip={{ duration: 240 }} in:fly={{ y: -40, duration: 320 }}>
+          <span
+            class="slot"
+            class:jittering={justJittered === b.id}
+            animate:flip={{ duration: 240 }}
+            in:fly={{ y: -40, duration: 320 }}
+          >
             <Draggable
               id={b.id}
               label={b.label}
@@ -112,5 +151,38 @@
     opacity: 0.6;
     font-family: var(--font-mono, monospace);
     font-size: var(--text-sm, 0.875rem);
+  }
+
+  .slot {
+    display: inline-flex;
+  }
+
+  .slot.jittering {
+    animation: jitter 420ms ease-out 1;
+    transform-origin: center;
+  }
+
+  @keyframes jitter {
+    0% {
+      transform: translate(0, -8px) rotate(-4deg);
+    }
+    25% {
+      transform: translate(3px, 1px) rotate(3deg);
+    }
+    50% {
+      transform: translate(-2px, -2px) rotate(-2deg);
+    }
+    75% {
+      transform: translate(1px, 1px) rotate(1deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slot.jittering {
+      animation: none;
+    }
   }
 </style>
