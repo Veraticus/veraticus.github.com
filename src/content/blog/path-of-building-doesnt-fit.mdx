@@ -85,6 +85,10 @@ The details that matter:
 
 The numbers I actually care about: pool size 8, p50 at 40ms for a swap-and-recompute, p99 at about 400ms. Good enough.
 
+![A passive swap run through the pool: +54,600 DPS gained, 241 life lost. The kind of answer the architecture makes cheap.](/images/pob/build-swap-delta.png)
+
+That is what the whole 10,000-line apparatus produces: three rows of "here is what moved." The AI asked, the pool calculated, the answer came back. That was the goal.
+
 ## What This Is Part Of
 
 A fair question at this point: why does any of this exist? I built `pob-server`, which is what we have been discussing, as part of [Savecraft](https://savecraft.gg) -- a [thing I have been writing about before](/blog/dashboards-are-already-dead/), an MCP server that parses game save files and serves structured game state to AI assistants. You point Claude or ChatGPT at it, and the AI gets access to your actual character, the gear they're carrying, and whatever terrible build guide you followed to get there, plus reference modules that do serious computation on top. `pob-server` is the Path of Exile reference module. Magic, Diablo II, RimWorld, Factorio, Stellaris, and World of Warcraft each have their own. Each game's reference module does what a deeply-knowledgeable friend would do for you if that friend had perfect recall of the game's data. PoE's friend happens to be an entire subprocess pool of a 200kloc Lua engine. The others are smaller.
