@@ -86,6 +86,14 @@
   let justWiggled = $state<Record<string, boolean>>({});
   const wiggleTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
+  /**
+   * Id of the block currently being dragged past the threshold, if any.
+   * Used to short-circuit animate:flip on THAT block so its flip-invert
+   * transform doesn't fight Draggable's pointer-tracking transform when
+   * live reorder moves the block to a new DOM slot.
+   */
+  let draggingId = $state<string | null>(null);
+
   function triggerJitter(id: string) {
     justJittered = id;
     if (jitterTimer) clearTimeout(jitterTimer);
@@ -146,6 +154,7 @@
   }
 
   function handleLiveMove(id: string, pos: Position) {
+    draggingId = id;
     const list = listForId(id);
     if (!list) return;
     const container = list === 'placed' ? dropEl : paletteEl;
@@ -162,6 +171,7 @@
   }
 
   function handleDragEnd(id: string, pos: Position) {
+    draggingId = null;
     const overTarget = dropEl ? hitTest(pos, dropEl.getBoundingClientRect()) : false;
     const overPalette = paletteEl ? hitTest(pos, paletteEl.getBoundingClientRect()) : false;
     const wasPlaced = placedOrder.includes(id);
@@ -212,7 +222,7 @@
           class="slot"
           class:jittering={justJittered === b.id}
           class:wiggled={justWiggled[b.id]}
-          animate:flip={{ duration: 240 }}
+          animate:flip={{ duration: draggingId === b.id ? 0 : 240 }}
           in:fly={{ y: -20, duration: 240 }}
         >
           <Draggable
@@ -244,7 +254,7 @@
             class="slot"
             class:jittering={justJittered === b.id}
             class:wiggled={justWiggled[b.id]}
-            animate:flip={{ duration: 240 }}
+            animate:flip={{ duration: draggingId === b.id ? 0 : 240 }}
             in:fly={{ y: -40, duration: 320 }}
           >
             <Draggable

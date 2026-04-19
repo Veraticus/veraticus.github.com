@@ -36,6 +36,9 @@
 
   let drag = $state<DragState>(createDragState());
   let suppressNextClick = $state(false);
+  let buttonEl: HTMLButtonElement | undefined = $state();
+  let layoutLeft = 0;
+  let layoutTop = 0;
 
   function onClick() {
     if (suppressNextClick) {
@@ -62,11 +65,34 @@
       // Not all environments support pointer capture (older jsdom, some browsers under test).
       // The drag state machine still works without it.
     }
+    // Capture the button's layout position (no transform applied yet at pointerdown).
+    const rect = target.getBoundingClientRect();
+    layoutLeft = rect.left;
+    layoutTop = rect.top;
     drag = handlePointerDown(drag, id, e);
   }
 
   function onPointerMove(e: PointerEvent) {
     if (drag.draggingId === null) return;
+    // Detect DOM-layout changes (e.g. parent reordered the list during live
+    // drag). Strip our known transform to recover the pure layout position,
+    // then adjust origin so `offset = pointer - origin` still yields the
+    // correct visual translate for the new DOM slot.
+    if (buttonEl) {
+      const rect = buttonEl.getBoundingClientRect();
+      const currentLayoutLeft = rect.left - drag.offset.x;
+      const currentLayoutTop = rect.top - drag.offset.y;
+      const dx = currentLayoutLeft - layoutLeft;
+      const dy = currentLayoutTop - layoutTop;
+      if (dx !== 0 || dy !== 0) {
+        drag = {
+          ...drag,
+          origin: { x: drag.origin.x + dx, y: drag.origin.y + dy },
+        };
+        layoutLeft = currentLayoutLeft;
+        layoutTop = currentLayoutTop;
+      }
+    }
     drag = handlePointerMove(drag, e);
     if (drag.moved) {
       ondragmove?.(id, { x: e.clientX, y: e.clientY });
@@ -102,6 +128,7 @@
 </script>
 
 <button
+  bind:this={buttonEl}
   type="button"
   aria-pressed={placed}
   class="draggable color-{color}"
