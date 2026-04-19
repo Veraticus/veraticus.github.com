@@ -1,0 +1,96 @@
+---
+title: "Can You Fit Path of Building Inside a Cloudflare Worker?"
+date: 2026-04-22 12:00:00 -0500
+tags: [engineering, ai, gamedev]
+---
+
+import PackTheWorker from '../../lib/interactives/widgets/PackTheWorker.svelte';
+
+The calc engine that every Path of Exile player uses weighs 145 megabytes in memory. Cloudflare Workers give you 128. That is the entire story of this post, and I am going to spend the next fifteen hundred words telling it to you anyway -- because the dead ends are where the interesting engineering lives, and because I still think I made the right call at each fork, even the ones that led nowhere.
+
+So. Some background, briefly, for the non-PoE-brained among you. Path of Building (PoB) is a community-maintained desktop application that simulates your character against every damage formula in a game that has, conservatively, a thousand of them. You paste in a build, it spits out your DPS, your survival numbers, your resistances, and the exact moment you stop being able to afford the next gem upgrade. It is the calc engine the entire community runs on. If you have ever read a build guide that quoted a number, the number came from PoB. It is a rare and wonderful piece of software -- open source, maintained by people who genuinely love the game, never taken hostage by a storefront, and weighing in at about two hundred thousand lines of Lua that somehow still works.
+
+I wanted Claude to be able to use it.
+
+Here is what I mean by "use it." A build guide says `take Vaal Pact at level 48`. Fine. But *your* build -- the one you are actually playing, with the gear you actually own -- might not want Vaal Pact. Maybe it wants Doctrine of the Unyielding instead. Maybe you don't have the stat investment for either one. Maybe it's just a bad build, which is why you're reading the guide in the first place. A smart, patient friend could load your build into PoB, try a few permutations, and eventually -- if they liked you enough -- tell you which one helped. That is what I wanted the AI to do. I wanted the LLM to hold a pickaxe at the calc engine until the calc engine gave up a DPS number, then swap a passive and go again, and again, and again, until it had something useful to tell me.
+
+The naive version of this is obvious: embed PoB in my Worker, call into it from the MCP tool handler, stream the result back. I host my whole stack on Cloudflare's edge. Workers are cheap and globally distributed and fast enough for what I'm doing. I had already embedded two other games' reference engines as WASM modules. This would make three. Get the Lua compiled to WASM, stuff it into a Worker, done.
+
+Reader, it was not done.
+
+## The Measurement
+
+Before I started any of this I wrote a test harness -- `mem_test.lua`, then `calc_mem_test.lua` -- that just loads PoB, parses a build, runs the calculation, and reports peak memory. Unglamorous; the kind of script you write because you got burned once and swore it wouldn't happen twice.
+
+Here is what it said.
+
+| Phase | LuaJIT 2.1 (native) | Lua 5.1 (est. 1.3x) |
+|-------|---------------------|---------------------|
+| Full init (data + tree + uniques) | 117 MB | ~152 MB |
+| After loading a build | 140 MB | ~182 MB |
+| During calc (peak, no GC) | **145 MB** | **~188 MB** |
+| After calc (post-GC) | 135 MB | ~176 MB |
+
+That 145 MB is the number that killed the idea. Workers cap WASM memory at 128 MB. You do not get to negotiate with that number; it is a hard limit enforced by the runtime. And 145 is only the low end of the measurement, because LuaJIT's compact table representation is the *best* you can do on memory for Lua. The runtimes that can actually be compiled to WASM use around thirty percent more. Call it 188 under Lua 5.1, maybe a touch less under Luau. Neither fits.
+
+Mod tables alone take up 41 MB. The uniques, once parsed through the mod engine, add another 46. UI code, class definitions, and the passive-tree scaffolding account for 26 MB more. Calc temporaries during evaluation add anywhere from five to twenty-eight megabytes depending on the build, and some of that is unavoidable because PoB's damage math is genuinely complicated and needs to hold a lot of intermediate state. There is no "just trim the UI" path that gets you under 128, because when you trim the UI you have about 120 MB of data left, and then you do a calc on top of it, and the calc needs room to breathe.
+
+So: no WASM. That is the wall I walked into at the end of week one.
+
+## The Runtime Trap, Which Is Funny
+
+While we are here, there is a genuinely funny wrinkle about Lua runtimes and WebAssembly worth a paragraph. LuaJIT -- the only Lua runtime with memory numbers this good -- uses a native JIT. It compiles to machine code at runtime. It cannot be compiled *to* WebAssembly, because WebAssembly has no native JIT to compile down to. It is a compile-once, run-anywhere target. LuaJIT and WASM are structurally incompatible at the layer that matters.
+
+The Lua runtimes that *can* compile to WASM (Lua 5.1, Luau) pay for that portability with worse memory behavior. The runtime with the memory numbers you want cannot run in a Worker. The runtimes that can run in a Worker cost you thirty percent more memory than you had to spend. These are the same fact stated from two angles, and they leave you nowhere. It is not an accident of my measurement methodology; it is a structural fact about how these runtimes are built, and it does not get better by staring at it harder.
+
+Luau -- Roblox's fork -- has the additional indignity of missing `goto` entirely. PoB uses `goto`, among other PoE-specific cleverness. You can restructure around it, probably, but you are restructuring in a fork of the Lua runtime inside a fork of the calc engine, and at that point you have committed to maintaining two forks in parallel every time PoE gets a league update, which is every three months. I don't have the weekends for that.
+
+## The Architectures I Considered and Rejected
+
+I spent about a week in the planning equivalent of pacing around the apartment before I settled on what to build. The options that didn't survive:
+
+**Full PoB in WASM.** Dead on arrival, see above.
+
+**Stripped PoB in WASM.** Fork PoB, lazy-load items, skip UI code, load only the current tree. I sketched it out and got something that might run under Luau at about 120 MB on the main scenario, modulo the `goto` situation. But "might run at 120 MB on the main scenario" is a fragile thing to rest production on -- the moment a player loads a build with unusual uniques, I exceed the budget and crash. And the fork has to be carried forward every league. This is a 4:3 tradeoff where the 3 is "runs at all" and the 4 is "the rest of my free time for the next two years."
+
+And the crash outcome, it turns out, is the optimistic one. I tested the pessimistic one. If you strip a data table and stay under the memory ceiling, PoB doesn't know it's been mutilated -- it starts up fine, imports the build, runs the calc, and returns a DPS number that looks reasonable and is wrong. I deleted PoB's ModCache at load time and ran a build that should have reported 5.22 million DPS. It reported 48. No error. No warning. Just a quietly catastrophic answer that would walk straight into an AI recommendation with no way for the player to know they were looking at a number the engine pulled out of a hat. The crash path is honest. The silent-wrong-answer path is the one that haunts you.
+
+### Try it yourself
+
+<PackTheWorker client:visible />
+
+**Ship it on a VPS.** Trivially solvable, boringly so, and still the wrong call. The rest of Savecraft lives on Cloudflare's edge. Adding a VPS means adding an entire ops surface -- provisioning, patching, monitoring, and all the TLS and backup busywork that comes with a real server -- for exactly one game. If I were writing a business plan I would spin this as "progressive infrastructure"; since I am not writing a business plan I will spin it as "what a mess."
+
+**Rewrite PoB's calc engine in TypeScript.** The "real" answer. TypeScript objects are more compact than Lua tables. A TS port runs fine in a Worker. This is also the *enormous* answer, because PoB's calc engine is two hundred thousand lines of Lua and every PoE league changes enough of it to make the merge into your fork nontrivial. Doing this well is a multi-month undertaking that turns into a recurring tax forever. I may still do this eventually -- I have a folder of notes -- but not this year.
+
+**Parse-only, no calc.** Decode the PoB build code (it is base64-encoded zlib, compressing a hilariously straightforward XML blob) and serve structured build data to the AI. No DPS numbers, no defense layers, nothing to iterate against. Trivially implementable. I rejected this because it kills the whole point: I wanted the AI to *play* with the build, not stare at it.
+
+So: not WASM, not stripped WASM, not a VPS, not a TypeScript rewrite, and decidedly not parse-only. The remaining option is the one I eventually shipped, and it is mildly embarrassing.
+
+## The Subprocess Pool, or: An Architecture Nobody Wants To Admit Works
+
+I wrote a Go HTTP server that manages a pool of long-lived LuaJIT subprocesses. Each subprocess runs a small Lua wrapper that embeds PoB's headless mode. When a request comes in, the Go server hands it to an idle subprocess over stdin; the subprocess runs the calc and writes a result to stdout; the Go server relays the result to whoever asked.
+
+This is an architecture that feels like something you'd sketch on a whiteboard at 2am and then throw out in the morning. It is also, empirically, the architecture that works.
+
+The details that matter:
+
+**Warm processes stay alive.** Initializing PoB from cold costs about two seconds -- parsing the passive tree, hydrating mods, loading the unique-item tables one by one until the engine is ready to answer questions. You pay that cost once per process, and then the process sits there with all of PoB loaded, ready to answer calc requests in tens of milliseconds. I kill idle processes after five minutes so they don't sit on memory forever; the first post-idle request eats a warm-up.
+
+**Two-send protocol for iteration.** When the AI wants to "explore builds near this one," I don't let the subprocess decide what to do -- Go decides. The subprocess gets a build and returns its stats. Go looks at the stats, picks a passive to perturb, sends that perturbation back for recomputation, and the cycle continues until Go has seen enough to answer. The subprocess stays dumb. All the decision logic lives in Go: which passive to swap next, which support gem might be worth trying, and whether any particular branch of the passive tree is pure dead weight under the current gear assumptions.
+
+**Ported PoB's perturbation algorithms to Go.** This is the piece I'm most proud of, and also the piece that took the longest. PoB's "nearby" and "audit" features, which let you compare a build to its neighbors and find opportunity cost, originally lived in Lua inside PoB proper. I ported them to Go so my subprocess pool only does PoB API calls while Go handles segmentation, ranking, and the dead-weight detection that makes the whole thing actually useful. This matters because I can now reason about the iteration loop without reading Lua -- and because Go is a language considerably more people can reason about than Lua is.
+
+The numbers I actually care about: pool size 8, p50 at 40ms for a swap-and-recompute, p99 at about 400ms. Good enough.
+
+## What This Is Part Of
+
+A fair question at this point: why does any of this exist? I built `pob-server`, which is what we have been discussing, as part of [Savecraft](https://savecraft.gg) -- a [thing I have been writing about before](/blog/dashboards-are-already-dead/), an MCP server that parses game save files and serves structured game state to AI assistants. You point Claude or ChatGPT at it, and the AI gets access to your actual character, the gear they're carrying, and whatever terrible build guide you followed to get there, plus reference modules that do serious computation on top. `pob-server` is the Path of Exile reference module. Magic, Diablo II, RimWorld, Factorio, Stellaris, and World of Warcraft each have their own. Each game's reference module does what a deeply-knowledgeable friend would do for you if that friend had perfect recall of the game's data. PoE's friend happens to be an entire subprocess pool of a 200kloc Lua engine. The others are smaller.
+
+All of this is open source and Apache 2.0. The pob-server code is at [github.com/joshsymonds/savecraft.gg/tree/main/cmd/pob-server](https://github.com/joshsymonds/savecraft.gg/tree/main/cmd/pob-server) -- about 10,000 lines of Go plus 1,800 lines of Lua for the wrapper. You can run it yourself if you want; it takes a directory of PoB's data files and a LuaJIT binary.
+
+## The Honest Closing
+
+Option four -- the TypeScript port of the calc engine -- is the right answer eventually. Someone is going to do it, and when they do, `pob-server` becomes vestigial, and good riddance to it. The subprocess pool is what you build when the correct architecture costs more hours than you have and you need to ship something that works today. I will defend that tradeoff cheerfully and then help pay for its funeral the moment the better thing exists.
+
+But if you are sitting at a kitchen table at one in the morning staring at a 145-megabyte Lua runtime and a 128-megabyte memory ceiling, and you have already ruled out the clever options, and you still want to ship: write the subprocess pool. It is an embarrassing architecture that happens to work, which is the highest praise I can muster for a piece of software at 1am. And on Tuesday night when the colony is burning and someone wants to know whether to take Vaal Pact, it gives the right answer -- which, when you get down to it, is the only thing an architecture has to do.
