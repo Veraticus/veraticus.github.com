@@ -1,6 +1,6 @@
 ---
 title: "Can You Fit Path of Building Inside a Cloudflare Worker?"
-date: 2026-04-22 12:00:00 -0500
+date: 2026-04-21 12:00:00 -0500
 tags: [engineering, ai, gamedev]
 ---
 
@@ -16,7 +16,7 @@ I wanted Claude to be able to use it.
 
 Here is what I mean by "use it." Making your own Path of Exile build from scratch is, famously, almost impossible. The passive tree has roughly 1,500 nodes; you pick 120 of them. Every piece of gear has a dozen modifier rolls that interact with everything else on the character. Skill gems level, support gems multiply, and damage types quietly convert into each other behind your back. Nobody holds this in their head.
 
-What players *actually* do is copy someone else's build guide move-for-move, and the moment they deviate -- a better chest drops, the unique the guide wants is 20 divines out of budget -- they are on their own. Did that swap cost 200,000 DPS or 2 million? Is the tree still balanced? Am I still viable in red maps? PoB answers all of this, if you are willing to sit in front of it for a few hours, twiddling things around and experiment.
+What players *actually* do is copy someone else's build guide move-for-move, and the moment they deviate -- a better chest drops, the unique the guide wants is 20 divines out of budget -- they are on their own. Did that swap cost 200,000 DPS or 2 million? Is the tree still balanced? Am I still viable in red maps? PoB answers all of this, if you are willing to sit in front of it for a few hours, twiddling things around and experimenting.
 
 That is what I wanted Claude to do for me! I wanted the LLM to dig deep in the build mines for me to uncover gems. It should naturally try five passives the build guide would never recommend, watch the numbers move, and come back with "this one is 40% more clear speed for 500 HP, worth it." LLMs are superb at iterating on code constrained by sensible guard rails. The same thing should work for theorycrafting a PoE build.
 
